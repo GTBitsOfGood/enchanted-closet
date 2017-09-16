@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const controllers = require('./controllers/');
 
-router.use('/users', (req, res) => {
-    res.json({ success: true });
-});
+router.use('/users', controllers.users.index);
 
 module.exports = router;
