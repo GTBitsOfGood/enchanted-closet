@@ -2,7 +2,7 @@ let bcrypt = require('bcrypt');
 let users = require('models/user');
 
 module.exports.genNew = (password) => {
-    return bcrypt.hashSync(password);
+    return bcrypt.hashSync(password, 15);
 }
 
 module.exports.checkAgainst = (data, callback) => {
@@ -11,10 +11,16 @@ module.exports.checkAgainst = (data, callback) => {
             callback(null, err);
             return;
         }
-        if (!bcrypt.compareSync(password, user.passHash)) {
-            callback(null, new Error("Password incorrect"));
-            return;
-        }
+        bcrypt.compare(password, user.passHash, (err, same) => {
+            if (err) {
+                callback(null, err);
+                return;
+            }
+            if (!same) {
+                callback(null, null);
+                return;
+            }
+        });
         let tmp = user;
         delete tmp.passHash;
         callback(tmp, null);
