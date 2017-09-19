@@ -5,11 +5,18 @@ module.exports.genNew = (password) => {
     return bcrypt.hashSync(password);
 }
 
-module.exports.checkAgainst = (email, password) => {
-    users.findByEmail(email, function(user, err){
+module.exports.checkAgainst = (data, callback) => {
+    users.findByEmail(data.email, function(user, err){
         if (err) {
-            return false;
+            callback(null, err);
+            return;
         }
-        return bcrypt.compareSync(password, user.passHash);
+        if (!bcrypt.compareSync(password, user.passHash)) {
+            callback(null, new Error("Password incorrect"));
+            return;
+        }
+        let tmp = user;
+        delete tmp.passHash;
+        callback(tmp, null);
     });
 }
