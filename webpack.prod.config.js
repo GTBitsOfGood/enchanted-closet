@@ -10,11 +10,11 @@ module.exports = {
     module: {
         rules: [
             { test: /\.js?$/, loader: 'babel-loader', exclude: /node_modules/, query: { presets: ['es2015', 'react'] } },
-            { test: /\.s?css$/, loader: 'style-loader!css-loader!sass-loader' },
+            { test: /\.less$/, loader: 'style-loader!css-loader!less-loader' }
         ],
     },
     resolve: {
-        extensions: ['.js', '.scss']
+        extensions: ['.js', '.less']
     },
     output: {
         path: path.join(__dirname, '/public'),
