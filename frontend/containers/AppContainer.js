@@ -12,12 +12,12 @@ const AppContainer = ({ name }) => {
     return (
         <div>
             <Title name={name} />
-	    <ButtonGroup>
-	    <Button type="default">Left</Button>
-	    <Button type="default">Middle</Button>
-	    <Button type="default">Right</Button>
-	    </ButtonGroup>	    
-	    <LoginForm />
+    	    <ButtonGroup>
+        	    <Button type="default">Left</Button>
+        	    <Button type="default">Middle</Button>
+        	    <Button type="default">Right</Button>
+    	    </ButtonGroup>
+    	    <LoginForm />
         </div>
     );
 };
