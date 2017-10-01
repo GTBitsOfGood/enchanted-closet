@@ -3,35 +3,35 @@ import PropTypes from 'prop-types';
 import { Form, FormInput, FormField } from 'elemental';
 
 /* pre: data
- * data - array of dictionaries representing fields
- * dictionary keys : { 
- *  "label" , "type" , "placeholder", "name"
- * }
- * todo: check for more specific types
- */
-const CustomForm = ( { data } ) => {
+* data - array of dictionaries representing fields
+* dictionary keys : {
+*  "label" , "type" , "placeholder", "name"
+* }
+* todo: check for more specific types
+*/
+const CustomForm = (  data  ) => {
     //put any header information here
-    console.log(data);
     return (
-	    <Form>
-	    {
-		data.map(makeFieldEntry)
-	    }
-	    </Form>
+        <Form>
+            {
+                data.map(FieldEntry)
+            }
+        </Form>
     );
-    
+
 };
 
-const FieldEntry = ( {entryData} ) => {
+const FieldEntry = ( entryData ) => {
+    let curInput;
     if (entryData["activate"] == "true") {
-	let curInput = <FormInput autoFocus type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
+        let curInput = <FormInput autoFocus type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
     } else if (entryData["activate"] == "false") {
-	let curInput = <FormInput type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
+        let curInput = <FormInput type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
     }
     return (
-	    <FormField label={entryData["label"]} htmlFor={entryData["name"]}>
-	    {curInput}
-	</FormField>
+        <FormField label={entryData["label"]} htmlFor={entryData["name"]}>
+            {curInput}
+        </FormField>
     );
 };
 
@@ -45,22 +45,20 @@ CustomForm.propTypes = {
 const LoginForm = () => {
     let customFormData = [];
     customFormData.push({
-	"label": "Email",
-	"type": "email",
-	"name": "email",
-	"placeholder": "Email",
-	"activate": "true"
+        "label": "Email",
+        "type": "email",
+        "name": "email",
+        "placeholder": "Email",
+        "activate": "true"
     });
-    customFormData.push(
-	"label": "Password",
-	"type": "password",
-	"name": "password",
-	"placeholder": "Password",
-	"activate": "false"
-    );
-    console.log(customFormData);
+    customFormData.push({
+        "label": "Password",
+        "type": "password",
+        "name": "password",
+        "placeholder": "Password",
+        "activate": "false"
+    });
     return CustomForm(customFormData);
 };
 
 export default LoginForm;
-
