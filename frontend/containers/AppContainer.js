@@ -3,7 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Title from '../components/Title';
 import { ButtonGroup, Button } from 'elemental';
-import LoginForm from '../components/CustomForm';
+import LoginForm from '../components/LoginForm';
+import SurveyForm from '../components/DefaultSurveyForm';
 
 //<Button>Test2</Button>
 
@@ -18,6 +19,7 @@ const AppContainer = ({ name }) => {
         	    <Button type="default">Right</Button>
     	    </ButtonGroup>
     	    <LoginForm />
+	    <SurveyForm />
         </div>
     );
 };

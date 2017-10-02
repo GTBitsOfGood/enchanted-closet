@@ -2,31 +2,61 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormInput, FormField } from 'elemental';
 
-/* pre: data
-* data - array of dictionaries representing fields
-* dictionary keys : {
-*  "label" , "type" , "placeholder", "name"
-* }
-* todo: check for more specific types
-*/
-const CustomForm = (  data  ) => {
-    //put any header information here
+
+//Todo: add display config
+/* pre: title, formBlocks
+ * title - Header for form
+ * formBlocks - array of dictionaries
+ * dictionary keys : {
+ * "title", "data", "misc", "type"
+ * }
+ *
+**/
+
+const CustomForm = ( title, formBlocks ) => { 
     return (
-        <Form>
-            {
-                data.map(FieldEntry)
-            }
-        </Form>
+	<div>
+	    <h2>{title}</h2>
+	    <Form type="horizontal">
+	    {
+		formBlocks.map(CustomFormBlock)
+	    }
+	    </Form>
+	</div>
     );
+}
+
+/* pre: formBlock
+ * formBlock - dictionary with keys : "title", "data"
+ * data - array of dictionaries representing fields
+ * dictionary keys : {
+ *  "label" , "type" , "placeholder", "name", "activate"
+ * }
+ * todo: check for more specific types
+**/
+//const DefaultCustomForm = ( label, type, placeholder, active) => {
+
+const CustomFormBlock = ( formBlock ) => {
+    //put any header information here
+    //todo : add meta information option
+    let retBlock = formBlock["title"] ?
+	(<div>
+	  <h3> {formBlock["title"]} </h3>    
+          {formBlock["data"].map(FieldEntry)}
+	 </div>)
+	: (<div>
+	   {formBlock["data"].map(FieldEntry)}
+	    </div>);
+    return retBlock;
 
 };
 
 const FieldEntry = ( entryData ) => {
     let curInput;
     if (entryData["activate"] == "true") {
-        let curInput = <FormInput autoFocus type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
-    } else if (entryData["activate"] == "false") {
-        let curInput = <FormInput type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
+        curInput = <FormInput autoFocus type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
+    } else {
+        curInput = <FormInput type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
     }
     return (
         <FormField label={entryData["label"]} htmlFor={entryData["name"]}>
@@ -35,30 +65,4 @@ const FieldEntry = ( entryData ) => {
     );
 };
 
-//Type checking
-CustomForm.propTypes = {
-
-};
-
-//example
-// pre: login, pass in dictionary
-const LoginForm = () => {
-    let customFormData = [];
-    customFormData.push({
-        "label": "Email",
-        "type": "email",
-        "name": "email",
-        "placeholder": "Email",
-        "activate": "true"
-    });
-    customFormData.push({
-        "label": "Password",
-        "type": "password",
-        "name": "password",
-        "placeholder": "Password",
-        "activate": "false"
-    });
-    return CustomForm(customFormData);
-};
-
-export default LoginForm;
+export default CustomForm;

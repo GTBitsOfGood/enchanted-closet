@@ -1,24 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CustomForm from 'CustomForm';
+import CustomForm from '../components/CustomForm';
 
 const LoginForm = () => {
+    let formTitle = "Login";
     let customFormData = [];
-    customFormData.push({
+    
+    let loginGroup = {	
+	"data" : []
+    };
+    loginGroup["data"].push({
         "label": "Email",
         "type": "email",
         "name": "email",
         "placeholder": "Email",
         "activate": "true"
     });
-    customFormData.push({
+    loginGroup["data"].push({
     	"label": "Password",
     	"type": "password",
     	"name": "password",
-    	"placeholder": "Password",
-    	"activate": "false"
+    	"placeholder": "Password"
     });
-    return CustomForm(customFormData);
+
+    customFormData.push(loginGroup);
+    return CustomForm(formTitle, customFormData);
 };
 
 export default LoginForm;
