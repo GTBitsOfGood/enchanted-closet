@@ -106,7 +106,7 @@ const SurveyForm = () => {
     customFormData.push(miscGroup);
     customFormData.push(affilGroup);
     customFormData.push(emerGroup);
-    return CustomForm(formTitle, customFormData);
+    return <CustomForm title={formTitle} formBlocks={customFormData} />;
 };
 
 export default SurveyForm;

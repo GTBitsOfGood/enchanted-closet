@@ -24,7 +24,7 @@ const LoginForm = () => {
     });
 
     customFormData.push(loginGroup);
-    return CustomForm(formTitle, customFormData);
+    return <CustomForm title={formTitle} formBlocks={customFormData} />;
 };
 
 export default LoginForm;

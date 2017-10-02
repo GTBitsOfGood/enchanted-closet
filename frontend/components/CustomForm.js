@@ -13,22 +13,22 @@ import { Form, FormInput, FormField } from 'elemental';
  *
 **/
 
-const CustomForm = ( title, formBlocks ) => { 
+const CustomForm = ( props ) => { 
     return (
 	<div>
-	    <h2>{title}</h2>
+	    <h2>{props.title}</h2>
 	    <Form type="horizontal">
 	    {
-		formBlocks.map(CustomFormBlock)
+		props.formBlocks.map(CustomFormBlock)
 	    }
 	    </Form>
 	</div>
     );
 }
 
-/* pre: formBlock
- * formBlock - dictionary with keys : "title", "data"
- * data - array of dictionaries representing fields
+/* pre: props
+ * props.title - header of input group
+ * props.data - array of dictionaries representing fields
  * dictionary keys : {
  *  "label" , "type" , "placeholder", "name", "activate"
  * }
@@ -36,30 +36,37 @@ const CustomForm = ( title, formBlocks ) => {
 **/
 //const DefaultCustomForm = ( label, type, placeholder, active) => {
 
-const CustomFormBlock = ( formBlock ) => {
+const CustomFormBlock = ( props ) => {
     //put any header information here
     //todo : add meta information option
-    let retBlock = formBlock["title"] ?
+    let retBlock = props.title ?
 	(<div>
-	  <h3> {formBlock["title"]} </h3>    
-          {formBlock["data"].map(FieldEntry)}
+	  <h3> {props.title} </h3>    
+          {props.data.map(FieldEntry)}
 	 </div>)
 	: (<div>
-	   {formBlock["data"].map(FieldEntry)}
+	   {props.data.map(FieldEntry)}
 	    </div>);
     return retBlock;
 
 };
 
-const FieldEntry = ( entryData ) => {
+/* pre : props
+ * props.activate - whether to activate onload
+ * props.type
+ * props.placeholder
+ * props.name
+ * props.label
+ */
+const FieldEntry = ( props ) => {
     let curInput;
-    if (entryData["activate"] == "true") {
-        curInput = <FormInput autoFocus type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
+    if (props.activate) {
+        curInput = <FormInput autoFocus type={props.type} placeholder = {props.placeholder} name={props.name} />;
     } else {
-        curInput = <FormInput type={entryData["type"]} placeholder={entryData["placeholder"]} name={entryData["name"]} />;
+        curInput = <FormInput type={props.type} placeholder={props.placeholder} name={props.name} />;
     }
     return (
-        <FormField label={entryData["label"]} htmlFor={entryData["name"]}>
+        <FormField label={props.label} htmlFor={props.name}>
             {curInput}
         </FormField>
     );
