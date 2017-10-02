@@ -5,4 +5,5 @@ const controllers = require('./controllers/');
 
 router.use('/users', controllers.users.index);
 
+
 module.exports = router;

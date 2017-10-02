@@ -17,7 +17,7 @@ var ParticipantSchema = new mongoose.Schema({
 		required: true
 	}
 	phone {
-		type:,
+		type:String,
 		index:true
 	},
 	birthday: Date,

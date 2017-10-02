@@ -1,5 +1,5 @@
 const assert = require('assert');
-var Admin = require('../backend/model/admin');
+var Admin = require('../backend/models/admin');
 
 describe('Creating admin', () => {
 	it('saves an admin user', (done) => {
