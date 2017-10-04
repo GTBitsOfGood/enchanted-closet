@@ -1,26 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormInput, FormField } from 'elemental';
+import { Form, FormInput, FormField, Button } from 'elemental';
+
+const SURVEY_DIR = '../static/surveys/';
+
+import SurveyForm from '../static/surveys/SurveyFormJSON.js'; 
+import LoginForm from '../static/surveys/LoginFormJSON.js';
+//import RegisterForm from '../static/surveys/RegisterFormJSON.js';
+
+const FileForm = ( props ) => {
+    switch ( props.type ) {
+    case "survey":	
+	return CustomForm(SurveyForm.SurveyForm);
+	break;
+    case "login":
+	return CustomForm(LoginForm.LoginForm);
+	break;
+    case "register":
+	return CustomForm(RegisterForm.RegisterForm);
+	break;
+    }
+    
+    return CustomForm(null);
+}
 
 
 //Todo: add display config
-/* pre: title, formBlocks
- * title - Header for form
- * formBlocks - array of dictionaries
+/* pre: props
+ * props - dictionary with form data
  * dictionary keys : {
  * "title", "data", "misc", "type"
  * }
- *
+ * Each 'data' is formBlock
 **/
-
-const CustomForm = ( props ) => { 
+const CustomForm = ( props ) => {
+    console.log(props);
     return (
 	<div>
-	    <h2>{props.title}</h2>
+	<h2>{props.title}</h2>
 	    <Form type="horizontal">
 	    {
-		props.formBlocks.map(CustomFormBlock)
+	        props.data.map(CustomFormBlock)
 	    }
+	         <Button>{props.button}</Button>
 	    </Form>
 	</div>
     );
@@ -72,4 +94,4 @@ const FieldEntry = ( props ) => {
     );
 };
 
-export default CustomForm;
+export default FileForm;
