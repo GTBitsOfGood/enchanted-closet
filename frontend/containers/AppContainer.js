@@ -5,26 +5,24 @@ import Title from '../components/Title';
 import FileForm from '../components/CustomForm';
 import EventEntry from '../components/EventEntry';
 import Frame from '../components/Frame';
-import { Row, Col, Card } from 'elemental';
+
+import { Container, Grid } from 'semantic-ui-react';
 
 
 const AppContainer = ({ name }) => {
     return (
-	<div>
-	    
-	    <Row>
-	    <Col sm="1/5" />
-	    <Col sm="3/5">
-	    //<Card>
-            <Title name={name} />
-    	    <FileForm type="survey"/>
-	    <FileForm type="login" />
-	    //<EventEntry title="a" date="b" desc="c" address="d" />
-	    //</Card>
-	    </Col>
-	    <Col sm="1/5" />
-	    </Row>
-        </div>
+    <div>
+        <Grid.Row>
+            <Grid.Column>
+                <Container>
+                    <Title name={name} />
+                    <FileForm type="survey"/>
+                    <FileForm type="login" />
+                    <EventEntry title="a" date="b" desc="c" address="d" />
+                </Container>
+            </Grid.Column>
+        </Grid.Row>
+    </div>
     );
 };
 

@@ -3,6 +3,8 @@ import { render } from 'react-dom';
 import { configureStore, history } from './store/configureStore';
 import Root from './containers/Root';
 
+import '../node_modules/semantic-ui-css/semantic.min.css';
+
 import './assets/stylesheets/base';
 
 const store = configureStore();

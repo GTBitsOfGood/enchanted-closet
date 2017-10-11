@@ -1,30 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Card } from 'elemental';
+
+import { Container, Grid, Segment } from 'semantic-ui-react';
 
 //display for an event entry - extend generic entry?
 const EventEntry = ( props ) => {
-    let retBlock = (
-	<Row className="EventEntry">
-	    <Col sm="1/6"/>
-	    <Col sm="2/3">
-	    <Card>
-	    <Row className="lead">
-	    <Col sm="2/3"> {props.title} </Col>
-	    <Col sm="1/3"> {props.date} </Col> //make this right aligned
-	    </Row>
-	    <Row>
-	    <Col> {props.desc} </Col>
-	    </Row>
-	    <Row>
-	    <Col> {props.address} </Col>
-	    </Row>
-	    </Card>
-	    </Col>
-	    <Col sm="1/6"/>
-	</Row>
-    );
-    return retBlock;
+    return (
+    <Grid.Row className="EventEntry">
+        <Grid.Column width={2}/>
+        <Grid.Column width={8}>
+            <Container>
+                <Grid.Row className="lead">
+                    <Grid.Column width={9}> {props.title} </Grid.Column>
+                    <Grid.Column width={3} floated='right'> {props.date} </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column> {props.desc} </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column> {props.address} </Grid.Column>
+                </Grid.Row>
+            </Container>
+        </Grid.Column>
+        <Grid.Column width={2}/>
+    </Grid.Row>
+    )
 };
 
 export default EventEntry;
