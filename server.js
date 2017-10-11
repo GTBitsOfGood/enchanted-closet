@@ -20,5 +20,3 @@ app.listen(PORT, error => {
     ? console.error(error)
     : console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`);
 });
-
-//ToDo : require db.js to start database

@@ -8,6 +8,10 @@ mongoose.connect(mongoDB, {
 //Get the default connection
 var db = mongoose.connection;
 
+require('./admin');
+require('./event');
+require('./participant');
+
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
