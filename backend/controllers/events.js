@@ -1,4 +1,4 @@
-const Event = require('mongoose').model('event');
+const Event = require('mongoose').model('Event');
 
 module.exports.index = (req, res) => {
     Event.find({}, (err, events) => {
