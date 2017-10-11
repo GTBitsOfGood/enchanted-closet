@@ -61,16 +61,20 @@ const CustomForm = ( props ) => {
 const CustomFormBlock = ( props ) => {
     //put any header information here
     //todo : add meta information option
-    let retBlock = props.title ?
-	(<div>
-	  <h3> {props.title} </h3>    
-          {props.data.map(FieldEntry)}
-	 </div>)
-	: (<div>
-	   {props.data.map(FieldEntry)}
-	    </div>);
-    return retBlock;
-
+    if (props.title) {
+        return (
+            <div>
+                <h3> {props.title} </h3>    
+                {props.data.map(FieldEntry)}
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                {props.data.map(FieldEntry)}
+            </div>
+        )
+    }
 };
 
 /* pre : props

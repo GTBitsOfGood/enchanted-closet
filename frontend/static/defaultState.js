@@ -1,3 +1,4 @@
 module.exports = {
-	applicationName: 'Enchanted Closet'
+	applicationName: 'Enchanted Closet',
+	showTitle: true
 };

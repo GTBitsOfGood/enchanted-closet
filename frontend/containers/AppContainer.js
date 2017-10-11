@@ -6,16 +6,15 @@ import FileForm from '../components/CustomForm';
 import EventEntry from '../components/EventEntry';
 import Frame from '../components/Frame';
 
-import { Container, Grid } from 'semantic-ui-react';
+import { Container, Grid, Reveal } from 'semantic-ui-react';
 
-
-const AppContainer = ({ applicationName }) => {
+const AppContainer = () => {
     return (
     <div>
         <Grid.Row>
             <Grid.Column>
                 <Container>
-                    <Title applicationName={applicationName} />
+                    <Title/>
                     <FileForm type="survey"/>
                     <FileForm type="login" />
                     <EventEntry title="a" date="b" desc="c" address="d" />
@@ -27,16 +26,14 @@ const AppContainer = ({ applicationName }) => {
 };
 
 AppContainer.propTypes = {
-    applicationName: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
     return {
-        applicationName: state.applicationName
     };
 };
 
-const mapDispatchToProps = (/* dispatch */) => {
+const mapDispatchToProps = (dispatch ) => {
     return {
     };
 };
