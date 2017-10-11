@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormInput, FormField, Button } from 'elemental';
+// import { Form, FormInput, FormField, Button } from 'elemental';
+import { Button, Form } from 'semantic-ui-react';
 
 const SURVEY_DIR = '../static/surveys/';
 
@@ -11,14 +12,14 @@ import LoginForm from '../static/surveys/LoginFormJSON.js';
 const FileForm = ( props ) => {
     switch ( props.type ) {
     case "survey":	
-	return CustomForm(SurveyForm.SurveyForm);
-	break;
+    	return CustomForm(SurveyForm.SurveyForm);
+    	break;
     case "login":
-	return CustomForm(LoginForm.LoginForm);
-	break;
+    	return CustomForm(LoginForm.LoginForm);
+    	break;
     case "register":
-	return CustomForm(RegisterForm.RegisterForm);
-	break;
+        return CustomForm(RegisterForm.RegisterForm);
+        break;
     }
     
     return CustomForm(null);
@@ -34,15 +35,14 @@ const FileForm = ( props ) => {
  * Each 'data' is formBlock
 **/
 const CustomForm = ( props ) => {
-    console.log(props);
     return (
 	<div>
-	<h2>{props.title}</h2>
-	    <Form type="horizontal">
-	    {
-	        props.data.map(CustomFormBlock)
-	    }
-	         <Button>{props.button}</Button>
+    	<h2>{props.title}</h2>
+	    <Form>
+            {
+                props.data.map(CustomFormBlock)
+            }
+	         <Button primary>{props.button}</Button>
 	    </Form>
 	</div>
     );
@@ -81,17 +81,15 @@ const CustomFormBlock = ( props ) => {
  * props.label
  */
 const FieldEntry = ( props ) => {
-    let curInput;
     if (props.activate) {
-        curInput = <FormInput autoFocus type={props.type} placeholder = {props.placeholder} name={props.name} />;
+        return (
+            <Form.Input focus label={props.label} type={props.type} placeholder={props.placeholder} />
+        )
     } else {
-        curInput = <FormInput type={props.type} placeholder={props.placeholder} name={props.name} />;
+        return (
+            <Form.Input label={props.label} type={props.type} placeholder={props.placeholder} />
+        )
     }
-    return (
-        <FormField label={props.label} htmlFor={props.name}>
-            {curInput}
-        </FormField>
-    );
 };
 
 export default FileForm;

@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'elemental';
+// import { Row, Col } from 'elemental';
+import { Grid } from 'semantic-ui-react';
 
 const Frame = ( props ) => {
     let retBlock = (
-	<Row>
-	<Col sm="1/5" />
-	    <Col sm="3/5">
-	{props.data}
-	</Col>
-	<Col sm="1/5" />
-	</Row>
+	<Grid.Row>
+		<Grid.Column width={1}/>
+	    <Grid.Column width={10}>
+			{props.data}
+		</Grid.Column>
+		<Grid.Column width={1}/>
+	</Grid.Row>
     );
     return retBlock;
 };
