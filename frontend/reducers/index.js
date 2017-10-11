@@ -1,5 +1,6 @@
-function rootReducer(state = {name: 'Enchanted Closet'}, action) {
+function rootReducer(state = require('../static/defaultState'), action) {
     switch (action.type) {
+
         default:
             return state;
     }
