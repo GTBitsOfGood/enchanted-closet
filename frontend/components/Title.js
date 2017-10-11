@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Title = ( { name } ) => {
+const Title = ( { applicationName } ) => {
     return (
-        <h1>{name}</h1>
+        <h1>{applicationName}</h1>
     );
 };
 
 Title.propTypes = {
-    name: PropTypes.string,
+    applicationName: PropTypes.string,
 };
 
 

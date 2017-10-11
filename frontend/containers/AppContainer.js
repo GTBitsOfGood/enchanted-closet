@@ -9,13 +9,13 @@ import Frame from '../components/Frame';
 import { Container, Grid } from 'semantic-ui-react';
 
 
-const AppContainer = ({ name }) => {
+const AppContainer = ({ applicationName }) => {
     return (
     <div>
         <Grid.Row>
             <Grid.Column>
                 <Container>
-                    <Title name={name} />
+                    <Title applicationName={applicationName} />
                     <FileForm type="survey"/>
                     <FileForm type="login" />
                     <EventEntry title="a" date="b" desc="c" address="d" />
@@ -27,12 +27,12 @@ const AppContainer = ({ name }) => {
 };
 
 AppContainer.propTypes = {
-    name: PropTypes.string,
+    applicationName: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
     return {
-        name: state.name
+        applicationName: state.applicationName
     };
 };
 
