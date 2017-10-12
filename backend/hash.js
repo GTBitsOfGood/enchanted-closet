@@ -6,14 +6,14 @@ module.exports.genNew = (password) => {
 }
 
 module.exports.checkAgainst = (data, callback) => {
-    users.findByEmail(data.email, function(user, err){
+    users.findByEmail(data.email, function (err, user) {
         if (err) {
-            callback(null, err);
+            callback(err, null);
             return false;
         }
         bcrypt.compare(data.password, user.passHash, (err, same) => {
             if (err) {
-                callback(null, err);
+                callback(err, null);
                 return false;
             }
             if (!same) {
@@ -23,7 +23,7 @@ module.exports.checkAgainst = (data, callback) => {
         });
         let tmp = user;
         delete tmp.passHash;
-        callback(tmp, null);
+        callback(null, tmp);
         return true;
     });
     return false;

@@ -1,10 +1,26 @@
-let hash = require('hash');
-let user = require('user');
+let hash = require('./hash');
+let user = require('./controllers/users');
+let randomBytes = require('crypto').randomBytes;
 let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+let redisClient = require('redis').createClient();
+
+redisClient.on("error", function (err) {
+    console.log("Error " + err);
+});
+
 module.exports.login = (data, callback) => {
-    hash.checkAgainst(data, callback);
+    hash.checkAgainst(data, function(err, usr){
+        if (usr != null) {
+            tok = randomBytes(64).toString("hex");
+            redisClient.set(tok, usr._id);
+            callback(err, Object.assign({}, usr, {"token": tok}));
+            return;
+        }
+        callback(err, usr);
+        return;
+    });
 }
 
 function hasAll(obj, props) {
