@@ -26,13 +26,38 @@ module.exports.get = (req, res, next) => {
         return next();
     }
 
-    Event.find({
+    Event.findOne({
         _id: req.params.id
     }, (err, event) => {
-        if (event && event.length > 0) {
+        if (event) {
             res.locals.data = {
-                event: event[0]
+                event: event
             };
+            return next();
+        } else {
+            res.locals.error = {
+                status: 404,
+                msg: 'That Event was not found in the database'
+            };
+            return next();
+        }
+    });
+}
+
+module.exports.delete = (req, res, next) => {
+    if (!req.params.id) {
+        res.locals.error = {
+            status: 404,
+            msg: 'That Event was not found in the database'
+        };
+        return next();
+    }
+
+    Event.findOne({
+        _id: req.params.id
+    }).remove((err, event) => {
+        if (event) {
+            res.locals.data = {}
             return next();
         } else {
             res.locals.error = {
