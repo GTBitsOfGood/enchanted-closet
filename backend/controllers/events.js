@@ -19,7 +19,11 @@ module.exports.index = (req, res, next) => {
 
 module.exports.get = (req, res, next) => {
     if (!req.params.id) {
-        return res.send('missing id');
+        res.locals.error = {
+            status: 404,
+            msg: 'That Event was not found in the database'
+        };
+        return next();
     }
 
     Event.find({
