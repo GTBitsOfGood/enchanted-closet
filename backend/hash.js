@@ -9,20 +9,22 @@ module.exports.checkAgainst = (data, callback) => {
     users.findByEmail(data.email, function(user, err){
         if (err) {
             callback(null, err);
-            return;
+            return false;
         }
-        bcrypt.compare(password, user.passHash, (err, same) => {
+        bcrypt.compare(data.password, user.passHash, (err, same) => {
             if (err) {
                 callback(null, err);
-                return;
+                return false;
             }
             if (!same) {
                 callback(null, null);
-                return;
+                return false;
             }
         });
         let tmp = user;
         delete tmp.passHash;
         callback(tmp, null);
+        return true;
     });
+    return false;
 }
