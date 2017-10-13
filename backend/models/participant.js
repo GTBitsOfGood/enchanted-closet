@@ -1,6 +1,5 @@
 const mongoose = require('Mongoose');
-//require Event 
-
+// const Event = mongoose.model('event');
 
 var ParticipantSchema = new mongoose.Schema({
 	name: {
@@ -12,13 +11,20 @@ var ParticipantSchema = new mongoose.Schema({
 		index: true,
 		required: true
 	},
-	password = {
-		type: Object,
+	password: {
+		type: String,
 		required: true
+<<<<<<< HEAD:backend/models/participant.js
 	}
 	phone {
 		type:String,
 		index:true
+=======
+	},
+	phone: {
+		type: Number,
+		index: true
+>>>>>>> ffb31b5ae9a1380033dd5617551511e3b25f1b8d:backend/model/participant.js
 	},
 	birthday: Date,
 	grade: String,
@@ -28,14 +34,11 @@ var ParticipantSchema = new mongoose.Schema({
 	leader: String,
 	emergencyContactName: String,
 	emergencyContactPhone: String,
-	emergencyContactRelation: String,
-	pastEvents: [Events]
+	emergencyContactRelation: String/*,
+	pastEvents: [Event]*/
 });
 
-//to load from a controller would do var Participant = require('/backend/model/participant').Participant;
-var Participant = mongoose.model('Participant', ParticipantSchema);
 
-module.exports = {
-	Participant: Participant
-}
+let Participant = mongoose.model('Participant', ParticipantSchema);
 
+module.exports = Participant;
