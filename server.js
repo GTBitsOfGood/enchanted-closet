@@ -13,6 +13,9 @@ const api = require('./backend/routes');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', api);
+app.get('/*', (request, response) => {
+    response.sendFile(__dirname + '/public/index.html'); // For React/Redux
+});
 app.use((req, res, next) => {
 	if (res.locals.data) {
 		let response = Object.assign({}, res.locals.data, {
@@ -31,10 +34,6 @@ app.use((req, res, next) => {
 			'msg': 'Internal Server Error'
 		});
 	}
-});
-
-app.get('/*', (request, response) => {
-    response.sendFile(__dirname + '/public/index.html'); // For React/Redux
 });
 
 app.listen(PORT, error => {
