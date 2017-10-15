@@ -7,6 +7,17 @@ function rootReducer(state = require('../static/defaultState'), action) {
     			showTitle: !state.showTitle
     		});
     		break;
+    	case types.SHOW_LOADING_MODAL:
+    		return Object.assign({}, state, {
+    			modalLoaderActive: true
+    		});
+    		break;
+    	case types.HIDE_LOADING_MODAL:
+    		return Object.assign({}, state, {
+    			modalLoaderActive: false
+    		});
+    		break;
+
         default:
             return state;
     }

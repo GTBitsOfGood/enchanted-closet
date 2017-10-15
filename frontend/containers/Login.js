@@ -1,14 +1,19 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-
 import FileForm from '../components/CustomForm';
+import { Container, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 
-import { Container, Grid, Reveal } from 'semantic-ui-react';
+import { showLoader, hideLoader } from '../actions/index';
 
-const Login = () => {
+const Login = ({ modalLoaderActive, performLogin }) => {
     return (
-        <FileForm type="login" />
+    	<div>
+    		<Dimmer active={modalLoaderActive}>
+				<Loader>Loading</Loader>
+    		</Dimmer>
+	        <FileForm type="login" onClick={performLogin} />
+	    </div>
     );
 };
 
@@ -17,13 +22,17 @@ Login.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
+    	modalLoaderActive: state.modalLoaderActive || false
     };
 };
 
-const mapDispatchToProps = (dispatch ) => {
-    return {
-    };
-};
+const mapDispatchToProps = (dispatch ) => ({
+	performLogin() {
+		return () => {
+			dispatch(showLoader());
+		}
+	}
+});
 
 export default connect(
     mapStateToProps,

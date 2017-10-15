@@ -1,3 +1,5 @@
 /* Action types */
 
 export const TOGGLE_TITLE_STATE = 'TOGGLE_TITLE_STATE';
+export const SHOW_LOADING_MODAL = 'SHOW_LOADING_MODAL';
+export const HIDE_LOADING_MODAL = 'HIDE_LOADING_MODAL';

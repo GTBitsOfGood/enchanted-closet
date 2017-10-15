@@ -11,18 +11,18 @@ import LoginForm from '../static/surveys/LoginFormJSON.js';
 
 const FileForm = ( props ) => {
     switch ( props.type ) {
-    case "survey":	
-    	return CustomForm(SurveyForm.SurveyForm);
-    	break;
+    case "survey":
+        return CustomForm(SurveyForm.SurveyForm, props.onClick);
+        break;
     case "login":
-    	return CustomForm(LoginForm.LoginForm);
-    	break;
+        return CustomForm(LoginForm.LoginForm, props.onClick);
+        break;
     case "register":
-        return CustomForm(RegisterForm.RegisterForm);
+        return CustomForm(RegisterForm.RegisterForm, props.onClick);
         break;
     }
     
-    return CustomForm(null);
+    return CustomForm(null, null);
 }
 
 
@@ -34,17 +34,17 @@ const FileForm = ( props ) => {
  * }
  * Each 'data' is formBlock
 **/
-const CustomForm = ( props ) => {
+const CustomForm = ( props, buttonAction ) => {
     return (
-	<div>
-    	<h2>{props.title}</h2>
-	    <Form>
+    <div>
+        <h2>{props.title}</h2>
+        <Form>
             {
                 props.data.map(CustomFormBlock)
             }
-	         <Button primary>{props.button}</Button>
-	    </Form>
-	</div>
+             <Button primary onClick={buttonAction()}>{props.button}</Button>
+        </Form>
+    </div>
     );
 }
 
