@@ -41,7 +41,8 @@ module.exports = {
     devtool: 'cheap-eval-source-map',
     devServer: {
         contentBase: './public',
-        hot: true
+        hot: true,
+        historyApiFallback: true
     },
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
