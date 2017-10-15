@@ -8,12 +8,12 @@ import { showLoader, hideLoader } from '../actions/index';
 
 const Login = ({ modalLoaderActive, performLogin }) => {
     return (
-    	<div>
+    	<Container>
     		<Dimmer active={modalLoaderActive}>
 				<Loader>Loading</Loader>
     		</Dimmer>
 	        <FileForm type="login" onClick={performLogin} />
-	    </div>
+	    </Container>
     );
 };
 
