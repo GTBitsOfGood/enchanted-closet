@@ -26,7 +26,9 @@
     "file-loader": "^1.1.5",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
-    "mocha": "^3.2.0",
+    "mocha": "^3.5.3",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.12",
     "node-sass": "^4.5.2",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
@@ -40,6 +42,7 @@
     "sass-loader": "^6.0.3",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.74.2",
+    "should": "^13.1.0",
     "style-loader": "^0.16.1",
     "url-loader": "^0.6.2",
     "webpack": "^2.3.3"
