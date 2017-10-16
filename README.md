@@ -1,5 +1,7 @@
 # Enchanted Closet
 
+[Project specification](https://docs.google.com/document/d/1W8H6OnPEkAtUfmfRPS561r9vzcje0qplNvJtVRApWKI/edit?usp=sharing)
+
 ## Getting started
 1. Clone the repo (`git clone git@github.com:GTBitsOfGood/enchanted-closet.git`)
 2. Install dependencies with `npm install`

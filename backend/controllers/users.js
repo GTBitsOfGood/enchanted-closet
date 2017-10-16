@@ -1,4 +1,5 @@
-module.exports.index = (req, res) => {
-    res.json({ success: true });
-}
+"use strict";
 
+module.exports.index = (req, res) => {
+    return res.json({ success: true });
+}

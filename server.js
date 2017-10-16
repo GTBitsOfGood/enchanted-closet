@@ -1,10 +1,13 @@
+"use strict";
+
 require('dotenv').config()
 
 const path = require('path');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const db = require('./backend/model/db');
+
+const db = require('./backend/models/db');
 const api = require('./backend/routes');
 
 app.use(express.static(path.join(__dirname, 'public')));

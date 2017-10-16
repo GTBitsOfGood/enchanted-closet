@@ -1,4 +1,4 @@
-function rootReducer(state = {name: 'Horizons'}, action) {
+function rootReducer(state = {name: 'Enchanted Closet'}, action) {
     switch (action.type) {
         default:
             return state;
