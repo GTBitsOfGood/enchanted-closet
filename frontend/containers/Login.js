@@ -17,12 +17,9 @@ const Login = ({ modalLoaderActive, performLogin }) => {
     );
 };
 
-Login.propTypes = {
-};
-
 const mapStateToProps = (state) => {
     return {
-    	modalLoaderActive: state.modalLoaderActive || false
+    	modalLoaderActive: state.modalLoaderActive
     };
 };
 

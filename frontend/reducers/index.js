@@ -6,17 +6,25 @@ function rootReducer(state = require('../static/defaultState'), action) {
     		return Object.assign({}, state, {
     			showTitle: !state.showTitle
     		});
-    		break;
-    	case types.SHOW_LOADING_MODAL:
-    		return Object.assign({}, state, {
-    			modalLoaderActive: true
-    		});
-    		break;
-    	case types.HIDE_LOADING_MODAL:
-    		return Object.assign({}, state, {
-    			modalLoaderActive: false
-    		});
-    		break;
+
+        case types.INVALIDATE_EVENTS:
+            return Object.assign({}, state, {
+                didInvalidateEvents: true
+            });
+
+        case types.RECEIVE_EVENTS:
+            return Object.assign({}, state, {
+                isFetchingEvents: false,
+                didInvalidateEvents: false,
+                events: action.events,
+                lastUpdatedEvents: action.receivedAt
+            });
+
+        case types.REQUEST_EVENTS:
+            return Object.assign({}, state, {
+                isFetchingEvents: true,
+                didInvalidateEvents: false
+            });
 
         default:
             return state;

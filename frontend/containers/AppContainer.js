@@ -16,7 +16,6 @@ const AppContainer = () => {
                 <Container>
                     <Title/>
                     <FileForm type="survey"/>
-                    <FileForm type="login" />
                     <EventEntry title="a" date="b" desc="c" address="d" />
                 </Container>
             </Grid.Column>
