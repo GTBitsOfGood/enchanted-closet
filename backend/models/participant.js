@@ -1,11 +1,11 @@
-const mongoose = require('Mongoose');
+const mongoose = require('mongoose');
 // const Event = mongoose.model('event');
 
 var ParticipantSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		index: true
-	}, 
+	},
 	email: {
 		type: String,
 		index: true,

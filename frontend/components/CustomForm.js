@@ -10,19 +10,23 @@ import LoginForm from '../static/surveys/LoginFormJSON.js';
 //import RegisterForm from '../static/surveys/RegisterFormJSON.js';
 
 const FileForm = ( props ) => {
+    let clickHandler = () => {
+        if (props.onClick !== undefined) props.onClick();
+        return;
+    }
     switch ( props.type ) {
-    case "survey":	
-    	return CustomForm(SurveyForm.SurveyForm);
-    	break;
+    case "survey":
+        return CustomForm(SurveyForm.SurveyForm, clickHandler);
+        break;
     case "login":
-    	return CustomForm(LoginForm.LoginForm);
-    	break;
+        return CustomForm(LoginForm.LoginForm, clickHandler);
+        break;
     case "register":
-        return CustomForm(RegisterForm.RegisterForm);
+        return CustomForm(RegisterForm.RegisterForm, clickHandler);
         break;
     }
     
-    return CustomForm(null);
+    return CustomForm(null, clickHandler);
 }
 
 
@@ -34,17 +38,18 @@ const FileForm = ( props ) => {
  * }
  * Each 'data' is formBlock
 **/
-const CustomForm = ( props ) => {
+const CustomForm = ( props, buttonAction ) => {
+    console.log(buttonAction)
     return (
-	<div>
-    	<h2>{props.title}</h2>
-	    <Form>
+    <div>
+        <h2>{props.title}</h2>
+        <Form>
             {
                 props.data.map(CustomFormBlock)
             }
-	         <Button primary>{props.button}</Button>
-	    </Form>
-	</div>
+             <Button primary onClick={buttonAction()}>{props.button}</Button>
+        </Form>
+    </div>
     );
 }
 
@@ -61,16 +66,20 @@ const CustomForm = ( props ) => {
 const CustomFormBlock = ( props ) => {
     //put any header information here
     //todo : add meta information option
-    let retBlock = props.title ?
-	(<div>
-	  <h3> {props.title} </h3>    
-          {props.data.map(FieldEntry)}
-	 </div>)
-	: (<div>
-	   {props.data.map(FieldEntry)}
-	    </div>);
-    return retBlock;
-
+    if (props.title) {
+        return (
+            <div>
+                <h3> {props.title} </h3>    
+                {props.data.map(FieldEntry)}
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                {props.data.map(FieldEntry)}
+            </div>
+        )
+    }
 };
 
 /* pre : props
