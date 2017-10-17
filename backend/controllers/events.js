@@ -73,7 +73,13 @@ module.exports.create = (req, res, next) => {
     var event = new Event({
         name: req.body.name,
         description: req.body.description,
-        datetime: req.body.description
-
+        datetime: req.body.description,
+        location: req.body.location,
+        presenters: req.body.presenters,
+        photo: req.body.photo
     });
+    event.save(function(err, event)) {
+        if(err) { return next(err)}
+        res.json(201, event);
+    }
 }
