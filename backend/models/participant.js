@@ -14,17 +14,10 @@ var ParticipantSchema = new mongoose.Schema({
 	password: {
 		type: String,
 		required: true
-<<<<<<< HEAD:backend/models/participant.js
-	}
-	phone {
-		type:String,
-		index:true
-=======
 	},
 	phone: {
 		type: Number,
 		index: true
->>>>>>> ffb31b5ae9a1380033dd5617551511e3b25f1b8d:backend/model/participant.js
 	},
 	birthday: Date,
 	grade: String,

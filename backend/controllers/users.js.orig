@@ -1,0 +1,11 @@
+"use strict";
+
+module.exports.index = (req, res) => {
+<<<<<<< HEAD
+    res.json({ success: true });
+}
+
+=======
+    return res.json({ success: true });
+}
+>>>>>>> d2675b325c37a3ea745b59070fbb600281ab91d1

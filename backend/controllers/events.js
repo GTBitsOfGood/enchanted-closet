@@ -68,3 +68,12 @@ module.exports.delete = (req, res, next) => {
         }
     });
 }
+
+module.exports.create = (req, res, next) => {
+    var event = new Event({
+        name: req.body.name,
+        description: req.body.description,
+        datetime: req.body.description
+
+    });
+}
