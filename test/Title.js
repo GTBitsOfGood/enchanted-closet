@@ -1,4 +1,4 @@
-import React from 'react';
+/**import React from 'react';
 import expect from 'expect';
 import { shallow } from 'enzyme';
 
@@ -16,4 +16,4 @@ describe('Component: App', () => {
   it('should run a solid smoke test', () => {
     expect(true).toEqual(true);
   });
-});
+});**/
