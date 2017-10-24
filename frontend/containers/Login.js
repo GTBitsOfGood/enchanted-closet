@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import FileForm from '../components/CustomForm';
-import { Container, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 
 import { showLoader, hideLoader } from '../actions/index';
 
@@ -12,7 +12,12 @@ const Login = ({ modalLoaderActive, performLogin }) => {
     		<Dimmer active={modalLoaderActive}>
 				<Loader>Loading</Loader>
     		</Dimmer>
-	        <FileForm type="login" onClick={performLogin} />
+            <Card fluid color='purple'>
+                <Card.Content header='Login' />
+                <Card.Content>
+        	        <FileForm type="login" onClick={performLogin} />
+                </Card.Content>
+            </Card>
 	    </Container>
     );
 };
