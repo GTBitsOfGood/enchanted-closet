@@ -15,10 +15,9 @@ module.exports.login = (data, callback) => {
         if (usr != null) {
             tok = randomBytes(64).toString("hex");
             redisClient.set(tok, usr._id);
-            callback(err, Object.assign({}, usr, {"token": tok}));
-            return;
+            return callback(err, Object.assign({}, usr, {"token": tok}));
         }
-        callback(err, usr);
+        return callback(err, usr);
     });
 }
 
@@ -39,38 +38,31 @@ function matchesComplexityRequirements(password) {
 module.exports.register = (data, callback) => {
     let tmp = hasAll(data, ["email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
     if (tmp) {
-        callback({reason: "Data object missing " + tmp + " property"}, false);
-        return;
+        return callback({reason: "Data object missing " + tmp + " property"}, false);
     }
     if (!isEmail.test(data.email)) {
-        callback({reason: "Email invalid"}, false);
-        return;
+        return callback({reason: "Email invalid"}, false);
     }
     if (!matchesComplexityRequirements(data.password)) {
-        callback({reason: "Password doesn't match complexity requirements"}, false)
-        return;
+        return callback({reason: "Password doesn't match complexity requirements"}, false);
     }
     if (grades.indexOf(data.grade) == -1) {
-        callback({reason: "Grade is not valid"})
-        return;
+        return callback({reason: "Grade is not valid"});
     }
     //TODO: constraint checks for race, school, leader_name
     tmp = hasAll(data.emergency_contact, ["name", "phone", "relation"]);
     if (tmp) {
-        callback({reason: "data.emergency_contact missing " + tmp + " property"}, false);
-        return;
+        return callback({reason: "data.emergency_contact missing " + tmp + " property"}, false);
     }
     if (!isPhone.test(data.emergency_contact.phone)) {
-        callback({reason: "Invalid phone number"}, false);
-        return;
+        return callback({reason: "Invalid phone number"}, false);
     }
     newHash = hash.genNew(data.password);
     delete data.password;
     data.hash = newHash;
     if (user.addNew(data)) {
         delete data.hash;
-        callback(null, data);
-        return;
+        return callback(null, data);
     }
-    callback(null, true);
+    return callback(null, true);
 }
