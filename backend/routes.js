@@ -8,4 +8,6 @@ router.get('/', controllers.core.index);
 
 router.get('/users', controllers.users.index);
 
+router.get('/login', controllers.auth.login);
+
 module.exports = router;
