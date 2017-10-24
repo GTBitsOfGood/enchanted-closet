@@ -26,6 +26,28 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 didInvalidateEvents: false
             });
 
+        case types.SHOW_MODAL_LOADER:
+            return Object.assign({}, state, {
+                modalLoaderActive: true
+            });
+
+        case types.HIDE_MODAL_LOADER:
+            return Object.assign({}, state, {
+                modalLoaderActive: false
+            });
+
+        case types.USER_AUTHENTICATED:
+            return Object.assign({}, state, {
+                user: action.user,
+                apiToken: action.user.token,
+                errorMessage: null
+            });
+
+        case types.USER_NOT_AUTHENTICATED:
+            return Object.assign({}, state, {
+                errorMessage: action.errorMessage
+            });
+
         default:
             return state;
     }

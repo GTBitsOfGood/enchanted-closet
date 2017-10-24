@@ -1,35 +1,50 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import FileForm from '../components/CustomForm';
 import { Container, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 
+import { performAdminLogin } from '../actions/index';
+
 import { showLoader, hideLoader } from '../actions/index';
 
-const Login = ({ modalLoaderActive, performLogin }) => {
-    return (
-    	<Container>
-    		<Dimmer active={modalLoaderActive}>
-				<Loader>Loading</Loader>
-    		</Dimmer>
-	        <FileForm type="login" onClick={performLogin} />
-	    </Container>
-    );
+import { Redirect } from 'react-router-dom';
+
+class Login extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const {loggedIn, modalLoaderActive, performAdminLogin} = this.props;
+        if (loggedIn) {
+            return <Redirect to="/events" />;
+        } else {
+            return (
+            <Container>
+                <Dimmer active={modalLoaderActive}>
+                    <Loader>Loading</Loader>
+                </Dimmer>
+                <FileForm type="login" onClick={performAdminLogin} />
+            </Container>
+            );
+        }
+    }
 };
 
 const mapStateToProps = (state) => {
     return {
-    	modalLoaderActive: state.modalLoaderActive
+        modalLoaderActive: state.modalLoaderActive,
+        loggedIn: (state.user && state.apiToken)
     };
 };
 
-const mapDispatchToProps = (dispatch ) => ({
-	performLogin() {
-		return () => {
-			dispatch(showLoader());
-		}
-	}
-});
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+        performAdminLogin: performAdminLogin
+    }, dispatch);
+}
 
 export default connect(
     mapStateToProps,
