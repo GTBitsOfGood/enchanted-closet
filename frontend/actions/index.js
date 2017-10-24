@@ -29,6 +29,12 @@ export function invalidateEvents() {
     };
 }
 
+export function logoutUser() {
+    return {
+        type: types.LOGOUT_USER
+    }
+}
+
 function processAuthenticationAttempt(json) {
     if (json.status === 'ok') {
         return {

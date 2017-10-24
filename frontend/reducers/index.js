@@ -48,6 +48,12 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 errorMessage: action.errorMessage
             });
 
+        case types.LOGOUT_USER:
+            return Object.assign({}, state, {
+                user: null,
+                apiToken: null
+            });
+
         default:
             return state;
     }

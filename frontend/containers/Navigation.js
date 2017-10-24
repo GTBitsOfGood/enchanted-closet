@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Menu, Dropdown } from 'semantic-ui-react'
+
+import { logoutUser } from '../actions/index';
 
 import { withRouter } from 'react-router-dom';
 
@@ -16,7 +19,7 @@ class Navigation extends Component {
     }
 
     render() {
-        const { applicationName, loggedIn, performLogout } = this.props;
+        const { applicationName, loggedIn, logoutUser } = this.props;
         const activeColor = 'violet'
         return (
         	<Menu color='grey' inverted stackable size='large'>
@@ -29,7 +32,7 @@ class Navigation extends Component {
                             <Dropdown.Item onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Menu.Item color={activeColor} onClick={performLogout}>Log out</Menu.Item>
+                    <Menu.Item color={activeColor} onClick={logoutUser}>Log out</Menu.Item>
                 </Menu.Menu>
                 }
                 {!loggedIn &&
@@ -47,12 +50,11 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    performLogout() {
-        console.log('Will logout');
-        return {};
-    }
-});
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+        logoutUser: logoutUser
+    }, dispatch);
+};
 
 export default withRouter(connect(
     mapStateToProps,
