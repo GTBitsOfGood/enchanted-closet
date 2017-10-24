@@ -43,7 +43,7 @@ class Navigation extends Component {
 const mapStateToProps = (state) => {
     return {
         applicationName: state.applicationName,
-        loggedIn: true
+        loggedIn: state.user && state.apiToken
     };
 };
 
