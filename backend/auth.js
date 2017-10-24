@@ -19,7 +19,6 @@ module.exports.login = (data, callback) => {
             return;
         }
         callback(err, usr);
-        return;
     });
 }
 
