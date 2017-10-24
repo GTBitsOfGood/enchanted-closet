@@ -1,1 +1,6 @@
 /* Action types */
+
+export const TOGGLE_TITLE_STATE = 'TOGGLE_TITLE_STATE';
+export const REQUEST_EVENTS = 'REQUEST_EVENTS';
+export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
+export const INVALIDATE_EVENTS = 'INVALIDATE_EVENTS';
