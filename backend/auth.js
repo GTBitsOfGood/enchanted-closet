@@ -11,9 +11,9 @@ redisClient.on("error", function (err) {
 });
 
 module.exports.login = (data, callback) => {
-    hash.checkAgainst(data, function(err, usr){
-        if (usr != null) {
-            tok = randomBytes(64).toString("hex");
+    hash.checkAgainst(data, function(err, usr) {
+        if (usr !== null) {
+            let tok = randomBytes(64).toString("hex");
             redisClient.set(tok, usr._id);
             return callback(err, Object.assign({}, usr, {"token": tok}));
         }
