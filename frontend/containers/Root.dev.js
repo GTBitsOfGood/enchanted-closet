@@ -11,7 +11,7 @@ import Navigation from './Navigation';
 import DevTools from './DevTools';
 import Helmet from 'react-helmet';
 
-import { HashRouter as Router, Route } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default function Root({ store }) {
     return (
@@ -21,10 +21,12 @@ export default function Root({ store }) {
                 <Router>
                     <div>
                         <Navigation />
-                        <Route exact path="/" component={AppContainer} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/events" component={Events} />
-                        <Route path="/*" component={MissingPage} />
+                        <Switch>
+                            <Route exact path="/" component={AppContainer} />
+                            <Route path="/login" component={Login} />
+                            <Route path="/events" component={Events} />
+                            <Route component={MissingPage} />
+                        </Switch>
                     </div>
                 </Router>
             </div>
