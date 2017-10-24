@@ -25,6 +25,11 @@ var EventSchema = new mongoose.Schema({
     photo: {
         type: String,
         required: false
+    },
+    attendees: {
+        type: String[],
+        required: false,
+        default: []
     }
 });
 

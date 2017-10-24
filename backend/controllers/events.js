@@ -1,4 +1,5 @@
 const Event = require('mongoose').model('Event');
+const User = require('mongoose').model('Participant');
 
 module.exports.index = (req, res, next) => {
     Event.find({}, (err, events) => {
@@ -15,6 +16,44 @@ module.exports.index = (req, res, next) => {
             return next();
         }
     });
+}
+
+module.exports.markPresentAt = (req, res, next) => {
+    if (!req.params.eventId) {
+        res.locals.error = {
+            status: 404,
+            msg: 'Missing parameter: eventId'
+        };
+        return next();
+    }
+    if (!req.params.userId) {
+        res.locals.error = {
+            status: 404,
+            msg: 'Missing parameter: userId'
+        };
+        return next();
+    }
+    User.count({_id: userID}, function (err, count){ 
+        if (count == 0) {
+            res.locals.error = {
+                status: 404,
+                msg: 'User does not exist'
+            };
+            return next();
+        }
+    }); 
+    Event.findById(req.params.eventId, function(err, item){
+        if (err) {
+            res.locals.error = {
+                status: 404,
+                msg: 'That Event was not found in the database'
+            };
+            return next();
+        }
+        item.attendees.push(req.params.userId);
+        item.save();
+    });
+    return next();
 }
 
 module.exports.get = (req, res, next) => {
