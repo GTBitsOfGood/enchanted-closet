@@ -1,19 +1,65 @@
 // Action Creators
 
 import fetch from 'isomorphic-fetch';
+import FormData from 'form-data';
 
 import * as types from './types';
 
 export function toggleTitleState() {
     return {
-        type: types.TOGGLE_TITLE_STATE,
+        type: types.TOGGLE_TITLE_STATE
     };
+}
+
+export function showModalLoader() {
+    return {
+        type: types.SHOW_MODAL_LOADER
+    };
+}
+
+export function hideModalLoader() {
+    return {
+        type: types.HIDE_MODAL_LOADER
+    }
 }
 
 export function invalidateEvents() {
     return {
         type: types.INVALIDATE_EVENTS
     };
+}
+
+function processAuthenticationAttempt(json) {
+    if (json.status === 'ok') {
+        return {
+            type: types.USER_AUTHENTICATED,
+            user: json.user
+        }
+    } else {
+        return {
+            type: types.USER_NOT_AUTHENTICATED,
+            errorMessage: json.msg
+        }
+    }
+}
+
+export function performAdminLogin(data) {
+    return dispatch => {
+        dispatch(showModalLoader());
+        return fetch(`/api/login`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(json => {
+                dispatch(hideModalLoader());
+                dispatch(processAuthenticationAttempt(json));
+            });
+    }
 }
 
 function requestEvents() {

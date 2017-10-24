@@ -5,13 +5,15 @@ import { Button, Form } from 'semantic-ui-react';
 
 const SURVEY_DIR = '../static/surveys/';
 
+let data = {};
+
 import SurveyForm from '../static/surveys/SurveyFormJSON.js'; 
 import LoginForm from '../static/surveys/LoginFormJSON.js';
 //import RegisterForm from '../static/surveys/RegisterFormJSON.js';
 
 const FileForm = ( props ) => {
-    let clickHandler = () => {
-        if (props.onClick !== undefined) props.onClick();
+    let clickHandler = (data) => {
+        if (props.onClick !== undefined) props.onClick(data);
         return;
     }
     switch ( props.type ) {
@@ -39,7 +41,6 @@ const FileForm = ( props ) => {
  * Each 'data' is formBlock
 **/
 const CustomForm = ( props, buttonAction ) => {
-    console.log(buttonAction)
     return (
     <div>
         <h2>{props.title}</h2>
@@ -47,7 +48,7 @@ const CustomForm = ( props, buttonAction ) => {
             {
                 props.data.map(CustomFormBlock)
             }
-             <Button primary onClick={buttonAction()}>{props.button}</Button>
+             <Button primary onClick={() => buttonAction(Object.assign({}, data))}>{props.button}</Button>
         </Form>
     </div>
     );
@@ -90,13 +91,14 @@ const CustomFormBlock = ( props ) => {
  * props.label
  */
 const FieldEntry = ( props ) => {
+    data[props.label.toLowerCase()] = '';
     if (props.activate) {
         return (
-            <Form.Input focus label={props.label} type={props.type} placeholder={props.placeholder} />
+            <Form.Input focus label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
         )
     } else {
         return (
-            <Form.Input label={props.label} type={props.type} placeholder={props.placeholder} />
+            <Form.Input label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
         )
     }
 };

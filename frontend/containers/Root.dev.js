@@ -29,6 +29,7 @@ export default function Root({ store }) {
                         </Switch>
                     </div>
                 </Router>
+                <DevTools/>
             </div>
         </Provider>
     );
