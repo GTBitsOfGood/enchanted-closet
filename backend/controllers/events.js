@@ -53,7 +53,6 @@ module.exports.markPresentAt = (req, res, next) => {
         item.attendees.push(req.params.userId);
         item.save();
     });
-    return next();
 }
 
 module.exports.get = (req, res, next) => {
