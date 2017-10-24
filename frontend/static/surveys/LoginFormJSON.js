@@ -1,5 +1,5 @@
 module.exports.LoginForm = {
-    "title" : "Login",
+    "title" : "",
     "button" : "Login",
     "data" : [
 	{
