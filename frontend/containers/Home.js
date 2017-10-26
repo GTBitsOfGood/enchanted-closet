@@ -8,7 +8,7 @@ import Frame from '../components/Frame';
 
 import { Container, Grid, Reveal } from 'semantic-ui-react';
 
-const AppContainer = () => {
+const Home = () => {
     return (
     <div>
         <Grid.Row>
@@ -24,7 +24,7 @@ const AppContainer = () => {
     );
 };
 
-AppContainer.propTypes = {
+Home.propTypes = {
 };
 
 const mapStateToProps = (state) => {
@@ -40,4 +40,4 @@ const mapDispatchToProps = (dispatch ) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AppContainer);
+)(Home);

@@ -33,7 +33,7 @@ class Events extends Component {
         const { events, isFetchingEvents, lastUpdatedEvents } = this.props
         return (
             <Container>
-                <h1>Upcoming Events</h1>
+                <h1><i>Upcoming Events</i></h1>
                 {lastUpdatedEvents &&
                     <span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
                 }

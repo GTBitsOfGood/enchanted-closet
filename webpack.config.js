@@ -19,6 +19,7 @@ module.exports = {
                     failOnError: false
                 }
             },
+            { test: /\.js?$/, exclude: /node_modules/, use: ['react-hot-loader/webpack'] },
             { test: /\.js?$/, loader: 'babel-loader', exclude: /node_modules/, query: { presets: ['es2015', 'react'] } },
             { test: /\.less/, loader: 'style-loader!css-loader!less-loader' },
             { test: /\.css/, loader: 'style-loader!css-loader' },
@@ -47,6 +48,7 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
     ]
