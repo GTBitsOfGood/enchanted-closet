@@ -11,6 +11,8 @@ import Navigation from './Navigation';
 import DevTools from './DevTools';
 import Helmet from 'react-helmet';
 
+import AdminDashboard from './Admin/Dashboard';
+
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default function Root({ store }) {
@@ -25,6 +27,7 @@ export default function Root({ store }) {
                             <Route exact path="/" component={AppContainer} />
                             <Route path="/login" component={Login} />
                             <Route path="/events" component={Events} />
+                            <Route path="/admin/dashboard" component={AdminDashboard} />
                             <Route component={MissingPage} />
                         </Switch>
                     </div>
