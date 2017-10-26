@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Form, FormInput, FormField, Button } from 'elemental';
 import { Button, Form } from 'semantic-ui-react';
 
 const SURVEY_DIR = '../static/surveys/';
@@ -69,17 +68,13 @@ const CustomFormBlock = ( props ) => {
     //todo : add meta information option
     if (props.title) {
         return (
-            <div>
+            <div key={props.title}>
                 <h3> {props.title} </h3>    
                 {props.data.map(FieldEntry)}
             </div>
         )
     } else {
-        return (
-            <div>
-                {props.data.map(FieldEntry)}
-            </div>
-        )
+        return props.data.map(FieldEntry)
     }
 };
 
@@ -94,11 +89,11 @@ const FieldEntry = ( props ) => {
     data[props.label.toLowerCase()] = '';
     if (props.activate) {
         return (
-            <Form.Input focus label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
+            <Form.Input focus key={props.label+props.type} label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
         )
     } else {
         return (
-            <Form.Input label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
+            <Form.Input key={props.label+props.type} label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
         )
     }
 };
