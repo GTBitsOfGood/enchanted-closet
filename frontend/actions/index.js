@@ -84,7 +84,8 @@ function processEventCreationAttempt(json) {
         }
     } else {
         return {
-            type: types.EVENT_NOT_CREATED
+            type: types.EVENT_NOT_CREATED,
+            error: json.msg
         }
     }
 }
