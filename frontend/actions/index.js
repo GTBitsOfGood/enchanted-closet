@@ -38,6 +38,7 @@ export function stopLoading() {
 export function createEvent(data) {
     return dispatch => {
         dispatch(loading());
+        data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
         return fetch(`/api/events/`, {
                 method: 'POST',
                 headers: {
@@ -80,7 +81,8 @@ function processAuthenticationAttempt(json) {
 function processEventCreationAttempt(json) {
     if (json.status === 'ok') {
         return {
-            type: types.EVENT_CREATED
+            type: types.EVENT_CREATED,
+            event: json.event
         }
     } else {
         return {

@@ -20,7 +20,8 @@ function rootReducer(state = require('../static/defaultState'), action) {
         case types.EVENT_CREATED:
             return Object.assign({}, state, {
                 loading: false,
-                error: ''
+                error: '',
+                newEvent: action.event
             });
 
         case types.EVENT_NOT_CREATED:
