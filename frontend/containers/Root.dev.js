@@ -13,6 +13,7 @@ import Helmet from 'react-helmet';
 
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
+import AdminEventsNew from './Admin/EventsNew';
 
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -30,6 +31,7 @@ export default function Root({ store }) {
                             <Route path="/events" component={Events} />
                             <Route path="/admin/dashboard" component={AdminDashboard} />
                             <Route exact path="/admin/events" component={AdminEvents} />
+                            <Route path="/admin/events/create" component={AdminEventsNew} />
                             <Route component={MissingPage} />
                         </Switch>
                     </div>

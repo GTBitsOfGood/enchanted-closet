@@ -23,6 +23,34 @@ export function hideModalLoader() {
     }
 }
 
+export function loading() {
+    return {
+        type: types.LOADING
+    }
+}
+
+export function stopLoading() {
+    return {
+        type: types.NOT_LOADING
+    }
+}
+
+export function createEvent(data) {
+    return dispatch => {
+        dispatch(loading());
+        return fetch(`/api/events/`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(json => dispatch(processEventCreationAttempt(json)));
+    }
+}
+
 export function invalidateEvents() {
     return {
         type: types.INVALIDATE_EVENTS
@@ -45,6 +73,18 @@ function processAuthenticationAttempt(json) {
         return {
             type: types.USER_NOT_AUTHENTICATED,
             errorMessage: json.msg
+        }
+    }
+}
+
+function processEventCreationAttempt(json) {
+    if (json.status === 'ok') {
+        return {
+            type: types.EVENT_CREATED
+        }
+    } else {
+        return {
+            type: types.EVENT_NOT_CREATED
         }
     }
 }
