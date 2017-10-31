@@ -44,6 +44,60 @@ module.exports.get = (req, res, next) => {
     });
 }
 
+module.exports.create = (req, res, next) => {
+    if (!req.body.name) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Name field is required'
+        };
+        return next();
+    }
+
+    if (!req.body.description) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Description field is required'
+        };
+        return next();
+    }
+
+    if (!req.body.address) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Address field is required'
+        };
+        return next();
+    }
+
+    if (!req.body.datetime) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Date & Time field is required'
+        };
+        return next();
+    }
+
+    Event.create({
+        name: req.body.name,
+        description: req.body.description,
+        location: req.body.address,
+        datetime: req.body.datetime
+    }, (err, result) => {
+        if (err) {
+            res.locals.error = {
+                status: 500,
+                msg: 'An error occurred while saving that event'
+            };
+            return next();
+        } else {
+            res.locals.data = {
+                event: result
+            }
+            return next();
+        }
+    });
+}
+
 module.exports.delete = (req, res, next) => {
     if (!req.params.id) {
         res.locals.error = {

@@ -12,6 +12,29 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 didInvalidateEvents: true
             });
 
+        case types.LOADING:
+            return Object.assign({}, state, {
+                loading: true
+            });
+
+        case types.EVENT_CREATED:
+            return Object.assign({}, state, {
+                loading: false,
+                error: '',
+                newEvent: action.event
+            });
+
+        case types.EVENT_NOT_CREATED:
+            return Object.assign({}, state, {
+                loading: false,
+                error: action.error
+            });
+
+        case types.NOT_LOADING:
+            return Object.assign({}, state, {
+                loading: false
+            });
+
         case types.RECEIVE_EVENTS:
             return Object.assign({}, state, {
                 isFetchingEvents: false,

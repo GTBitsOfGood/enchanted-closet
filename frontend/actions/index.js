@@ -23,6 +23,35 @@ export function hideModalLoader() {
     }
 }
 
+export function loading() {
+    return {
+        type: types.LOADING
+    }
+}
+
+export function stopLoading() {
+    return {
+        type: types.NOT_LOADING
+    }
+}
+
+export function createEvent(data) {
+    return dispatch => {
+        dispatch(loading());
+        data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
+        return fetch(`/api/events/`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(json => dispatch(processEventCreationAttempt(json)));
+    }
+}
+
 export function invalidateEvents() {
     return {
         type: types.INVALIDATE_EVENTS
@@ -45,6 +74,20 @@ function processAuthenticationAttempt(json) {
         return {
             type: types.USER_NOT_AUTHENTICATED,
             errorMessage: json.msg
+        }
+    }
+}
+
+function processEventCreationAttempt(json) {
+    if (json.status === 'ok') {
+        return {
+            type: types.EVENT_CREATED,
+            event: json.event
+        }
+    } else {
+        return {
+            type: types.EVENT_NOT_CREATED,
+            error: json.msg
         }
     }
 }
