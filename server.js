@@ -7,10 +7,15 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const bodyParser = require('body-parser')
+
 const db = require('./backend/models/db');
 const api = require('./backend/routes');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 app.use('/api', api);
 app.get('/', (request, response) => {
@@ -35,6 +40,7 @@ app.use((req, res, next) => {
 		});
 	}
 });
+
 
 app.listen(PORT, error => {
     error

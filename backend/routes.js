@@ -8,7 +8,9 @@ router.get('/users', controllers.users.index);
 router.get('/events', controllers.events.index);
 router.get('/events/:id', controllers.events.get);
 router.delete('/events/:id', controllers.events.delete);
-router.post('/events/create', controllers.events.create);
+router.put('/events/:id', controllers.events.put)
+router.post('/createevent', controllers.events.postEvent);
+
 
 
 module.exports = router;
