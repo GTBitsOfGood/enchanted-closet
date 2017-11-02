@@ -1,4 +1,22 @@
 import PropTypes from 'prop-types';
+<<<<<<< HEAD
+import React from 'react';
+import { connect } from 'react-redux';
+import FileForm from '../components/CustomForm';
+import { Container, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
+
+import { showLoader, hideLoader } from '../actions/index';
+
+const Login = ({ modalLoaderActive, performLogin }) => {
+    return (
+    	<Container>
+    		<Dimmer active={modalLoaderActive}>
+				<Loader>Loading</Loader>
+    		</Dimmer>
+	        <FileForm type="login" onClick={performLogin} />
+	    </Container>
+    );
+=======
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -36,10 +54,24 @@ class Login extends Component {
             );
         }
     }
+>>>>>>> 2433daea710b59d8c38a88814c673eaf1cded570
 };
 
 const mapStateToProps = (state) => {
     return {
+<<<<<<< HEAD
+    	modalLoaderActive: state.modalLoaderActive
+    };
+};
+
+const mapDispatchToProps = (dispatch ) => ({
+	performLogin() {
+		return () => {
+			dispatch(showLoader());
+		}
+	}
+});
+=======
         modalLoaderActive: state.modalLoaderActive,
         loggedIn: (state.user && state.apiToken)
     };
@@ -50,6 +82,7 @@ const mapDispatchToProps = dispatch => {
         performAdminLogin: performAdminLogin
     }, dispatch);
 }
+>>>>>>> 2433daea710b59d8c38a88814c673eaf1cded570
 
 export default connect(
     mapStateToProps,
