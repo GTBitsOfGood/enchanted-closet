@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Container, Icon, Dimmer, Loader, Segment } from 'semantic-ui-react';
 
 import Event from '../components/Event';
+import ErrorComponent from '../components/ErrorComponent';
 
 import { fetchEvents, fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
 
@@ -16,13 +17,36 @@ class EventsDetail extends Component {
     constructor(props) {
         super(props);
         this.handleRefreshClick = this.handleRefreshClick.bind(this)
+	const { match } = this.props;
+	const eventId = match.params.id;
+	this.state = {
+	    detail : '',
+	    eventId
+	}
     }
 
     componentDidMount() {
-        const { dispatch } = this.props;
-        dispatch(fetchEventsIfNeeded());
+        const { dispatch, events, location } = this.props;
+	dispatch(fetchEventsIfNeeded());	
+	const detail = events.filter((event) => {
+	    return event._id === this.state.eventId})
+	if (detail.length === 0) { //in case local store is old
+	    dispatch(fetchEvents());
+	} else {
+	    this.setState( {detail: detail[0]} );
+	}
     }
 
+    componentWillReceiveProps(nextProps) {
+	const { events } = nextProps;
+	const eventId = this.state.eventId;
+	//process it again
+	const detail = events.filter((event) => {
+	    return event._id === eventId})
+	this.setState({detail: detail.length === 0 ? '' : detail[0]})
+
+    }
+    
     handleRefreshClick(e) {
         e.preventDefault()
 
@@ -32,22 +56,11 @@ class EventsDetail extends Component {
     }
 
     render() {
-        const { events, isFetchingEvents, lastUpdatedEvents, location } = this.props
-	const eventId = location.pathname.substring(location.pathname.lastIndexOf("/") + 1)
-	const detail = events.filter((event) => {
-	    return event._id === eventId})
-	console.log(events); //curious...
-	if (detail.length == 0) {
-	    console.log("Event not found, retrieving events from backend...");
-	    console.log(detail);
-	    console.log(events);
-	    //dispatch(fetchEventsIfNeeded());
-	}
-
-	
+        const { events, isFetchingEvents, lastUpdatedEvents, location } = this.props;
+	const detail = this.state.detail;
         return (
             <Container>
-                <h1>Showing event : {eventId}</h1>
+                <h1>Showing event : {this.state.eventId}</h1>
                 {lastUpdatedEvents &&
                  <span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
                 }
@@ -58,14 +71,12 @@ class EventsDetail extends Component {
                 <Dimmer active={isFetchingEvents}>
                     <Loader>Loading</Loader>
                 </Dimmer>
-                { detail.length > 0 && 
-                  Event(detail[0])
+                { detail != '' &&
+                  Event(detail)
                 }
-                { !isFetchingEvents && detail.length === 0 && 
-                  (<div>
-		      <h1>404 Event not found</h1>
-		      <p>Return to <a href="#/events/">events</a></p>
-		  </div>
+                { !isFetchingEvents && detail === '' && 
+                  (
+		      <ErrorComponent redir='#/events/' redirMsg='Events'/>
 		  )
                 }
             </Container>
