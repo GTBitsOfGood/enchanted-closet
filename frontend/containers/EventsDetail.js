@@ -28,8 +28,7 @@ class EventsDetail extends Component {
     componentDidMount() {
         const { dispatch, events, location } = this.props;
 	dispatch(fetchEventsIfNeeded());	
-	const detail = events.filter((event) => {
-	    return event._id === this.state.eventId})
+        const detail = events.filter(event => event._id === this.state.eventId);
 	if (detail.length === 0) { //in case local store is old
 	    dispatch(fetchEvents());
 	} else {
@@ -76,7 +75,7 @@ class EventsDetail extends Component {
                 }
                 { !isFetchingEvents && detail === '' && 
                   (
-		      <ErrorComponent redir='#/events/' redirMsg='Events'/>
+		      <ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
 		  )
                 }
             </Container>
