@@ -32,8 +32,19 @@ function hasAll(obj, props) {
 }
 
 function matchesComplexityRequirements(password) {
-    //TODO: implement
-    return true;
+    if (password.length < 7) return false;
+    let hasAlpha = false;
+    let hasNum = false;
+    for (let i = 0; i < password.length; i++) {
+        let c = password.charCodeAt(i);
+        if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
+            hasAlpha = true;
+        } else if (c >= 48 && c <= 57) {
+            hasNum = true;
+        }
+        if (hasAlpha && hasNum) return true;
+    }
+    return false;
 }
 
 module.exports.register = (data, callback) => {
