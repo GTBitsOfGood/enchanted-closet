@@ -15,37 +15,41 @@ const FileForm = ( props ) => {
         if (props.onClick !== undefined) props.onClick(data);
         return;
     }
+    let formProps = null;
     switch ( props.type ) {
-    case "survey":
-        return CustomForm(SurveyForm.SurveyForm, clickHandler);
-        break;
-    case "login":
-        return CustomForm(LoginForm.LoginForm, clickHandler);
-        break;
-    case "register":
-        return CustomForm(RegisterForm.RegisterForm, clickHandler);
-        break;
+	case "survey":
+	    formProps = SurveyForm.SurveyForm
+            break;
+	case "login":
+	    formProps = LoginForm.LoginForm
+            break;
+	case "register":
+	    formProps = RegisterForm.RegisterForm
+            break;
     }
-    
-    return CustomForm(null, clickHandler);
+    formProps["type"] = props["isForm"] ? 'form' : 'inline';
+    return CustomForm(formProps, clickHandler);
 }
 
 
 //Todo: add display config
-/* pre: props
+/*
+ * pre: props
  * props - dictionary with form data
  * dictionary keys : {
  * "title", "data", "misc", "type"
  * }
  * Each 'data' is formBlock
-**/
-const CustomForm = ( props, buttonAction ) => {
+ */
+const CustomForm = ( props, buttonAction ) => {	
     return (
     <div>
         <h2>{props.title}</h2>
         <Form>
             {
-                props.data.map(CustomFormBlock)
+                props.data.map((d) => {
+		    CustomFormBlock(d, props.type)
+		})
             }
              <Button primary onClick={() => buttonAction(Object.assign({}, data))}>{props.button}</Button>
         </Form>
@@ -53,7 +57,9 @@ const CustomForm = ( props, buttonAction ) => {
     );
 }
 
-/* pre: props
+
+/* pre: props, isForm
+ * isForm - determines if fieldEntry is inline
  * props.title - header of input group
  * props.data - array of dictionaries representing fields
  * dictionary keys : {
@@ -62,10 +68,11 @@ const CustomForm = ( props, buttonAction ) => {
  * todo: check for more specific types
 **/
 //const DefaultCustomForm = ( label, type, placeholder, active) => {
-
-const CustomFormBlock = ( props ) => {
+const CustomFormBlock = ( props, formType ) => {
     //put any header information here
     //todo : add meta information option
+    //const fieldEntryFunc = formType === 'form' ? FieldEntry : FieldEntryInline
+    console.log(formType)
     if (props.title) {
         return (
             <div key={props.title}>
@@ -74,7 +81,11 @@ const CustomFormBlock = ( props ) => {
             </div>
         )
     } else {
-        return props.data.map(FieldEntry)
+        return (
+	    <div>
+	    props.data.map(FieldEntry)
+	    </div>
+	);
     }
 };
 
@@ -87,6 +98,7 @@ const CustomFormBlock = ( props ) => {
  */
 const FieldEntry = ( props ) => {
     data[props.label.toLowerCase()] = '';
+    
     if (props.activate) {
         return (
             <Form.Input focus key={props.label+props.type} label={props.label} type={props.type} placeholder={props.placeholder} onChange={e => (data[props.label.toLowerCase()] = e.target.value)}/>
@@ -97,5 +109,17 @@ const FieldEntry = ( props ) => {
         )
     }
 };
+
+
+/* FieldEntryInline - Inline display of form with editable html (todo : give isEdited state? 
+ * pre : see FieldEntry
+ * NOT WORKING RN
+ */
+const FieldEntryInline = (props) => {
+    data[props.label.toLowerCase()] = '';
+    return (
+	<Form.Input key={props.label+props.type} props />
+    );
+}
 
 export default FileForm;
