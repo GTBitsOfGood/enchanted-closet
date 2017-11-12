@@ -118,7 +118,7 @@ const FieldEntry = ( props ) => {
 const FieldEntryInline = (props) => {
     data[props.label.toLowerCase()] = '';
     return (
-	<Form.Input key={props.label+props.type} props />
+	<p key={props.label+props.type}>{props.label} :<span contenteditable="true">{props.placeholder}</span></p>
     );
 }
 
