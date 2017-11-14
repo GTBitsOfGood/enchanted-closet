@@ -22,6 +22,16 @@ module.exports.login = (data, callback) => {
     });
 }
 
+module.exports.currentUser = (tok) => {
+    let retVal = null;
+    redisClient.get(tok, function(err, reply){
+        if (reply != null) {
+            retVal = reply;
+        }
+    });
+    return retVal;
+}
+
 function hasAll(obj, props) {
     for (p in props) {
         if (!(obj[p])) {
