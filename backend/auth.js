@@ -5,7 +5,6 @@ let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\
 let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 let redisClient = require('redis').createClient();
-const User = require('mongoose').model('Participant');
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
@@ -22,32 +21,6 @@ module.exports.login = (data, callback) => {
     });
 }
 
-module.exports.isAdmin = (id) => {
-    if (!id) { //catch falsy values like null or empty string
-        return false;
-    }
-    let retVal = false;
-    User.findById(id, (err, doc) => {
-        if (!err && doc.role == "admin") {
-            retVal = true;
-        }
-    });
-    return retVal;
-}
-
-module.exports.currentUser = (tok) => {
-    if (!tok) { //catch falsy values like null, empty string
-        return null;
-    }
-    let retVal = null;
-    redisClient.get(tok, function(err, reply){
-        if (reply != null) {
-            retVal = reply;
-        }
-    });
-    return retVal;
-}
-
 function hasAll(obj, props) {
     for (p in props) {
         if (!(obj[p])) {
@@ -58,19 +31,8 @@ function hasAll(obj, props) {
 }
 
 function matchesComplexityRequirements(password) {
-    if (password.length < 7) return false;
-    let hasAlpha = false;
-    let hasNum = false;
-    for (let i = 0; i < password.length; i++) {
-        let c = password.charCodeAt(i);
-        if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
-            hasAlpha = true;
-        } else if (c >= 48 && c <= 57) {
-            hasNum = true;
-        }
-        if (hasAlpha && hasNum) return true;
-    }
-    return false;
+    //TODO: implement
+    return true;
 }
 
 module.exports.register = (data, callback) => {
