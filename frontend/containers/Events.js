@@ -31,7 +31,7 @@ class Events extends Component {
     }
 
     render() {
-        const { isFetchingEvents, lastUpdatedEvents } = this.props
+        const { isFetchingEvents, lastUpdatedEvents, history } = this.props
         let { events } = this.props;
         events = events.map(e => {
             e.showAdminControls = false;
@@ -52,7 +52,7 @@ class Events extends Component {
                 </Dimmer>
                 { events.length > 0 && 
                     events.map(e => {
-                        return <Event key={e._id} data={e}/>
+                        return <Event key={e._id} data={e} history={history}/>
                     })
                 }
                 { !isFetchingEvents && events.length === 0 && 
