@@ -39,7 +39,7 @@ export function createEvent(data) {
     return dispatch => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
-        return fetchHelper(`/api/events/`, {
+        return fetch(`/api/events/`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -64,23 +64,11 @@ export function logoutUser() {
     }
 }
 
-function fetchHelper(route, obj) {
-    if (!apiToken) {
-        return fetch(route, obj);
-    }
-    let headers = {'Authorization': 'Bearer ' + apiToken};
-    if (obj && obj.headers) {
-        headers = Object.assign({}, headers, obj.headers);
-    }
-    return fetch(route, Object.assign({}, req, {'headers': headers}))
-}
-
 function processAuthenticationAttempt(json) {
     if (json.status === 'ok') {
         return {
             type: types.USER_AUTHENTICATED,
-            user: json.user,
-            apiToken: json.token
+            user: json.user
         }
     } else {
         return {
@@ -104,10 +92,10 @@ function processEventCreationAttempt(json) {
     }
 }
 
-export function performLogin(data) {
+export function performAdminLogin(data) {
     return dispatch => {
         dispatch(showModalLoader());
-        return fetchHelper(`/api/login`, {
+        return fetch(`/api/login`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -140,7 +128,7 @@ function receieveEvents(json) {
 export function fetchEvents() {
     return dispatch => {
         dispatch(requestEvents());
-        return fetchHelper(`/api/events`)
+        return fetch(`/api/events`)
             .then(response => response.json())
             .then(json => dispatch(receieveEvents(json)));
     }

@@ -1,4 +1,5 @@
 const Event = require('mongoose').model('Event');
+const auth = require('../auth');
 
 module.exports.index = (req, res, next) => {
     Event.find({}, (err, events) => {
@@ -45,6 +46,9 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.create = (req, res, next) => {
+    if (!auth.isAdmin(auth.currentUser(req.token))) {
+        return next();
+    }
     if (!req.body.name) {
         res.locals.error = {
             status: 400,
@@ -99,6 +103,9 @@ module.exports.create = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
+    if (!auth.isAdmin(auth.currentUser(req.token))) {
+        return next();
+    }
     if (!req.params.id) {
         res.locals.error = {
             status: 404,
