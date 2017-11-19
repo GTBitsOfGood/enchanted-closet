@@ -30,7 +30,12 @@ class Events extends Component {
     }
 
     render() {
-        const { events, isFetchingEvents, lastUpdatedEvents } = this.props
+        const { isFetchingEvents, lastUpdatedEvents } = this.props
+        let { events } = this.props;
+        events = events.map(e => {
+            e.showAdminControls = false;
+            return e;
+        });
         return (
             <Container>
                 <h1>Upcoming Events</h1>
@@ -45,7 +50,9 @@ class Events extends Component {
                     <Loader>Loading</Loader>
                 </Dimmer>
                 { events.length > 0 && 
-                    events.map(Event)
+                    events.map(e => {
+                        return <Event key={e._id} data={e}/>
+                    })
                 }
                 { !isFetchingEvents && events.length === 0 && 
                     <h1>No events</h1>

@@ -17,6 +17,29 @@ export function showModalLoader() {
     };
 }
 
+export function deleteEvent(id) {
+    return dispatch => {
+        dispatch(showModalLoader());
+        dispatch(deleteEventLocally(id));
+        return fetch(`/api/events/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(json => dispatch(hideModalLoader()));
+    }
+}
+
+function deleteEventLocally(id) {
+    return {
+        type: types.DELETE_EVENT,
+        id: id
+    }
+}
+
 export function hideModalLoader() {
     return {
         type: types.HIDE_MODAL_LOADER

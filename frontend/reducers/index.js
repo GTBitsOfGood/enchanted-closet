@@ -77,6 +77,11 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 apiToken: null
             });
 
+        case types.DELETE_EVENT:
+            return Object.assign({}, state, {
+                events: state.events.filter(e => e._id !== action.id)
+            });
+
         default:
             return state;
     }

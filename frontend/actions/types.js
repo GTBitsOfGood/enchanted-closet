@@ -16,3 +16,4 @@ export const LOADING = 'LOADING';
 export const NOT_LOADING = 'NOT_LOADING';
 export const EVENT_NOT_CREATED = 'EVENT_NOT_CREATED';
 export const EVENT_CREATED = 'EVENT_CREATED';
+export const DELETE_EVENT = 'DELETE_EVENT';
