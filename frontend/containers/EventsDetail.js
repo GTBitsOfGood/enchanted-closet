@@ -6,12 +6,18 @@ import { Button, Container, Icon, Dimmer, Loader, Segment } from 'semantic-ui-re
 
 import Event from '../components/Event';
 import ErrorComponent from '../components/ErrorComponent';
+import ECMap from '../components/ECMap';
+import Speakers from '../components/Speakers';
 
 import { fetchEvents, fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
 
 import {uniqueId} from 'lodash';
 
+import moment from 'moment';
+
 import { withRouter } from 'react-router-dom';
+
+import PageTitle from '../components/PageTitle';
 
 class EventsDetail extends Component {
 	constructor(props) {
@@ -63,29 +69,54 @@ class EventsDetail extends Component {
 	}
 
 	render() {
-		const { events, isFetchingEvents, lastUpdatedEvents, location } = this.props;
+		const { events, isFetchingEvents, location } = this.props;
 		const { detail } = this.state;
+		const speakers = [
+		  {
+		    name: 'Elliot Fu',
+		    bio: 'Elliot has been a member since July 2012',
+		    avatar: '/assets/images/avatar/small/elliot.jpg',
+		  },
+		  {
+		    name: 'Stevie Feliciano',
+		    bio: 'Stevie has been a member since August 2013',
+		    avatar: '/assets/images/avatar/small/stevie.jpg',
+		  },
+		  {
+		    name: 'Matt',
+		    bio: 'Matt has been a member since July 2014',
+		    avatar: '/assets/images/avatar/small/matt.jpg',
+		  },
+		];
 		return (
 			<Container>
-				<h1>Showing event : {this.state.eventId}</h1>
-				{lastUpdatedEvents &&
-					<span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
-				}
-				{!isFetchingEvents &&
-					<a href="#" onClick={this.handleRefreshClick}>
-					Refresh
-					</a>
-				}
 				<Dimmer active={isFetchingEvents}>
-				<Loader>Loading</Loader>
+					<Loader>Loading</Loader>
 				</Dimmer>
-				{ detail != '' &&
-					Event(detail)
+				{ !isFetchingEvents && detail &&
+					<div>
+						<PageTitle title={detail.name} />
+						<Segment>
+							<h3>Description</h3>
+							<p>{detail.description}</p>
+						</Segment>
+						<Speakers speakers={speakers}/>
+						<ECMap
+						  isMarkerShown
+						  lat={51.5033640}
+						  long={-0.1276250}
+						/>
+						<Segment>
+							<h3>Details</h3>
+							<p><Icon name='map'/> {detail.location}</p>
+							<p><Icon name='clock'/> {moment(new Date(detail.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
+						</Segment>
+					</div>
 				}
 				{ !isFetchingEvents && !detail && 
 					<ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
 				}
-		</Container>
+			</Container>
 		);
 	}
 }
