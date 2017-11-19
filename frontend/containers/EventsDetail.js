@@ -54,6 +54,7 @@ class EventsDetail extends Component {
 			});
 		} else {
 			this.setState({
+				isFetchingEvents: false,
 				detail: detail,
 			});
 		}
