@@ -26,7 +26,7 @@ module.exports.present = (req, res, next) => {
         };
         return next();
     }
-    if (!req.params.userId) {
+    if (!req.body.userId) {
         res.locals.error = {
             status: 400,
             msg: 'User ID required'
@@ -43,25 +43,25 @@ module.exports.present = (req, res, next) => {
             hadError = true;
             return;
         }
-        doc.participants.push(req.params.userId);
+        doc.participants.push(req.body.userId);
         doc.save();
     });
     if (hadError) {
         return next();
     }
-    User.findById(req.params.userId, function(err, doc){
+    User.findById(req.body.userId, function(err, doc){
         if (err) {
             res.locals.error = {
                 status: 404,
                 msg: 'That user was not found in the database'
             };
-            hadError = true;
-            return;
+            return next();
         }
         doc.pastEvents.push(req.params.id);
         doc.save();
+        return next();
     });
-    return next();
+    
 }
 
 module.exports.absent = (req, res, next) => {
@@ -72,7 +72,7 @@ module.exports.absent = (req, res, next) => {
         };
         return next();
     }
-    if (!req.params.userId) {
+    if (!req.body.userId) {
         res.locals.error = {
             status: 400,
             msg: 'User ID required'
@@ -89,7 +89,7 @@ module.exports.absent = (req, res, next) => {
             hadError = true;
             return;
         }
-        let ind = doc.participants.indexOf(req.params.userId);
+        let ind = doc.participants.indexOf(req.body.userId);
         if (ind != -1) {
             doc.participants.splice(ind, 1);
             doc.save();
@@ -98,22 +98,21 @@ module.exports.absent = (req, res, next) => {
     if (hadError) {
         return next();
     }
-    User.findById(req.params.userId, function(err, doc){
+    User.findById(req.body.userId, function(err, doc){
         if (err) {
             res.locals.error = {
                 status: 404,
                 msg: 'That user was not found in the database'
             };
-            hadError = true;
-            return;
+            return next();
         }
         let ind = doc.pastEvents.indexOf(req.params.id);
         if (ind != -1) {
             doc.pastEvents.splice(ind, 1);
             doc.save();
         }
+        return next();
     });
-    return next();
 }
 
 module.exports.get = (req, res, next) => {

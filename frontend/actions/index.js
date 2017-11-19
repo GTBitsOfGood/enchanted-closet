@@ -18,16 +18,16 @@ export function showModalLoader() {
 }
 
 export function deleteEvent(id) {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(showModalLoader());
         dispatch(deleteEventLocally(id));
-        return fetch(`/api/events/${id}`, {
+        return fetchHelper(`/api/events/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => dispatch(hideModalLoader()));
     }
@@ -59,7 +59,7 @@ export function stopLoading() {
 }
 
 export function upsertEvent(data) {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
 
@@ -74,7 +74,7 @@ export function upsertEvent(data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => dispatch(processEventUpsert(json, isUpdate)));
     }
@@ -134,7 +134,7 @@ function processEventUpsert(json, isUpdate) {
 }
 
 export function performLogin(data) {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(showModalLoader());
         return fetchHelper(`/api/login`, {
                 method: 'POST',
@@ -143,7 +143,7 @@ export function performLogin(data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => {
                 dispatch(hideModalLoader());
@@ -167,9 +167,9 @@ function receieveEvents(json) {
 }
 
 export function fetchEvents() {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(requestEvents());
-        return fetchHelper(`/api/events`)
+        return fetchHelper(`/api/events`, null, getState().apiToken)
             .then(response => response.json())
             .then(json => dispatch(receieveEvents(json)));
     }
