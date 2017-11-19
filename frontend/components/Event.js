@@ -29,7 +29,7 @@ class Event extends Component {
             {data.showAdminControls &&
             <Clearfix>
                 <Button.Group floated='right'>
-                    <Edit history={history} route='admin/events' id={data._id}/>
+                    <Edit history={history} route={`admin/events/${data._id}/edit`}/>
                     <Modal
                       trigger={
                         <Button animated="vertical" color="red">

@@ -17,14 +17,29 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 loading: true
             });
 
-        case types.EVENT_CREATED:
-            return Object.assign({}, state, {
+        case types.EVENT_UPSERT:
+            let { events } = state;
+            let stateUpdate = {
                 loading: false,
                 error: '',
-                newEvent: action.event
-            });
+                newEvent: action.event,
+                events: []
+            };
+            if (action.isUpdate) {
+                events = events.map(e => {
+                    if (e._id === action.event._id) {
+                        return action.event;
+                    } else {
+                        return e;
+                    }
+                })
+            } else {
+                events.push(action.event);
+            }
+            stateUpdate.events = events;
+            return Object.assign({}, state, stateUpdate);
 
-        case types.EVENT_NOT_CREATED:
+        case types.EVENT_NOT_UPSERTED:
             return Object.assign({}, state, {
                 loading: false,
                 error: action.error

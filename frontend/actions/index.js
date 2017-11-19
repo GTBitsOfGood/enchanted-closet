@@ -58,12 +58,16 @@ export function stopLoading() {
     }
 }
 
-export function createEvent(data) {
+export function upsertEvent(data) {
     return dispatch => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
-        return fetch(`/api/events/`, {
-                method: 'POST',
+        const url = data._id ? `/api/events/${data._id}` : `/api/events`;
+        const method = data._id ? 'PUT' : 'POST';
+        const isUpdate = data._id ? true : false;
+        delete data._id;
+        return fetch(url, {
+                method: method,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -71,7 +75,7 @@ export function createEvent(data) {
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
-            .then(json => dispatch(processEventCreationAttempt(json)));
+            .then(json => dispatch(processEventUpsert(json, isUpdate)));
     }
 }
 
@@ -101,15 +105,16 @@ function processAuthenticationAttempt(json) {
     }
 }
 
-function processEventCreationAttempt(json) {
+function processEventUpsert(json, isUpdate) {
     if (json.status === 'ok') {
         return {
-            type: types.EVENT_CREATED,
-            event: json.event
+            type: types.EVENT_UPSERT,
+            event: json.event,
+            isUpdate: isUpdate
         }
     } else {
         return {
-            type: types.EVENT_NOT_CREATED,
+            type: types.EVENT_NOT_UPSERTED,
             error: json.msg
         }
     }
