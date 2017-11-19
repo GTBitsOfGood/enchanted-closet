@@ -34,8 +34,8 @@ var UserSchema = new mongoose.Schema({
 	leader: String,
 	emergencyContactName: String,
 	emergencyContactPhone: String,
-	emergencyContactRelation: String/*,
-	pastEvents: [Event]*/
+	emergencyContactRelation: String,
+	pastEvents: [mongoose.Schema.Types.ObjectId]
 });
 
 
