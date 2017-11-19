@@ -9,6 +9,7 @@ import Event from '../components/Event';
 import { fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
 
 import {uniqueId} from 'lodash';
+import { withRouter } from 'react-router-dom';
 
 class Events extends Component {
     constructor(props) {
@@ -83,5 +84,6 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Events)
-
+export default withRouter(connect(
+    mapStateToProps
+)(Events));

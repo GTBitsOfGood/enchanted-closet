@@ -18,7 +18,8 @@ class Event extends Component {
   }
 
   render() {
-    const { data, deleteEvent } = this.props; 
+    const { data, deleteEvent, history } = this.props; 
+    console.log(history)
     return (
         <Segment key={uniqueId('event_')}>
             <h3>{data.name}</h3>
@@ -28,7 +29,7 @@ class Event extends Component {
             {data.showAdminControls &&
             <Clearfix>
                 <Button.Group floated='right'>
-                    <Edit/>
+                    <Edit history={history} route='admin/events' id={data._id}/>
                     <Modal
                       trigger={
                         <Button animated="vertical" color="red">
