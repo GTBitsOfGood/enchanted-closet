@@ -18,6 +18,8 @@ import AdminEventsNew from './Admin/EventsNew';
 import AdminEventsEdit from './Admin/EventsEdit';
 import AdminEventsDetail from './Admin/EventsDetail';
 
+import { CookiesProvider } from 'react-cookie';
+
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default function Root({ store }) {
@@ -29,7 +31,7 @@ export default function Root({ store }) {
                     <div>
                         <Navigation />
                         <Switch>
-                            <Route exact path="/" component={AppContainer} />
+                            <Route exact path="/" component={AppContainer}/>
                             <Route path="/login" component={Login} />
                             <Route exact path="/events" component={Events} />
             			    <Route path="/events/:id" component={EventsDetail} />
