@@ -46,7 +46,15 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.create = (req, res, next) => {
-    if (!auth.isAdmin(auth.currentUser(req.token))) {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    if (!auth.isAdmin(auth.currentUser(token))) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized to modify events'
+        };
         return next();
     }
     if (!req.body.name) {
@@ -103,7 +111,15 @@ module.exports.create = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
-    if (!auth.isAdmin(auth.currentUser(req.token))) {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    if (!auth.isAdmin(auth.currentUser(token))) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized to modify events'
+        };
         return next();
     }
     if (!req.params.id) {
