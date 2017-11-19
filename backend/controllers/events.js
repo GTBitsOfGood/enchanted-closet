@@ -160,10 +160,10 @@ module.exports.create = (req, res, next) => {
         return next();
     }
 
-    if (!req.body.address) {
+    if (!req.body.location) {
         res.locals.error = {
             status: 400,
-            msg: 'Address field is required'
+            msg: 'Location field is required'
         };
         return next();
     }
@@ -179,7 +179,7 @@ module.exports.create = (req, res, next) => {
     Event.create({
         name: req.body.name,
         description: req.body.description,
-        location: req.body.address,
+        location: req.body.location,
         datetime: req.body.datetime
     }, (err, result) => {
         if (err) {
@@ -219,5 +219,46 @@ module.exports.delete = (req, res, next) => {
             };
             return next();
         }
+    });
+}
+
+module.exports.update = (req, res, next) => {
+    if (!req.params.id) {
+        res.locals.error = {
+            status: 404,
+            msg: 'That Event was not found in the database'
+        };
+        return next();
+    }
+
+    Event.findById(req.params.id, (err, event) => {
+        if (err) {
+            console.error(err);
+            res.locals.errors = {
+                status: 500,
+                msg: err
+            };
+            return next();
+        }
+
+        if (!event) {
+            res.locals.error = {
+                status: 404,
+                msg: 'That Event was not found in the database'
+            };
+            return next();       
+        }
+
+        event.name = req.body.name;
+        event.description = req.body.description;
+        event.location = req.body.location;
+        event.datetime = req.body.datetime;
+
+        event.save((err, updatedEvent) => {
+            res.locals.data = {
+                event: updatedEvent
+            };
+            return next();
+        });
     });
 }

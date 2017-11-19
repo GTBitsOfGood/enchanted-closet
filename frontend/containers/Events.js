@@ -9,6 +9,7 @@ import Event from '../components/Event';
 import { fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
 
 import {uniqueId} from 'lodash';
+import { withRouter } from 'react-router-dom';
 
 class Events extends Component {
     constructor(props) {
@@ -30,7 +31,12 @@ class Events extends Component {
     }
 
     render() {
-        const { events, isFetchingEvents, lastUpdatedEvents } = this.props
+        const { isFetchingEvents, lastUpdatedEvents, history } = this.props
+        let { events } = this.props;
+        events = events.map(e => {
+            e.showAdminControls = false;
+            return e;
+        });
         return (
             <Container>
                 <h1>Upcoming Events</h1>
@@ -45,7 +51,9 @@ class Events extends Component {
                     <Loader>Loading</Loader>
                 </Dimmer>
                 { events.length > 0 && 
-                    events.map(Event)
+                    events.map(e => {
+                        return <Event key={e._id} data={e} history={history}/>
+                    })
                 }
                 { !isFetchingEvents && events.length === 0 && 
                     <h1>No events</h1>
@@ -76,5 +84,6 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Events)
-
+export default withRouter(connect(
+    mapStateToProps
+)(Events));

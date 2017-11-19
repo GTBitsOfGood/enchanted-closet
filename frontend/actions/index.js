@@ -17,6 +17,29 @@ export function showModalLoader() {
     };
 }
 
+export function deleteEvent(id) {
+    return dispatch => {
+        dispatch(showModalLoader());
+        dispatch(deleteEventLocally(id));
+        return fetch(`/api/events/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(json => dispatch(hideModalLoader()));
+    }
+}
+
+function deleteEventLocally(id) {
+    return {
+        type: types.DELETE_EVENT,
+        id: id
+    }
+}
+
 export function hideModalLoader() {
     return {
         type: types.HIDE_MODAL_LOADER
@@ -35,12 +58,17 @@ export function stopLoading() {
     }
 }
 
-export function createEvent(data) {
+export function upsertEvent(data) {
     return dispatch => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
-        return fetchHelper(`/api/events/`, {
-                method: 'POST',
+
+        const url = data._id ? `/api/events/${data._id}` : `/api/events`;
+        const method = data._id ? 'PUT' : 'POST';
+        const isUpdate = data._id ? true : false;
+        delete data._id;
+        return fetchHelper(url, {
+                method: method,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -48,7 +76,7 @@ export function createEvent(data) {
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
-            .then(json => dispatch(processEventCreationAttempt(json)));
+            .then(json => dispatch(processEventUpsert(json, isUpdate)));
     }
 }
 
@@ -90,15 +118,16 @@ function processAuthenticationAttempt(json) {
     }
 }
 
-function processEventCreationAttempt(json) {
+function processEventUpsert(json, isUpdate) {
     if (json.status === 'ok') {
         return {
-            type: types.EVENT_CREATED,
-            event: json.event
+            type: types.EVENT_UPSERT,
+            event: json.event,
+            isUpdate: isUpdate
         }
     } else {
         return {
-            type: types.EVENT_NOT_CREATED,
+            type: types.EVENT_NOT_UPSERTED,
             error: json.msg
         }
     }
