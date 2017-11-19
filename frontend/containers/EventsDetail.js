@@ -74,10 +74,8 @@ class EventsDetail extends Component {
 				Event(detail)
 			}
 			{ !isFetchingEvents && detail === '' && 
-			(
 				<ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
-				)
-		}
+			}
 		</Container>
 		);
 	}
