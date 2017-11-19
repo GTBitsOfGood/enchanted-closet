@@ -19,7 +19,7 @@ class Event extends Component {
 
   render() {
     const { data, deleteEvent, history } = this.props; 
-    console.log(history)
+
     return (
         <Segment key={uniqueId('event_')}>
             <h3>{data.name}</h3>
