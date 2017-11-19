@@ -18,8 +18,6 @@ import AdminEventsNew from './Admin/EventsNew';
 import AdminEventsEdit from './Admin/EventsEdit';
 import AdminEventsDetail from './Admin/EventsDetail';
 
-import { CookiesProvider } from 'react-cookie';
-
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default function Root({ store }) {
