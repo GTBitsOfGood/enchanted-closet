@@ -12,6 +12,7 @@ import PageTitle from '../../components/PageTitle';
 import LoadingIcon from '../../components/LoadingIcon';
 
 import Event from '../../components/Event';
+import { withRouter } from 'react-router-dom';
 
 class AdminEvents extends Component {
 	constructor(props) {
@@ -24,7 +25,12 @@ class AdminEvents extends Component {
 	}
 
 	render() {
-		const { events, isFetchingEvents } = this.props;
+		const { isFetchingEvents, history } = this.props;
+		let { events } = this.props;
+		events = events.map(e => {
+			e.showAdminControls = true;
+			return e;
+		});
 		return (
 			<Container>
 				<PageTitle title="Events" link="admin/events/create" linkTitle="Create New"/>
@@ -32,8 +38,10 @@ class AdminEvents extends Component {
 					{isFetchingEvents &&
 					<LoadingIcon active/>
 					}
-					{!isFetchingEvents && events.length > 0 &&
-						events.map(Event)
+					{ !isFetchingEvents && events.length > 0 && 
+					    events.map(e => {
+					        return <Event key={e._id} data={e} history={history}/>
+					    })
 					}
 					{!isFetchingEvents && events.length === 0 &&
 						<h1>No events!</h1>
@@ -66,6 +74,6 @@ const mapDispatchToProps = dispatch => {
 	return {};
 }
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps
-)(AdminEvents);
+)(AdminEvents));

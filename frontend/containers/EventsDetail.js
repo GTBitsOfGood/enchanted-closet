@@ -48,6 +48,7 @@ class EventsDetail extends Component {
 			});
 		} else {
 			this.setState({
+				isFetchingEvents: false,
 				detail: detail,
 			});
 		}
@@ -77,10 +78,10 @@ class EventsDetail extends Component {
 					</a>
 				}
 				<Dimmer active={isFetchingEvents}>
-				<Loader>Loading</Loader>
+					<Loader>Loading</Loader>
 				</Dimmer>
-				{ detail != '' &&
-					Event(detail)
+				{ !isFetchingEvents && detail &&
+					<Event data={detail}/>
 				}
 				{ !isFetchingEvents && !detail && 
 					<ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
