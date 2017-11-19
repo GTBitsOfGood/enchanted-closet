@@ -10,6 +10,8 @@ router.get('/events/:id', controllers.events.get);
 router.put('/events/:id', controllers.events.update);
 router.post('/events/', controllers.events.create);
 router.delete('/events/:id', controllers.events.delete);
+router.post('/events/:id/present', controllers.events.present);
+router.post('/events/:id/absent', controllers.events.absent);
 
 router.post('/login', controllers.auth.login);
 

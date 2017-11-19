@@ -18,16 +18,16 @@ export function showModalLoader() {
 }
 
 export function deleteEvent(id) {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(showModalLoader());
         dispatch(deleteEventLocally(id));
-        return fetch(`/api/events/${id}`, {
+        return fetchHelper(`/api/events/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => dispatch(hideModalLoader()));
     }
@@ -59,21 +59,22 @@ export function stopLoading() {
 }
 
 export function upsertEvent(data) {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
+
         const url = data._id ? `/api/events/${data._id}` : `/api/events`;
         const method = data._id ? 'PUT' : 'POST';
         const isUpdate = data._id ? true : false;
         delete data._id;
-        return fetch(url, {
+        return fetchHelper(url, {
                 method: method,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => dispatch(processEventUpsert(json, isUpdate)));
     }
@@ -91,11 +92,23 @@ export function logoutUser() {
     }
 }
 
+function fetchHelper(route, obj) {
+    if (!apiToken) {
+        return fetch(route, obj);
+    }
+    let headers = {'Authorization': 'Bearer ' + apiToken};
+    if (obj && obj.headers) {
+        headers = Object.assign({}, headers, obj.headers);
+    }
+    return fetch(route, Object.assign({}, req, {'headers': headers}))
+}
+
 function processAuthenticationAttempt(json) {
     if (json.status === 'ok') {
         return {
             type: types.USER_AUTHENTICATED,
-            user: json.user
+            user: json.user,
+            apiToken: json.token
         }
     } else {
         return {
@@ -120,17 +133,17 @@ function processEventUpsert(json, isUpdate) {
     }
 }
 
-export function performAdminLogin(data) {
-    return dispatch => {
+export function performLogin(data) {
+    return (dispatch, getState) => {
         dispatch(showModalLoader());
-        return fetch(`/api/login`, {
+        return fetchHelper(`/api/login`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => {
                 dispatch(hideModalLoader());
@@ -154,9 +167,9 @@ function receieveEvents(json) {
 }
 
 export function fetchEvents() {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(requestEvents());
-        return fetch(`/api/events`)
+        return fetchHelper(`/api/events`, null, getState().apiToken)
             .then(response => response.json())
             .then(json => dispatch(receieveEvents(json)));
     }
