@@ -40,9 +40,17 @@ class EventsDetail extends Component {
 		const { events } = nextProps;
 		const eventId = this.state.eventId;
 		//process it again
-		const detail = events.filter((event) => {
-			return event._id === eventId})
-		this.setState({detail: detail.length === 0 ? '' : detail[0]})
+		const detail = events.find(e => e._id === eventId);
+		if (!detail) {
+			this.setState({
+				isFetchingEvents: false,
+				detail: null
+			});
+		} else {
+			this.setState({
+				detail: detail,
+			});
+		}
 
 	}
 
@@ -56,26 +64,27 @@ class EventsDetail extends Component {
 
 	render() {
 		const { events, isFetchingEvents, lastUpdatedEvents, location } = this.props;
-		const detail = this.state.detail;
+		const { detail } = this.state;
 		return (
 			<Container>
-			<h1>Showing event : {this.state.eventId}</h1>
-			{lastUpdatedEvents &&
-				<span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
-			}
-			{!isFetchingEvents &&
-				<a href="#" onClick={this.handleRefreshClick}>
-				Refresh
-				</a>}
+				<h1>Showing event : {this.state.eventId}</h1>
+				{lastUpdatedEvents &&
+					<span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
+				}
+				{!isFetchingEvents &&
+					<a href="#" onClick={this.handleRefreshClick}>
+					Refresh
+					</a>
+				}
 				<Dimmer active={isFetchingEvents}>
 				<Loader>Loading</Loader>
 				</Dimmer>
 				{ detail != '' &&
-				Event(detail)
-			}
-			{ !isFetchingEvents && detail === '' && 
-				<ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
-			}
+					Event(detail)
+				}
+				{ !isFetchingEvents && !detail && 
+					<ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
+				}
 		</Container>
 		);
 	}
