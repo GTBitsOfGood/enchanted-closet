@@ -21,7 +21,7 @@ export function deleteEvent(id) {
     return (dispatch, getState) => {
         dispatch(showModalLoader());
         dispatch(deleteEventLocally(id));
-        return fetchHelper(`/api/events/${id}`, {
+        return fetchHelper(`/api/events/${id}`, getAPIToken(getState), {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -67,7 +67,7 @@ export function upsertEvent(data) {
         const method = data._id ? 'PUT' : 'POST';
         const isUpdate = data._id ? true : false;
         delete data._id;
-        return fetchHelper(url, {
+        return fetchHelper(url, getAPIToken(getState), {
                 method: method,
                 headers: {
                     'Accept': 'application/json',
@@ -92,7 +92,7 @@ export function logoutUser() {
     }
 }
 
-function fetchHelper(route, obj) {
+function fetchHelper(route, apiToken, obj) {
     if (!apiToken) {
         return fetch(route, obj);
     }
@@ -136,7 +136,7 @@ function processEventUpsert(json, isUpdate) {
 export function performLogin(data) {
     return (dispatch, getState) => {
         dispatch(showModalLoader());
-        return fetchHelper(`/api/login`, {
+        return fetchHelper(`/api/login`, getAPIToken(getState), {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -169,7 +169,7 @@ function receieveEvents(json) {
 export function fetchEvents() {
     return (dispatch, getState) => {
         dispatch(requestEvents());
-        return fetchHelper(`/api/events`, null, getState().apiToken)
+        return fetchHelper(`/api/events`, getAPIToken(getState))
             .then(response => response.json())
             .then(json => dispatch(receieveEvents(json)));
     }
@@ -192,4 +192,8 @@ export function fetchEventsIfNeeded() {
             return dispatch(fetchEvents());
         }
     }
+}
+
+function getAPIToken(getState) {
+    return getState().apiToken;
 }
