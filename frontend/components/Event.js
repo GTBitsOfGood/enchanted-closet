@@ -23,8 +23,8 @@ class Event extends Component {
     const { data, deleteEvent, history } = this.props;
     const link = `${data.showAdminControls ? '/admin' : ''}/events/${data._id}`;
     return (
-        <div style={{paddingTop: 10, paddingBottom: 10}}>
-            <div key={uniqueId('event_')} onClick={() => history.push(link)}>
+        <div key={uniqueId('event_')} style={{paddingTop: 10, paddingBottom: 10}}>
+            <div onClick={() => history.push(link)} style={{cursor:'pointer'}}>
                 <Segment key={uniqueId('event_')}>
                     <h3>{data.name}</h3>
                     <p>{pruneDescription(data.description)}</p>
