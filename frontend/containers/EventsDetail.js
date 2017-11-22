@@ -23,17 +23,18 @@ class EventsDetail extends Component {
 	constructor(props) {
 		super(props);
 		this.handleRefreshClick = this.handleRefreshClick.bind(this)
-		const { match } = this.props;
+		const { match, adminControls } = this.props;
 		const eventId = match.params.id;
 		this.state = {
 			detail : '',
+			adminControls: adminControls ? adminControls : false,
 			eventId
 		}
 	}
 
 	componentDidMount() {
 		const { dispatch, events, location } = this.props;
-		dispatch(fetchEventsIfNeeded());	
+		dispatch(fetchEventsIfNeeded());
 		const detail = events.filter(event => event._id === this.state.eventId);
 		if (detail.length === 0) { //in case local store is old
 			dispatch(fetchEvents());
@@ -71,7 +72,7 @@ class EventsDetail extends Component {
 
 	render() {
 		const { events, isFetchingEvents, location } = this.props;
-		const { detail } = this.state;
+		const { detail, adminControls } = this.state;
 		const speakers = [
 		  {
 		    name: 'Elliot Fu',
@@ -97,9 +98,9 @@ class EventsDetail extends Component {
 				{ !isFetchingEvents && detail &&
 					<div>
 						<PageTitle title={detail.name} />
-						<Segment>
+						<Segment key="information">
 							<h3>Description</h3>
-							<p>{detail.description}</p>
+							<p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>
 						</Segment>
 						<Speakers speakers={speakers}/>
 						<ECMap
@@ -107,14 +108,20 @@ class EventsDetail extends Component {
 						  lat={51.5033640}
 						  long={-0.1276250}
 						/>
-						<Segment>
+						<Segment key="details">
 							<h3>Details</h3>
 							<p><Icon name='map'/> {detail.location}</p>
 							<p><Icon name='clock'/> {moment(new Date(detail.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
 						</Segment>
+						{adminControls &&
+							<Segment key="admin_controls">
+								<h3>Admin Controls</h3>
+
+							</Segment>
+						}
 					</div>
 				}
-				{ !isFetchingEvents && !detail && 
+				{ !isFetchingEvents && !detail &&
 					<ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
 				}
 			</Container>
@@ -144,4 +151,3 @@ function mapStateToProps(state) {
 }
 
 export default withRouter(connect(mapStateToProps)(EventsDetail))
-
