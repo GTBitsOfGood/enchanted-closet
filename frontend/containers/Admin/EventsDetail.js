@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-
-import { Container } from 'semantic-ui-react';
-
-import { Redirect } from 'react-router-dom';
 import EventsDetail from '../EventsDetail';
 
 class AdminEventsDetail extends Component {
@@ -16,9 +9,9 @@ class AdminEventsDetail extends Component {
 
 	render() {
 		return (
-		<p>Test</p>
+			<EventsDetail adminControls={true}/>
 		)
 	}
 }
 
-export default withRouter(AdminEventsDetail);
+export default AdminEventsDetail;
