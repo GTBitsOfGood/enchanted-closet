@@ -1,5 +1,5 @@
 let hash = require('./hash');
-let user = require('./controllers/users');
+
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 let randomBytes = require('crypto').randomBytes;
@@ -7,7 +7,6 @@ let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\
 let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 let redisClient = require('redis').createClient();
-const User = require('mongoose').model('Participant');
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
