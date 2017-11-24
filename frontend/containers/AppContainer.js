@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import Title from '../components/Title';
-import FileForm from '../components/CustomForm';
+import { FileForm } from '../components/CustomForm';
 import EventEntry from '../components/EventEntry';
 import Frame from '../components/Frame';
 
@@ -15,7 +15,7 @@ const AppContainer = () => {
             <Grid.Column>
                 <Container>
                     <Title/>
-                    <FileForm type="survey" isForm="true"/>
+                    <FileForm type="survey" isInline="false"/>
                     <EventEntry title="a" date="b" desc="c" address="d" />
                 </Container>
             </Grid.Column>
