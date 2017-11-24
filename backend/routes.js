@@ -14,5 +14,6 @@ router.post('/events/:id/present', controllers.events.present);
 router.post('/events/:id/absent', controllers.events.absent);
 
 router.post('/login', controllers.auth.login);
+router.post('/register', controllers.auth.register);
 
 module.exports = router;

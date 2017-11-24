@@ -35,9 +35,28 @@ module.exports.login = (req, res, next) => {
 		} else {
 			res.locals.error = {
 				status: 403,
-				msg: 'Incorrect credentials'
+				msg: 'Your email or password is incorrect.'
 			};
 			return next();
 		}
 	})
+}
+
+module.exports.register = (req, res, next) => {
+	auth.register(req.body, (err, user) => {
+		console.log(err);
+		console.log(user);
+		if (err) {
+			console.error(err);
+			res.locals.error = {
+				status: 500
+			};
+			return next();
+		}
+
+		res.locals.data = {
+			user: user
+		}
+		return next();
+	});
 }
