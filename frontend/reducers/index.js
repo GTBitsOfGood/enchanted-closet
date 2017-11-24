@@ -77,7 +77,6 @@ function rootReducer(state = require('../static/defaultState'), action) {
         case types.USER_AUTHENTICATED:
             return Object.assign({}, state, {
                 user: action.user,
-                apiToken: action.user.token,
                 errorMessage: null
             });
 
@@ -88,13 +87,23 @@ function rootReducer(state = require('../static/defaultState'), action) {
 
         case types.LOGOUT_USER:
             return Object.assign({}, state, {
-                user: null,
-                apiToken: null
+                user: null
             });
 
         case types.DELETE_EVENT:
             return Object.assign({}, state, {
                 events: state.events.filter(e => e._id !== action.id)
+            });
+
+        case types.REQUEST_USERS:
+            return Object.assign({}, state, {
+                isFetchingUsers: true
+            });
+
+        case types.RECEIVE_USERS:
+            return Object.assign({}, state, {
+                isFetchingUsers: false,
+                users: action.users
             });
 
         default:
