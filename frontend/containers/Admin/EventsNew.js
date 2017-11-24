@@ -82,14 +82,14 @@ class AdminEventsNew extends Component {
 						<Segment>
 							<Form error={error !== undefined || error !== null} loading={loading} onSubmit={this.upsertEvent}>
 								{error &&
-								<Message
-								  error
-								  header='Unable to create event'
-								  content={error}
-								/>
+									<Message
+										error
+										header='Unable to create event'
+										content={error}
+									/>
 								}
 								<Form.Input required label='Event Name' value={this.state.name} name='name' placeholder='Event Name' onChange={this.handleInputChange} />
-								<Form.TextArea required label='Description' value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />
+								<Form.TextArea required label='Description' rows={12} value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />
 								<Form.Input required label='Event Address' value={this.state.location} name='location' placeholder='123 Main Street, Atlanta GA 30318' onChange={this.handleInputChange} />
 								<Form.Field
 									label='Starting date & time'
