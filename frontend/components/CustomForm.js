@@ -6,9 +6,9 @@ const SURVEY_DIR = '../static/surveys/';
 
 let data = {};
 
-import SurveyForm from '../static/surveys/SurveyFormJSON.js'; 
+import SurveyForm from '../static/surveys/SurveyFormJSON.js';
 import LoginForm from '../static/surveys/LoginFormJSON.js';
-//import RegisterForm from '../static/surveys/RegisterFormJSON.js';
+import RegisterForm from '../static/surveys/RegisterFormJSON.js';
 
 const FileForm = ( props ) => {
     let clickHandler = (data) => {
@@ -26,7 +26,7 @@ const FileForm = ( props ) => {
         return CustomForm(RegisterForm.RegisterForm, clickHandler);
         break;
     }
-    
+
     return CustomForm(null, clickHandler);
 }
 
@@ -69,7 +69,7 @@ const CustomFormBlock = ( props ) => {
     if (props.title) {
         return (
             <div key={props.title}>
-                <h3> {props.title} </h3>    
+                <h3> {props.title} </h3>
                 {props.data.map(FieldEntry)}
             </div>
         )
