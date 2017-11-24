@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import FileForm from '../components/CustomForm';
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message } from 'semantic-ui-react'
 
-import { performAdminLogin } from '../actions/index';
+import { performLogin } from '../actions/index';
 
 import { Redirect } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ class Login extends Component {
     }
 
     render() {
-        const {loggedIn, modalLoaderActive, performAdminLogin} = this.props;
+        const {loggedIn, modalLoaderActive, performLogin, errorMessage} = this.props;
         if (loggedIn) {
             return <Redirect to="/" />;
         } else {
@@ -24,10 +24,17 @@ class Login extends Component {
                 <Dimmer active={modalLoaderActive}>
                     <Loader>Loading</Loader>
                 </Dimmer>
+                {errorMessage &&
+                    <Message
+                        error
+                        header='Oops an error occurred!'
+                        content={errorMessage}
+                    />
+                }
                 <Card fluid color='purple'>
                     <Card.Content header='Login' />
                     <Card.Content>
-                        <FileForm type="login" onClick={performAdminLogin} />
+                        <FileForm type="login" onClick={performLogin} />
                     </Card.Content>
                 </Card>
             </Container>
@@ -39,13 +46,14 @@ class Login extends Component {
 const mapStateToProps = (state) => {
     return {
         modalLoaderActive: state.modalLoaderActive,
-        loggedIn: (state.user && state.apiToken)
+        loggedIn: state.user,
+        errorMessage: state.errorMessage
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
-        performAdminLogin: performAdminLogin
+        performLogin: performLogin
     }, dispatch);
 }
 
