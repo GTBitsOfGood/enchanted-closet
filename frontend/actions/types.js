@@ -17,3 +17,5 @@ export const NOT_LOADING = 'NOT_LOADING';
 export const EVENT_NOT_UPSERTED = 'EVENT_NOT_UPSERTED';
 export const EVENT_UPSERT = 'EVENT_UPSERT';
 export const DELETE_EVENT = 'DELETE_EVENT';
+export const REQUEST_USERS = 'REQUEST_USERS';
+export const RECEIVE_USERS = 'RECEIVE_USERS';
