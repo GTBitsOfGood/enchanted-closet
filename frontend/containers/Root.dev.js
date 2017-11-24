@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import AppContainer from './AppContainer.js';
 import Login from './Login.js';
+import Register from './Register';
 import Events from './Events.js';
 import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
@@ -31,6 +32,7 @@ export default function Root({ store }) {
                         <Switch>
                             <Route exact path="/" component={AppContainer}/>
                             <Route path="/login" component={Login} />
+                            <Route path="/register" component={Register} />
                             <Route exact path="/events" component={Events} />
             			    <Route path="/events/:id" component={EventsDetail} />
                             <Route path="/admin/dashboard" component={AdminDashboard} />
