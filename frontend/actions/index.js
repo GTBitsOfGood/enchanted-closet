@@ -98,9 +98,9 @@ function fetchHelper(route, apiToken, obj) {
     }
     let headers = {'Authorization': 'Bearer ' + apiToken};
     if (obj && obj.headers) {
-        headers = Object.assign({}, headers, obj.headers);
+        obj.headers = Object.assign({}, headers, obj.headers);
     }
-    return fetch(route, Object.assign({}, req, {'headers': headers}))
+    return fetch(route, obj)
 }
 
 function processAuthenticationAttempt(json) {
@@ -136,14 +136,33 @@ function processEventUpsert(json, isUpdate) {
 export function performLogin(data) {
     return (dispatch, getState) => {
         dispatch(showModalLoader());
-        return fetchHelper(`/api/login`, getAPIToken(getState), {
+        return fetchHelper(`/api/login`, null, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }, getState().apiToken)
+            })
+            .then(response => response.json())
+            .then(json => {
+                dispatch(hideModalLoader());
+                dispatch(processAuthenticationAttempt(json));
+            });
+    }
+}
+
+export function performRegistration(data) {
+    return (dispatch, getState) => {
+        dispatch(showModalLoader());
+        return fetchHelper(`/api/register`, null, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
             .then(response => response.json())
             .then(json => {
                 dispatch(hideModalLoader());
@@ -175,6 +194,28 @@ export function fetchEvents() {
     }
 }
 
+function fetchUsers() {
+    return {
+        type: types.REQUEST_USERS
+    }
+}
+
+function receieveUsers(json) {
+    return {
+        type: types.RECEIVE_USERS,
+        users: json.users
+    }
+}
+
+export function fetchUsers() {
+    return (dispatch, getState) => {
+        dispatch(requestUsers());
+        return fetchHelper(`/api/users`, getAPItoken(getState))
+            .then(response => response.json())
+            .then(json => dispatch(receieveUsers(json)));
+    }
+}
+
 function shouldFetchEvents(state) {
     const events = state.events;
     if (!events || events.length === 0) {
@@ -195,5 +236,5 @@ export function fetchEventsIfNeeded() {
 }
 
 function getAPIToken(getState) {
-    return getState().apiToken;
+    return getState().user ? getState().user.token : null;
 }
