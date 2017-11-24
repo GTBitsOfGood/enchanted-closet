@@ -1,5 +1,6 @@
 const Event = require('mongoose').model('Event');
-const User = require('mongoose').model('User')
+const User = require('mongoose').model('User');
+const auth = require('../auth');
 
 module.exports.index = (req, res, next) => {
     Event.find({}, (err, events) => {
@@ -61,7 +62,7 @@ module.exports.present = (req, res, next) => {
         doc.save();
         return next();
     });
-    
+
 }
 
 module.exports.absent = (req, res, next) => {
@@ -143,6 +144,17 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.create = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    if (!auth.isAdmin(auth.currentUser(token))) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized to modify events'
+        };
+        return next();
+    }
     if (!req.body.name) {
         res.locals.error = {
             status: 400,
@@ -197,6 +209,17 @@ module.exports.create = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    if (!auth.isAdmin(auth.currentUser(token))) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized to modify events'
+        };
+        return next();
+    }
     if (!req.params.id) {
         res.locals.error = {
             status: 400,
@@ -245,7 +268,7 @@ module.exports.update = (req, res, next) => {
                 status: 404,
                 msg: 'That Event was not found in the database'
             };
-            return next();       
+            return next();
         }
 
         event.name = req.body.name;

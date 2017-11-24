@@ -62,7 +62,6 @@ export function upsertEvent(data) {
     return (dispatch, getState) => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
-
         const url = data._id ? `/api/events/${data._id}` : `/api/events`;
         const method = data._id ? 'PUT' : 'POST';
         const isUpdate = data._id ? true : false;
@@ -107,8 +106,7 @@ function processAuthenticationAttempt(json) {
     if (json.status === 'ok') {
         return {
             type: types.USER_AUTHENTICATED,
-            user: json.user,
-            apiToken: json.token
+            user: json.user
         }
     } else {
         return {
@@ -194,7 +192,7 @@ export function fetchEvents() {
     }
 }
 
-function fetchUsers() {
+function requestUsers() {
     return {
         type: types.REQUEST_USERS
     }
@@ -210,7 +208,7 @@ function receieveUsers(json) {
 export function fetchUsers() {
     return (dispatch, getState) => {
         dispatch(requestUsers());
-        return fetchHelper(`/api/users`, getAPItoken(getState))
+        return fetchHelper(`/api/users`, getAPIToken(getState))
             .then(response => response.json())
             .then(json => dispatch(receieveUsers(json)));
     }
