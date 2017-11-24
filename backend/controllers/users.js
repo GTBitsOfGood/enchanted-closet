@@ -3,10 +3,10 @@ const User = require('mongoose').model('User');
 const auth = require('../auth');
 
 module.exports.index = (req, res, next) => {
-    User.find({}, (err, events) => {
-        if (events) {
+    User.find({}, (err, users) => {
+        if (users) {
             res.locals.data = {
-                events: events
+                users: users
             };
             return next();
         } else {
@@ -40,10 +40,10 @@ module.exports.get = (req, res, next) => {
 
     User.findOne({
         _id: req.params.id
-    }, (err, event) => {
-        if (event) {
+    }, (err, user) => {
+        if (user) {
             res.locals.data = {
-                event: event
+                user: user
             };
             return next();
         } else {
@@ -78,8 +78,8 @@ module.exports.delete = (req, res, next) => {
 
     User.findOne({
         _id: req.params.id
-    }).remove((err, event) => {
-        if (event) {
+    }).remove((err, user) => {
+        if (user) {
             res.locals.data = {}
             return next();
         } else {
