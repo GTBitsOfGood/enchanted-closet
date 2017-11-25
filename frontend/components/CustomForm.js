@@ -24,6 +24,8 @@ import ProfileForm from '../static/surveys/ProfileFormJSON.js';
  * Each 'data' is formBlock
  */
 
+
+//NOTES: uncomment dispatces for saving and loading, add proper routes
 class CustomForm extends Component {
 
     constructor(props) {
@@ -42,29 +44,45 @@ class CustomForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-	const { newValues } = nextProps; //has key (SECTION-LABEL) val (VALUE) for each entry
-	this.setState({ formValues: newValues })
+	//convert db keynames to form keynames (nonfucntional)
+	const { newValues } = nextProps; //has key (LABEL) val (VALUE) for each entry
+	//append section to label for easier processing
+	let newKeyDict = {}
+	for (let key in this.state.formValues) {
+	    let newKey = key.split("|")[1]; //get second half
+	    newKeyDict[key] = newKey;
+	} 
+	let processedValues = {}	
+	for (let key in newValues) {
+	    processedValues[newKeyDict[camelCasedToSpaced(key)]] = newValues[key]	    
+	}
+	console.log(processedValues);
+	
+	this.setState({ formValues: processedValues })
     }
-
+    
     clickHandler() {
 	if (this.props.saveRoute != undefined) {
-	    dispatch(saveFormData(props.saveRoute, this.state.changeValues))
+	    //strip section labels and convert keys to db keynames
+	    let dbValues = {}
+	    
+	    for (let key in this.state.changedValues) {
+		let newKey = spacedToCamelCase(key.split("|")[1])
+		dbValues[newKey] = this.state.changedValues[key] //probably still not right ie. Emergency Contact Name => emerContactName (Hardcode needed)
+	    }
+	    console.log(dbValues);
+	    //dispatch(saveFormData(props.saveRoute, dbValues))
 	    this.setState({ changedValues: {}}) //ideally this is reset on server confirm save
 	}
-        return;
     }
     
     changeHandler(event) {
-	console.log(event);
-	console.log("Who");
 	let dictKey = event.target.name
 	let newVal = event.target.value
 	this.setState({changedValues: Object.assign(this.state.changedValues, {[dictKey]: newVal})})
 	this.setState({formValues: Object.assign(this.state.formValues, {[dictKey]: newVal})})
     }
 
-    //const CustomForm = ( props, buttonAction, onFieldChange ) => {
-    //const { title, button, displayType } = props;
     render() {
 	const { formValues } = this.state;
 	let formValHardcode = {
@@ -91,7 +109,7 @@ class CustomForm extends Component {
 		<h2>{ title }</h2>
 		<Form>
 		    {
-			data.map((d) => <CustomFormBlock key={title + d.title} displayType={displayType} data={d} changeHandler={this.changeHandler} />)	
+			data.map((d) => <CustomFormBlock key={title + d.title} displayType={displayType} data={d} changeHandler={this.changeHandler} />)
 		    }
 		    <Button primary onClick={this.clickHandler}>{button}</Button>
 		</Form>
@@ -121,7 +139,6 @@ const FileForm = ( props ) => {
 	    break;
 	default:
 	    formProps = {}
-	    console.log(props.type)
 	    break;
     }
     formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';
@@ -159,6 +176,22 @@ const enhance = (formDict, valueDict) => { //assigns value from valueDict to cor
     }
 }
 
+
+const spacedToCamelCase = (s) => {
+    let arr = s.split(" ");
+    arr[0] = arr[0].toLowerCase();
+    for (let i = 1; i < arr.length; i++) {
+	arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1)
+    }
+    return arr.join('')
+}
+
+const camelCaseToSpaced = (s) => {
+    let arr = s.split(new RegExp("[A-Z]"));
+    arr[0] = arr[0].charAt(0).toUpperCase() + arr[0].slice(1)
+    return arr.join(" ")
+}
+
 /* pre: props, isForm
  * isForm - determines if fieldEntry is inline
  * props.title - header of input group
@@ -174,7 +207,7 @@ const CustomFormBlock = ( props ) => {
     //todo : add meta information option
     const { data, displayType, changeHandler } = props
     if (data.title) {
-        return (	    
+	return (	    
 		<div key={data.title}>
                     <h3> {data.title} </h3>    
                     {data.data.map((d) => <FieldEntry key={data.title+d.label} formKey ={data.title+"|"+d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
@@ -197,9 +230,8 @@ const CustomFormBlock = ( props ) => {
  * props.label
  */
 const FieldEntry = ( props ) => {
-    const { data, displayType, onChange, formKey } = props
+    const { data, displayType, changeHandler , formKey } = props
     globalData[data.label.toLowerCase()] = ''    
-
     //todo: change to spread syntax
     return (
         <Form.Input focus={data.activate != null ? true : false}
@@ -209,7 +241,7 @@ const FieldEntry = ( props ) => {
 	            name={formKey} 
 		    type={data.type}
 		    placeholder={data.placeholder}
-		    onChange={data.changeHandler}
+		    onChange={changeHandler}
 		    value={data.value}
 	/>
     )
