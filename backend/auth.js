@@ -105,7 +105,7 @@ module.exports.register = (data, callback) => {
     return callback(null, true);
 }
 
-module.exports.isAdmin = (req, res, next) => {
+module.exports.checkAdmin = (req, res, next) => {
     let token = req.header("Authorization");
     if (token && token.split(" ").length == 2) {
         token = token.split(" ")[1];

@@ -31,7 +31,8 @@ module.exports.get = (req, res, next) => {
     if (token && token.split(" ").length == 2) {
         token = token.split(" ")[1];
     }
-    if (req.params.id != auth.currentUser(token)) {
+    let curr = auth.currentUser(token);
+    if (!auth.isAdmin(curr) && req.params.id != curr) {
         res.locals.error = {
             status: 403,
             msg: 'Not authorized to view other users'
@@ -57,21 +58,10 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
-    let token = req.header("Authorization");
-    if (token && token.split(" ").length == 2) {
-        token = token.split(" ")[1];
-    }
-    if (!auth.isAdmin(auth.currentUser(token))) {
-        res.locals.error = {
-            status: 403,
-            msg: 'Not authorized to modify users'
-        };
-        return next();
-    }
     if (!req.params.id) {
         res.locals.error = {
-            status: 404,
-            msg: 'That Event was not found in the database'
+            status: 400,
+            msg: 'User ID required'
         };
         return next();
     }
@@ -90,4 +80,16 @@ module.exports.delete = (req, res, next) => {
             return next();
         }
     });
+}
+
+module.exports.update = (req, res, next) => {
+    if (!req.params.id) {
+        res.locals.error = {
+            status: 400,
+            msg: 'User ID required'
+        };
+        return next();
+    }
+
+
 }
