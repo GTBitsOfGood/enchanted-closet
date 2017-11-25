@@ -104,3 +104,20 @@ module.exports.register = (data, callback) => {
     }
     return callback(null, true);
 }
+
+module.exports.isAdmin = (req, res, next) => {
+    if (!isAdmin(currentUser(req.token))) {
+        //TODO: verify that this sends response
+        return;
+    }
+    return next();
+}
+
+module.exports.idMatches = (req, res, next) => {
+    let curr = currentUser(req.token);
+    if (curr == null || curr != req.id) {
+        //TODO: verify that this sends response
+        return;
+    }
+    return next();
+}
