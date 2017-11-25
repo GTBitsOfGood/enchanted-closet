@@ -106,7 +106,15 @@ module.exports.register = (data, callback) => {
 }
 
 module.exports.isAdmin = (req, res, next) => {
-    if (!isAdmin(currentUser(req.token))) {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    if (!auth.isAdmin(auth.currentUser(token))) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
         //TODO: verify that this sends response
         return;
     }
@@ -114,9 +122,17 @@ module.exports.isAdmin = (req, res, next) => {
 }
 
 module.exports.idMatches = (req, res, next) => {
-    let curr = currentUser(req.token);
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    let curr = currentUser(token);
     if (curr == null || curr != req.id) {
         //TODO: verify that this sends response
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized'
+        };
         return;
     }
     return next();
