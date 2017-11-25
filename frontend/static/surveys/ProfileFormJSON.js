@@ -9,7 +9,6 @@ module.exports.ProfileForm = {
 		 "type" : "text",
 		 "name" : "name",
 		 "placeholder" : "George P. Burdell",
-		 "value" : "test",
 		 "activate" : true
 	     },
 	     {
@@ -19,14 +18,14 @@ module.exports.ProfileForm = {
 		 "placeholder" : "gburdell@gatech.edu"
 	     },
 	     {
-		 "label" : "Phone number",
+		 "label" : "Phone Number",
 		 "type" : "number",
 		 "name" : "phone",
 		 "placeholder" : "12345667890",
 	     },
 	     {
 		 "label" : "Birthday",
-		 "type" : "number",
+		 "type" : "date",
 		 "name" : "birthday",
 		 "placeholder" : "01/01/2000" 
 	     },

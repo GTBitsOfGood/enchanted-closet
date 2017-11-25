@@ -7,36 +7,26 @@ import { Button, Container, Card } from 'semantic-ui-react';
 import PageTitle from '../components/PageTitle';
 import LoadingIcon from '../components/LoadingIcon';
 
-import {CustomForm} from '../components/CustomForm';
+import {CustomForm, enhance} from '../components/CustomForm';
 import ProfileForm from '../static/surveys/ProfileFormJSON.js';
+//import {} from '../actions/index';
 
-class Profile extends Component {
-    constructor(props) {
-        super(props);
-    }
-    
-    componentDidMount() {
-	const { dispatch } = this.props;
-	//dispatch(fetchProfile()); gets data into store
-    }
 
-    componentWillReceiveProps(nextProps) {
-	const { newValues } = nextProps; //has key (LABEL) val (VALUE) for each entry
-	this.setState({ profileValues: newValues })
-    }
-    
-    render() {
-	return (
-	    <Container>
-		<PageTitle title="Profile" />	
-		<Card fluid>
-		    <Card.Content>
-			{CustomForm(FormData, clickHandler)}
-		    </Card.Content>
-		</Card>
-	    </Container>
-	);
-    }
+const Profile = () => {
+    let formProps = ProfileForm.ProfileForm
+    let loadRoute = "api/loadProfile"
+    let saveRoute = "api/saveProfile"
+    return (
+	<Container>
+	    <PageTitle title="Profile" />	
+	    <Card fluid>
+		<Card.Content>
+		    {<CustomForm {...formProps} loadRoute={loadRoute} saveRoute={saveRoute} />}
+		</Card.Content>
+	    </Card>
+	</Container>
+
+    );
 }
 
 function mapStateToProps(state){
