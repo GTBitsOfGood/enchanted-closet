@@ -126,6 +126,42 @@ module.exports.register = (req, res, next) => {
 }
 
 module.exports.get = (req, res, next) => {
+    if (!req.params.id) {
+        res.locals.error = {
+            status: 400,
+            msg: 'User ID required'
+        };
+        return next();
+    }
+    let add = undefined;
+    if (req.role == "Participant" || req.role == "Volunteer") {
+        add = validateUser(req.body.data, errResp);
+    } else if (req.role = "Admin") {
+        //only admins can create other admins
+        let token = req.header("Authorization");
+        if (token && token.split(" ").length == 2) {
+            token = token.split(" ")[1];
+        }
+        let curr = auth.currentUser(token);
+        if (auth.isAdmin(curr)){
+            add = validateAdmin(req.body.data, errResp);
+        }
+    }
+    if (add) {
+        delete add.password;
+        User.create(add, (err, instance) => {
+            if (err) {
+                res.locals.error = {
+                    status: 500,
+                    msg: "Couldn't save user"
+                };
+            }
+        });
+    }
+    return next();
+}
+
+module.exports.get = (req, res, next) => {
     User.findOne({
         _id: req.params.id
     }, (err, event) => {

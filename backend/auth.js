@@ -1,11 +1,8 @@
 let hash = require('./hash');
 let user = require('./controllers/users');
 let randomBytes = require('crypto').randomBytes;
-let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
-let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 let redisClient = require('redis').createClient();
-const User = require('mongoose').model('Participant');
+const User = require('mongoose').model('User');
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
@@ -28,7 +25,7 @@ module.exports.isAdmin = (id) => {
     }
     let retVal = false;
     User.findById(id, (err, doc) => {
-        if (!err && doc.role == "admin") {
+        if (!err && doc.role == "Admin") {
             retVal = true;
         }
     });
@@ -48,61 +45,21 @@ module.exports.currentUser = (tok) => {
     return retVal;
 }
 
-function hasAll(obj, props) {
-    for (p in props) {
-        if (!(obj[p])) {
-            return p;
-        }
+module.exports.idMatchesOrAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
     }
-    return false;
-}
-
-function matchesComplexityRequirements(password) {
-    if (password.length < 7) return false;
-    let hasAlpha = false;
-    let hasNum = false;
-    for (let i = 0; i < password.length; i++) {
-        let c = password.charCodeAt(i);
-        if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
-            hasAlpha = true;
-        } else if (c >= 48 && c <= 57) {
-            hasNum = true;
-        }
-        if (hasAlpha && hasNum) return true;
+    let curr = currentUser(token);
+    if (curr == null || (curr != req.id && !isAdmin(curr))) {
+        //TODO: verify that this sends response
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized'
+        };
+        return;
     }
-    return false;
-}
-
-module.exports.register = (data, callback) => {
-    let tmp = hasAll(data, ["email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-    if (tmp) {
-        return callback({reason: "Data object missing " + tmp + " property"}, false);
-    }
-    if (!isEmail.test(data.email)) {
-        return callback({reason: "Email invalid"}, false);
-    }
-    if (!matchesComplexityRequirements(data.password)) {
-        return callback({reason: "Password doesn't match complexity requirements"}, false);
-    }
-    if (grades.indexOf(data.grade) == -1) {
-        return callback({reason: "Grade is not valid"});
-    }
-    //TODO: constraint checks for race, school, leader_name
-    tmp = hasAll(data.emergency_contact, ["name", "phone", "relation"]);
-    if (tmp) {
-        return callback({reason: "data.emergency_contact missing " + tmp + " property"}, false);
-    }
-    if (!isPhone.test(data.emergency_contact.phone)) {
-        return callback({reason: "Invalid phone number"}, false);
-    }
-    newHash = hash.genNew(data.password);
-    delete data.password;
-    data.hash = newHash;
-    if (user.addNew(data)) {
-        delete data.hash;
-        return callback(null, data);
-    }
-    return callback(null, true);
+    return next();
 }
 
 module.exports.checkAdmin = (req, res, next) => {
@@ -110,7 +67,7 @@ module.exports.checkAdmin = (req, res, next) => {
     if (token && token.split(" ").length == 2) {
         token = token.split(" ")[1];
     }
-    if (!auth.isAdmin(auth.currentUser(token))) {
+    if (!isAdmin(currentUser(token))) {
         res.locals.error = {
             status: 403,
             msg: 'Not authorized (must be admin)'

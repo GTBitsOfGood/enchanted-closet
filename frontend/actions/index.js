@@ -17,6 +17,29 @@ export function showModalLoader() {
     };
 }
 
+export function deleteEvent(id) {
+    return (dispatch, getState) => {
+        dispatch(showModalLoader());
+        dispatch(deleteEventLocally(id));
+        return fetchHelper(`/api/events/${id}`, getAPIToken(getState), {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }, getState().apiToken)
+            .then(response => response.json())
+            .then(json => dispatch(hideModalLoader()));
+    }
+}
+
+function deleteEventLocally(id) {
+    return {
+        type: types.DELETE_EVENT,
+        id: id
+    }
+}
+
 export function hideModalLoader() {
     return {
         type: types.HIDE_MODAL_LOADER
@@ -35,20 +58,24 @@ export function stopLoading() {
     }
 }
 
-export function createEvent(data) {
-    return dispatch => {
+export function upsertEvent(data) {
+    return (dispatch, getState) => {
         dispatch(loading());
         data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
-        return fetch(`/api/events/`, {
-                method: 'POST',
+        const url = data._id ? `/api/events/${data._id}` : `/api/events`;
+        const method = data._id ? 'PUT' : 'POST';
+        const isUpdate = data._id ? true : false;
+        delete data._id;
+        return fetchHelper(url, getAPIToken(getState), {
+                method: method,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
+            }, getState().apiToken)
             .then(response => response.json())
-            .then(json => dispatch(processEventCreationAttempt(json)));
+            .then(json => dispatch(processEventUpsert(json, isUpdate)));
     }
 }
 
@@ -62,6 +89,17 @@ export function logoutUser() {
     return {
         type: types.LOGOUT_USER
     }
+}
+
+function fetchHelper(route, apiToken, obj) {
+    if (!apiToken) {
+        return fetch(route, obj);
+    }
+    let headers = {'Authorization': 'Bearer ' + apiToken};
+    if (obj && obj.headers) {
+        headers = Object.assign({}, headers, obj.headers);
+    }
+    return fetch(route, Object.assign({}, req, {'headers': headers}))
 }
 
 function processAuthenticationAttempt(json) {
@@ -78,31 +116,32 @@ function processAuthenticationAttempt(json) {
     }
 }
 
-function processEventCreationAttempt(json) {
+function processEventUpsert(json, isUpdate) {
     if (json.status === 'ok') {
         return {
-            type: types.EVENT_CREATED,
-            event: json.event
+            type: types.EVENT_UPSERT,
+            event: json.event,
+            isUpdate: isUpdate
         }
     } else {
         return {
-            type: types.EVENT_NOT_CREATED,
+            type: types.EVENT_NOT_UPSERTED,
             error: json.msg
         }
     }
 }
 
-export function performAdminLogin(data) {
-    return dispatch => {
+export function performLogin(data) {
+    return (dispatch, getState) => {
         dispatch(showModalLoader());
-        return fetch(`/api/login`, {
+        return fetchHelper(`/api/login`, getAPIToken(getState), {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
+            }, getState().apiToken)
             .then(response => response.json())
             .then(json => {
                 dispatch(hideModalLoader());
@@ -126,9 +165,9 @@ function receieveEvents(json) {
 }
 
 export function fetchEvents() {
-    return dispatch => {
+    return (dispatch, getState) => {
         dispatch(requestEvents());
-        return fetch(`/api/events`)
+        return fetchHelper(`/api/events`, getAPIToken(getState))
             .then(response => response.json())
             .then(json => dispatch(receieveEvents(json)));
     }
@@ -151,4 +190,8 @@ export function fetchEventsIfNeeded() {
             return dispatch(fetchEvents());
         }
     }
+}
+
+function getAPIToken(getState) {
+    return getState().apiToken;
 }
