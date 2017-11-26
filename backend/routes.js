@@ -6,6 +6,10 @@ const controllers = require('./controllers/');
 const auth = require('./auth');
 
 router.get('/users', auth.checkAdmin, controllers.users.index);
+//more complex permissions checking implemented manually in this method
+router.get('/users/:id', controllers.users.get);
+router.get('/users/new', controllers.users.register);
+
 
 router.get('/events', controllers.events.index);
 router.get('/events/:id', controllers.events.get);
