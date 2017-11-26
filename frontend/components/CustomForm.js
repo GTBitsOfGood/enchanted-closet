@@ -26,8 +26,7 @@ import ProfileForm from '../static/surveys/ProfileFormJSON.js';
 
 
 //NOTES: uncomment dispatces for saving and loading, add proper routes
-class CustomForm extends Component {
-
+class CustomForm extends Component {    
     constructor(props) {
 	super(props);
 	this.state = {
@@ -62,7 +61,7 @@ class CustomForm extends Component {
     }
     
     clickHandler() {
-	if (this.props.saveRoute != undefined) {
+	if (this.props.submitRoute != undefined) {
 	    //strip section labels and convert keys to db keynames
 	    let dbValues = {}
 	    
@@ -71,7 +70,7 @@ class CustomForm extends Component {
 		dbValues[newKey] = this.state.changedValues[key] //probably still not right ie. Emergency Contact Name => emerContactName (Hardcode needed)
 	    }
 	    console.log(dbValues);
-	    //dispatch(saveFormData(props.saveRoute, dbValues))
+	    //dispatch(saveFormData(props.submitRoute, dbValues))
 	    this.setState({ changedValues: {}}) //ideally this is reset on server confirm save
 	}
     }
@@ -84,6 +83,7 @@ class CustomForm extends Component {
     }
 
     render() {
+	console.log(this.props);
 	const { formValues } = this.state;
 	let formValHardcode = {
 	    //hardcode test
@@ -104,6 +104,7 @@ class CustomForm extends Component {
 	const { title, displayType, button, data, dispatch } = this.props;
 	
 	enhance(data, formValues); //enhance(data, formValues);
+	
 	return (
 	    <div>
 		<h2>{ title }</h2>
@@ -119,6 +120,7 @@ class CustomForm extends Component {
 }
 
 const FileForm = ( props ) => {
+    const { submitRoute } = props;
     let clickHandler = (data) => {
         if (props.onClick !== undefined) props.onClick(data);
         return;
@@ -142,7 +144,7 @@ const FileForm = ( props ) => {
 	    break;
     }
     formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';
-    return <CustomForm {...formProps} clickHandler={clickHandler} />;
+    return <CustomForm {...formProps} clickHandler={submitRoute} />;
 }
 
 /* flatten: turns data into dictionary keyset (empty str values) with group:label
@@ -216,7 +218,7 @@ const CustomFormBlock = ( props ) => {
     } else {
         return (
 	    <div>
-		data.data.map(FieldEntry)
+		{data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} />)}
 	    </div>
 	);
     }

@@ -21,7 +21,7 @@ const Profile = () => {
 	    <PageTitle title="Profile" />	
 	    <Card fluid>
 		<Card.Content>
-		    {<CustomForm {...formProps} loadRoute={loadRoute} saveRoute={saveRoute} />}
+		    {<CustomForm {...formProps} loadRoute={loadRoute} submitRoute={saveRoute} />}
 		</Card.Content>
 	    </Card>
 	</Container>
