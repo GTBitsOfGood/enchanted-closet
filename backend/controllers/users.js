@@ -4,6 +4,7 @@ const auth = require('../auth');
 let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+const hash = require("../hash");
 
 module.exports.index = (req, res, next) => {
     User.find({}, (err, events) => {
@@ -52,7 +53,7 @@ let validateUser = (data, callback) => {
     if (tmp) {
         return callback({reason: "Data object missing " + tmp + " property"}, false);
     }
-    if (name.length < 2) {
+    if (data.name.length < 2) {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
     if (!isEmail.test(data.email)) {
@@ -68,7 +69,7 @@ let validateUser = (data, callback) => {
     if (!isPhone.test(data.emergency_contact.phone)) {
         return callback({reason: "Invalid phone number"}, false);
     }
-    newHash = hash.genNew(data.password);
+    let newHash = hash.genNew(data.password);
     return Object.assign({}, data, {"hash": newHash});
 }
 
@@ -83,7 +84,7 @@ let validateAdmin = (data, callback) => {
     if (!matchesComplexityRequirements(data.password)) {
         return callback({reason: "Password doesn't match complexity requirements"}, false);
     }
-    if (name.length < 2) {
+    if (data.name.length < 2) {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
     newHash = hash.genNew(data.password);
@@ -93,25 +94,14 @@ let validateAdmin = (data, callback) => {
 module.exports.register = (req, res, next) => {
     let errResp = (err, success) => {
         if (!success) {
-            res.error = err.reason;
+            res.error = {
+                status: 400,
+                msg: err.reason
+            };
         }
-        return next();
     }
-    let add = undefined;
     if (req.role == "Participant" || req.role == "Volunteer") {
-        add = validateUser(req.body.data, errResp);
-    } else if (req.role = "Admin") {
-        //only admins can create other admins
-        let token = req.header("Authorization");
-        if (token && token.split(" ").length == 2) {
-            token = token.split(" ")[1];
-        }
-        let curr = auth.currentUser(token);
-        if (auth.isAdmin(curr)){
-            add = validateAdmin(req.body.data, errResp);
-        }
-    }
-    if (add) {
+        let add = validateUser(req.body.data, errResp);
         delete add.password;
         User.create(add, (err, instance) => {
             if (err) {
@@ -120,51 +110,47 @@ module.exports.register = (req, res, next) => {
                     msg: "Couldn't save user"
                 };
             }
+            return next();
         });
-    }
-    return next();
-}
-
-module.exports.get = (req, res, next) => {
-    if (!req.params.id) {
-        res.locals.error = {
-            status: 400,
-            msg: 'User ID required'
-        };
-        return next();
-    }
-    let add = undefined;
-    if (req.role == "Participant" || req.role == "Volunteer") {
-        add = validateUser(req.body.data, errResp);
     } else if (req.role = "Admin") {
         //only admins can create other admins
         let token = req.header("Authorization");
-        if (token && token.split(" ").length == 2) {
-            token = token.split(" ")[1];
+        if (!token.startsWith("Bearer ")) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized (must be admin)'
+            };
+            return next();
         }
-        let curr = auth.currentUser(token);
-        if (auth.isAdmin(curr)){
-            add = validateAdmin(req.body.data, errResp);
-        }
-    }
-    if (add) {
-        delete add.password;
-        User.create(add, (err, instance) => {
-            if (err) {
-                res.locals.error = {
-                    status: 500,
-                    msg: "Couldn't save user"
-                };
-            }
+        token = token.substring(7);
+        auth.currentUser(token, (curr) => {
+            auth.isAdmin(curr, (state) => {
+                if (state) {
+                    let add = validateAdmin(req.body.data, errResp);
+                    delete add.password;
+                    User.create(add, (err, instance) => {
+                        if (err) {
+                            res.locals.error = {
+                                status: 500,
+                                msg: "Couldn't save user"
+                            };
+                        }
+                        return next();
+                    });
+                } else {
+                    res.locals.error = {
+                        status: 403,
+                        msg: "Can't register admin"
+                    }
+                    return next();
+                }
+            });
         });
     }
-    return next();
 }
 
 module.exports.get = (req, res, next) => {
-    User.findOne({
-        _id: req.params.id
-    }, (err, event) => {
+    User.findById(req.params.id, (err, event) => {
         if (event) {
             res.locals.data = {
                 event: event
@@ -181,17 +167,7 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
-    if (!req.params.id) {
-        res.locals.error = {
-            status: 400,
-            msg: 'User ID required'
-        };
-        return next();
-    }
-
-    User.findOne({
-        _id: req.params.id
-    }).remove((err, event) => {
+    User.findById(req.params.id).remove((err, event) => {
         if (event) {
             res.locals.data = {}
             return next();
@@ -213,8 +189,40 @@ module.exports.update = (req, res, next) => {
         };
         return next();
     }
+    let newProps = {};
     if (req.body.data["password"]) {
-
+        //TODO: verify old password
+        if (matchesComplexityRequirements(req.body.data[password])) {
+            newProps["hash"] = hash.genNew(req.body.data.password);
+        }
     }
-
+    if (req.body.data["name"] && req.body.data["name"].length >= 2) {
+        newProps["name"] = req.body.data["name"];
+    }
+    //["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
+    if (req.body.data["email"] && isEmail.test(req.body.data["email"])) {
+        newProps["email"] = req.body.data["email"];
+    }
+    if (req.body.data["grade"] && grades.indexOf(req.body.data["grade"] != -1)) {
+        newProps["grade"] = req.body.data["grade"];
+    }
+    User.findById(req.params.id, (err, doc) => {
+        if (err) {
+            res.locals.error = {
+                status: 404,
+                msg: "User not found with desired ID"
+            }
+        } else {
+            doc.set(newProps);
+            doc.save((err, updated) => {
+                if (err) {
+                    res.locals.error = {
+                        status: 500,
+                        msg: "Unable to save changes to db"
+                    }
+                }
+            });
+        }
+        return next();
+    });
 }
