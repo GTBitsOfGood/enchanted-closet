@@ -29,7 +29,7 @@ class Login extends Component {
                 <Card fluid color='purple'>
                     <Card.Content header='Login' />
                     <Card.Content>
-                        <FileForm type="login" submitRoute={performAdminLogin} />
+                        <FileForm type="login" submitRoute="login" buttonAction={performAdminLogin} />
                     </Card.Content>
                 </Card>
             </Container>

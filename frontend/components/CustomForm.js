@@ -5,7 +5,7 @@ import { Button, Form } from 'semantic-ui-react';
 
 const SURVEY_DIR = '../static/surveys/';
 
-let globalData = {};
+let data = {};
 
 import SurveyForm from '../static/surveys/SurveyFormJSON.js'; 
 import LoginForm from '../static/surveys/LoginFormJSON.js';
@@ -61,15 +61,29 @@ class CustomForm extends Component {
     }
     
     clickHandler() {
-	if (this.props.submitRoute != undefined) {
-	    //strip section labels and convert keys to db keynames
-	    let dbValues = {}
-	    
-	    for (let key in this.state.changedValues) {
-		let newKey = spacedToCamelCase(key.split("|")[1])
-		dbValues[newKey] = this.state.changedValues[key] //probably still not right ie. Emergency Contact Name => emerContactName (Hardcode needed)
+	const { buttonAction, submitRoute } = this.props;
+	const { changedValues } = this.state;
+	if (submitRoute != undefined) {
+	    let formData = {}
+	    switch (submitRoute) { //determines what gets fed to buttonAction
+		case "profile":		    
+		    for (let key in changedValues) {
+			let newKey = spacedToCamelCase(key.split("|")[1])
+			formData[newKey] = changedValues[key] //probably still not right ie. Emergency Contact Name => emerContactName (Hardcode needed)
+		    }
+		    break;
+		case "login":
+		default:
+		    for (let key in changedValues) {
+			let newKey = spacedToCamelCase(key)
+			formData[newKey] = changedValues[key]
+		    }
+		    break;
 	    }
-	    console.log(dbValues);
+	    console.log("Sending off formData");
+	    console.log(formData);
+	    //strip section labels and convert keys to db keynames
+	    buttonAction(formData);
 	    //dispatch(saveFormData(props.submitRoute, dbValues))
 	    this.setState({ changedValues: {}}) //ideally this is reset on server confirm save
 	}
@@ -102,7 +116,6 @@ class CustomForm extends Component {
 	};
 	
 	const { title, displayType, button, data, dispatch } = this.props;
-	
 	enhance(data, formValues); //enhance(data, formValues);
 	
 	return (
@@ -120,7 +133,6 @@ class CustomForm extends Component {
 }
 
 const FileForm = ( props ) => {
-    const { submitRoute } = props;
     let clickHandler = (data) => {
         if (props.onClick !== undefined) props.onClick(data);
         return;
@@ -136,15 +148,13 @@ const FileForm = ( props ) => {
 	case "register":
 	    formProps = RegisterForm.RegisterForm
             break;
-	case "profile":
-	    formProps = ProfileForm.ProfileForm
-	    break;
 	default:
 	    formProps = {}
 	    break;
     }
-    formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';
-    return <CustomForm {...formProps} clickHandler={submitRoute} />;
+    const { buttonAction, submitRoute } = props;
+    formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';    
+    return <CustomForm {...formProps} buttonAction={buttonAction} submitRoute={submitRoute}  />;
 }
 
 /* flatten: turns data into dictionary keyset (empty str values) with group:label
@@ -178,7 +188,6 @@ const enhance = (formDict, valueDict) => { //assigns value from valueDict to cor
     }
 }
 
-
 const spacedToCamelCase = (s) => {
     let arr = s.split(" ");
     arr[0] = arr[0].toLowerCase();
@@ -208,7 +217,8 @@ const CustomFormBlock = ( props ) => {
     //put any header information here
     //todo : add meta information option
     const { data, displayType, changeHandler } = props
-    if (data.title) {
+    
+    if (data.title != null) {
 	return (	    
 		<div key={data.title}>
                     <h3> {data.title} </h3>    
@@ -218,7 +228,7 @@ const CustomFormBlock = ( props ) => {
     } else {
         return (
 	    <div>
-		{data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} />)}
+		{data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
 	    </div>
 	);
     }
@@ -233,7 +243,7 @@ const CustomFormBlock = ( props ) => {
  */
 const FieldEntry = ( props ) => {
     const { data, displayType, changeHandler , formKey } = props
-    globalData[data.label.toLowerCase()] = ''    
+    data[data.label.toLowerCase()] = ''    
     //todo: change to spread syntax
     return (
         <Form.Input focus={data.activate != null ? true : false}
