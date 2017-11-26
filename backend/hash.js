@@ -1,12 +1,12 @@
 let bcrypt = require('bcrypt');
-const User = require('mongoose').model('User');
+const Admin = require('mongoose').model('admin');
 
 module.exports.genNew = (password) => {
     return bcrypt.hashSync(password, 15);
 }
 
 module.exports.checkAgainst = (data, callback) => {
-    User.findOne({
+    Admin.findOne({
         email: data.email
     }, function (err, user) {
         if (err) {
