@@ -6,9 +6,11 @@ const controllers = require('./controllers/');
 const auth = require('./auth');
 
 router.get('/users', auth.checkAdmin, controllers.users.index);
-//more complex permissions checking implemented manually in this method
-router.get('/users/:id', controllers.users.get);
-router.get('/users/new', controllers.users.register);
+router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
+//more complex permissions checking (need admin to create admin) done in function
+router.post('/users/new', controllers.users.register);
+router.delete('/users/:id', auth.idMatchesOrAdmin, controllers.users.delete);
+router.post('/users/:id', auth.idMatchesOrAdmin, controllers.users.update);
 
 
 router.get('/events', controllers.events.index);

@@ -45,12 +45,29 @@ module.exports.currentUser = (tok) => {
     return retVal;
 }
 
+module.exports.idMatchesOrAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
+    }
+    let curr = currentUser(token);
+    if (curr == null || (curr != req.id && !isAdmin(curr))) {
+        //TODO: verify that this sends response
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized'
+        };
+        return;
+    }
+    return next();
+}
+
 module.exports.checkAdmin = (req, res, next) => {
     let token = req.header("Authorization");
     if (token && token.split(" ").length == 2) {
         token = token.split(" ")[1];
     }
-    if (!auth.isAdmin(auth.currentUser(token))) {
+    if (!isAdmin(currentUser(token))) {
         res.locals.error = {
             status: 403,
             msg: 'Not authorized (must be admin)'
