@@ -1,3 +1,5 @@
+import { delete } from './events';
+
 "use strict";
 const User = require('mongoose').model('User');
 const auth = require('../auth');
@@ -69,7 +71,7 @@ let validateUser = (data, callback) => {
         return callback({reason: "Invalid phone number"}, false);
     }
     newHash = hash.genNew(data.password);
-    return Object.assign({}, data, {"password": "", "hash": newHash});
+    return Object.assign({}, data, {"hash": newHash});
 }
 
 let validateAdmin = (data, callback) => {
@@ -87,7 +89,7 @@ let validateAdmin = (data, callback) => {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
     newHash = hash.genNew(data.password);
-    return Object.assign({}, data, {"password": "", "hash": newHash});
+    return Object.assign({}, data, {"hash": newHash});
 }
 
 module.exports.register = (req, res, next) => {
@@ -112,6 +114,7 @@ module.exports.register = (req, res, next) => {
         }
     }
     if (add) {
+        delete add.password;
         User.create(add, (err, instance) => {
             if (err) {
                 res.locals.error = {
@@ -195,6 +198,8 @@ module.exports.update = (req, res, next) => {
         };
         return next();
     }
+    if (req.body.data["password"]) {
 
+    }
 
 }
