@@ -7,8 +7,6 @@ import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment } from 's
 
 import { performAdminLogin } from '../actions/index';
 
-import { showLoader, hideLoader } from '../actions/index';
-
 import { Redirect } from 'react-router-dom';
 
 class Login extends Component {
@@ -19,7 +17,7 @@ class Login extends Component {
     render() {
         const {loggedIn, modalLoaderActive, performAdminLogin} = this.props;
         if (loggedIn) {
-            return <Redirect to="/events" />;
+            return <Redirect to="/" />;
         } else {
             return (
             <Container>

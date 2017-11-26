@@ -19,12 +19,15 @@ var EventSchema = new mongoose.Schema({
         required: true
     },
     presenters: {
-        type: Array,
+        type: [String],
         required: false
     },
     photo: {
         type: String,
         required: false
+    },
+    participants: {
+        type: [mongoose.Schema.Types.ObjectId]
     }
 });
 
