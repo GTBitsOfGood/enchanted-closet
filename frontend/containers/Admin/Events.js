@@ -36,9 +36,9 @@ class AdminEvents extends Component {
 				<PageTitle title="Events" link="admin/events/create" linkTitle="Create New"/>
 				<div style={{paddingTop:50}}>
 					{isFetchingEvents &&
-					<LoadingIcon active/>
+						<LoadingIcon active/>
 					}
-					{ !isFetchingEvents && events.length > 0 && 
+					{ !isFetchingEvents && events.length > 0 &&
 					    events.map(e => {
 					        return <Event key={e._id} data={e} history={history}/>
 					    })

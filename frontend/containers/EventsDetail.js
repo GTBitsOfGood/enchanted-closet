@@ -40,7 +40,8 @@ class EventsDetail extends Component {
 		this.state = {
 			detail : '',
 			adminControls: adminControls ? adminControls : false,
-			eventId
+			eventId,
+			displayMapLocationError: false
 		}
 	}
 
@@ -56,7 +57,9 @@ class EventsDetail extends Component {
 				.then(location => {
 					this.setState({latitude: location.lat, longitude: location.lng});
 				})
-				.catch(err => console.error(err));
+				.catch(err => {
+					this.setState({displayMapLocationError: true});
+				});
 		}
 	}
 
@@ -79,13 +82,15 @@ class EventsDetail extends Component {
 				.then(location => {
 					this.setState({latitude: location.lat, longitude: location.lng});
 				})
-				.catch(err => console.error(err));
+				.catch(err => {
+					this.setState({displayMapLocationError: true});
+				});
 		}
 	}
 
 	render() {
 		const { events, deleteEvent, isFetchingEvents, location, history } = this.props;
-		const { detail, adminControls, latitude, longitude } = this.state;
+		const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
 		const speakers = [
 		  {
 		    name: 'Elliot Fu',
@@ -116,16 +121,15 @@ class EventsDetail extends Component {
 							<p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>
 						</Segment>
 						<Speakers speakers={speakers}/>
-						{latitude && longitude ?
+						{displayMapLocationError || (latitude && longitude) ?
 							<ECMap
 								isMarkerShown
 								lat={latitude || DEFAULT_MAP_LOCATION.latitude}
 								long={longitude || DEFAULT_MAP_LOCATION.longitude}
+								displayMapLocationError={displayMapLocationError}
 							/>
 						:
-						<div style={{ height: `400px` }}>
-							<p>Loading Google Maps...</p>
-						</div>
+						<Segment style={{textAlign: 'center', padding: '80px'}} loading />
 						}
 						<Segment key="details">
 							<h3>Details</h3>
