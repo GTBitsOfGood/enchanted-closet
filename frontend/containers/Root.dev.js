@@ -15,6 +15,8 @@ import Helmet from 'react-helmet';
 
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
+import AdminUsers from './Admin/Users';
+import AdminUsersNew from './Admin/UsersNew';
 import AdminEventsNew from './Admin/EventsNew';
 import AdminEventsEdit from './Admin/EventsEdit';
 import AdminEventsDetail from './Admin/EventsDetail';
@@ -40,6 +42,10 @@ export default function Root({ store }) {
                             <Route path="/admin/events/create" component={AdminEventsNew} />
                             <Route exact path="/admin/events/:id" component={AdminEventsDetail} />
                             <Route path="/admin/events/:id/edit" component={AdminEventsEdit} />
+                            <Route exact path="/admin/users" component={AdminUsers} />
+                            <Route path="/admin/users/create" component={AdminUsersNew} />
+                            <Route path="/admin/users/:id" component={AdminUsers} />
+
                             <Route component={MissingPage} />
                         </Switch>
                     </div>

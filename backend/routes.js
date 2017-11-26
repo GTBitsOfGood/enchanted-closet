@@ -4,7 +4,12 @@ const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers/');
 
+router.get('/dashboard', controllers.admin.cards);
+
 router.get('/users', controllers.users.index);
+router.get('/users/:id', controllers.users.get);
+router.delete('/users/:id', controllers.users.delete);
+router.post('/users/', controllers.users.create);
 
 router.get('/events', controllers.events.index);
 router.get('/events/:id', controllers.events.get);

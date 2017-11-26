@@ -47,7 +47,7 @@ const CustomForm = ( props, buttonAction ) => {
             {
                 props.data.map(CustomFormBlock)
             }
-             <Button primary onClick={() => buttonAction(Object.assign({}, data))}>{props.button}</Button>
+            <Button primary onClick={() => buttonAction(Object.assign({}, data))}>{props.button}</Button>
         </Form>
     </div>
     );

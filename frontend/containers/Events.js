@@ -40,22 +40,13 @@ class Events extends Component {
         return (
             <Container>
                 <h1>Upcoming Events</h1>
-                {lastUpdatedEvents &&
-                    <span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
-                }
-                {!isFetchingEvents &&
-                  <a href="#" onClick={this.handleRefreshClick}>
-                    Refresh
-                  </a>}
-                <Dimmer active={isFetchingEvents}>
-                    <Loader>Loading</Loader>
-                </Dimmer>
-                { events.length > 0 && 
+                <Loader active={isFetchingEvents}>Loading</Loader>
+                { events.length > 0 &&
                     events.map(e => {
                         return <Event key={e._id} data={e} history={history}/>
                     })
                 }
-                { !isFetchingEvents && events.length === 0 && 
+                { !isFetchingEvents && events.length === 0 &&
                     <h1>No events</h1>
                 }
             </Container>
