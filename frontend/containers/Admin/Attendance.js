@@ -9,6 +9,7 @@ import PageTitle from '../../components/PageTitle';
 import ErrorComponent from '../../components/ErrorComponent';
 import LoadingIcon from '../../components/LoadingIcon';
 import ECUserList from '../../components/ECUserList';
+import ECSearchBarCard from '../../components/ECSearchBarCard';
 
 import {fetchEvents, fetchUsers} from '../../actions/';
 
@@ -21,7 +22,8 @@ class AdminAttendance extends Component {
 			event_id: match.params.id,
 			users: users || [],
 			hasAttemptedRefresh: false,
-			loading: false
+			loading: false,
+			filter: ''
 		};
 
 		if (events && events.length > 0) {
@@ -30,6 +32,8 @@ class AdminAttendance extends Component {
 				this.state.event = event[0];
 			}
 		}
+
+		this.searchFilterUsers = this.searchFilterUsers.bind(this);
 	}
 
 	componentDidMount() {
@@ -66,14 +70,18 @@ class AdminAttendance extends Component {
 		}
 	}
 
+	searchFilterUsers(filterString) {
+		this.setState({filter: filterString});
+	}
+
     render() {
-		const { users } = this.props;
-		const { loading, event, hasAttemptedRefresh } = this.state;
+		const { loading, event, users, hasAttemptedRefresh, filter } = this.state;
 		if (event) {
 	        return (
 				<Container>
 					<PageTitle title={event.name} showLoadingIcon />
-					<ECUserList event={event} users={users} />
+					<ECSearchBarCard filterFunction={this.searchFilterUsers}/>
+					<ECUserList event={event} users={users} filter={filter} />
 				</Container>
 	        );
 		} else {

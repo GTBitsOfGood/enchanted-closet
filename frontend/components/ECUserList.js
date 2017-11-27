@@ -14,14 +14,14 @@ class ECUserList extends Component {
 	}
 
     render() {
-		const {users, event} = this.props;
+		const {users, event, filter} = this.props;
         return (
 			<Segment>
 				{users &&
 					<List selection verticalAlign='middle'>
 						{users.map(user => {
 							const attending = user.pastEvents.indexOf(event._id) > -1;
-							return (<ECUserListItem attending={attending} event={event} key={user._id} user={user}/>);
+							return (<ECUserListItem attending={attending} event={event} key={user._id} user={user} filter={filter}/>);
 						})}
 					</List>
 				}

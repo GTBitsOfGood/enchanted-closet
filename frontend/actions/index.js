@@ -337,6 +337,22 @@ function formatCards(cards) {
     }
 }
 
+function userMarkedAsAttended(eventID, userID) {
+    return {
+        type: types.MARK_ATTENDING,
+        eventID: eventID,
+        userID: userID
+    };
+}
+
+function userMarkedAsUnAttended(eventID, userID) {
+    return {
+        type: types.MARK_UNATTENDING,
+        eventID: eventID,
+        userID: userID
+    };
+}
+
 export function loadDashboardCards() {
     return (dispatch, getState) => {
         dispatch(loading());
@@ -354,9 +370,7 @@ export function markAttending(eventID, userID) {
         dispatch(loading());
         return fetchHelper(`/api/events/${eventID}/present/${userID}`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => {
-                return;
-            })
+            .then(json => dispatch(userMarkedAsAttended(eventID, userID)))
             .then(() => dispatch(stopLoading()));
     }
 }
@@ -366,10 +380,7 @@ export function markUnattending(eventID, userID) {
         dispatch(loading());
         return fetchHelper(`/api/events/${eventID}/absent/${userID}`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => {
-                console.log(json);
-                return;
-            })
+            .then(json => dispatch(userMarkedAsUnAttended(eventID, userID)))
             .then(() => dispatch(stopLoading()));
     }
 }

@@ -30,9 +30,12 @@ class ECUserListItem extends Component {
 	}
 
 	render() {
-		const {user} = this.props;
+		const {user, filter} = this.props;
+		const visible = 'block';
+		const hidden = 'none';
+		const filteredVisibility = user.name && user.name.toLowerCase().indexOf(filter.toLowerCase()) > -1 ? visible : hidden;
 		return (
-			<List.Item onClick={this.attendanceUpdate}>
+			<List.Item style={{display:filteredVisibility}} onClick={this.attendanceUpdate}>
 				<List.Content>
 					<List.Header><Checkbox onClick={() => {}} checked={this.state.attending} label={user.name}/></List.Header>
 				</List.Content>
