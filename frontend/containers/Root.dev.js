@@ -32,7 +32,7 @@ export default function Root({ store }) {
                         <Switch>
                             <Route exact path="/" component={AppContainer}/>
                             <Route path="/login" component={Login} />
-			    <Route path="/profile" component={Profile} />
+                            <Route path="/profile" component={Profile} />
                             <Route exact path="/events" component={Events} />
             			    <Route path="/events/:id" component={EventsDetail} />
                             <Route path="/admin/dashboard" component={AdminDashboard} />

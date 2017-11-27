@@ -9,7 +9,6 @@ import LoadingIcon from '../components/LoadingIcon';
 
 import {CustomForm, enhance} from '../components/CustomForm';
 import ProfileForm from '../static/surveys/ProfileFormJSON.js';
-//import {} from '../actions/index';
 
 
 const Profile = () => {
@@ -17,25 +16,22 @@ const Profile = () => {
     let loadRoute = "api/loadProfile"
     let saveRoute = "api/saveProfile"
     return (
-	<Container>
-	    <PageTitle title="Profile" />	
-	    <Card fluid>
-		<Card.Content>
-	{<CustomForm {...formProps} loadRoute={loadRoute} buttonAction={null} submitRoute="profile" displayType="inline" />}
-		</Card.Content>
-	    </Card>
-	</Container>
+	       <Container>
+               <PageTitle title="Profile" />
+               <Card fluid>
+                   <Card.Content>
+                       {<CustomForm {...formProps} loadRoute={loadRoute} buttonAction={null} submitRoute="profile" displayType="inline" />}
+                   </Card.Content>
+               </Card>
+           </Container>
 
     );
 }
 
-function mapStateToProps(state){
-    const {
-	profileData
-    } = state;
+const mapStateToProps = state => {
     return {
-	profileData
+        profileData: state.profileData
     }
 }
 
-export default connect(mapStateToProps)(Profile)
+export default connect(mapStateToProps)(Profile);
