@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import Title from '../components/Title';
-import FileForm from '../components/CustomForm';
+import { FileForm } from '../components/CustomForm';
 import EventEntry from '../components/EventEntry';
 import Frame from '../components/Frame';
 
