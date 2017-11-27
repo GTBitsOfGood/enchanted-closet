@@ -26,6 +26,7 @@
     "enzyme": "^2.8.1",
     "expect": "^1.20.2",
     "express": "^4.15.2",
+    "fast-csv": "^2.4.1",
     "file-loader": "^1.1.5",
     "form-data": "^2.3.1",
     "isomorphic-fetch": "^2.2.1",
