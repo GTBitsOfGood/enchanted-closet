@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { Container, Segment, Form, Message } from 'semantic-ui-react';
 
-import { createEvent } from '../../actions';
+import { upsertEvent } from '../../actions';
 
 import PageTitle from '../../components/PageTitle';
 import LoadingIcon from '../../components/LoadingIcon';
@@ -26,14 +26,28 @@ class AdminEventsNew extends Component {
 		this.state = {
 			name: '',
 			description: '',
-			address: '',
+			location: '',
 			datetime: moment(),
 			loading: this.props.loading,
 			error: this.props.error
 		};
-		this.processEventCreation = this.processEventCreation.bind(this);
+
+		this.upsertEvent = this.upsertEvent.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleDatetimeChange = this.handleDatetimeChange.bind(this);
+	}
+
+	componentWillMount() {
+		if (this.props.event) {
+			const {event} = this.props;
+			this.setState({
+				_id: event._id,
+				name: event.name,
+				description: event.description,
+				location: event.location,
+				datetime: moment(new Date(event.datetime))
+			});
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -41,11 +55,11 @@ class AdminEventsNew extends Component {
 		this.setState({ loading, error, newEvent });
 	}
 
-	processEventCreation() {
-		const { dispatchEvent } = this.props;
-		const {name, description, address, datetime} = this.state;
+	upsertEvent() {
+		const { processEvent } = this.props;
+		const {_id, name, description, location, datetime} = this.state;
 		this.setState({loading: true});
-		dispatchEvent({name, description, address, datetime});
+		processEvent({_id, name, description, location, datetime});
 	}
 
 	handleInputChange(e, {name, value}) {
@@ -63,10 +77,10 @@ class AdminEventsNew extends Component {
 		} else {
 			return (
 				<Container>
-					<PageTitle title="New Event" />
+					<PageTitle title={this.state._id ? `Update Event` : `New Event`} />
 					<div style={{paddingTop:50}}>
 						<Segment>
-							<Form error={error !== undefined || error !== null} loading={loading} onSubmit={this.processEventCreation}>
+							<Form error={error !== undefined || error !== null} loading={loading} onSubmit={this.upsertEvent}>
 								{error &&
 								<Message
 								  error
@@ -74,9 +88,9 @@ class AdminEventsNew extends Component {
 								  content={error}
 								/>
 								}
-								<Form.Input required label='Event Name' name='name' placeholder='Event Name' onChange={this.handleInputChange} />
-								<Form.TextArea required label='Description' name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />
-								<Form.Input required label='Event Address' name='address' placeholder='123 Main Street, Atlanta GA 30318' onChange={this.handleInputChange} />
+								<Form.Input required label='Event Name' value={this.state.name} name='name' placeholder='Event Name' onChange={this.handleInputChange} />
+								<Form.TextArea required label='Description' value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />
+								<Form.Input required label='Event Address' value={this.state.location} name='location' placeholder='123 Main Street, Atlanta GA 30318' onChange={this.handleInputChange} />
 								<Form.Field
 									label='Starting date & time'
 									control={DatePicker}
@@ -86,7 +100,7 @@ class AdminEventsNew extends Component {
 									showTimeSelect
 									timeFormat="HH:mm"
 									timeIntervals={15}/>
-								<Form.Button>Submit</Form.Button>
+								<Form.Button>{this.state._id ? 'Update Event' : 'Create Event'}</Form.Button>
 							</Form>
 						</Segment>
 					</div>
@@ -109,8 +123,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	dispatchEvent(eventData) {
-		dispatch(createEvent(eventData));
+	processEvent(eventData) {
+		dispatch(upsertEvent(eventData));
 	}
 })
 

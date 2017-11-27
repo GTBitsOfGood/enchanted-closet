@@ -1,13 +1,13 @@
 const assert = require('assert');
-var Admin = require('../backend/model/admin');
+var User = require('../backend/model/user');
 
-describe('Creating admin', () => {
-	it('saves an admin user', (done) => {
-		var newAdmin = new Admin({name:'Admin', email:'test@test.com', password:"1234", admin:true});
+describe('Creating user', () => {
+	it('saves a user', (done) => {
+		var newUser = new User({name:'Admin', email:'test@test.com', password:"1234", role: 'Admin'});
 
-		newAdmin.save()
+		newUser.save()
 			.then(() => {
-				assert(!newAdmin.isNew);
+				assert(!newUser.isNew);
 				done();
 		});
 	});

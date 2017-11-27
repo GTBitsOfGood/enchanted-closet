@@ -16,6 +16,8 @@ import Helmet from 'react-helmet';
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
 import AdminEventsNew from './Admin/EventsNew';
+import AdminEventsEdit from './Admin/EventsEdit';
+import AdminEventsDetail from './Admin/EventsDetail';
 
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -28,15 +30,16 @@ export default function Root({ store }) {
                     <div>
                         <Navigation />
                         <Switch>
-                            <Route exact path="/" component={AppContainer} />
+                            <Route exact path="/" component={AppContainer}/>
                             <Route path="/login" component={Login} />
 			    <Route path="/profile" component={Profile} />
                             <Route exact path="/events" component={Events} />
-			    <Route path="/events/:id" component={EventsDetail} />
+            			    <Route path="/events/:id" component={EventsDetail} />
                             <Route path="/admin/dashboard" component={AdminDashboard} />
                             <Route exact path="/admin/events" component={AdminEvents} />
-			    <Route path="/admin/events/:id" component={EventsDetail} />
                             <Route path="/admin/events/create" component={AdminEventsNew} />
+                            <Route exact path="/admin/events/:id" component={AdminEventsDetail} />
+                            <Route path="/admin/events/:id/edit" component={AdminEventsEdit} />
                             <Route component={MissingPage} />
                         </Switch>
                     </div>

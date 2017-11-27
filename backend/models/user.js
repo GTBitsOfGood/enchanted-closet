@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 // const Event = mongoose.model('event');
 
-var ParticipantSchema = new mongoose.Schema({
+var UserSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		index: true
@@ -19,6 +19,13 @@ var ParticipantSchema = new mongoose.Schema({
 		type: Number,
 		index: true
 	},
+	role: {
+		type: String,
+		enum: ['Participant', 'Volunteer', 'Admin'],
+		index: true,
+		default: 'Participant',
+		required: true
+	},
 	birthday: Date,
 	grade: String,
 	age: Number,
@@ -27,11 +34,11 @@ var ParticipantSchema = new mongoose.Schema({
 	leader: String,
 	emergencyContactName: String,
 	emergencyContactPhone: String,
-	emergencyContactRelation: String/*,
-	pastEvents: [Event]*/
+	emergencyContactRelation: String,
+	pastEvents: [mongoose.Schema.Types.ObjectId]
 });
 
 
-let Participant = mongoose.model('Participant', ParticipantSchema);
+let User = mongoose.model('User', UserSchema);
 
-module.exports = Participant;
+module.exports = User;
