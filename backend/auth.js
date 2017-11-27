@@ -1,10 +1,8 @@
 let hash = require('./hash');
 let user = require('./controllers/users');
 let randomBytes = require('crypto').randomBytes;
-let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
-let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 let redisClient = require('redis').createClient();
+const User = require('mongoose').model('User');
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
@@ -21,48 +19,90 @@ module.exports.login = (data, callback) => {
     });
 }
 
-function hasAll(obj, props) {
-    for (p in props) {
-        if (!(obj[p])) {
-            return p;
+module.exports.isAdmin = (id, callback) => {
+    if (!id) { //catch falsy values like null or empty string
+        callback(false);
+        return next(new Error());
+    }
+    let retVal = false;
+    User.findById(id, (err, result) => {
+        if (!err && result.role == "Admin") {
+            callback(true);
+            return next(new Error());
         }
-    }
-    return false;
+        callback(false);
+    });
 }
 
-function matchesComplexityRequirements(password) {
-    //TODO: implement
-    return true;
+module.exports.currentUser = (tok, callback) => {
+    if (!tok) { //catch falsy values like null, empty string
+        return callback(null, null);
+    }
+    redisClient.get(tok, function(err, reply){
+        callback(err, reply)
+    });
 }
 
-module.exports.register = (data, callback) => {
-    let tmp = hasAll(data, ["email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-    if (tmp) {
-        return callback({reason: "Data object missing " + tmp + " property"}, false);
+module.exports.idMatchesOrAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
     }
-    if (!isEmail.test(data.email)) {
-        return callback({reason: "Email invalid"}, false);
+    currentUser(token, (_, curr) => {
+        isAdmin(curr, (state) => {
+            if (curr == null || (curr != req.id && !state)) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized'
+                };
+                return next(new Error());
+            }
+            return next();
+        });
+    });
+}
+
+module.exports.checkAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error());
     }
-    if (!matchesComplexityRequirements(data.password)) {
-        return callback({reason: "Password doesn't match complexity requirements"}, false);
+    token = token.substring(7);
+    currentUser(token, (_, curr) => {
+        isAdmin(curr, (state) => {
+            if (!state) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized (must be admin)'
+                };
+                return next(new Error());
+            }
+            return next();
+        });
+    });
+}
+
+module.exports.idMatches = (req, res, next) => {
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error());
     }
-    if (grades.indexOf(data.grade) == -1) {
-        return callback({reason: "Grade is not valid"});
-    }
-    //TODO: constraint checks for race, school, leader_name
-    tmp = hasAll(data.emergency_contact, ["name", "phone", "relation"]);
-    if (tmp) {
-        return callback({reason: "data.emergency_contact missing " + tmp + " property"}, false);
-    }
-    if (!isPhone.test(data.emergency_contact.phone)) {
-        return callback({reason: "Invalid phone number"}, false);
-    }
-    newHash = hash.genNew(data.password);
-    delete data.password;
-    data.hash = newHash;
-    if (user.addNew(data)) {
-        delete data.hash;
-        return callback(null, data);
-    }
-    return callback(null, true);
+    token = token.substring(7);
+    currentUser(token, (_, curr) => {
+        if (curr == null || curr != req.id) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized'
+            };
+            return next(new Error());
+        }
+        return next();
+    });
 }
