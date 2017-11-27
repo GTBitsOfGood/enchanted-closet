@@ -143,7 +143,10 @@ function fetchHelper(route, apiToken, obj) {
     }
     let headers = {'Authorization': 'Bearer ' + apiToken};
     if (obj && obj.headers) {
-        obj.headers = Object.assign({}, headers, obj.headers);
+        obj.headers = Object.assign({}, obj.headers, headers);
+    } else {
+        if (!obj) obj = {};
+        obj.headers = Object.assign({}, obj.headers || {}, headers);
     }
     return fetch(route, obj)
 }

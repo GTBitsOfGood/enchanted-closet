@@ -23,9 +23,10 @@ module.exports.login = (req, res, next) => {
 	}, (error, user) => {
 		if (error) {
 			res.locals.error = {
-				status: 500
+				status: 500,
+				msg: 'Internal Server Erro'
 			};
-			return next();
+			return next(new Error(res.locals.error));
 		}
 		if (user) {
             res.locals.data = {
