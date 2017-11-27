@@ -14,6 +14,7 @@ import LoadingIcon from '../../components/LoadingIcon';
 import ECEmergencyContactCard from '../../components/ECEmergencyContactCard';
 import ECDemographicsCard from '../../components/ECDemographicsCard';
 import ECContactCard from '../../components/ECContactCard';
+import ECPastEventsCard from '../../components/ECPastEventsCard';
 
 class AdminUsersDetail extends Component {
 	constructor(props) {
@@ -78,6 +79,7 @@ class AdminUsersDetail extends Component {
 						<ECContactCard user={user}/>
 						<ECDemographicsCard user={user}/>
 						<ECEmergencyContactCard user={user}/>
+						<ECPastEventsCard user={user}/>
 					</div>
 				}
 			</Container>
