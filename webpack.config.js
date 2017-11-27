@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     entry: [
@@ -46,6 +47,7 @@ module.exports = {
         historyApiFallback: true
     },
     plugins: [
+        new Dotenv({path: './.env.frontend'}),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()

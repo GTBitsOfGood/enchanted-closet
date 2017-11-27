@@ -1,15 +1,23 @@
 let bcrypt = require('bcrypt');
-let users = require('models/user');
+const User = require('mongoose').model('User');
 
 module.exports.genNew = (password) => {
-    return bcrypt.hashSync(password);
+    return bcrypt.hashSync(password, 15);
 }
 
-module.exports.checkAgainst = (email, password) => {
-    users.findByEmail(email, function(user, err){
+module.exports.checkAgainst = (data, callback) => {
+    User.findOne({
+        email: data.email
+    }, function (err, user) {
         if (err) {
-            return false;
+            return callback(err, null);
         }
-        return bcrypt.compareSync(password, user.passHash);
+        if (user) {
+            user.validatePassword(data.password)
+                .then(authenticatedUser => callback(null, authenticatedUser))
+                .catch(error => callback(error, null));
+        } else {
+            return callback('Incorrect email/password combination', null);
+        }
     });
 }

@@ -1,20 +1,33 @@
-module.exports.SurveyForm = {
-    "title": "",
-    "button": "",
+module.exports.ProfileForm = {
+    "title": "Personal Information",
+    "button": "Save",
     "data": [
-	{"title" : "Demographics",
+	{"title" : "Bio",
 	 "data" : [
 	     {
-		 "label" : "Phone number",
+		 "label" : "Name",
+		 "type" : "text",
+		 "name" : "name",
+		 "placeholder" : "George P. Burdell",
+		 "activate" : true
+	     },
+	     {
+		 "label" : "Email",
+		 "type" : "email",
+		 "name" : "email",
+		 "placeholder" : "gburdell@gatech.edu"
+	     },
+	     {
+		 "label" : "Phone Number",
 		 "type" : "number",
 		 "name" : "phone",
 		 "placeholder" : "12345667890",
 	     },
 	     {
 		 "label" : "Birthday",
-		 "type" : "number",
+		 "type" : "date",
 		 "name" : "birthday",
-		 "placeholder" : "01/01/2000"
+		 "placeholder" : "01/01/2000" 
 	     },
 	     {
 		 "label" : "Grade",
@@ -58,19 +71,19 @@ module.exports.SurveyForm = {
 		 "label" : "Emergency Contact Name",
 		 "type" : "text",
 		 "name" : "emergencyContactName",
-		 "placeholder" : "EC Name"
+		 "placeholder" : "EC Name"	
 	     },
 	     {
 		 "label" : "Emergency Contact Phone",
 		 "type" : "text",
 		 "name" : "emergencyContactPhone",
-		 "placeholder" : "EC Phone"
+		 "placeholder" : "EC Phone"	
 	     },
 	     {
 		 "label" : "Emergency Contact Relation",
 		 "type" : "text",
 		 "name" : "emergencyContactRelation",
-		 "placeholder" : "EC Relation"
+		 "placeholder" : "EC Relation"	
 	     },
 	 ]
 	}

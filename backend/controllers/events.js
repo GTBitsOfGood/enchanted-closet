@@ -1,5 +1,5 @@
 const Event = require('mongoose').model('Event');
-const User = require('mongoose').model('Participant');
+const User = require('mongoose').model('User')
 
 module.exports.index = (req, res, next) => {
     Event.find({}, (err, events) => {
@@ -10,7 +10,7 @@ module.exports.index = (req, res, next) => {
             return next();
         } else {
             res.locals.error = {
-                msg: 'There are no Events listed in the database',
+                msg: 'There are no events in the database',
                 status: 404
             };
             return next();
@@ -18,48 +18,108 @@ module.exports.index = (req, res, next) => {
     });
 }
 
-module.exports.markPresentAt = (req, res, next) => {
-    if (!req.params.eventId) {
+module.exports.present = (req, res, next) => {
+    if (!req.params.id) {
         res.locals.error = {
-            status: 404,
-            msg: 'Missing parameter: eventId'
+            status: 400,
+            msg: 'Event ID required'
         };
         return next();
     }
-    if (!req.params.userId) {
+    if (!req.body.userId) {
         res.locals.error = {
-            status: 404,
-            msg: 'Missing parameter: userId'
+            status: 400,
+            msg: 'User ID required'
         };
         return next();
     }
-    User.count({_id: userID}, function (err, count){ 
-        if (count == 0) {
-            res.locals.error = {
-                status: 404,
-                msg: 'User does not exist'
-            };
-            return next();
-        }
-    }); 
-    Event.findById(req.params.eventId, function(err, item){
+    let hadError = false;
+    Event.findById(req.params.id, function(err, doc){
         if (err) {
             res.locals.error = {
                 status: 404,
-                msg: 'That Event was not found in the database'
+                msg: 'That event was not found in the database'
+            };
+            hadError = true;
+            return;
+        }
+        doc.participants.push(req.body.userId);
+        doc.save();
+    });
+    if (hadError) {
+        return next();
+    }
+    User.findById(req.body.userId, function(err, doc){
+        if (err) {
+            res.locals.error = {
+                status: 404,
+                msg: 'That user was not found in the database'
             };
             return next();
         }
-        item.attendees.push(req.params.userId);
-        item.save();
+        doc.pastEvents.push(req.params.id);
+        doc.save();
+        return next();
+    });
+
+}
+
+module.exports.absent = (req, res, next) => {
+    if (!req.params.id) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Event ID required'
+        };
+        return next();
+    }
+    if (!req.body.userId) {
+        res.locals.error = {
+            status: 400,
+            msg: 'User ID required'
+        };
+        return next();
+    }
+    let hadError = false;
+    Event.findById(req.params.id, function(err, doc){
+        if (err) {
+            res.locals.error = {
+                status: 404,
+                msg: 'That event was not found in the database'
+            };
+            hadError = true;
+            return;
+        }
+        let ind = doc.participants.indexOf(req.body.userId);
+        if (ind != -1) {
+            doc.participants.splice(ind, 1);
+            doc.save();
+        }
+    });
+    if (hadError) {
+        return next();
+    }
+    User.findById(req.body.userId, function(err, doc){
+        if (err) {
+            res.locals.error = {
+                status: 404,
+                msg: 'That user was not found in the database'
+            };
+            return next();
+        }
+        let ind = doc.pastEvents.indexOf(req.params.id);
+        if (ind != -1) {
+            doc.pastEvents.splice(ind, 1);
+            doc.save();
+        }
+        return next();
     });
 }
 
 module.exports.get = (req, res, next) => {
     if (!req.params.id) {
         res.locals.error = {
-            status: 404,
-            msg: 'That Event was not found in the database'
+            status: 400,
+            msg: 'Event ID required'
         };
         return next();
     }
@@ -82,11 +142,65 @@ module.exports.get = (req, res, next) => {
     });
 }
 
+module.exports.create = (req, res, next) => {
+    if (!req.body.name) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Name field is required'
+        };
+        return next();
+    }
+
+    if (!req.body.description) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Description field is required'
+        };
+        return next();
+    }
+
+    if (!req.body.location) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Location field is required'
+        };
+        return next();
+    }
+
+    if (!req.body.datetime) {
+        res.locals.error = {
+            status: 400,
+            msg: 'Date & Time field is required'
+        };
+        return next();
+    }
+
+    Event.create({
+        name: req.body.name,
+        description: req.body.description,
+        location: req.body.location,
+        datetime: req.body.datetime
+    }, (err, result) => {
+        if (err) {
+            res.locals.error = {
+                status: 500,
+                msg: 'An error occurred while saving that event'
+            };
+            return next();
+        } else {
+            res.locals.data = {
+                event: result
+            }
+            return next();
+        }
+    });
+}
+
 module.exports.delete = (req, res, next) => {
     if (!req.params.id) {
         res.locals.error = {
-            status: 404,
-            msg: 'That Event was not found in the database'
+            status: 400,
+            msg: 'Event id required'
         };
         return next();
     }
@@ -104,5 +218,46 @@ module.exports.delete = (req, res, next) => {
             };
             return next();
         }
+    });
+}
+
+module.exports.update = (req, res, next) => {
+    if (!req.params.id) {
+        res.locals.error = {
+            status: 404,
+            msg: 'That Event was not found in the database'
+        };
+        return next();
+    }
+
+    Event.findById(req.params.id, (err, event) => {
+        if (err) {
+            console.error(err);
+            res.locals.errors = {
+                status: 500,
+                msg: err
+            };
+            return next();
+        }
+
+        if (!event) {
+            res.locals.error = {
+                status: 404,
+                msg: 'That Event was not found in the database'
+            };
+            return next();
+        }
+
+        event.name = req.body.name;
+        event.description = req.body.description;
+        event.location = req.body.location;
+        event.datetime = req.body.datetime;
+
+        event.save((err, updatedEvent) => {
+            res.locals.data = {
+                event: updatedEvent
+            };
+            return next();
+        });
     });
 }
