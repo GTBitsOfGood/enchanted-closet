@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import FileForm from '../components/CustomForm';
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message } from 'semantic-ui-react'
+import { FileForm } from '../components/CustomForm';
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image } from 'semantic-ui-react'
 
 import { performLogin } from '../actions/index';
 
@@ -34,7 +34,7 @@ class Login extends Component {
                 <Card fluid color='purple'>
                     <Card.Content header='Login' />
                     <Card.Content>
-                        <FileForm type="login" onClick={performLogin} />
+                        <FileForm type="login" submitRoute="login" buttonAction={performLogin} />
                     </Card.Content>
                 </Card>
             </Container>

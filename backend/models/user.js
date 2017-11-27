@@ -31,7 +31,7 @@ var UserSchema = new mongoose.Schema({
 	grade: String,
 	age: Number,
 	race: String,
-	School: String,
+	school: String,
 	leader: String,
 	emergencyContactName: String,
 	emergencyContactPhone: String,

@@ -3,9 +3,6 @@ let hash = require('./hash');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 let randomBytes = require('crypto').randomBytes;
-let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
-let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 let redisClient = require('redis').createClient();
 
 redisClient.on("error", function (err) {
@@ -27,97 +24,89 @@ module.exports.login = (data, callback) => {
     });
 }
 
-module.exports.isAdmin = (id) => {
-    if (!id) { //catch falsy values like null or empty string
-        return false;
+module.exports.isAdmin = (id, callback) => {
+    if (!id) {
+        return next(new Error());
     }
     let retVal = false;
-    User.findById(id, (err, doc) => {
-        if (!err && doc.role == "admin") {
-            retVal = true;
+    User.findById(id, (err, result) => {
+        if (!err && result.role == "Admin") {
+            callback(true);
+            return next(new Error());
         }
+        callback(false);
     });
-    return retVal;
 }
 
-module.exports.currentUser = (tok) => {
-    if (!tok) { //catch falsy values like null, empty string
-        return null;
+module.exports.currentUser = (tok, callback) => {
+    if (!tok) {
+        return callback(null, null);
     }
-    let retVal = null;
     redisClient.get(tok, function(err, reply){
-        if (reply != null) {
-            retVal = reply;
-        }
+        callback(err, reply)
     });
-    return retVal;
 }
 
-function hasAll(obj, props) {
-    for (p in props) {
-        if (!(obj[p])) {
-            return p;
-        }
+module.exports.idMatchesOrAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (token && token.split(" ").length == 2) {
+        token = token.split(" ")[1];
     }
-    return false;
-}
-
-function matchesComplexityRequirements(password) {
-    if (password.length < 7) return false;
-    let hasAlpha = false;
-    let hasNum = false;
-    for (let i = 0; i < password.length; i++) {
-        let c = password.charCodeAt(i);
-        if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
-            hasAlpha = true;
-        } else if (c >= 48 && c <= 57) {
-            hasNum = true;
-        }
-        if (hasAlpha && hasNum) return true;
-    }
-    return false;
-}
-
-module.exports.register = (data, callback) => {
-    console.log(data);
-    const requiredFields = ['email', 'password', 'confirm_password', 'name'];
-
-    if (!hasAll(data, requiredFields)) return callback({reason: 'Required field missing'}, null);
-
-    if (data.password !== data.confirm_password) return callback({reason: 'Passwords do not match'}, null);
-
-    if (!isEmail.test(data.email)) {
-        return callback({reason: 'Email is not a valid format'}, null);
-    }
-    if (!matchesComplexityRequirements(data.password)) {
-        return callback({reason: "Password doesn't match complexity requirements"}, false);
-    }
-    // if (grades.indexOf(data.grade) == -1) {
-    //     return callback({reason: "Grade is not valid"});
-    // }
-    // //TODO: constraint checks for race, school, leader_name
-    // tmp = hasAll(data.emergency_contact, ["name", "phone", "relation"]);
-    // if (tmp) {
-    //     return callback({reason: "data.emergency_contact missing " + tmp + " property"}, false);
-    // }
-    // if (!isPhone.test(data.emergency_contact.phone)) {
-    //     return callback({reason: "Invalid phone number"}, false);
-    // }
-    const hashedPassword = hash.genNew(data.password);
-    User.create({
-        email: data.email,
-        password: hashedPassword,
-        role: data.role || 'user',
-        name: data.name
-    }, (err, result) => {
-        if (err) {
-            return callback(err, null);
-        }
-
-        return callback(null, result);
+    currentUser(token, (_, curr) => {
+        isAdmin(curr, (state) => {
+            if (curr == null || (curr != req.id && !state)) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized'
+                };
+                return next(new Error(res.locals.error));
+            }
+            return next();
+        });
     });
-    // if (user.addNew(data)) {
-    //     delete data.hash;
-    //     return callback(null, data);
-    // }
+}
+
+module.exports.checkAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token || !token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (_, curr) => {
+        isAdmin(curr, (state) => {
+            if (!state) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized (must be admin)'
+                };
+                return next(new Error());
+            }
+            return next();
+        });
+    });
+}
+
+module.exports.idMatches = (req, res, next) => {
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (_, curr) => {
+        if (curr == null || curr != req.id) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized'
+            };
+            return next(new Error());
+        }
+        return next();
+    });
 }
