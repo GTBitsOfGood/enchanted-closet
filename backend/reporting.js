@@ -1,7 +1,7 @@
 const fs = require('fs');
 const csv = require('fast-csv');
 const Event = require('mongoose').model('Event');
-const User = require('mongoose').model('Participant');
+const User = require('mongoose').model('User');
 
 
 module.exports.generateReport = (req, res, next) => {
