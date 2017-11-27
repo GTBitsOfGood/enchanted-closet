@@ -1,5 +1,6 @@
 const Event = require('mongoose').model('Event');
-const User = require('mongoose').model('User')
+const User = require('mongoose').model('User');
+const async = require('async');
 
 module.exports.index = (req, res, next) => {
     Event.find({}, (err, events) => {
@@ -19,101 +20,153 @@ module.exports.index = (req, res, next) => {
 }
 
 module.exports.present = (req, res, next) => {
-    if (!req.params.id) {
+    if (!req.params.eventID) {
         res.locals.error = {
             status: 400,
             msg: 'Event ID required'
         };
         return next();
     }
-    if (!req.body.userId) {
+    if (!req.params.userID) {
         res.locals.error = {
             status: 400,
             msg: 'User ID required'
         };
         return next();
     }
-    let hadError = false;
-    Event.findById(req.params.id, function(err, doc){
-        if (err) {
+    Event.findById(req.params.eventID, function(err, eDoc){
+        if (err || !eDoc) {
             res.locals.error = {
                 status: 404,
                 msg: 'That event was not found in the database'
             };
-            hadError = true;
-            return;
-        }
-        doc.participants.push(req.body.userId);
-        doc.save();
-    });
-    if (hadError) {
-        return next();
-    }
-    User.findById(req.body.userId, function(err, doc){
-        if (err) {
-            res.locals.error = {
-                status: 404,
-                msg: 'That user was not found in the database'
-            };
             return next();
         }
-        doc.pastEvents.push(req.params.id);
-        doc.save();
-        return next();
-    });
+        User.findById(req.params.userID, function(err, uDoc){
+            if (err || !uDoc) {
+                res.locals.error = {
+                    status: 404,
+                    msg: 'That user was not found in the database'
+                };
+                return next();
+            }
 
+            if (!eDoc.participants) eDoc.participants = [];
+            if (eDoc.participants.indexOf(req.params.userID) === -1) {
+                eDoc.participants.push(req.params.userID);
+            } else {
+                res.locals.error = {
+                    status: 400,
+                    msg: 'That user has already been marked present'
+                };
+                return next();
+            }
+
+            if (!uDoc.pastEvents) uDoc.pastEvents = [];
+            uDoc.pastEvents.push(req.params.eventID);
+
+            uDoc.save((err) => {
+                if (err) {
+                    console.log(err);
+                    res.locals.error = {
+                        code: 500,
+                        msg: err
+                    };
+                    return next();
+                }
+                eDoc.save(err => {
+                    if (err) {
+                        console.log(err);
+                        res.locals.error = {
+                            code: 500,
+                            msg: err
+                        };
+                    }
+
+                    res.locals.data = {
+                        present: true
+                    }
+                    return next();
+                });
+            });
+        });
+    });
 }
 
 module.exports.absent = (req, res, next) => {
-    if (!req.params.id) {
+    if (!req.params.eventID) {
         res.locals.error = {
             status: 400,
             msg: 'Event ID required'
         };
         return next();
     }
-    if (!req.body.userId) {
+    if (!req.params.userID) {
         res.locals.error = {
             status: 400,
             msg: 'User ID required'
         };
         return next();
     }
-    let hadError = false;
-    Event.findById(req.params.id, function(err, doc){
-        if (err) {
+
+    Event.findById(req.params.eventID, function(err, eDoc){
+        if (err || !eDoc) {
             res.locals.error = {
                 status: 404,
                 msg: 'That event was not found in the database'
             };
-            hadError = true;
-            return;
-        }
-        let ind = doc.participants.indexOf(req.body.userId);
-        if (ind != -1) {
-            doc.participants.splice(ind, 1);
-            doc.save();
-        }
-    });
-    if (hadError) {
-        return next();
-    }
-    User.findById(req.body.userId, function(err, doc){
-        if (err) {
-            res.locals.error = {
-                status: 404,
-                msg: 'That user was not found in the database'
-            };
             return next();
         }
-        let ind = doc.pastEvents.indexOf(req.params.id);
-        if (ind != -1) {
-            doc.pastEvents.splice(ind, 1);
-            doc.save();
-        }
-        return next();
+
+        User.findById(req.params.userID, function(err, uDoc){
+            if (err || !uDoc) {
+                res.locals.error = {
+                    status: 404,
+                    msg: 'That user was not found in the database'
+                };
+                return next();
+            }
+
+            if (eDoc.participants) {
+                let ind = eDoc.participants.indexOf(req.params.userID);
+                if (ind != -1) {
+                    eDoc.participants.splice(ind, 1);
+                }
+            }
+
+            if (uDoc.pastEvents) {
+                let ind = uDoc.pastEvents.indexOf(req.params.eventID);
+                if (ind != -1) {
+                    uDoc.pastEvents.splice(ind, 1);
+
+                }
+            }
+            eDoc.save(err => {
+                if (err) {
+                    console.log(err);
+                    res.locals.error = {
+                        code: 500,
+                        msg: err
+                    };
+                }
+                uDoc.save(err => {
+                    if (err) {
+                        console.log(err);
+                        res.locals.error = {
+                            code: 500,
+                            msg: err
+                        };
+                    }
+
+                    res.locals.data = {
+                        absent: true
+                    }
+                    return next();
+                });
+            });
+        });
     });
-}
+};
 
 module.exports.get = (req, res, next) => {
     if (!req.params.id) {

@@ -349,6 +349,31 @@ export function loadDashboardCards() {
     }
 }
 
+export function markAttending(eventID, userID) {
+    return (dispatch, getState) => {
+        dispatch(loading());
+        return fetchHelper(`/api/events/${eventID}/present/${userID}`, getAPIToken(getState))
+            .then(response => response.json())
+            .then(json => {
+                return;
+            })
+            .then(() => dispatch(stopLoading()));
+    }
+}
+
+export function markUnattending(eventID, userID) {
+    return (dispatch, getState) => {
+        dispatch(loading());
+        return fetchHelper(`/api/events/${eventID}/absent/${userID}`, getAPIToken(getState))
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                return;
+            })
+            .then(() => dispatch(stopLoading()));
+    }
+}
+
 function getAPIToken(getState) {
     return getState().user ? getState().user.token : null;
 }

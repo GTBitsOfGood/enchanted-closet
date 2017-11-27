@@ -37,6 +37,7 @@ app.use((req, res, next) => {
 	} else {
 		return res.status(500).json({
 			'status': 'error',
+			'code': 500,
 			'msg': 'Internal Server Error'
 		});
 	}
@@ -53,6 +54,7 @@ app.use((err, req, res, next) => {
 	} else {
 		return res.status(500).json({
 			'status': 'error',
+			'code': 500,
 			'msg': 'Internal Server Error'
 		});
 	}

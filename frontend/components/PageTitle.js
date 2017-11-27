@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Container, Card, Grid } from 'semantic-ui-react';
+import {connect} from 'react-redux';
+
+import { Container, Card, Grid, Loader } from 'semantic-ui-react';
 
 import { withRouter } from 'react-router-dom';
 
@@ -11,7 +13,7 @@ class PageTitle extends Component {
 	}
 
     render() {
-    	const { title, link, linkTitle } = this.props;
+    	const { title, link, linkTitle, showLoadingIcon, loading } = this.props;
     	return (
     		<Container>
     			<Card fluid>
@@ -19,7 +21,10 @@ class PageTitle extends Component {
     					<Grid>
     						<Grid.Row columns={link && linkTitle ? 2 : 1}>
     							<Grid.Column>
-    								<h2>{title}</h2>
+    								<h2 style={{display:'inline'}}>{title}</h2>
+									{showLoadingIcon &&
+										<Loader active={loading} inline size='small' style={{marginLeft: '20px', marginTop: '-5px'}}/>
+									}
     							</Grid.Column>
     							{link && linkTitle &&
     							<Grid.Column textAlign="right">
@@ -35,4 +40,10 @@ class PageTitle extends Component {
     }
 }
 
-export default withRouter(PageTitle);
+const mapStateToProps = state => {
+	return {
+		loading: state.loading
+	}
+}
+
+export default withRouter(connect(mapStateToProps)(PageTitle));
