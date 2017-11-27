@@ -7,10 +7,10 @@ let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
 const hash = require("../hash");
 
 module.exports.index = (req, res, next) => {
-    User.find({}, (err, events) => {
-        if (events) {
+    User.find({}, (err, users) => {
+        if (users) {
             res.locals.data = {
-                events: events
+                users: users
             };
             return next();
         } else {
@@ -23,7 +23,7 @@ module.exports.index = (req, res, next) => {
     });
 }
 
-function hasAll(obj, props) {
+function lacksAny(obj, props) {
     for (p in props) {
         if (!(obj[p])) {
             return p;
@@ -49,7 +49,7 @@ function matchesComplexityRequirements(password) {
 }
 
 let validateUser = (data, callback) => {
-    let tmp = hasAll(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
+    let tmp = lacksAny(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
     if (tmp) {
         return callback({reason: "Data object missing " + tmp + " property"}, false);
     }
@@ -69,12 +69,11 @@ let validateUser = (data, callback) => {
     if (!isPhone.test(data.emergency_contact.phone)) {
         return callback({reason: "Invalid phone number"}, false);
     }
-    let newHash = hash.genNew(data.password);
-    return Object.assign({}, data, {"hash": newHash});
+    return Object.assign({}, data, {"password": hash.genNew(data.password)});
 }
 
 let validateAdmin = (data, callback) => {
-    let tmp = hasAll(data, ["email", "password", "name"]);
+    let tmp = lacksAny(data, ["email", "password", "name"]);
     if (tmp) {
         return callback({reason: "Data object missing " + tmp + " property"}, false);
     }
@@ -87,8 +86,7 @@ let validateAdmin = (data, callback) => {
     if (data.name.length < 2) {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
-    newHash = hash.genNew(data.password);
-    return Object.assign({}, data, {"hash": newHash});
+    return Object.assign({}, data, {"password": hash.genNew(data.password)});
 }
 
 module.exports.register = (req, res, next) => {
@@ -123,7 +121,7 @@ module.exports.register = (req, res, next) => {
             return next();
         }
         token = token.substring(7);
-        auth.currentUser(token, (curr) => {
+        auth.currentUser(token, (_, curr) => {
             auth.isAdmin(curr, (state) => {
                 if (state) {
                     let add = validateAdmin(req.body.data, errResp);
@@ -150,10 +148,10 @@ module.exports.register = (req, res, next) => {
 }
 
 module.exports.get = (req, res, next) => {
-    User.findById(req.params.id, (err, event) => {
-        if (event) {
+    User.findById(req.params.id, (err, user) => {
+        if (user) {
             res.locals.data = {
-                event: event
+                user: user
             };
             return next();
         } else {
@@ -167,8 +165,8 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
-    User.findById(req.params.id).remove((err, event) => {
-        if (event) {
+    User.findById(req.params.id).remove((err, user) => {
+        if (user) {
             res.locals.data = {}
             return next();
         } else {
@@ -192,9 +190,24 @@ module.exports.update = (req, res, next) => {
     let newProps = {};
     if (req.body.data["password"]) {
         //TODO: verify old password
-        if (matchesComplexityRequirements(req.body.data[password])) {
-            newProps["hash"] = hash.genNew(req.body.data.password);
+        
+        let token = req.header("Authorization");
+        if (!token.startsWith("Bearer ")) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized (must be admin)'
+            };
+            return next();
         }
+        token = token.substring(7);
+        auth.currentUser(token, (_, curr) => {
+            if (req.params.id != curr) {
+                return;
+            }
+            if (matchesComplexityRequirements(req.body.data[password])) {
+                newProps["password"] = hash.genNew(req.body.data.password);
+            }
+        });
     }
     if (req.body.data["name"] && req.body.data["name"].length >= 2) {
         newProps["name"] = req.body.data["name"];
@@ -221,6 +234,7 @@ module.exports.update = (req, res, next) => {
                         msg: "Unable to save changes to db"
                     }
                 }
+                res.locals.user = updated;
             });
         }
         return next();

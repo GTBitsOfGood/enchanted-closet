@@ -21,13 +21,14 @@ module.exports.login = (data, callback) => {
 
 module.exports.isAdmin = (id, callback) => {
     if (!id) { //catch falsy values like null or empty string
-        return false;
+        callback(false);
+        return next(new Error());
     }
     let retVal = false;
-    User.findById(id, (err, doc) => {
-        if (!err && doc.role == "Admin") {
+    User.findById(id, (err, result) => {
+        if (!err && result.role == "Admin") {
             callback(true);
-            return;
+            return next(new Error());
         }
         callback(false);
     });
@@ -35,11 +36,10 @@ module.exports.isAdmin = (id, callback) => {
 
 module.exports.currentUser = (tok, callback) => {
     if (!tok) { //catch falsy values like null, empty string
-        return null;
+        return callback(null, null);
     }
-    let retVal = null;
     redisClient.get(tok, function(err, reply){
-        callback(reply)
+        callback(err, reply)
     });
 }
 
@@ -48,15 +48,14 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
     if (token && token.split(" ").length == 2) {
         token = token.split(" ")[1];
     }
-    currentUser(token, (curr) => {
+    currentUser(token, (_, curr) => {
         isAdmin(curr, (state) => {
             if (curr == null || (curr != req.id && !state)) {
-                //TODO: verify that this sends response
                 res.locals.error = {
                     status: 403,
                     msg: 'Not authorized'
                 };
-                return;
+                return next(new Error());
             }
             return next();
         });
@@ -66,23 +65,21 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
 module.exports.checkAdmin = (req, res, next) => {
     let token = req.header("Authorization");
     if (!token.startsWith("Bearer ")) {
-        //TODO: verify that this sends response
         res.locals.error = {
             status: 403,
             msg: 'Not authorized (must be admin)'
         };
-        return;
+        return next(new Error());
     }
     token = token.substring(7);
-    currentUser(token, (curr) => {
+    currentUser(token, (_, curr) => {
         isAdmin(curr, (state) => {
             if (!state) {
-                //TODO: verify that this sends response
                 res.locals.error = {
                     status: 403,
                     msg: 'Not authorized (must be admin)'
                 };
-                return;
+                return next(new Error());
             }
             return next();
         });
@@ -91,22 +88,20 @@ module.exports.checkAdmin = (req, res, next) => {
 
 module.exports.idMatches = (req, res, next) => {
     if (!token.startsWith("Bearer ")) {
-        //TODO: verify that this sends response
         res.locals.error = {
             status: 403,
             msg: 'Not authorized (must be admin)'
         };
-        return;
+        return next(new Error());
     }
     token = token.substring(7);
-    currentUser(token, (curr) => {
+    currentUser(token, (_, curr) => {
         if (curr == null || curr != req.id) {
-            //TODO: verify that this sends response
             res.locals.error = {
                 status: 403,
                 msg: 'Not authorized'
             };
-            return;
+            return next(new Error());
         }
         return next();
     });
