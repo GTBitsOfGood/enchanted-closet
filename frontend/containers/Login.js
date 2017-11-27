@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { FileForm } from '../components/CustomForm';
 import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 
-import { performAdminLogin } from '../actions/index';
+import { performLogin } from '../actions/index';
 
 import { Redirect } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ class Login extends Component {
     }
 
     render() {
-        const {loggedIn, modalLoaderActive, performAdminLogin} = this.props;
+        const {loggedIn, modalLoaderActive, performLogin} = this.props;
         if (loggedIn) {
             return <Redirect to="/" />;
         } else {
@@ -27,7 +27,7 @@ class Login extends Component {
                 <Card fluid color='purple'>
                     <Card.Content header='Login' />
                     <Card.Content>
-                        <FileForm type="login" submitRoute="login" buttonAction={performAdminLogin} />
+                        <FileForm type="login" submitRoute="login" buttonAction={performLogin} />
                     </Card.Content>
                 </Card>
             </Container>
@@ -45,7 +45,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
-        performAdminLogin: performAdminLogin
+        performLogin: performLogin
     }, dispatch);
 }
 
