@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FileForm } from '../components/CustomForm';
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image } from 'semantic-ui-react'
 
 import { performLogin } from '../actions/index';
 
@@ -15,7 +15,7 @@ class Login extends Component {
     }
 
     render() {
-        const {loggedIn, modalLoaderActive, performLogin} = this.props;
+        const {loggedIn, modalLoaderActive, performLogin, errorMessage} = this.props;
         if (loggedIn) {
             return <Redirect to="/" />;
         } else {
@@ -24,6 +24,13 @@ class Login extends Component {
                 <Dimmer active={modalLoaderActive}>
                     <Loader>Loading</Loader>
                 </Dimmer>
+                {errorMessage &&
+                    <Message
+                        error
+                        header='Oops an error occurred!'
+                        content={errorMessage}
+                    />
+                }
                 <Card fluid color='purple'>
                     <Card.Content header='Login' />
                     <Card.Content>
@@ -39,7 +46,8 @@ class Login extends Component {
 const mapStateToProps = (state) => {
     return {
         modalLoaderActive: state.modalLoaderActive,
-        loggedIn: (state.user && state.apiToken)
+        loggedIn: state.user,
+        errorMessage: state.errorMessage
     };
 };
 

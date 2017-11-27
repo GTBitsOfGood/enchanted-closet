@@ -13,21 +13,11 @@ module.exports.checkAgainst = (data, callback) => {
             return callback(err, null);
         }
         if (user) {
-            bcrypt.compare(data.password, user.password, (err, authenticated) => {
-                if (err) {
-                    return callback(err, null);
-                }
-                if (authenticated) {
-                    // This is a hack to make sure we don't create a reference, but instead literally copy the object
-                    let temporaryUser = JSON.parse(JSON.stringify(user));
-                    delete temporaryUser.password;
-                    return callback(null, temporaryUser);
-                } else {
-                    return callback(null, null);
-                }
-            });
+            user.validatePassword(data.password)
+                .then(authenticatedUser => callback(null, authenticatedUser))
+                .catch(error => callback(error, null));
         } else {
-            return callback(null, null);            
+            return callback('Incorrect email/password combination', null);
         }
     });
 }

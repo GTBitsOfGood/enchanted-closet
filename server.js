@@ -42,6 +42,22 @@ app.use((req, res, next) => {
 	}
 });
 
+// Error handler
+app.use((err, req, res, next) => {
+	if (res.locals.error) {
+		let statusCode = res.locals.error.status || 500;
+		let response = Object.assign({}, res.locals.error, {
+			'status': 'error'
+		});
+		return res.status(statusCode).json(response);
+	} else {
+		return res.status(500).json({
+			'status': 'error',
+			'msg': 'Internal Server Error'
+		});
+	}
+});
+
 app.listen(PORT, error => {
     error
     ? console.error(error)

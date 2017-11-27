@@ -61,7 +61,7 @@ module.exports.present = (req, res, next) => {
         doc.save();
         return next();
     });
-    
+
 }
 
 module.exports.absent = (req, res, next) => {
@@ -245,7 +245,7 @@ module.exports.update = (req, res, next) => {
                 status: 404,
                 msg: 'That Event was not found in the database'
             };
-            return next();       
+            return next();
         }
 
         event.name = req.body.name;

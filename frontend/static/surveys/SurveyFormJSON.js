@@ -1,25 +1,8 @@
 module.exports.SurveyForm = {
-    "title": "Participant Survey",
-    "button": "Submit",
+    "title": "",
+    "button": "",
     "data": [
-	{"title" : "Who are you?",
-	 "data" : [
-	     {
-		 "label" : "Name",
-		 "type" : "text",
-		 "name" : "name",
-		 "placeholder" : "George P. Burdell",
-		 "activate" : true
-	     },
-	     {
-		 "label" : "Email",
-		 "type" : "email",
-		 "name" : "email",
-		 "placeholder" : "gburdell@gatech.edu"
-	     }
-	 ]
-	},
-	{"title" : "Some details",
+	{"title" : "Demographics",
 	 "data" : [
 	     {
 		 "label" : "Phone number",
@@ -31,7 +14,7 @@ module.exports.SurveyForm = {
 		 "label" : "Birthday",
 		 "type" : "number",
 		 "name" : "birthday",
-		 "placeholder" : "01/01/2000" 
+		 "placeholder" : "01/01/2000"
 	     },
 	     {
 		 "label" : "Grade",
@@ -75,19 +58,19 @@ module.exports.SurveyForm = {
 		 "label" : "Emergency Contact Name",
 		 "type" : "text",
 		 "name" : "emergencyContactName",
-		 "placeholder" : "EC Name"	
+		 "placeholder" : "EC Name"
 	     },
 	     {
 		 "label" : "Emergency Contact Phone",
 		 "type" : "text",
 		 "name" : "emergencyContactPhone",
-		 "placeholder" : "EC Phone"	
+		 "placeholder" : "EC Phone"
 	     },
 	     {
 		 "label" : "Emergency Contact Relation",
 		 "type" : "text",
 		 "name" : "emergencyContactRelation",
-		 "placeholder" : "EC Relation"	
+		 "placeholder" : "EC Relation"
 	     },
 	 ]
 	}

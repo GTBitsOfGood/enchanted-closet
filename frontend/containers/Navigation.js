@@ -25,15 +25,17 @@ class Navigation extends Component {
         	<Menu color='grey' inverted stackable size='large'>
                 <Menu.Item header color={activeColor} onClick={() => this.navigate('/')}>{applicationName}</Menu.Item>
                 {loggedIn &&
-                <Menu.Menu position='right'>
-                    <Menu.Item color={activeColor} onClick={() => this.navigate('/events')}>Events</Menu.Item>
-                    <Dropdown item text='Admin'>
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Menu.Item color={activeColor} onClick={logoutUser}>Log out</Menu.Item>
-                </Menu.Menu>
+                    <Menu.Menu position='right'>
+                        <Menu.Item color={activeColor} onClick={() => this.navigate('/events')}>Events</Menu.Item>
+                        <Dropdown item text='Admin'>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
+                                <Dropdown.Item onClick={() => this.navigate('/admin/users')}>Users</Dropdown.Item>
+                                <Dropdown.Item onClick={() => this.navigate('/admin/events')}>Events</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Menu.Item color={activeColor} onClick={logoutUser}>Log out</Menu.Item>
+                    </Menu.Menu>
                 }
                 {!loggedIn &&
                 <Menu.Item position='right' active color={activeColor} onClick={() => {this.navigate('/login')}}>Log In</Menu.Item>
@@ -46,7 +48,7 @@ class Navigation extends Component {
 const mapStateToProps = (state) => {
     return {
         applicationName: state.applicationName,
-        loggedIn: state.user && state.apiToken
+        loggedIn: state.user
     };
 };
 

@@ -1,108 +1,156 @@
 let hash = require('./hash');
-let user = require('./controllers/users');
+
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 let randomBytes = require('crypto').randomBytes;
 let redisClient = require('redis').createClient();
-const User = require('mongoose').model('User');
+
+const authHeader = 'authorization';
+
+const authError = {
+    code: 403,
+    msg: 'Invalid authorization credentials'
+};
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
 });
 
+function isCorrectAuthHeaderFormat(header) {
+    if (!header) return false;
+    if (!header.startsWith('Bearer ')) return false;
+    if (header.split(' ').length !== 2) return false;
+    return true;
+}
+
+function getToken(headers) {
+    if (!headers) return null;
+    return headers[authHeader].split(' ')[1];
+}
+
+module.exports.hasValidToken = (req, res, next) => {
+    let header = req.headers[authHeader];
+    if (!header || !isCorrectAuthHeaderFormat(header)) {
+        res.locals.error = authError;
+        return next(new Error(res.locals.errors));
+    }
+    let token = header.split(' ')[1];
+    redisClient.get(token, (err, cachedID) => {
+        if (err) {
+            res.locals.error = {
+                code: 500,
+                msg: 'Internal server error'
+            };
+            return next(new Error(res.locals.error));
+        }
+
+        if (!cachedID) {
+            res.locals.error = authError;
+            return next(new Error(res.locals.error));
+        }
+
+        console.log('valid')
+
+        return next();
+    });
+}
+
+module.exports.isAdmin = (req, res, next) => {
+    let token = getToken(req.headers);
+    redisClient.get(token, (err, cachedID) => {
+        if (err) {
+            res.locals.error = {
+                code: 500,
+                msg: 'Internal server error'
+            };
+            return next(new Error(res.locals.error));
+        }
+
+        User.findById(cachedID, (err, user) => {
+            if (err || !user) {
+                res.locals.error = authError;
+                return next(new Error(res.locals.error));
+            }
+
+            if (user.role.toLowerCase() !== 'admin') {
+                res.locals.error = authError;
+                return next(new Error(res.locals.error));
+            }
+
+            return next();
+        });
+    });
+}
+
+module.exports.isAdminOrIDMatches = (req, res, next) => {
+    let token = getToken(req.headers);
+    redisClient.get(token, (err, cachedID) => {
+        if (err) {
+            res.locals.error = {
+                code: 500,
+                msg: 'Internal server error'
+            };
+            return next(new Error(res.locals.error));
+        }
+
+        User.findById(cachedID, (err, user) => {
+            if (err || !user) {
+                res.locals.error = authError;
+                return next(new Error(res.locals.error));
+            }
+
+            if (user.role.toLowerCase() === 'admin') {
+                return next();
+            }
+
+            if (req.params.id === user._id) {
+                return next();
+            }
+
+            res.locals.error = authError;
+            return next(new Error(res.locals.error));
+        });
+    });
+}
+
+module.exports.isIDMatch = (req, res, next) => {
+    let token = getToken(req.headers);
+    redisClient.get(token, (err, cachedID) => {
+        if (err) {
+            res.locals.error = {
+                code: 500,
+                msg: 'Internal server error'
+            };
+            return next(new Error(res.locals.error));
+        }
+
+        User.findById(cachedID, (err, user) => {
+            if (err || !user) {
+                res.locals.error = authError;
+                return next(new Error(res.locals.error));
+            }
+
+            if (req.params.id === user._id) {
+                return next();
+            }
+
+            res.locals.error = authError;
+            return next(new Error(res.locals.error));
+        });
+    });
+}
+
 module.exports.login = (data, callback) => {
     hash.checkAgainst(data, function(err, usr) {
+        if (err) {
+            console.error(err);
+            return callback(err, null);
+        }
         if (usr !== null) {
             let tok = randomBytes(64).toString("hex");
             redisClient.set(tok, usr._id);
             return callback(err, Object.assign({}, usr, {"token": tok}));
         }
         return callback(err, usr);
-    });
-}
-
-module.exports.isAdmin = (id, callback) => {
-    if (!id) { //catch falsy values like null or empty string
-        callback(false);
-        return next(new Error());
-    }
-    let retVal = false;
-    User.findById(id, (err, result) => {
-        if (!err && result.role == "Admin") {
-            callback(true);
-            return next(new Error());
-        }
-        callback(false);
-    });
-}
-
-module.exports.currentUser = (tok, callback) => {
-    if (!tok) { //catch falsy values like null, empty string
-        return callback(null, null);
-    }
-    redisClient.get(tok, function(err, reply){
-        callback(err, reply)
-    });
-}
-
-module.exports.idMatchesOrAdmin = (req, res, next) => {
-    let token = req.header("Authorization");
-    if (token && token.split(" ").length == 2) {
-        token = token.split(" ")[1];
-    }
-    currentUser(token, (_, curr) => {
-        isAdmin(curr, (state) => {
-            if (curr == null || (curr != req.id && !state)) {
-                res.locals.error = {
-                    status: 403,
-                    msg: 'Not authorized'
-                };
-                return next(new Error());
-            }
-            return next();
-        });
-    });
-}
-
-module.exports.checkAdmin = (req, res, next) => {
-    let token = req.header("Authorization");
-    if (!token.startsWith("Bearer ")) {
-        res.locals.error = {
-            status: 403,
-            msg: 'Not authorized (must be admin)'
-        };
-        return next(new Error());
-    }
-    token = token.substring(7);
-    currentUser(token, (_, curr) => {
-        isAdmin(curr, (state) => {
-            if (!state) {
-                res.locals.error = {
-                    status: 403,
-                    msg: 'Not authorized (must be admin)'
-                };
-                return next(new Error());
-            }
-            return next();
-        });
-    });
-}
-
-module.exports.idMatches = (req, res, next) => {
-    if (!token.startsWith("Bearer ")) {
-        res.locals.error = {
-            status: 403,
-            msg: 'Not authorized (must be admin)'
-        };
-        return next(new Error());
-    }
-    token = token.substring(7);
-    currentUser(token, (_, curr) => {
-        if (curr == null || curr != req.id) {
-            res.locals.error = {
-                status: 403,
-                msg: 'Not authorized'
-            };
-            return next(new Error());
-        }
-        return next();
     });
 }

@@ -1,8 +1,9 @@
 module.exports.RegisterForm = {
-    "title": "Registration",
-    "button": "Submit",
+    "title": "",
+    "button": "Register",
     "data": [
-	{"title" : "Who are you?",
+	{
+        "title" : "",
 	 "data" : [
 	     {
 		 "label" : "Name",
@@ -31,7 +32,7 @@ module.exports.RegisterForm = {
 		 "label" : "Birthday",
 		 "type" : "number",
 		 "name" : "birthday",
-		 "placeholder" : "01/01/2000" 
+		 "placeholder" : "01/01/2000"
 	     },
 	     {
 		 "label" : "Grade",
@@ -75,19 +76,19 @@ module.exports.RegisterForm = {
 		 "label" : "Emergency Contact Name",
 		 "type" : "text",
 		 "name" : "emergencyContactName",
-		 "placeholder" : "EC Name"	
+		 "placeholder" : "EC Name"
 	     },
 	     {
 		 "label" : "Emergency Contact Phone",
 		 "type" : "text",
 		 "name" : "emergencyContactPhone",
-		 "placeholder" : "EC Phone"	
+		 "placeholder" : "EC Phone"
 	     },
 	     {
 		 "label" : "Emergency Contact Relation",
 		 "type" : "text",
 		 "name" : "emergencyContactRelation",
-		 "placeholder" : "EC Relation"	
+		 "placeholder" : "EC Relation"
 	     },
 	 ]
 	}

@@ -7,10 +7,10 @@ const SURVEY_DIR = '../static/surveys/';
 
 let data = {};
 
-import SurveyForm from '../static/surveys/SurveyFormJSON.js'; 
+import SurveyForm from '../static/surveys/SurveyFormJSON.js';
 import LoginForm from '../static/surveys/LoginFormJSON.js';
+import RegisterForm from '../static/surveys/RegisterFormJSON.js';
 import ProfileForm from '../static/surveys/ProfileFormJSON.js';
-//import RegisterForm from '../static/surveys/RegisterFormJSON.js';
 
 
 
@@ -26,7 +26,7 @@ import ProfileForm from '../static/surveys/ProfileFormJSON.js';
 
 
 //NOTES: uncomment dispatces for saving and loading, add proper routes
-class CustomForm extends Component {    
+class CustomForm extends Component {
     constructor(props) {
 	super(props);
 	this.state = {
@@ -36,7 +36,7 @@ class CustomForm extends Component {
 	this.clickHandler = this.clickHandler.bind(this);
 	this.changeHandler = this.changeHandler.bind(this);
     }
-    
+
     componentDidMount() {
 	const { dispatch } = this.props;
 	//dispatch(fetchFormData(this.props.loadRoute)); gets data into store
@@ -50,23 +50,23 @@ class CustomForm extends Component {
 	for (let key in this.state.formValues) {
 	    let newKey = key.split("|")[1]; //get second half
 	    newKeyDict[key] = newKey;
-	} 
-	let processedValues = {}	
+	}
+	let processedValues = {}
 	for (let key in newValues) {
-	    processedValues[newKeyDict[camelCasedToSpaced(key)]] = newValues[key]	    
+	    processedValues[newKeyDict[camelCasedToSpaced(key)]] = newValues[key]
 	}
 	console.log(processedValues);
-	
+
 	this.setState({ formValues: processedValues })
     }
-    
+
     clickHandler() {
 	const { buttonAction, submitRoute } = this.props;
 	const { changedValues } = this.state;
 	if (submitRoute != undefined) {
 	    let formData = {}
 	    switch (submitRoute) { //determines what gets fed to buttonAction
-		case "profile":		    
+		case "profile":
 		    for (let key in changedValues) {
 			let newKey = spacedToCamelCase(key.split("|")[1])
 			formData[newKey] = changedValues[key] //probably still not right ie. Emergency Contact Name => emerContactName (Hardcode needed)
@@ -88,7 +88,7 @@ class CustomForm extends Component {
 	    this.setState({ changedValues: {}}) //ideally this is reset on server confirm save
 	}
     }
-    
+
     changeHandler(event) {
 	let dictKey = event.target.name
 	let newVal = event.target.value
@@ -114,10 +114,10 @@ class CustomForm extends Component {
 	    "Emergency|Emergency Contact Relation": "Stranger",
 	    "Emergency|Emergency Contact Phone": 1111111111
 	};
-	
+
 	const { title, displayType, button, data, dispatch } = this.props;
 	enhance(data, formValues); //enhance(data, formValues);
-	
+
 	return (
 	    <div>
 		<h2>{ title }</h2>
@@ -153,7 +153,7 @@ const FileForm = ( props ) => {
 	    break;
     }
     const { buttonAction, submitRoute } = props;
-    formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';    
+    formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';
     return <CustomForm {...formProps} buttonAction={buttonAction} submitRoute={submitRoute}  />;
 }
 
@@ -166,25 +166,24 @@ const flatten = (data) => {
     return data
 	.reduce((total, curData) =>
 	    Object.assign(total, curData.data //why won't spread syntax work...
-					.reduce((total, d) => Object.assign(total, {[curData.title+ "|" + d.label]:""}), {})), 
+					.reduce((total, d) => Object.assign(total, {[curData.title+ "|" + d.label]:""}), {})),
 		{});
 }
 
 //reverse of flatten
 const enhance = (formDict, valueDict) => { //assigns value from valueDict to corresponding entry in formDict
     for (let value in valueDict) {
-	let route = value.split("|")
-	for (let i = 0; i < formDict.length; i++) {
-	    if (formDict[i]["title"] === route[0]) {
-		for (let j = 0; j < formDict[i].data.length; j++) {
-		    if (formDict[i].data[j]["label"] === route[1]) {
-			formDict[i].data[j]["value"] = valueDict[value]
-			j = formDict[i].data.length //break
-		    }
-		}
-		i = formDict.length
-	    }
-	}
+	    let route = value.split("|")
+	    for (let i = 0; i < formDict.length; i++) {
+	    if (formDict[i]["title"] === route[0])
+            for (let j = 0; j < formDict[i].data.length; j++) {
+		        if (formDict[i].data[j]["label"] === route[1]) {
+                    formDict[i].data[j]["value"] = valueDict[value]
+                    j = formDict[i].data.length //break
+                }
+            }
+            i = formDict.length
+        }
     }
 }
 
@@ -217,18 +216,18 @@ const CustomFormBlock = ( props ) => {
     //put any header information here
     //todo : add meta information option
     const { data, displayType, changeHandler } = props
-    
+
     if (data.title != null) {
-	return (	    
+	return (
 		<div key={data.title}>
-                    <h3> {data.title} </h3>    
-                    {data.data.map((d) => <FieldEntry key={data.title+d.label} formKey ={data.title+"|"+d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
+            <h3> {data.title} </h3>
+            {data.data.map((d) => <FieldEntry key={data.title+d.label} formKey ={data.title+"|"+d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
 		</div>
         )
     } else {
         return (
 	    <div>
-		{data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
+            {data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
 	    </div>
 	);
     }
@@ -243,14 +242,14 @@ const CustomFormBlock = ( props ) => {
  */
 const FieldEntry = ( props ) => {
     const { data, displayType, changeHandler , formKey } = props
-    data[data.label.toLowerCase()] = ''    
+    data[data.label.toLowerCase()] = ''
     //todo: change to spread syntax
     return (
         <Form.Input focus={data.activate != null ? true : false}
 		    className={displayType === "form" ? null : "inline"}
 		    key={data.label+data.type}
 		    label={data.label}
-	            name={formKey} 
+            name={formKey}
 		    type={data.type}
 		    placeholder={data.placeholder}
 		    onChange={changeHandler}

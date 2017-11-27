@@ -190,7 +190,7 @@ module.exports.update = (req, res, next) => {
     let newProps = {};
     if (req.body.data["password"]) {
         //TODO: verify old password
-        
+
         let token = req.header("Authorization");
         if (!token.startsWith("Bearer ")) {
             res.locals.error = {
