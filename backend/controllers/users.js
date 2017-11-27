@@ -100,7 +100,6 @@ module.exports.register = (req, res, next) => {
     }
     if (req.role == "Participant" || req.role == "Volunteer") {
         let add = validateUser(req.body.data, errResp);
-        delete add.password;
         User.create(add, (err, instance) => {
             if (err) {
                 res.locals.error = {
@@ -125,7 +124,6 @@ module.exports.register = (req, res, next) => {
             auth.isAdmin(curr, (state) => {
                 if (state) {
                     let add = validateAdmin(req.body.data, errResp);
-                    delete add.password;
                     User.create(add, (err, instance) => {
                         if (err) {
                             res.locals.error = {
