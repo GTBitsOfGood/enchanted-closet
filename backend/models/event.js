@@ -26,6 +26,10 @@ var EventSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    speakers: {
+        type: [mongoose.Schema.Types.Mixed],
+        required: false
+    },
     participants: {
         type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
     }
