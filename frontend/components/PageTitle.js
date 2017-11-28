@@ -15,8 +15,13 @@ class PageTitle extends Component {
 
     render() {
     	var styles = {
+            background: {
+                backgroundColor: '#733D9D',
+                color: 'white'
+            },
             button: {
             	backgroundColor: '#6200B3',
+                border: '1px solid white',
             	fontFamily: 'Lato',
             	color: 'white',
             	':active': {
@@ -27,7 +32,7 @@ class PageTitle extends Component {
     	const { title, link, linkTitle, showLoadingIcon, loading } = this.props;
     	return (
     	    <Container>
-                <Card fluid>
+                <Card fluid style={styles.background}>
                     <Card.Content>
                         <Grid>
                             <Grid.Row columns={link && linkTitle ? 2 : 1}>
@@ -39,7 +44,7 @@ class PageTitle extends Component {
                                 </Grid.Column>
                                 {link && linkTitle &&
                                     <Grid.Column textAlign="right">
-                                        <Button style={styles.button} inverted as='a' href={`#/${link}`}>{linkTitle}</Button>
+                                        <Button style={styles.button} as='a' href={`#/${link}`}>{linkTitle}</Button>
                                     </Grid.Column>
                                 }
                             </Grid.Row>
