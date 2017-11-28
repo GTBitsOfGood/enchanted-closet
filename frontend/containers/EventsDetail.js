@@ -67,6 +67,7 @@ class EventsDetail extends Component {
 		const { events } = nextProps;
 		const eventId = this.state.eventId;
 		//process it again
+		if (!events) return;
 		const detail = events.find(e => e._id === eventId);
 		if (!detail) {
 			this.setState({
@@ -159,6 +160,7 @@ class EventsDetail extends Component {
 											]}
 											onActionClick={() => deleteEvent(detail._id)}
 										/>
+										<Button onClick={() => history.push(`/admin/events/${detail._id}/attendance`)}>Attendance</Button>
 									</Button.Group>
 								</Clearfix>
 							</Segment>
