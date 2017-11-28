@@ -38,6 +38,7 @@
     "mongoose": "^4.11.12",
     "node-sass": "^4.5.2",
     "prop-types": "^15.5.8",
+    "radium": "^0.19.6",
     "react": "^15.5.4",
     "react-addons-css-transition-group": "^15.6.0",
     "react-cookie": "^2.1.2",
