@@ -3,7 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers/');
-const auth = require('./auth');
+const reporting = require('./reporting');
+const auth = require('./auth')
 
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
@@ -21,7 +22,9 @@ router.get('/events', /*[auth.hasValidToken],*/ controllers.events.index);
 router.get('/events/:id', [auth.hasValidToken], controllers.events.get);
 router.post('/events/', [auth.hasValidToken, auth.isAdmin], controllers.events.create);
 router.delete('/events/:id', [auth.hasValidToken, auth.isAdmin], controllers.events.delete);
+
 router.get('/events/:eventID/present/:userID', /*[auth.hasValidToken, auth.isAdmin],*/ controllers.events.present);
 router.get('/events/:eventID/absent/:userID', /*[auth.hasValidToken, auth.isAdmin],*/ controllers.events.absent);
+router.get('/events/:id/report', auth.checkAdmin, reporting.generateReport);
 
 module.exports = router;
