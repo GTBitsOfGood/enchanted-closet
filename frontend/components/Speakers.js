@@ -6,11 +6,11 @@ const Speakers = (props) => {
 	return (
 		<Segment>
 			<h3>Speakers</h3>
-			{props.speakers && props.speakers.length > 0 ?
-				props.speakers.map(speaker => (
+			{props.presenters && props.presenters.length > 0 ?
+				props.presenters.map(speaker => (
 					<Popup
 						key={speaker.name}
-						trigger={<Image src={speaker.avatar} avatar />}
+						trigger={speaker.avatar ? (<Image src={speaker.avatar} avatar />) : (<Icon name='question circle outline'/>)}
 						header={speaker.name}
 						content={speaker.bio}
 					/>

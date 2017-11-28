@@ -10,7 +10,7 @@ class ECUserListItem extends Component {
 		super(props);
 		this.state = {
 			event: this.props.event,
-			userID: this.props.user._id,
+			user: this.props.user,
 			attending: this.props.attending ? this.props.attending : false
 		};
 		this.attendanceUpdate = this.attendanceUpdate.bind(this);
@@ -18,13 +18,13 @@ class ECUserListItem extends Component {
 
 	attendanceUpdate(updateEvent, data) {
 		const { markAttending, markUnattending } = this.props;
-		const {event, userID} = this.state;
+		const {event, user} = this.state;
 		this.setState({attending: !this.state.attending}, () => {
-			console.log(`${this.state.userID} is now ${this.state.attending}`)
+			console.log(`${this.state.user._id} is now ${this.state.attending}`)
 			if (this.state.attending) {
-				markAttending(event._id, userID);
+				markAttending(event, user);
 			} else {
-				markUnattending(event._id, userID);
+				markUnattending(event, user);
 			}
 		});
 	}

@@ -79,6 +79,7 @@ class EventsDetail extends Component {
 				isFetchingEvents: false,
 				detail: detail
 			});
+
 			geocode(detail.location)
 				.then(location => {
 					this.setState({latitude: location.lat, longitude: location.lng});
@@ -92,23 +93,7 @@ class EventsDetail extends Component {
 	render() {
 		const { events, deleteEvent, isFetchingEvents, location, history } = this.props;
 		const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
-		const speakers = [
-		  {
-		    name: 'Elliot Fu',
-		    bio: 'Elliot has been a member since July 2012',
-		    avatar: '/assets/images/avatar/small/elliot.jpg',
-		  },
-		  {
-		    name: 'Stevie Feliciano',
-		    bio: 'Stevie has been a member since August 2013',
-		    avatar: '/assets/images/avatar/small/stevie.jpg',
-		  },
-		  {
-		    name: 'Matt',
-		    bio: 'Matt has been a member since July 2014',
-		    avatar: '/assets/images/avatar/small/matt.jpg',
-		  },
-		];
+		console.log(detail);
 		return (
 			<Container>
 				<Dimmer active={isFetchingEvents}>
@@ -129,7 +114,7 @@ class EventsDetail extends Component {
 							<h3>Description</h3>
 							<p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>
 						</Segment>
-						<Speakers speakers={[]}/>
+						<Speakers presenters={detail.presenters}/>
 						{displayMapLocationError || (latitude && longitude) ?
 							<ECMap
 								isMarkerShown

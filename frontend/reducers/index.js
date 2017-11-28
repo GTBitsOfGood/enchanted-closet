@@ -150,13 +150,13 @@ function rootReducer(state = require('../static/defaultState'), action) {
         case types.MARK_ATTENDING:
             const userMap = state.users.map(u => {
                 if (u._id === action.userID) {
-                    u.pastEvents.push(action.eventID);
+                    u.pastEvents.push(action.event);
                 }
                 return u;
             });
             const eventRemap = state.events.map(e => {
                 if (e._id === action.eventID) {
-                    e.participants.push(action.userID);
+                    e.participants.push(action.user);
                 }
                 return e;
             });
@@ -168,14 +168,14 @@ function rootReducer(state = require('../static/defaultState'), action) {
         case types.MARK_UNATTENDING:
             const userRebuild = state.users.map(u => {
                 if (u._id === action.userID) {
-                    const i = u.pastEvents.indexOf(action.eventID);
+                    const i = u.pastEvents.findIndex(e => e._id === action.event._id);
                     if (i > -1) u.pastEvents.splice(i, 1);
                 }
                 return u;
             });
             const eventRebuild = state.events.map(e => {
                 if (e._id === action.eventID) {
-                    const i = e.participants.indexOf(action.eventID);
+                    const i = e.participants.findIndex(u => u._id === action.user._id);
                     if (i > -1) e.participants.splice(i, 1);
                 }
                 return e;
