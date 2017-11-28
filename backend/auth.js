@@ -18,12 +18,12 @@ redisClient.on("error", function (err) {
 
 module.exports.isAdmin = (id, callback) => {
     if (!id) { //catch falsy values like null or empty string
-        callback(null, false);
+        return callback(null, false);
     }
     let retVal = false;
     User.findById(id, (err, result) => {
         if (!err && result.role == "Admin") {
-            callback(err, true);
+            return callback(err, true);
         }
         callback(err, false);
     });

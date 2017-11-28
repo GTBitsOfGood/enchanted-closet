@@ -102,7 +102,7 @@ module.exports.register = (req, res, next) => {
         }
     }
     if (req.role == "Participant" || req.role == "Volunteer") {
-        add = validateUser(req.body.data, errResp);
+        let add = validateUser(req.body.data, errResp);
         User.create(add, (err, instance) => {
             if (err) {
                 res.locals.error = {
