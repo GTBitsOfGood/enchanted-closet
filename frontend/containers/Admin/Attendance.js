@@ -27,7 +27,7 @@ class AdminAttendance extends Component {
 		};
 
 		if (events && events.length > 0) {
-			const event = events.filter(e => e._id === event_id);
+			const event = events.filter(e => e._id === this.state.event_id);
 			if (event && event.length === 1) {
 				this.state.event = event[0];
 			}
