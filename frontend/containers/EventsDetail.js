@@ -93,7 +93,6 @@ class EventsDetail extends Component {
 	render() {
 		const { events, deleteEvent, isFetchingEvents, location, history } = this.props;
 		const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
-		console.log(detail);
 		return (
 			<Container>
 				<Dimmer active={isFetchingEvents}>
@@ -101,14 +100,6 @@ class EventsDetail extends Component {
 				</Dimmer>
 				{ !isFetchingEvents && detail &&
 					<div>
-						{adminControls &&
-							<div onClick={() => console.log('click')}>
-								<Message
-									header='Public Event View'
-									content='Please click here if you would like to make changes to this event'
-								/>
-							</div>
-						}
 						<PageTitle title={detail.name} />
 						<Segment key="information">
 							<h3>Description</h3>
