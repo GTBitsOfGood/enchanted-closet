@@ -27,7 +27,7 @@ var EventSchema = new mongoose.Schema({
         required: false
     },
     participants: {
-        type: [mongoose.Schema.Types.ObjectId]
+        type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
     }
 });
 

@@ -3,20 +3,23 @@ const User = require('mongoose').model('User');
 const async = require('async');
 
 module.exports.index = (req, res, next) => {
-    Event.find({}, (err, events) => {
-        if (events) {
-            res.locals.data = {
-                events: events
-            };
-            return next();
-        } else {
-            res.locals.error = {
-                msg: 'There are no events in the database',
-                status: 404
-            };
-            return next();
-        }
-    });
+    Event
+        .find({})
+        .populate('participants')
+        .exec((err, events) => {
+            if (events) {
+                res.locals.data = {
+                    events: events
+                };
+                return next();
+            } else {
+                res.locals.error = {
+                    msg: 'There are no events in the database',
+                    status: 404
+                };
+                return next();
+            }
+        });
 }
 
 module.exports.present = (req, res, next) => {
@@ -177,9 +180,10 @@ module.exports.get = (req, res, next) => {
         return next();
     }
 
-    Event.findOne({
-        _id: req.params.id
-    }, (err, event) => {
+    Event
+        .findById(req.params.id)
+        .populate('participants')
+        .exec((err, event) => {
         if (event) {
             res.locals.data = {
                 event: event

@@ -11,7 +11,6 @@ import './assets/stylesheets/base';
 
 const store = configureStore(loadState());
 
-console.log(store);
 store.subscribe(() => {
     saveState(store.getState());
 })

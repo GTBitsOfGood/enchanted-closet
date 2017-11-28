@@ -7,7 +7,10 @@ let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
 const hash = require("../hash");
 
 module.exports.index = (req, res, next) => {
-    User.find({}, (err, users) => {
+    User
+        .find({})
+        .populate('pastEvents')
+        .exec((err, users) => {
         if (users) {
             res.locals.data = {
                 users: users
@@ -146,7 +149,10 @@ module.exports.register = (req, res, next) => {
 }
 
 module.exports.get = (req, res, next) => {
-    User.findById(req.params.id, (err, user) => {
+    User
+        .findById(req.params.id)
+        .populate('pastEvents')
+        .exec((err, user) => {
         if (user) {
             res.locals.data = {
                 user: user
