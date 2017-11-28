@@ -46,15 +46,16 @@ class Navigation extends Component {
                 {loggedIn &&
                     <Menu.Menu position='right'>
                         <Menu.Item style={styles.button} onClick={() => this.navigate('/events')}>Events</Menu.Item>
+                        <Menu.Item style={styles.button} onClick={() => this.navigate('/profile')}>My Profile</Menu.Item>
                         <Dropdown item text='Admin' style={styles.button} >
-                         <Dropdown.Menu>
-                             <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
-                             <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/users')}>Users</Dropdown.Item>
-                             <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/events')}>Events</Dropdown.Item>
-                         </Dropdown.Menu>
-                     </Dropdown>
-                     <Menu.Item onClick={logoutUser}>Log out</Menu.Item>
-                 </Menu.Menu>
+                            <Dropdown.Menu>
+                                <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
+                                <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/users')}>Users</Dropdown.Item>
+                                <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/events')}>Events</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Menu.Item onClick={logoutUser}>Log out</Menu.Item>
+                    </Menu.Menu>
                 }
                 {!loggedIn &&
                  <Menu.Item position='right' style={styles.button}  onClick={() => {this.navigate('/login')}}>Log In</Menu.Item>

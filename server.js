@@ -29,14 +29,17 @@ app.use((req, res, next) => {
 		});
 		return res.status(200).json(response);
 	} else if (res.locals.error) {
-		let statusCode = res.locals.error.status || 500;
+		console.log(res.locals.error);
+		let statusCode = res.locals.error.code || 500;
 		let response = Object.assign({}, res.locals.error, {
 			'status': 'error'
 		});
 		return res.status(statusCode).json(response);
 	} else {
+		console.log('generic server error');
 		return res.status(500).json({
 			'status': 'error',
+			'code': 500,
 			'msg': 'Internal Server Error'
 		});
 	}
@@ -44,8 +47,9 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
+	console.log(err);
 	if (res.locals.error) {
-		let statusCode = res.locals.error.status || 500;
+		let statusCode = res.locals.error.code || 500;
 		let response = Object.assign({}, res.locals.error, {
 			'status': 'error'
 		});
@@ -53,6 +57,7 @@ app.use((err, req, res, next) => {
 	} else {
 		return res.status(500).json({
 			'status': 'error',
+			'code': 500,
 			'msg': 'Internal Server Error'
 		});
 	}
