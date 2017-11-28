@@ -24,7 +24,8 @@ class Navigation extends Component {
 	var styles = {
 	    base: {
 	      background: '#3B0086',
-	      fontFamily: 'Lato'
+	      fontFamily: 'Lato',
+          borderRadius: 0
 	    },
 	    button: {
 		background: '#6200B3',
@@ -40,12 +41,12 @@ class Navigation extends Component {
 	};
         const { applicationName, loggedIn, logoutUser } = this.props;
         return (
-            <Menu style={styles.base} inverted stackable size='large'>
+            <Menu style={styles.base} inverted stackable size='massive'>
                 <Menu.Item header onClick={() => this.navigate('/')}>{applicationName}</Menu.Item>
                 {loggedIn &&
-                 <Menu.Menu position='right'>
-                     <Menu.Item style={styles.button} onClick={() => this.navigate('/events')}>Events</Menu.Item>
-                     <Dropdown item text='Admin' style={styles.button} >
+                    <Menu.Menu position='right'>
+                        <Menu.Item style={styles.button} onClick={() => this.navigate('/events')}>Events</Menu.Item>
+                        <Dropdown item text='Admin' style={styles.button} >
                          <Dropdown.Menu>
                              <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
                              <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/users')}>Users</Dropdown.Item>
