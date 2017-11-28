@@ -24,11 +24,10 @@ class Navigation extends Component {
 	var styles = {
 	    base: {
 	      background: '#3B0086',
-	      fontFamily: 'Lato',
-          borderRadius: 0
+              borderRadius: 0
 	    },
 	    button: {
-		background: '#6200B3',
+	      background: '#6200B3',
 		':hover': {
 		  background: '#7E2EC0',
 		  boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
