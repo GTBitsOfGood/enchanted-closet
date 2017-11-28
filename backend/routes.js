@@ -4,7 +4,10 @@ const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers/');
 const reporting = require('./reporting');
-const auth = require('./auth')
+const auth = require('./auth');
+const multer = require('multer');
+//limit file uploads to 5 MB
+var upload = multer({limits: {fileSize: 5000000}});
 
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
@@ -28,5 +31,8 @@ router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.even
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent);
 router.put('/events/:id', auth.checkAdmin, controllers.events.update);
 router.get('/events/:id/report', reporting.generateReport);
+
+router.post('/upload/picture/event/:id', [auth.hasValidToken, auth.checkAdmin, upload], controllers.upload.eventPic);
+router.post('/upload/picture/user/:id', [auth.hasValidToken, auth.isIDMatch, upload], controllers.upload.userPic);
 
 module.exports = router;

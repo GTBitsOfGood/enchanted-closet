@@ -27,6 +27,10 @@ var UserSchema = new mongoose.Schema({
 		default: 'Participant',
 		required: true
 	},
+	photo: {
+		type: String,
+		required: false
+	},
 	birthday: Date,
 	grade: String,
 	age: Number,
