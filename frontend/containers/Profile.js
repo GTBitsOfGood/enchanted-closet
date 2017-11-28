@@ -10,27 +10,31 @@ import LoadingIcon from '../components/LoadingIcon';
 import {CustomForm, enhance} from '../components/CustomForm';
 import ProfileForm from '../static/surveys/ProfileFormJSON.js';
 
+class Profile extends Component {
+    constructor(props){
+    	super(props);
+    }
 
-const Profile = () => {
-    let formProps = ProfileForm.ProfileForm
-    let loadRoute = "api/loadProfile"
-    let saveRoute = "api/saveProfile"
-    return (
-	       <Container>
-               <PageTitle title="Profile" />
-               <Card fluid>
-                   <Card.Content>
-                       {<CustomForm {...formProps} loadRoute={loadRoute} buttonAction={null} submitRoute="profile" displayType="inline" />}
-                   </Card.Content>
-               </Card>
-           </Container>
+    render() {
+        let formProps = ProfileForm.ProfileForm;
+        const {user} = this.props;
+        return (
+               <Container>
+                   <PageTitle title="Profile" />
+                   <Card fluid>
+                       <Card.Content>
+                           {<CustomForm {...formProps} buttonAction={null} submitRoute="profile" displayType="inline" />}
+                       </Card.Content>
+                   </Card>
+               </Container>
 
-    );
+        );
+    }
 }
 
 const mapStateToProps = state => {
     return {
-        profileData: state.profileData
+        user: state.user
     }
 }
 
