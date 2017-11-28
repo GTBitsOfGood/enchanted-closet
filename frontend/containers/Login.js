@@ -14,8 +14,8 @@ class Login extends Component {
     constructor(props) {
         super(props);
     }
-    
-    render() {	
+
+    render() {
         const {loggedIn, modalLoaderActive, performLogin, errorMessage} = this.props;
 	const imgL = "/images/EC_dress2-01.png";
 	const imgR = "/images/EC_dress4-01.png";
@@ -25,41 +25,41 @@ class Login extends Component {
 		margin: '2em',
 	    }
 	};
-	
+
         if (loggedIn) {
             return <Redirect to="/" />;
         } else {
             return (
-		<Grid style={styles.margin} columns='three' relaxed centered>
-		    <Grid.Row>
-			<Grid.Column width={4}>
-			    <Image src={imgL} size='medium' centered />
-			</Grid.Column>
-			<Grid.Column width={8}>
-			    <Container text centered>
-				<Dimmer active={modalLoaderActive}>
-				    <Loader>Loading</Loader>
-				</Dimmer>
-				{errorMessage &&
-				 <Message
-				     error
-				     header='Oops an error occurred!'
-				     content={errorMessage}
-				 />
-				}
-				<Card fluid color='purple' >
-				    <Card.Content header='Login' />
-				    <Card.Content>
-					<FileForm type="login" isInline="true" submitRoute="login" buttonAction={performLogin} />
-				    </Card.Content>
-				</Card>
-			    </Container>
-			</Grid.Column>
-			<Grid.Column width={4}>
-			    <Image src={imgR} size='medium' centered />
-			</Grid.Column>
-		    </Grid.Row>
-		</Grid>
+                <Grid style={styles.margin} columns='three' relaxed centered>
+                    <Grid.Row>
+                        <Grid.Column width={4}>
+                            <Image src={imgL} size='medium' centered />
+                        </Grid.Column>
+                        <Grid.Column width={8}>
+                            <Container text centered>
+                                <Dimmer active={modalLoaderActive}>
+                                    <Loader>Loading</Loader>
+                                </Dimmer>
+                                {errorMessage &&
+                                    <Message
+                                        error
+                                        header='Oops an error occurred!'
+                                        content={errorMessage}
+                                    />
+                                }
+                                <Card fluid color='purple' >
+                                    <Card.Content header='Login' />
+                                    <Card.Content>
+                                        <FileForm type="login" isInline="true" submitRoute="login" buttonAction={performLogin} />
+                                    </Card.Content>
+                                </Card>
+                            </Container>
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                            <Image src={imgR} size='medium' centered />
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
             );
         }
     }
