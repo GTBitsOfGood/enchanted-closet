@@ -9,7 +9,6 @@ class Auth extends Component {
 	}
 
 	render() {
-		console.log(this.props)
 		const {loggedIn} = this.props;
 
 		if (loggedIn) {
