@@ -6,7 +6,7 @@ import { Menu, Dropdown } from 'semantic-ui-react'
 
 import { logoutUser } from '../actions/index';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
 import Radium from 'radium';
 
 
