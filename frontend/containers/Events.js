@@ -6,7 +6,7 @@ import { Button, Container, Icon, Dimmer, Loader, Segment } from 'semantic-ui-re
 
 import Event from '../components/Event';
 
-import { fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
+import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
 
 import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
@@ -19,7 +19,8 @@ class Events extends Component {
 
     componentDidMount() {
         const { dispatch } = this.props;
-        dispatch(fetchEventsIfNeeded());
+        dispatch(fetchEvents());
+        // dispatch(fetchEventsIfNeeded());
     }
 
     handleRefreshClick(e) {

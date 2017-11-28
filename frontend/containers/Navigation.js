@@ -27,6 +27,7 @@ class Navigation extends Component {
                 {loggedIn &&
                     <Menu.Menu position='right'>
                         <Menu.Item color={activeColor} onClick={() => this.navigate('/events')}>Events</Menu.Item>
+                        <Menu.Item color={activeColor} onClick={() => this.navigate('/profile')}>My Profile</Menu.Item>
                         <Dropdown item text='Admin'>
                             <Dropdown.Menu>
                                 <Dropdown.Item onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
