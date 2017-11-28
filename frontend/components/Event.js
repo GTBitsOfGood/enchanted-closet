@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Segment, Icon, Grid, Button, Modal } from 'semantic-ui-react';
+import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
 
 import { deleteEvent } from '../actions';
 
@@ -15,50 +15,89 @@ import Clearfix from './Clearfix';
 import {Edit} from './Buttons';
 
 class Event extends Component {
-  constructor(props) {
-    super(props);
-  }
+    constructor(props) {
+	super(props);
+    }
 
-  render() {
-    const { data, deleteEvent, history } = this.props;
-    const link = `${data.showAdminControls ? '/admin' : ''}/events/${data._id}`;
-    return (
-        <div key={uniqueId('event_')} style={{paddingTop: 10, paddingBottom: 10}}>
-            <div onClick={() => history.push(link)} style={{cursor:'pointer'}}>
-                <Segment key={uniqueId('event_')}>
-                    <h3>{data.name}</h3>
-                    <p>{pruneDescription(data.description)}</p>
-                    <p><Icon name='calendar'/>{moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
-                    <p><Icon name='road'/>{data.location}</p>
-                    {data.showAdminControls &&
-                        <Clearfix>
-                            <Button.Group floated='right'>
-                                <Edit history={history} route={`admin/events/${data._id}/edit`}/>
-                                <Modal
-                                    trigger={
-                                        <Button animated="vertical" color="red">
-                                            <Button.Content visible>Delete</Button.Content>
-                                            <Button.Content hidden>
-                                                <Icon name='trash' />
-                                            </Button.Content>
-                                        </Button>
-                                    }
-                                    header='Confirm Delete'
-                                    content='Are you sure you want to delete this event?'
-                                    actions={[
-                                        'Cancel',
-                                        { key: 'done', content: 'Delete', negative: true },
-                                    ]}
-                                    onActionClick={() => deleteEvent(data._id)}
-                                />
-                            </Button.Group>
-                        </Clearfix>
-                    }
-                </Segment>
-            </div>
+    render() {
+	const { data, deleteEvent, history } = this.props;
+	const link = `${data.showAdminControls ? '/admin' : ''}/events/${data._id}`;
+	const style = {
+	    cardLeft: {
+		backgroundColor: '#733D9D',
+		padding: '1em',
+		paddingLeft: '2em'
+	    },
+	    whiteText: {
+		color: '#FFFFFF'
+	    },
+	    cardRight: {
+		backgroundColor: 'white'
+	    }
+	}
+	return (
+            <div key={uniqueId('event_')} style={{paddingTop: 10, paddingBottom: 10}}>
+		<div onClick={() => history.push(link)} style={{cursor:'pointer'}}>
+                    <Segment.Group key={uniqueId('event_')}>
+			<Segment.Group horizontal>
+			    <Segment style={style.cardLeft}>
+				<Header as='h3' inverted>{data.name}</Header>
+				<Popup inverted
+				       trigger={(
+					       <Container style={style.whiteText}>
+						   <Icon name='calendar'/>
+						   {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
+					       </Container>
+				       )}
+				       content="Date" 
+				/>
+				<Popup inverted
+				       trigger={(
+					       <Container style={style.whiteText}>
+						   <Icon name='road' inverted/>
+						   {data.location}
+					       </Container>
+				       )}
+				       content="Address" 
+				/>
+			    </Segment>
+			    <Segment style={style.cardRight}>
+				<Container textAlign="right" style={{paddingRight: 10, paddingTop: 10}}>
+				    <p>{pruneDescription(data.description)}</p>
+				</Container>
+			    </Segment>
+			</Segment.Group>
+			{data.showAdminControls &&
+			 <Segment>
+                             <Clearfix>
+				 <Button.Group floated='right'>
+                                     <Edit history={history} route={`admin/events/${data._id}/edit`}/>
+                                     <Modal
+					 trigger={
+                                             <Button animated="vertical" color="red">
+						 <Button.Content visible>Delete</Button.Content>
+						 <Button.Content hidden>
+                                                     <Icon name='trash' />
+						 </Button.Content>
+                                             </Button>
+					 }
+					 header='Confirm Delete'
+					 content='Are you sure you want to delete this event?'
+					 actions={[
+                                             'Cancel',
+                                             { key: 'done', content: 'Delete', negative: true },
+					 ]}
+					 onActionClick={() => deleteEvent(data._id)}
+                                     />
+				 </Button.Group>
+                             </Clearfix>
+			 </Segment>
+			}
+		    </Segment.Group>
+		</div>
 	    </div>
-    )
-  }
+	)
+    }
 }
 
 const pruneDescription = (description) => {
