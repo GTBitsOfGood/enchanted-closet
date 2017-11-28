@@ -32,5 +32,6 @@ module.exports.generateReport = (req, res, next) => {
                 csvStream.write({name: userInfo.name, email: userInfo.email});
             });
         }
-    });    
+    });
+    csvStream.end();
 }
