@@ -33,6 +33,6 @@ router.put('/events/:id', [auth.isAdmin], controllers.events.update);
 router.get('/events/:id/report', auth.checkAdmin, reporting.generateReport);
 
 router.post('/upload/picture/event/:id', [auth.hasValidToken, auth.checkAdmin, upload], controllers.upload.eventPic);
-router.post('/upload/picture/event/:id', [auth.hasValidToken, auth.isIDMatch, upload], controllers.upload.eventPic);
+router.post('/upload/picture/user/:id', [auth.hasValidToken, auth.isIDMatch, upload], controllers.upload.userPic);
 
 module.exports = router;
