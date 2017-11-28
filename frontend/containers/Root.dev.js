@@ -47,13 +47,17 @@ export default function Root({ store }) {
                                 <Route path="/events/:id" component={EventsDetail} />
                                 <Route path="/admin/dashboard" component={AdminDashboard} />
                                 <Route exact path="/admin/events" component={AdminEvents} />
-                                <Route path="/admin/events/create" component={AdminEventsNew} />
-                                <Route path="/admin/events/:id/attendance" component={EventsAttendance} />
-                                <Route path="/admin/events/:id/edit" component={AdminEventsEdit} />
-                                <Route exact path="/admin/events/:id" component={AdminEventsDetail} />
+                                <Switch>
+                                    <Route path="/admin/events/create" component={AdminEventsNew} />
+                                    <Route path="/admin/events/:id/attendance" component={EventsAttendance} />
+                                    <Route path="/admin/events/:id/edit" component={AdminEventsEdit} />
+                                    <Route exact path="/admin/events/:id" component={AdminEventsDetail} />
+                                </Switch>
                                 <Route exact path="/admin/users" component={AdminUsers} />
-                                <Route path="/admin/users/create" component={AdminUsersNew} />
-                                <Route path="/admin/users/:id" component={AdminUsersDetail} />
+                                <Switch>
+                                    <Route exact path="/admin/users/create" component={AdminUsersNew} />
+                                    <Route path="/admin/users/:id" component={AdminUsersDetail} />
+                                </Switch>
                             </Auth>
                             <Route component={MissingPage} />
                         </Switch>
