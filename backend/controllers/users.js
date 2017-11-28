@@ -1,17 +1,19 @@
-import { delete } from './events';
-
 "use strict";
 const User = require('mongoose').model('User');
 const auth = require('../auth');
 let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+const hash = require("../hash");
 
 module.exports.index = (req, res, next) => {
-    User.find({}, (err, events) => {
-        if (events) {
+    User
+        .find({})
+        .populate('pastEvents')
+        .exec((err, users) => {
+        if (users) {
             res.locals.data = {
-                events: events
+                users: users
             };
             return next();
         } else {
@@ -24,7 +26,7 @@ module.exports.index = (req, res, next) => {
     });
 }
 
-function hasAll(obj, props) {
+function lacksAny(obj, props) {
     for (p in props) {
         if (!(obj[p])) {
             return p;
@@ -50,11 +52,11 @@ function matchesComplexityRequirements(password) {
 }
 
 let validateUser = (data, callback) => {
-    let tmp = hasAll(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
+    let tmp = lacksAny(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
     if (tmp) {
         return callback({reason: "Data object missing " + tmp + " property"}, false);
     }
-    if (name.length < 2) {
+    if (data.name.length < 2) {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
     if (!isEmail.test(data.email)) {
@@ -70,12 +72,11 @@ let validateUser = (data, callback) => {
     if (!isPhone.test(data.emergency_contact.phone)) {
         return callback({reason: "Invalid phone number"}, false);
     }
-    newHash = hash.genNew(data.password);
-    return Object.assign({}, data, {"hash": newHash});
+    return Object.assign({}, data, {"password": hash.genNew(data.password)});
 }
 
 let validateAdmin = (data, callback) => {
-    let tmp = hasAll(data, ["email", "password", "name"]);
+    let tmp = lacksAny(data, ["email", "password", "name"]);
     if (tmp) {
         return callback({reason: "Data object missing " + tmp + " property"}, false);
     }
@@ -85,23 +86,32 @@ let validateAdmin = (data, callback) => {
     if (!matchesComplexityRequirements(data.password)) {
         return callback({reason: "Password doesn't match complexity requirements"}, false);
     }
-    if (name.length < 2) {
+    if (data.name.length < 2) {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
-    newHash = hash.genNew(data.password);
-    return Object.assign({}, data, {"hash": newHash});
+    return Object.assign({}, data, {"password": hash.genNew(data.password)});
 }
 
 module.exports.register = (req, res, next) => {
     let errResp = (err, success) => {
         if (!success) {
-            res.error = err.reason;
+            res.error = {
+                status: 400,
+                msg: err.reason
+            };
         }
-        return next();
     }
-    let add = undefined;
     if (req.role == "Participant" || req.role == "Volunteer") {
         add = validateUser(req.body.data, errResp);
+        User.create(add, (err, instance) => {
+            if (err) {
+                res.locals.error = {
+                    status: 500,
+                    msg: "Couldn't save user"
+                };
+            }
+            return next();
+        });        
     } else if (req.role = "Admin") {
         //only admins can create other admins
         let token = req.header("Authorization");
@@ -110,59 +120,42 @@ module.exports.register = (req, res, next) => {
                 status: 403,
                 msg: 'Not authorized (must be admin)'
             };
-            return next(new Error(res.locals.error));
+            return next();
         }
         token = token.substring(7);
-        let curr = auth.currentUser(token);
-        if (auth.isAdmin(curr)){
-            add = validateAdmin(req.body.data, errResp);
-        }
-    }
-    if (add) {
-        delete add.password;
-        User.create(add, (err, instance) => {
-            if (err) {
-                res.locals.error = {
-                    status: 500,
-                    msg: "Couldn't save user"
-                };
-            }
+        auth.currentUser(token, (_, curr) => {
+            auth.isAdmin(curr, (state) => {
+                if (state) {
+                    let add = validateAdmin(req.body.data, errResp);
+                    User.create(add, (err, instance) => {
+                        if (err) {
+                            res.locals.error = {
+                                status: 500,
+                                msg: "Couldn't save user"
+                            };
+                        }
+                        return next();
+                    });
+                } else {
+                    res.locals.error = {
+                        status: 403,
+                        msg: "Can't register admin"
+                    }
+                    return next();
+                }
+            });
         });
     }
-    return next();
 }
 
 module.exports.get = (req, res, next) => {
-    if (!req.params.id) {
-        res.locals.error = {
-            status: 400,
-            msg: 'User ID required'
-        };
-        return next();
-    }
-    let token = req.header("Authorization");
-    if (!token.startsWith("Bearer ")) {
-        res.locals.error = {
-            status: 403,
-            msg: 'Not authorized (must be admin)'
-        };
-        return next(new Error(res.locals.error));
-    }
-    token = token.substring(7);
-    let curr = auth.currentUser(token);
-    if (!auth.isAdmin(curr) && req.params.id != curr) {
-        res.locals.error = {
-            status: 403,
-            msg: 'Not authorized to view other users'
-        };
-    }
-
-    User.findOne({
-        _id: req.params.id
-    }, (err, event) => {
-        if (event) {
+    User
+        .findById(req.params.id)
+        .populate('pastEvents')
+        .exec((err, user) => {
+        if (user) {
             res.locals.data = {
-                event: event
+                user: user
             };
             return next();
         } else {
@@ -176,18 +169,8 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
-    if (!req.params.id) {
-        res.locals.error = {
-            status: 400,
-            msg: 'User ID required'
-        };
-        return next();
-    }
-
-    User.findOne({
-        _id: req.params.id
-    }).remove((err, event) => {
-        if (event) {
+    User.findById(req.params.id).remove((err, user) => {
+        if (user) {
             res.locals.data = {}
             return next();
         } else {
@@ -208,8 +191,85 @@ module.exports.update = (req, res, next) => {
         };
         return next();
     }
-    if (req.body.data["password"]) {
+    let newProps = {};
+    if (req.body.password) {
+        //TODO: verify old password
 
+        let token = req.headers.authorization;
+        if (!token.startsWith("Bearer ")) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized (must be admin)'
+            };
+            return next(new Error(res.locals.error));
+        }
+        token = token.substring(7);
+        auth.currentUser(token, (_, curr) => {
+            if (req.params.id != curr) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized (must be admin)'
+                };
+                return next(new Error(res.locals.error));
+            }
+            if (matchesComplexityRequirements(req.body.data[password])) {
+                newProps["password"] = hash.genNew(req.body.data.password);
+            }
+        });
     }
-
+    if (req.body.name && req.body.name.length >= 2) {
+        newProps.name = req.body.name;
+    }
+    //["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
+    if (req.body.email && isEmail.test(req.body.email)) {
+        newProps.email = req.body.email;
+    }
+    if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
+        newProps.grade = req.body.grade;
+    }
+    if (req.body.phone) {
+        newProps.phone = req.body.phone;
+    }
+    if (req.body.grade && req.body.grade > 0 && req.body.grade <= 12) {
+        newProps.grade = req.body.grade;
+    }
+    if (req.body.race && req.body.race.length > 2) {
+        newProps.race = req.body.race;
+    }
+    if (req.body.school && req.body.school.length > 2) {
+        newProps.school = req.body.school;
+    }
+    if (req.body.emergencyContactName && req.body.emergencyContactName.length > 2) {
+        newProps.emergencyContactName = req.body.emergencyContactName;
+    }
+    if (req.body.emergencyContactPhone && req.body.emergencyContactPhone.length > 2) {
+        newProps.emergencyContactPhone = req.body.emergencyContactPhone;
+    }
+    if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
+        newProps.emergencyContactRelation = req.body.emergencyContactRelation;
+    }
+    User.findById(req.params.id, (err, doc) => {
+        if (err) {
+            res.locals.error = {
+                status: 404,
+                msg: "User not found with desired ID"
+            }
+            return next(new Error(res.locals.error));
+        } else {
+            doc.set(newProps);
+            doc.save((err, updated) => {
+                console.log(err)
+                if (err) {
+                    res.locals.error = {
+                        status: 500,
+                        msg: "Unable to save changes to db"
+                    }
+                }
+                res.locals.data = {
+                    user: updated
+                };
+                return next();
+            });
+        }
+    });
 }

@@ -40,6 +40,7 @@
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-addons-css-transition-group": "^15.6.0",
+    "react-cookie": "^2.1.2",
     "react-datepicker": "^0.57.0",
     "react-dom": "^15.5.4",
     "react-google-maps": "^9.2.2",

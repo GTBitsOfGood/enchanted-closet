@@ -6,7 +6,7 @@ import { Button, Container, Icon, Dimmer, Loader, Segment } from 'semantic-ui-re
 
 import Event from '../components/Event';
 
-import { fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
+import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
 
 import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
@@ -19,7 +19,8 @@ class Events extends Component {
 
     componentDidMount() {
         const { dispatch } = this.props;
-        dispatch(fetchEventsIfNeeded());
+        dispatch(fetchEvents());
+        // dispatch(fetchEventsIfNeeded());
     }
 
     handleRefreshClick(e) {
@@ -40,22 +41,13 @@ class Events extends Component {
         return (
             <Container>
                 <h1>Upcoming Events</h1>
-                {lastUpdatedEvents &&
-                    <span>Last updated at {new Date(lastUpdatedEvents).toLocaleTimeString()}.{' '}</span>
-                }
-                {!isFetchingEvents &&
-                  <a href="#" onClick={this.handleRefreshClick}>
-                    Refresh
-                  </a>}
-                <Dimmer active={isFetchingEvents}>
-                    <Loader>Loading</Loader>
-                </Dimmer>
-                { events.length > 0 && 
+                <Loader active={isFetchingEvents}>Loading</Loader>
+                { events.length > 0 &&
                     events.map(e => {
                         return <Event key={e._id} data={e} history={history}/>
                     })
                 }
-                { !isFetchingEvents && events.length === 0 && 
+                { !isFetchingEvents && events.length === 0 &&
                     <h1>No events</h1>
                 }
             </Container>

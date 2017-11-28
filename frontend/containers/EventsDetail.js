@@ -2,16 +2,20 @@ import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Container, Icon, Dimmer, Loader, Segment } from 'semantic-ui-react';
+import { geocode } from '../helpers/geocodeEngine';
+
+import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
 
 import Event from '../components/Event';
 import ErrorComponent from '../components/ErrorComponent';
 import ECMap from '../components/ECMap';
 import Speakers from '../components/Speakers';
 
-import { fetchEvents, fetchEventsIfNeeded, invalidateEvents } from '../actions/index';
+import { fetchEvents, fetchEventsIfNeeded, invalidateEvents, deleteEvent } from '../actions/index';
 
 import {uniqueId} from 'lodash';
+
+import { bindActionCreators } from 'redux';
 
 import moment from 'moment';
 
@@ -19,27 +23,43 @@ import { withRouter } from 'react-router-dom';
 
 import PageTitle from '../components/PageTitle';
 
+import Clearfix from '../components/Clearfix';
+import { Edit } from '../components/Buttons';
+
+
+const DEFAULT_MAP_LOCATION = {
+	latitude: 51.5033640,
+	longitude: -0.1276250
+};
+
 class EventsDetail extends Component {
 	constructor(props) {
 		super(props);
-		this.handleRefreshClick = this.handleRefreshClick.bind(this)
 		const { match, adminControls } = this.props;
 		const eventId = match.params.id;
 		this.state = {
 			detail : '',
 			adminControls: adminControls ? adminControls : false,
-			eventId
+			eventId,
+			displayMapLocationError: false
 		}
 	}
 
 	componentDidMount() {
-		const { dispatch, events, location } = this.props;
-		dispatch(fetchEventsIfNeeded());
+		const { fetchEventsIfNeeded, fetchEvents, events, location } = this.props;
+		fetchEventsIfNeeded();
 		const detail = events.filter(event => event._id === this.state.eventId);
 		if (detail.length === 0) { //in case local store is old
-			dispatch(fetchEvents());
+			fetchEvents();
 		} else {
 			this.setState( {detail: detail[0]} );
+			geocode(detail[0].location)
+				.then(location => {
+					this.setState({latitude: location.lat, longitude: location.lng});
+				})
+				.catch(err => {
+					this.setState({displayMapLocationError: true});
+				});
 		}
 	}
 
@@ -47,6 +67,7 @@ class EventsDetail extends Component {
 		const { events } = nextProps;
 		const eventId = this.state.eventId;
 		//process it again
+		if (!events) return;
 		const detail = events.find(e => e._id === eventId);
 		if (!detail) {
 			this.setState({
@@ -56,23 +77,21 @@ class EventsDetail extends Component {
 		} else {
 			this.setState({
 				isFetchingEvents: false,
-				detail: detail,
+				detail: detail
 			});
+			geocode(detail.location)
+				.then(location => {
+					this.setState({latitude: location.lat, longitude: location.lng});
+				})
+				.catch(err => {
+					this.setState({displayMapLocationError: true});
+				});
 		}
-
-	}
-
-	handleRefreshClick(e) {
-		e.preventDefault()
-
-		const { dispatch } = this.props;
-		dispatch(invalidateEvents())
-		dispatch(fetchEventsIfNeeded());
 	}
 
 	render() {
-		const { events, isFetchingEvents, location } = this.props;
-		const { detail, adminControls } = this.state;
+		const { events, deleteEvent, isFetchingEvents, location, history } = this.props;
+		const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
 		const speakers = [
 		  {
 		    name: 'Elliot Fu',
@@ -103,11 +122,16 @@ class EventsDetail extends Component {
 							<p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>
 						</Segment>
 						<Speakers speakers={speakers}/>
-						<ECMap
-						  isMarkerShown
-						  lat={51.5033640}
-						  long={-0.1276250}
-						/>
+						{displayMapLocationError || (latitude && longitude) ?
+							<ECMap
+								isMarkerShown
+								lat={latitude || DEFAULT_MAP_LOCATION.latitude}
+								long={longitude || DEFAULT_MAP_LOCATION.longitude}
+								displayMapLocationError={displayMapLocationError}
+							/>
+						:
+						<Segment style={{textAlign: 'center', padding: '80px'}} loading />
+						}
 						<Segment key="details">
 							<h3>Details</h3>
 							<p><Icon name='map'/> {detail.location}</p>
@@ -116,7 +140,29 @@ class EventsDetail extends Component {
 						{adminControls &&
 							<Segment key="admin_controls">
 								<h3>Admin Controls</h3>
-
+								<Clearfix>
+									<Button.Group>
+										<Edit history={history} route={`admin/events/${detail._id}/edit`}/>
+										<Modal
+											trigger={
+												<Button animated="vertical" color="red">
+													<Button.Content visible>Delete</Button.Content>
+													<Button.Content hidden>
+														<Icon name='trash' />
+													</Button.Content>
+												</Button>
+											}
+											header='Confirm Delete'
+											content='Are you sure you want to delete this event?'
+											actions={[
+												'Cancel',
+												{ key: 'done', content: 'Delete', negative: true },
+											]}
+											onActionClick={() => deleteEvent(detail._id)}
+										/>
+										<Button onClick={() => history.push(`/admin/events/${detail._id}/attendance`)}>Attendance</Button>
+									</Button.Group>
+								</Clearfix>
 							</Segment>
 						}
 					</div>
@@ -130,13 +176,9 @@ class EventsDetail extends Component {
 }
 
 EventsDetail.propTypes = {
-	events: PropTypes.array.isRequired,
-	isFetchingEvents: PropTypes.bool.isRequired,
-	lastUpdatedEvents: PropTypes.number,
-	dispatch: PropTypes.func.isRequired
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
 	const {
 		isFetchingEvents,
 		lastUpdatedEvents,
@@ -150,4 +192,12 @@ function mapStateToProps(state) {
 	}
 }
 
-export default withRouter(connect(mapStateToProps)(EventsDetail))
+const mapDispatchToProps = dispatch => {
+	return bindActionCreators({
+		deleteEvent: deleteEvent,
+		fetchEventsIfNeeded: fetchEventsIfNeeded,
+		fetchEvents: fetchEvents
+	}, dispatch);
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EventsDetail))

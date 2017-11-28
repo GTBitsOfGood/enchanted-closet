@@ -1,5 +1,5 @@
 "use strict";
-
-module.exports.users = require('./users');
+module.exports.admin = require('./admin');
 module.exports.auth = require('./auth');
+module.exports.users = require('./users');
 module.exports.events = require('./events');
