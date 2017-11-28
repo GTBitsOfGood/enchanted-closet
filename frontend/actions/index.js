@@ -50,6 +50,12 @@ export function showModalLoader() {
     };
 }
 
+export function clearErrors() {
+    return {
+        type: types.CLEAR_ERRORS
+    }
+}
+
 export function deleteEvent(id) {
     return (dispatch, getState) => {
         dispatch(showModalLoader());
@@ -334,6 +340,12 @@ function formatCards(cards) {
             }
         ];
         dispatch(updateDashboardCards(formatted));
+    }
+}
+
+function updateUser(user) {
+    return (dispatch, getState) => {
+        dispatch(loading());
     }
 }
 

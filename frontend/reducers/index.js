@@ -17,6 +17,12 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 loading: true
             });
 
+        case types.CLEAR_ERRORS:
+            return Object.assign({}, state, {
+                error: null,
+                errorMessage: null
+            });
+
         case types.EVENT_UPSERT:
             let { events } = state;
             if (!events) events = [];
@@ -41,13 +47,14 @@ function rootReducer(state = require('../static/defaultState'), action) {
             return Object.assign({}, state, eventStateUpdate);
 
         case types.USER_UPSERT:
-            let { users } = state;
+            let { users, user } = state;
             if (!users) users = [];
             let userStateUpdate = {
                 loading: false,
                 error: '',
                 newUser: action.user,
-                users: []
+                users: [],
+                user: user
             };
             if (action.isUpdate) {
                 users = users.map(e => {
@@ -56,7 +63,8 @@ function rootReducer(state = require('../static/defaultState'), action) {
                     } else {
                         return e;
                     }
-                })
+                });
+                userStateUpdate.user = Object.assign({}, userStateUpdate.user, action.user);
             } else {
                 users.push(action.user);
             }

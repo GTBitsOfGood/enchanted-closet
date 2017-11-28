@@ -13,7 +13,7 @@ router.get('/users/:id', [auth.hasValidToken, auth.isAdminOrIDMatches], controll
 //more complex permissions checking (need admin to create admin) done in function
 router.post('/users/new', controllers.users.register);
 router.delete('/users/:id', [auth.hasValidToken, auth.isAdminOrIDMatches], controllers.users.delete);
-router.post('/users/:id', [auth.hasValidToken, auth.isAdminOrIDMatches], controllers.users.update);
+router.put('/users/:id', controllers.users.update);
 
 router.get('/dashboard', [auth.hasValidToken, auth.isAdmin], controllers.admin.cards);
 
