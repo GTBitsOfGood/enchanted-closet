@@ -18,11 +18,12 @@ router.put('/users/:id', controllers.users.update);
 
 router.get('/dashboard', [auth.hasValidToken, auth.isAdmin], controllers.admin.cards);
 
-router.get('/events', /*[auth.hasValidToken],*/ controllers.events.index);
+router.get('/events', controllers.events.index);
 router.get('/events/:id', [auth.hasValidToken], controllers.events.get);
 router.post('/events/', [auth.hasValidToken, auth.isAdmin], controllers.events.create);
 router.delete('/events/:id', [auth.hasValidToken, auth.isAdmin], controllers.events.delete);
 
+router.put('/events/:id', [auth.hasValidToken, auth.isAdmin], controllers.events.update);
 router.get('/events/:eventID/present/:userID', /*[auth.hasValidToken, auth.isAdmin],*/ controllers.events.present);
 router.get('/events/:eventID/absent/:userID', /*[auth.hasValidToken, auth.isAdmin],*/ controllers.events.absent);
 router.get('/events/:id/report', auth.checkAdmin, reporting.generateReport);

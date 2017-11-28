@@ -3,16 +3,16 @@ import { render } from 'react-dom';
 import { configureStore, history } from './store/configureStore';
 import Root from './containers/Root';
 
-import { loadState, saveState } from './store/localStorage';
+import { loadAuthState, saveAuthState } from './store/localStorage';
 
 import '../node_modules/semantic-ui-css/semantic.min.css';
 
 import './assets/stylesheets/base';
 
-const store = configureStore(loadState());
+const store = configureStore({user: loadAuthState()});
 
 store.subscribe(() => {
-    saveState(store.getState());
+    saveAuthState(store.getState());
 })
 
 render(

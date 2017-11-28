@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Provider } from 'react-redux';
-import AppContainer from './AppContainer.js';
+import Homepage from './Homepage.js';
 import Login from './Login.js';
 import Register from './Register';
 import Profile from './Profile.js';
@@ -33,12 +33,12 @@ export default function Root({ store }) {
     return (
         <Provider store={store}>
             <div>
-                <Helmet bodyAttributes={{style: 'background-color : #efefef'}}/>
+                <Helmet bodyAttributes={{style: 'background-color : #E2D0F1'}}/>
                 <Router>
                     <div>
                         <Navigation />
                         <Switch>
-                            <Route exact path="/" component={AppContainer}/>
+                            <Route exact path="/" component={Homepage}/>
                             <Route path="/login" component={Login} />
                             <Route path="/register" component={Register} />
                             <Auth>

@@ -20,7 +20,7 @@ class ECUserList extends Component {
 				{users &&
 					<List selection verticalAlign='middle'>
 						{users.map(user => {
-							const attending = user.pastEvents.indexOf(event._id) > -1;
+							const attending = user.pastEvents.filter(e => e._id === event._id).length === 1;
 							return (<ECUserListItem attending={attending} event={event} key={user._id} user={user} filter={filter}/>);
 						})}
 					</List>
