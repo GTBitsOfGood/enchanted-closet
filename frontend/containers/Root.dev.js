@@ -29,7 +29,7 @@ export default function Root({ store }) {
     return (
         <Provider store={store}>
             <div>
-                <Helmet bodyAttributes={{style: 'background-color : #efefef'}}/>
+                <Helmet bodyAttributes={{style: 'background-color : #E2D0F1'}}/>
                 <Router>
                     <div>
                         <Navigation />
