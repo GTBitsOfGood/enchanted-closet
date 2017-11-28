@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Provider } from 'react-redux';
-import AppContainer from './AppContainer.js';
+import Homepage from './Homepage.js';
 import Login from './Login.js';
 import Register from './Register';
 import Profile from './Profile.js';
@@ -34,7 +34,7 @@ export default function Root({ store }) {
                     <div>
                         <Navigation />
                         <Switch>
-                            <Route exact path="/" component={AppContainer}/>
+                            <Route exact path="/" component={Homepage}/>
                             <Route path="/login" component={Login} />
                             <Route path="/register" component={Register} />
                             <Route path="/profile" component={Profile} />

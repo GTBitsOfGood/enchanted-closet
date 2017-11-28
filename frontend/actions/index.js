@@ -252,7 +252,8 @@ export function fetchEvents() {
         dispatch(requestEvents());
         return fetchHelper(`/api/events`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => dispatch(receieveEvents(json)));
+            .then(json => dispatch(receieveEvents(json)))
+            .then(() => dispatch(stopLoading()));
     }
 }
 
@@ -292,6 +293,7 @@ function shouldFetchEvents(state) {
 export function fetchEventsIfNeeded() {
     return (dispatch, getState) => {
         if (shouldFetchEvents(getState())) {
+            dispatch(loading());
             return dispatch(fetchEvents());
         }
     }

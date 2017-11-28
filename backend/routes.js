@@ -15,9 +15,9 @@ router.post('/users/new', controllers.users.register);
 router.delete('/users/:id', [auth.hasValidToken, auth.isAdminOrIDMatches], controllers.users.delete);
 router.post('/users/:id', [auth.hasValidToken, auth.isAdminOrIDMatches], controllers.users.update);
 
-router.get('/dashboard', controllers.admin.cards);
+router.get('/dashboard', [auth.hasValidToken, auth.isAdmin], controllers.admin.cards);
 
-router.get('/events', [auth.hasValidToken], controllers.events.index);
+router.get('/events', controllers.events.index);
 router.get('/events/:id', [auth.hasValidToken], controllers.events.get);
 router.post('/events/', [auth.hasValidToken, auth.isAdmin], controllers.events.create);
 router.delete('/events/:id', [auth.hasValidToken, auth.isAdmin], controllers.events.delete);
