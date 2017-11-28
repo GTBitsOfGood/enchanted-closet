@@ -105,9 +105,14 @@ module.exports.register = (req, res, next) => {
     } else if (req.role = "Admin") {
         //only admins can create other admins
         let token = req.header("Authorization");
-        if (token && token.split(" ").length == 2) {
-            token = token.split(" ")[1];
+        if (!token.startsWith("Bearer ")) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized (must be admin)'
+            };
+            return next(new Error(res.locals.error));
         }
+        token = token.substring(7);
         let curr = auth.currentUser(token);
         if (auth.isAdmin(curr)){
             add = validateAdmin(req.body.data, errResp);
@@ -136,9 +141,14 @@ module.exports.get = (req, res, next) => {
         return next();
     }
     let token = req.header("Authorization");
-    if (token && token.split(" ").length == 2) {
-        token = token.split(" ")[1];
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
     }
+    token = token.substring(7);
     let curr = auth.currentUser(token);
     if (!auth.isAdmin(curr) && req.params.id != curr) {
         res.locals.error = {

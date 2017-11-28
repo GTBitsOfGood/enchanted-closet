@@ -19,78 +19,109 @@ module.exports.login = (data, callback) => {
     });
 }
 
-module.exports.isAdmin = (id) => {
+module.exports.isAdmin = (id, callback) => {
     if (!id) { //catch falsy values like null or empty string
-        return false;
+        callback(false);
+        return next(new Error(res.locals.error));
     }
     let retVal = false;
-    User.findById(id, (err, doc) => {
-        if (!err && doc.role == "Admin") {
-            retVal = true;
+    User.findById(id, (err, result) => {
+        if (!err && result.role == "Admin") {
+            callback(true);
+            return next(new Error(res.locals.error));
         }
+        callback(false);
     });
-    return retVal;
 }
 
-module.exports.currentUser = (tok) => {
+module.exports.currentUser = (tok, callback) => {
     if (!tok) { //catch falsy values like null, empty string
-        return null;
+        return callback(null, null);
     }
-    let retVal = null;
     redisClient.get(tok, function(err, reply){
-        if (reply != null) {
-            retVal = reply;
-        }
+        callback(err, reply)
     });
-    return retVal;
 }
 
 module.exports.idMatchesOrAdmin = (req, res, next) => {
     let token = req.header("Authorization");
-    if (token && token.split(" ").length == 2) {
-        token = token.split(" ")[1];
-    }
-    let curr = currentUser(token);
-    if (curr == null || (curr != req.id && !isAdmin(curr))) {
-        //TODO: verify that this sends response
-        res.locals.error = {
-            status: 403,
-            msg: 'Not authorized'
-        };
-        return;
-    }
-    return next();
-}
-
-module.exports.checkAdmin = (req, res, next) => {
-    let token = req.header("Authorization");
-    if (token && token.split(" ").length == 2) {
-        token = token.split(" ")[1];
-    }
-    if (!isAdmin(currentUser(token))) {
+    if (!token.startsWith("Bearer ")) {
         res.locals.error = {
             status: 403,
             msg: 'Not authorized (must be admin)'
         };
-        //TODO: verify that this sends response
-        return;
+        return next(new Error(res.locals.error));
     }
-    return next();
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
+        if (err != null) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized or redis error'
+            };
+            return next(new Error(res.locals.error));
+        }
+        isAdmin(curr, (state) => {
+            if (curr == null || (curr != req.id && !state)) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized'
+                };
+                return next(new Error(res.locals.error));
+            }
+            return next();
+        });
+    });
+}
+
+module.exports.checkAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
+        if (err != null) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized or redis error'
+            };
+            return next(new Error(res.locals.error));
+        }
+        isAdmin(curr, (state) => {
+            if (!state) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized (must be admin)'
+                };
+                return next(new Error(res.locals.error));
+            }
+            return next();
+        });
+    });
 }
 
 module.exports.idMatches = (req, res, next) => {
-    let token = req.header("Authorization");
-    if (token && token.split(" ").length == 2) {
-        token = token.split(" ")[1];
-    }
-    let curr = currentUser(token);
-    if (curr == null || curr != req.id) {
-        //TODO: verify that this sends response
+    if (!token.startsWith("Bearer ")) {
         res.locals.error = {
             status: 403,
-            msg: 'Not authorized'
+            msg: 'Not authorized (must be admin)'
         };
-        return;
+        return next(new Error(res.locals.error));
     }
-    return next();
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
+        if (err != null || curr == null || curr != req.id) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized'
+            };
+            return next(new Error(res.locals.error));
+        }
+        return next();
+    });
 }
