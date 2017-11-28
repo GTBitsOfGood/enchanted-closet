@@ -258,7 +258,8 @@ export function fetchEvents() {
         dispatch(requestEvents());
         return fetchHelper(`/api/events`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => dispatch(receieveEvents(json)));
+            .then(json => dispatch(receieveEvents(json)))
+            .then(() => dispatch(stopLoading()));
     }
 }
 
@@ -298,6 +299,7 @@ function shouldFetchEvents(state) {
 export function fetchEventsIfNeeded() {
     return (dispatch, getState) => {
         if (shouldFetchEvents(getState())) {
+            dispatch(loading());
             return dispatch(fetchEvents());
         }
     }
@@ -349,19 +351,19 @@ function updateUser(user) {
     }
 }
 
-function userMarkedAsAttended(eventID, userID) {
+function userMarkedAsAttended(event, user) {
     return {
         type: types.MARK_ATTENDING,
-        eventID: eventID,
-        userID: userID
+        event: event,
+        user: user
     };
 }
 
-function userMarkedAsUnAttended(eventID, userID) {
+function userMarkedAsUnAttended(event, user) {
     return {
         type: types.MARK_UNATTENDING,
-        eventID: eventID,
-        userID: userID
+        event: event,
+        user: user
     };
 }
 
@@ -377,22 +379,22 @@ export function loadDashboardCards() {
     }
 }
 
-export function markAttending(eventID, userID) {
+export function markAttending(event, user) {
     return (dispatch, getState) => {
         dispatch(loading());
-        return fetchHelper(`/api/events/${eventID}/present/${userID}`, getAPIToken(getState))
+        return fetchHelper(`/api/events/${event._id}/present/${user._id}`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => dispatch(userMarkedAsAttended(eventID, userID)))
+            .then(json => dispatch(userMarkedAsAttended(event, user)))
             .then(() => dispatch(stopLoading()));
     }
 }
 
-export function markUnattending(eventID, userID) {
+export function markUnattending(event, user) {
     return (dispatch, getState) => {
         dispatch(loading());
-        return fetchHelper(`/api/events/${eventID}/absent/${userID}`, getAPIToken(getState))
+        return fetchHelper(`/api/events/${event._id}/absent/${user._id}`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => dispatch(userMarkedAsUnAttended(eventID, userID)))
+            .then(json => dispatch(userMarkedAsUnAttended(event, user)))
             .then(() => dispatch(stopLoading()));
     }
 }

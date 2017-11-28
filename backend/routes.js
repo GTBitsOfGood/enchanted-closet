@@ -3,7 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers/');
-const auth = require('./auth');
+const reporting = require('./reporting');
+const auth = require('./auth')
 
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
@@ -19,11 +20,13 @@ router.post('/users/:id', [auth.idMatches], controllers.users.update);
 router.get('/dashboard', [auth.hasValidToken, auth.isAdmin], controllers.admin.cards);
 
 router.get('/events', controllers.events.index);
+
 router.get('/events/:id', controllers.events.get);
 router.post('/events/', [auth.checkAdmin], controllers.events.create);
 router.delete('/events/:id', [auth.checkAdmin], controllers.events.delete);
 router.post('/events/:id/present/:userID', [auth.checkAdmin], controllers.events.present);
 router.post('/events/:id/absent/:userID', [auth.checkAdmin], controllers.events.absent);
-
+router.put('/events/:id', [auth.isAdmin], controllers.events.update);
+router.get('/events/:id/report', auth.checkAdmin, reporting.generateReport);
 
 module.exports = router;

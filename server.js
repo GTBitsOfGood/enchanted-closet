@@ -5,6 +5,7 @@ require('dotenv').config()
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const favicon = require('serve-favicon');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use(bodyParser.json());
+app.use(favicon(__dirname + '/public/images/favicon/favicon.ico'));
 
 const db = require('./backend/models/db');
 const api = require('./backend/routes');

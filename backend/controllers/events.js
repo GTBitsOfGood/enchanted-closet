@@ -305,12 +305,23 @@ module.exports.update = (req, res, next) => {
             return next();
         }
 
-        event.name = req.body.name;
-        event.description = req.body.description;
-        event.location = req.body.location;
-        event.datetime = req.body.datetime;
+        let newValues = {};
+        if (req.body.name && req.body.name.length > 2) newValues.name = req.body.name;
+        if (req.body.description && req.body.description.length > 2) newValues.description = req.body.description;
+        if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location;
+        if (req.body.datetime && req.body.datetime.length > 2) newValues.datetime = req.body.datetime;
+        if (req.body.presenters) newValues.presenters = JSON.parse(req.body.presenters);
 
+        event.set(newValues);
         event.save((err, updatedEvent) => {
+            if (err) {
+                res.locals.error = {
+                    code: 500,
+                    msg: 'Internal Server Error'
+                }
+                console.log(err);
+                return next(new Error(res.locals.error));
+            }
             res.locals.data = {
                 event: updatedEvent
             };
