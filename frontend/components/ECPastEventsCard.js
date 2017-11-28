@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { Segment, List, Icon } from 'semantic-ui-react';
 
+import moment from 'moment';
+
 const ECPastEventsCards = ( props ) => {
 	const {user} = props;
 
 	if (hasPastEvents(user)) {
 		return (
 			<Segment>
-				<h3>Demographics</h3>
+				<h3>Past Events</h3>
 				<List >
-					{demographicsFields.map(d => {
+					{user.pastEvents.map(event => {
 						return (
-							<List.Item key={d}>
+							<List.Item key={event._id}>
 								<List.Content>
-									<b>{`${d.charAt(0).toUpperCase()}${d.substr(1)}`}: </b>{nullCheck(user[d.toLowerCase()])}
+									<List.Header>{event.name}</List.Header>
+									<List.Description>{console.log(event.datetime)}{moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</List.Description>
 								</List.Content>
 							</List.Item>
 						)

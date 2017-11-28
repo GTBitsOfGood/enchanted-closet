@@ -50,6 +50,12 @@ export function showModalLoader() {
     };
 }
 
+export function clearErrors() {
+    return {
+        type: types.CLEAR_ERRORS
+    }
+}
+
 export function deleteEvent(id) {
     return (dispatch, getState) => {
         dispatch(showModalLoader());
@@ -252,7 +258,8 @@ export function fetchEvents() {
         dispatch(requestEvents());
         return fetchHelper(`/api/events`, getAPIToken(getState))
             .then(response => response.json())
-            .then(json => dispatch(receieveEvents(json)));
+            .then(json => dispatch(receieveEvents(json)))
+            .then(() => dispatch(stopLoading()));
     }
 }
 
@@ -292,6 +299,7 @@ function shouldFetchEvents(state) {
 export function fetchEventsIfNeeded() {
     return (dispatch, getState) => {
         if (shouldFetchEvents(getState())) {
+            dispatch(loading());
             return dispatch(fetchEvents());
         }
     }
@@ -337,6 +345,28 @@ function formatCards(cards) {
     }
 }
 
+function updateUser(user) {
+    return (dispatch, getState) => {
+        dispatch(loading());
+    }
+}
+
+function userMarkedAsAttended(event, user) {
+    return {
+        type: types.MARK_ATTENDING,
+        event: event,
+        user: user
+    };
+}
+
+function userMarkedAsUnAttended(event, user) {
+    return {
+        type: types.MARK_UNATTENDING,
+        event: event,
+        user: user
+    };
+}
+
 export function loadDashboardCards() {
     return (dispatch, getState) => {
         dispatch(loading());
@@ -345,6 +375,26 @@ export function loadDashboardCards() {
             .then(response => response.json())
             .then(json => json.cards)
             .then(cards => dispatch(formatCards(cards)))
+            .then(() => dispatch(stopLoading()));
+    }
+}
+
+export function markAttending(event, user) {
+    return (dispatch, getState) => {
+        dispatch(loading());
+        return fetchHelper(`/api/events/${event._id}/present/${user._id}`, getAPIToken(getState))
+            .then(response => response.json())
+            .then(json => dispatch(userMarkedAsAttended(event, user)))
+            .then(() => dispatch(stopLoading()));
+    }
+}
+
+export function markUnattending(event, user) {
+    return (dispatch, getState) => {
+        dispatch(loading());
+        return fetchHelper(`/api/events/${event._id}/absent/${user._id}`, getAPIToken(getState))
+            .then(response => response.json())
+            .then(json => dispatch(userMarkedAsUnAttended(event, user)))
             .then(() => dispatch(stopLoading()));
     }
 }

@@ -16,127 +16,122 @@ redisClient.on("error", function (err) {
     console.log("Error " + err);
 });
 
-function isCorrectAuthHeaderFormat(header) {
-    if (!header) return false;
-    if (!header.startsWith('Bearer ')) return false;
-    if (header.split(' ').length !== 2) return false;
-    return true;
-}
-
-function getToken(headers) {
-    if (!headers) return null;
-    return headers[authHeader].split(' ')[1];
-}
-
-module.exports.hasValidToken = (req, res, next) => {
-    let header = req.headers[authHeader];
-    if (!header || !isCorrectAuthHeaderFormat(header)) {
-        res.locals.error = authError;
-        return next(new Error(res.locals.errors));
+module.exports.isAdmin = (id, callback) => {
+    if (!id) { //catch falsy values like null or empty string
+        callback(null, false);
     }
-    let token = header.split(' ')[1];
-    redisClient.get(token, (err, cachedID) => {
-        if (err) {
-            res.locals.error = {
-                code: 500,
-                msg: 'Internal server error'
-            };
-            return next(new Error(res.locals.error));
+    let retVal = false;
+    User.findById(id, (err, result) => {
+        if (!err && result.role == "Admin") {
+            callback(err, true);
         }
-
-        if (!cachedID) {
-            res.locals.error = authError;
-            return next(new Error(res.locals.error));
-        }
-
-        console.log('valid')
-
-        return next();
+        callback(err, false);
     });
 }
 
-module.exports.isAdmin = (req, res, next) => {
-    let token = getToken(req.headers);
-    redisClient.get(token, (err, cachedID) => {
+module.exports.currentUser = (tok, callback) => {
+    if (!tok) { //catch falsy values like null, empty string
+        return callback(null, null);
+    }
+    redisClient.get(tok, function(err, reply){
+        callback(err, reply)
+    });
+}
+
+module.exports.idMatchesOrAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
         if (err) {
             res.locals.error = {
-                code: 500,
-                msg: 'Internal server error'
+                status: 403,
+                msg: 'Not authorized or redis error'
             };
             return next(new Error(res.locals.error));
         }
-
-        User.findById(cachedID, (err, user) => {
-            if (err || !user) {
-                res.locals.error = authError;
+        isAdmin(curr, (err, state) => {
+            if (err) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized or redis error'
+                };
                 return next(new Error(res.locals.error));
             }
-
-            if (user.role.toLowerCase() !== 'admin') {
-                res.locals.error = authError;
+            if (curr == null || (curr != req.id && !state)) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized'
+                };
                 return next(new Error(res.locals.error));
             }
-
             return next();
         });
     });
 }
 
-module.exports.isAdminOrIDMatches = (req, res, next) => {
-    let token = getToken(req.headers);
-    redisClient.get(token, (err, cachedID) => {
+module.exports.checkAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
         if (err) {
             res.locals.error = {
-                code: 500,
-                msg: 'Internal server error'
+                status: 403,
+                msg: 'Not authorized or redis error'
             };
             return next(new Error(res.locals.error));
         }
-
-        User.findById(cachedID, (err, user) => {
-            if (err || !user) {
-                res.locals.error = authError;
+        isAdmin(curr, (err, state) => {
+            if (err) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized or redis error'
+                };
                 return next(new Error(res.locals.error));
             }
-
-            if (user.role.toLowerCase() === 'admin') {
-                return next();
+            if (!state) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized (must be admin)'
+                };
+                return next(new Error(res.locals.error));
             }
-
-            if (req.params.id === user._id) {
-                return next();
-            }
-
-            res.locals.error = authError;
-            return next(new Error(res.locals.error));
+            return next();
         });
     });
 }
 
-module.exports.isIDMatch = (req, res, next) => {
-    let token = getToken(req.headers);
-    redisClient.get(token, (err, cachedID) => {
-        if (err) {
+module.exports.idMatches = (req, res, next) => {
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
+        if (err || curr == null || curr != req.id) {
             res.locals.error = {
-                code: 500,
-                msg: 'Internal server error'
+                status: 403,
+                msg: 'Not authorized'
             };
             return next(new Error(res.locals.error));
         }
-
-        User.findById(cachedID, (err, user) => {
-            if (err || !user) {
-                res.locals.error = authError;
-                return next(new Error(res.locals.error));
-            }
-
-            if (req.params.id === user._id) {
-                return next();
-            }
-
-            res.locals.error = authError;
-            return next(new Error(res.locals.error));
-        });
+        return next();
     });
 }
 

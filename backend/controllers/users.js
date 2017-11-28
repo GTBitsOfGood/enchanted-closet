@@ -7,7 +7,10 @@ let grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
 const hash = require("../hash");
 
 module.exports.index = (req, res, next) => {
-    User.find({}, (err, users) => {
+    User
+        .find({})
+        .populate('pastEvents')
+        .exec((err, users) => {
         if (users) {
             res.locals.data = {
                 users: users
@@ -99,8 +102,7 @@ module.exports.register = (req, res, next) => {
         }
     }
     if (req.role == "Participant" || req.role == "Volunteer") {
-        let add = validateUser(req.body.data, errResp);
-        delete add.password;
+        add = validateUser(req.body.data, errResp);
         User.create(add, (err, instance) => {
             if (err) {
                 res.locals.error = {
@@ -109,7 +111,7 @@ module.exports.register = (req, res, next) => {
                 };
             }
             return next();
-        });
+        });        
     } else if (req.role = "Admin") {
         //only admins can create other admins
         let token = req.header("Authorization");
@@ -121,11 +123,24 @@ module.exports.register = (req, res, next) => {
             return next();
         }
         token = token.substring(7);
-        auth.currentUser(token, (_, curr) => {
-            auth.isAdmin(curr, (state) => {
+        auth.currentUser(token, (err, curr) => {
+            if (err) {
+                res.locals.error = {
+                    status: 403,
+                    msg: "Not authorized or redis error"
+                };
+                return next(new Error(res.locals.error));
+            }
+            auth.isAdmin(curr, (err, state) => {
+                if (err) {
+                    res.locals.error = {
+                        status: 403,
+                        msg: "Not authorized or redis error"
+                    };
+                    return next(new Error(res.locals.error));
+                }
                 if (state) {
                     let add = validateAdmin(req.body.data, errResp);
-                    delete add.password;
                     User.create(add, (err, instance) => {
                         if (err) {
                             res.locals.error = {
@@ -148,7 +163,10 @@ module.exports.register = (req, res, next) => {
 }
 
 module.exports.get = (req, res, next) => {
-    User.findById(req.params.id, (err, user) => {
+    User
+        .findById(req.params.id)
+        .populate('pastEvents')
+        .exec((err, user) => {
         if (user) {
             res.locals.data = {
                 user: user
@@ -188,55 +206,85 @@ module.exports.update = (req, res, next) => {
         return next();
     }
     let newProps = {};
-    if (req.body.data["password"]) {
+    if (req.body.password) {
         //TODO: verify old password
 
-        let token = req.header("Authorization");
+        let token = req.headers.authorization;
         if (!token.startsWith("Bearer ")) {
             res.locals.error = {
                 status: 403,
                 msg: 'Not authorized (must be admin)'
             };
-            return next();
+            return next(new Error(res.locals.error));
         }
         token = token.substring(7);
         auth.currentUser(token, (_, curr) => {
             if (req.params.id != curr) {
-                return;
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized (must be admin)'
+                };
+                return next(new Error(res.locals.error));
             }
             if (matchesComplexityRequirements(req.body.data[password])) {
                 newProps["password"] = hash.genNew(req.body.data.password);
             }
         });
     }
-    if (req.body.data["name"] && req.body.data["name"].length >= 2) {
-        newProps["name"] = req.body.data["name"];
+    if (req.body.name && req.body.name.length >= 2) {
+        newProps.name = req.body.name;
     }
     //["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-    if (req.body.data["email"] && isEmail.test(req.body.data["email"])) {
-        newProps["email"] = req.body.data["email"];
+    if (req.body.email && isEmail.test(req.body.email)) {
+        newProps.email = req.body.email;
     }
-    if (req.body.data["grade"] && grades.indexOf(req.body.data["grade"] != -1)) {
-        newProps["grade"] = req.body.data["grade"];
+    if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
+        newProps.grade = req.body.grade;
     }
+    if (req.body.phone) {
+        newProps.phone = req.body.phone;
+    }
+    if (req.body.grade && req.body.grade > 0 && req.body.grade <= 12) {
+        newProps.grade = req.body.grade;
+    }
+    if (req.body.race && req.body.race.length > 2) {
+        newProps.race = req.body.race;
+    }
+    if (req.body.school && req.body.school.length > 2) {
+        newProps.school = req.body.school;
+    }
+    if (req.body.emergencyContactName && req.body.emergencyContactName.length > 2) {
+        newProps.emergencyContactName = req.body.emergencyContactName;
+    }
+    if (req.body.emergencyContactPhone && req.body.emergencyContactPhone.length > 2) {
+        newProps.emergencyContactPhone = req.body.emergencyContactPhone;
+    }
+    if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
+        newProps.emergencyContactRelation = req.body.emergencyContactRelation;
+    }
+
     User.findById(req.params.id, (err, doc) => {
         if (err) {
             res.locals.error = {
                 status: 404,
                 msg: "User not found with desired ID"
             }
+            return next(new Error(res.locals.error));
         } else {
             doc.set(newProps);
             doc.save((err, updated) => {
+                console.log(err)
                 if (err) {
                     res.locals.error = {
                         status: 500,
                         msg: "Unable to save changes to db"
                     }
                 }
-                res.locals.user = updated;
+                res.locals.data = {
+                    user: updated
+                };
+                return next();
             });
         }
-        return next();
     });
 }

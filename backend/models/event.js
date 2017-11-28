@@ -19,7 +19,7 @@ var EventSchema = new mongoose.Schema({
         required: true
     },
     presenters: {
-        type: [String],
+        type: [mongoose.Schema.Types.Mixed],
         required: false
     },
     photo: {
@@ -27,7 +27,7 @@ var EventSchema = new mongoose.Schema({
         required: false
     },
     participants: {
-        type: [mongoose.Schema.Types.ObjectId]
+        type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
     }
 });
 

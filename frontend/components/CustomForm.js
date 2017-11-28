@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'semantic-ui-react';
-
+import { Container, Segment, Button, Form } from 'semantic-ui-react';
+import Radium from 'radium';
 
 const SURVEY_DIR = '../static/surveys/';
 
@@ -55,7 +55,6 @@ class CustomForm extends Component {
 	for (let key in newValues) {
 	    processedValues[newKeyDict[camelCasedToSpaced(key)]] = newValues[key]
 	}
-	console.log(processedValues);
 
 	this.setState({ formValues: processedValues })
     }
@@ -97,7 +96,6 @@ class CustomForm extends Component {
     }
 
     render() {
-	console.log(this.props);
 	const { formValues } = this.state;
 	let formValHardcode = {
 	    //hardcode test
@@ -115,22 +113,32 @@ class CustomForm extends Component {
 	    "Emergency|Emergency Contact Phone": 1111111111
 	};
 
-	const { title, displayType, button, data, dispatch } = this.props;
+	const { title, displayType, button, data, dispatch, required } = this.props;
 	enhance(data, formValues); //enhance(data, formValues);
 
+	var styles = {
+	    buttonContainer: {
+		padding: '.5em 1em',
+	    }
+	};
+
+
 	return (
-	    <div>
+	    <Container>
 		<h2>{ title }</h2>
 		<Form>
 		    {
-			data.map((d) => <CustomFormBlock key={title + d.title} displayType={displayType} data={d} changeHandler={this.changeHandler} />)
+			data.map((d) => <CustomFormBlock key={title + d.title} displayType={displayType} data={d} changeHandler={this.changeHandler} required={required} />)
 		    }
-		    <Button primary onClick={this.clickHandler}>{button}</Button>
+		    <Container textAlign="right" style={styles.buttonContainer}>
+			<Button color="violet" onClick={this.clickHandler}>{button}</Button>
+		    </Container>
 		</Form>
-	    </div>
+	    </Container>
 	);
     }
 }
+CustomForm = Radium(CustomForm);
 
 const FileForm = ( props ) => {
     let clickHandler = (data) => {
@@ -154,6 +162,7 @@ const FileForm = ( props ) => {
     }
     const { buttonAction, submitRoute } = props;
     formProps["displayType"] = props["isInline"] === "true" ? 'inline' : 'form';
+    formProps["required"] = "true";
     return <CustomForm {...formProps} buttonAction={buttonAction} submitRoute={submitRoute}  />;
 }
 
@@ -212,27 +221,32 @@ const camelCaseToSpaced = (s) => {
  * todo: check for more specific types
  **/
 //const DefaultCustomForm = ( label, type, placeholder, active) => {
-const CustomFormBlock = ( props ) => {
+const CustomFormBlock = Radium(( props ) => {
     //put any header information here
     //todo : add meta information option
-    const { data, displayType, changeHandler } = props
+    const { data, displayType, changeHandler, required } = props
 
+    var styles = {
+	base: {
+	    'margin': '1em'
+	}
+    };
+    
     if (data.title != null) {
 	return (
-		<div key={data.title}>
+	    <Segment vertical key={data.title} style={styles.base}>
             <h3> {data.title} </h3>
-            {data.data.map((d) => <FieldEntry key={data.title+d.label} formKey ={data.title+"|"+d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
-		</div>
+            {data.data.map((d) => <FieldEntry key={data.title+d.label} formKey ={data.title+"|"+d.label} data={d} displayType={displayType} changeHandler={changeHandler} required={required} />)}
+	    </Segment>
         )
     } else {
         return (
-	    <div>
-            {data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} changeHandler={changeHandler} />)}
-	    </div>
+	    <Segment vertical style={styles.base}>
+	    {data.data.map((d) => <FieldEntry key={d.label} formKey={d.label} data={d} displayType={displayType} changeHandler={changeHandler} required={required} />)}
+	    </Segment>
 	);
     }
-};
-
+})
 /* pre : props
  * props.activate - whether to activate onload
  * props.type
@@ -240,8 +254,8 @@ const CustomFormBlock = ( props ) => {
  * props.name
  * props.label
  */
-const FieldEntry = ( props ) => {
-    const { data, displayType, changeHandler , formKey } = props
+const FieldEntry = ( props ) => {    
+    const { data, displayType, changeHandler , formKey, required } = props
     data[data.label.toLowerCase()] = ''
     //todo: change to spread syntax
     return (
@@ -249,11 +263,13 @@ const FieldEntry = ( props ) => {
 		    className={displayType === "form" ? null : "inline"}
 		    key={data.label+data.type}
 		    label={data.label}
-            name={formKey}
+		    name={formKey}
 		    type={data.type}
 		    placeholder={data.placeholder}
 		    onChange={changeHandler}
 		    value={data.value}
+	            width={6}
+	            required={required}
 	/>
     )
 };

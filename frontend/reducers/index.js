@@ -17,6 +17,12 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 loading: true
             });
 
+        case types.CLEAR_ERRORS:
+            return Object.assign({}, state, {
+                error: null,
+                errorMessage: null
+            });
+
         case types.EVENT_UPSERT:
             let { events } = state;
             if (!events) events = [];
@@ -41,13 +47,14 @@ function rootReducer(state = require('../static/defaultState'), action) {
             return Object.assign({}, state, eventStateUpdate);
 
         case types.USER_UPSERT:
-            let { users } = state;
+            let { users, user } = state;
             if (!users) users = [];
             let userStateUpdate = {
                 loading: false,
                 error: '',
                 newUser: action.user,
-                users: []
+                users: [],
+                user: user
             };
             if (action.isUpdate) {
                 users = users.map(e => {
@@ -56,7 +63,8 @@ function rootReducer(state = require('../static/defaultState'), action) {
                     } else {
                         return e;
                     }
-                })
+                });
+                userStateUpdate.user = Object.assign({}, userStateUpdate.user, action.user);
             } else {
                 users.push(action.user);
             }
@@ -138,6 +146,45 @@ function rootReducer(state = require('../static/defaultState'), action) {
             return Object.assign({}, state, {
                 dashboardCards: action.cards
             });
+
+        case types.MARK_ATTENDING:
+            const userMap = state.users.map(u => {
+                if (u._id === action.userID) {
+                    u.pastEvents.push(action.event);
+                }
+                return u;
+            });
+            const eventRemap = state.events.map(e => {
+                if (e._id === action.eventID) {
+                    e.participants.push(action.user);
+                }
+                return e;
+            });
+            return Object.assign({}, state, {
+                users: userMap,
+                events: eventRemap
+            });
+
+        case types.MARK_UNATTENDING:
+            const userRebuild = state.users.map(u => {
+                if (u._id === action.userID) {
+                    const i = u.pastEvents.findIndex(e => e._id === action.event._id);
+                    if (i > -1) u.pastEvents.splice(i, 1);
+                }
+                return u;
+            });
+            const eventRebuild = state.events.map(e => {
+                if (e._id === action.eventID) {
+                    const i = e.participants.findIndex(u => u._id === action.user._id);
+                    if (i > -1) e.participants.splice(i, 1);
+                }
+                return e;
+            });
+            return Object.assign({}, state, {
+                users: userRebuild,
+                events: eventRebuild
+            });
+
 
         default:
             return state;

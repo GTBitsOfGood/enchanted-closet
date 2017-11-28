@@ -14,9 +14,9 @@ export default class Clearfix extends React.Component {
 
     return (
       <div {...this.props}>
-        <div style={beforeStyle}/>
-        {this.props.children}
-        <div style={afterStyle}/>
+          <div style={beforeStyle}/>
+          {this.props.children}
+          <div style={afterStyle}/>
       </div>
     );
   }
