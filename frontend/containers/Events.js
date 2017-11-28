@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Container, Icon, Dimmer, Loader, Segment } from 'semantic-ui-react';
+import { Button, Container, Icon, Dimmer, Loader, Segment, Header } from 'semantic-ui-react';
 
 import Event from '../components/Event';
 
@@ -10,6 +10,7 @@ import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/i
 
 import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
+import Radium from 'radium';
 
 class Events extends Component {
     constructor(props) {
@@ -38,9 +39,16 @@ class Events extends Component {
             e.showAdminControls = false;
             return e;
         });
+	let style = {
+	    base: {
+		padding: "2em"
+	    }
+	}
         return (
             <Container>
-                <h1>Upcoming Events</h1>
+		<Segment textAlign="center" style={style.base}>
+                    <Header as="h1">Upcoming Events</Header>
+		</Segment>
                 <Loader active={isFetchingEvents}>Loading</Loader>
                 { events.length > 0 &&
                     events.map(e => {
