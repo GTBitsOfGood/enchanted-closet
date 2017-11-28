@@ -248,6 +248,7 @@ module.exports.update = (req, res, next) => {
     if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
         newProps.emergencyContactRelation = req.body.emergencyContactRelation;
     }
+
     User.findById(req.params.id, (err, doc) => {
         if (err) {
             res.locals.error = {
