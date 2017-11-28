@@ -23,7 +23,6 @@ class Auth extends Component {
 			)
 		}
 	}
-
 }
 
 const mapStateToProps = (state) => {
