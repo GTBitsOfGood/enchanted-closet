@@ -123,8 +123,22 @@ module.exports.register = (req, res, next) => {
             return next();
         }
         token = token.substring(7);
-        auth.currentUser(token, (_, curr) => {
-            auth.isAdmin(curr, (state) => {
+        auth.currentUser(token, (err, curr) => {
+            if (err) {
+                res.locals.error = {
+                    status: 403,
+                    msg: "Not authorized or redis error"
+                };
+                return next(new Error(res.locals.error));
+            }
+            auth.isAdmin(curr, (err, state) => {
+                if (err) {
+                    res.locals.error = {
+                        status: 403,
+                        msg: "Not authorized or redis error"
+                    };
+                    return next(new Error(res.locals.error));
+                }
                 if (state) {
                     let add = validateAdmin(req.body.data, errResp);
                     User.create(add, (err, instance) => {

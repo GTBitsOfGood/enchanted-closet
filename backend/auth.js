@@ -18,16 +18,14 @@ redisClient.on("error", function (err) {
 
 module.exports.isAdmin = (id, callback) => {
     if (!id) { //catch falsy values like null or empty string
-        callback(false);
-        return next(new Error(res.locals.error));
+        callback(null, false);
     }
     let retVal = false;
     User.findById(id, (err, result) => {
         if (!err && result.role == "Admin") {
-            callback(true);
-            return next(new Error(res.locals.error));
+            callback(err, true);
         }
-        callback(false);
+        callback(err, false);
     });
 }
 
@@ -51,14 +49,21 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
     }
     token = token.substring(7);
     currentUser(token, (err, curr) => {
-        if (err != null) {
+        if (err) {
             res.locals.error = {
                 status: 403,
                 msg: 'Not authorized or redis error'
             };
             return next(new Error(res.locals.error));
         }
-        isAdmin(curr, (state) => {
+        isAdmin(curr, (err, state) => {
+            if (err) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized or redis error'
+                };
+                return next(new Error(res.locals.error));
+            }
             if (curr == null || (curr != req.id && !state)) {
                 res.locals.error = {
                     status: 403,
@@ -82,14 +87,21 @@ module.exports.checkAdmin = (req, res, next) => {
     }
     token = token.substring(7);
     currentUser(token, (err, curr) => {
-        if (err != null) {
+        if (err) {
             res.locals.error = {
                 status: 403,
                 msg: 'Not authorized or redis error'
             };
             return next(new Error(res.locals.error));
         }
-        isAdmin(curr, (state) => {
+        isAdmin(curr, (err, state) => {
+            if (err) {
+                res.locals.error = {
+                    status: 403,
+                    msg: 'Not authorized or redis error'
+                };
+                return next(new Error(res.locals.error));
+            }
             if (!state) {
                 res.locals.error = {
                     status: 403,
@@ -112,7 +124,7 @@ module.exports.idMatches = (req, res, next) => {
     }
     token = token.substring(7);
     currentUser(token, (err, curr) => {
-        if (err != null || curr == null || curr != req.id) {
+        if (err || curr == null || curr != req.id) {
             res.locals.error = {
                 status: 403,
                 msg: 'Not authorized'
