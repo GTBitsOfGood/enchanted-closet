@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 		});
 		return res.status(200).json(response);
 	} else if (res.locals.error) {
-		let statusCode = res.locals.error.status || 500;
+		let statusCode = res.locals.error.code || 500;
 		let response = Object.assign({}, res.locals.error, {
 			'status': 'error'
 		});
@@ -37,6 +37,7 @@ app.use((req, res, next) => {
 	} else {
 		return res.status(500).json({
 			'status': 'error',
+			'code': 500,
 			'msg': 'Internal Server Error'
 		});
 	}
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
 	if (res.locals.error) {
-		let statusCode = res.locals.error.status || 500;
+		let statusCode = res.locals.error.code || 500;
 		let response = Object.assign({}, res.locals.error, {
 			'status': 'error'
 		});
@@ -53,6 +54,7 @@ app.use((err, req, res, next) => {
 	} else {
 		return res.status(500).json({
 			'status': 'error',
+			'code': 500,
 			'msg': 'Internal Server Error'
 		});
 	}
