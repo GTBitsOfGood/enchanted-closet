@@ -61,6 +61,7 @@ typings/
 # Public index file
 public/*
 !public/index.html
+!public/images/*
 
 # macOS Index File
 .DS_Store
