@@ -24,9 +24,9 @@ router.get('/events', controllers.events.index);
 router.get('/events/:id', controllers.events.get);
 router.post('/events/', auth.checkAdmin, controllers.events.create);
 router.delete('/events/:id', auth.checkAdmin, controllers.events.delete);
-router.post('/events/:id/present/:userID', auth.checkAdmin, controllers.events.present);
-router.post('/events/:id/absent/:userID', auth.checkAdmin, controllers.events.absent);
+router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.events.present);
+router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent);
 router.put('/events/:id', auth.checkAdmin, controllers.events.update);
-router.get('/events/:id/report', auth.checkAdmin, reporting.generateReport);
+router.get('/events/:id/report', reporting.generateReport);
 
 module.exports = router;

@@ -16,7 +16,7 @@ redisClient.on("error", function (err) {
     console.log("Error " + err);
 });
 
-module.exports.isAdmin = (id, callback) => {
+const isAdmin = (id, callback) => {
     if (!id) { //catch falsy values like null or empty string
         return callback(null, false);
     }
@@ -29,7 +29,7 @@ module.exports.isAdmin = (id, callback) => {
     });
 }
 
-module.exports.currentUser = (tok, callback) => {
+const currentUser = (tok, callback) => {
     if (!tok) { //catch falsy values like null, empty string
         return callback(null, null);
     }
@@ -48,7 +48,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
         return next(new Error(res.locals.error));
     }
     token = token.substring(7);
-    currentUser(token, (err, curr) => {
+    module.exports.currentUser(token, (err, curr) => {
         if (err) {
             res.locals.error = {
                 status: 403,
@@ -56,7 +56,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
             };
             return next(new Error(res.locals.error));
         }
-        isAdmin(curr, (err, state) => {
+        module.exports.isAdmin(curr, (err, state) => {
             if (err) {
                 res.locals.error = {
                     status: 403,
@@ -115,6 +115,7 @@ module.exports.checkAdmin = (req, res, next) => {
 }
 
 module.exports.idMatches = (req, res, next) => {
+    let token = req.header("Authorization");
     if (!token.startsWith("Bearer ")) {
         res.locals.error = {
             status: 403,
@@ -123,7 +124,7 @@ module.exports.idMatches = (req, res, next) => {
         return next(new Error(res.locals.error));
     }
     token = token.substring(7);
-    currentUser(token, (err, curr) => {
+    module.exports.currentUser(token, (err, curr) => {
         if (err || curr == null || curr != req.id) {
             res.locals.error = {
                 status: 403,
@@ -149,3 +150,7 @@ module.exports.login = (data, callback) => {
         return callback(err, usr);
     });
 }
+
+
+module.exports.currentUser = currentUser;
+module.exports.isAdmin = isAdmin;
