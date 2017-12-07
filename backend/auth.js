@@ -124,7 +124,7 @@ module.exports.idMatches = (req, res, next) => {
     }
     token = token.substring(7);
     module.exports.currentUser(token, (err, curr) => {
-        if (err || curr == null || curr != req.id) {
+        if (err || curr == null || curr != req.params.id) {
             res.locals.error = {
                 status: 403,
                 msg: 'Not authorized'
