@@ -314,34 +314,41 @@ export function updateDashboardCards(cards) {
 
 function formatCards(cards) {
     return dispatch => {
-        const formatted = [
-            {
-                content: Object.values(cards.users).reduce((a, b) => a + b),
-                title: 'Users',
-                url: 'admin/users'
-            },
-            {
-                content: cards.events,
-                title: 'Events',
-                url: 'admin/events'
-            },
-            {
-                content: cards.users.participant,
-                title: 'Participants',
-                url: 'admin/users'
-            },
-            {
-                content: cards.users.volunteer,
-                title: 'Volunteers',
-                url: 'admin/users'
-            },
-            {
-                content: cards.users.admin,
-                title: 'Admins',
-                url: 'admin/users'
+        if (cards) {
+            const formatted = [
+                {
+                    content: Object.values(cards.users).reduce((a, b) => a + b),
+                    title: 'Users',
+                    url: 'admin/users'
+                },
+                {
+                    content: cards.events,
+                    title: 'Events',
+                    url: 'admin/events'
+                },
+                {
+                    content: cards.users.participant,
+                    title: 'Participants',
+                    url: 'admin/users'
+                },
+                {
+                    content: cards.users.volunteer,
+                    title: 'Volunteers',
+                    url: 'admin/users'
+                },
+                {
+                    content: cards.users.admin,
+                    title: 'Admins',
+                    url: 'admin/users'
+                }
+            ];
+            dispatch(updateDashboardCards(formatted));
+        } else {
+            return {
+                type: types.API_ERROR,
+                error: 'An error occurred pulling that information'
             }
-        ];
-        dispatch(updateDashboardCards(formatted));
+        }
     }
 }
 
