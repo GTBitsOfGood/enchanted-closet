@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers/');
-const reporting = require('./reporting');
 const auth = require('./auth')
 
 router.post('/login', controllers.auth.login);
@@ -27,6 +26,6 @@ router.delete('/events/:id', auth.checkAdmin, controllers.events.delete);
 router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.events.present);
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent);
 router.put('/events/:id', auth.checkAdmin, controllers.events.update);
-router.get('/events/:id/report', reporting.generateReport);
+router.get('/events/:id/report', controllers.reporting.generateReport);
 
 module.exports = router;
