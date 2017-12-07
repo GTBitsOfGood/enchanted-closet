@@ -20,7 +20,6 @@ const isAdmin = (id, callback) => {
     if (!id) { //catch falsy values like null or empty string
         return callback(null, false);
     }
-    let retVal = false;
     User.findById(id, (err, result) => {
         if (!err && result.role == "Admin") {
             return callback(err, true);
