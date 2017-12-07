@@ -16,6 +16,7 @@ class UsersNew extends Component {
 
 	constructor(props) {
 		super(props);
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
 		this.state = {
 			error: this.props.error,
 			loading: this.props.loading,
@@ -76,6 +77,7 @@ class UsersNew extends Component {
 const mapStateToProps = state => {
 	return {
 		error: state.error,
+		user: state.user,
 		newUser: state.newUser,
 		loading: state.loading ? state.loading : false
 	};

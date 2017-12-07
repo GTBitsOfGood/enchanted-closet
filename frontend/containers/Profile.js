@@ -23,6 +23,7 @@ class Profile extends Component {
     	super(props);
         const {clearErrors} = this.props;
         clearErrors();
+
         this.state = {
             user: null,
             hasChanged: false,

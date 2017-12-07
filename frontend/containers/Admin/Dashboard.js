@@ -9,6 +9,8 @@ import DashboardCards from '../../components/DashboardCards';
 
 import {loadDashboardCards} from '../../actions/';
 
+import {withRouter} from 'react-router-dom';
+
 const DEFAULT_CARDS = [
 	{
 		content: null,
@@ -30,6 +32,10 @@ const DEFAULT_CARDS = [
 class AdminDashboard extends Component {
 	constructor(props) {
 		super(props);
+
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
+			this.props.history.goBack();
+		}
 	}
 
 	componentDidMount() {
@@ -52,6 +58,7 @@ class AdminDashboard extends Component {
 
 const mapStateToProps = (state) => {
     return {
+    	user: state.user,
 		cards: state.dashboardCards
     };
 };
@@ -62,7 +69,7 @@ const mapDispatchToProps = dispatch => {
     }, dispatch);
 }
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(AdminDashboard);
+)(AdminDashboard));

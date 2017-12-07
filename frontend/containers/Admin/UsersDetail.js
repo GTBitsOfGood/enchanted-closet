@@ -19,6 +19,7 @@ import ECPastEventsCard from '../../components/ECPastEventsCard';
 class AdminUsersDetail extends Component {
 	constructor(props) {
 		super(props);
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
 		const {updateUserStore, users, match} = this.props;
 		this.state = {
 			user_id: match.params.id,
@@ -89,6 +90,7 @@ class AdminUsersDetail extends Component {
 
 const mapStateToProps = state => {
 	return {
+		user: state.user,
 		users: state.users
 	};
 }

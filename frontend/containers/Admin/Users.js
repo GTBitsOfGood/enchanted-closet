@@ -13,6 +13,7 @@ const roles = ['admin', 'volunteer', 'participant'];
 class Users extends Component {
 	constructor(props) {
 		super(props);
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
 		this.state = {
 			users: {
 				'admin': null,
@@ -99,6 +100,7 @@ class Users extends Component {
 
 const mapStateToProps = state => {
 	return {
+		user: state.user,
 		users: state.users
 	};
 }

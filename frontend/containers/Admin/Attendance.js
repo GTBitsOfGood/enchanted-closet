@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 
 import {Container, Segment} from 'semantic-ui-react';
 
+import {withRouter} from 'react-router-dom';
+
 import PageTitle from '../../components/PageTitle';
 import ErrorComponent from '../../components/ErrorComponent';
 import LoadingIcon from '../../components/LoadingIcon';
@@ -17,7 +19,12 @@ class AdminAttendance extends Component {
 	constructor(props) {
 		super(props);
 
-		const { match, users, events } = this.props;
+		const { match, users, events, user, history } = this.props;
+
+		if (user.role !== 'Volunteer' && user.role !== 'Admin') {
+			history.goBack();
+		}
+
 		this.state = {
 			event_id: match.params.id,
 			users: users || [],
@@ -100,6 +107,7 @@ class AdminAttendance extends Component {
 
 const mapStateToProps = state => {
 	return {
+		user: state.user,
 		users: state.users,
 		events: state.events
 	};
@@ -112,4 +120,4 @@ const mapDispatchToProps = dispatch => {
 	}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminAttendance);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminAttendance));

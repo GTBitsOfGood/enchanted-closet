@@ -17,6 +17,10 @@ import { withRouter } from 'react-router-dom';
 class AdminEvents extends Component {
 	constructor(props) {
 		super(props);
+
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
+			this.props.history.goBack();
+		}
 	}
 
 	componentDidMount() {
@@ -59,14 +63,10 @@ AdminEvents.PropTypes = {
 }
 
 const mapStateToProps = (state) => {
-    const {
-        isFetchingEvents,
-        events
-    } = state;
-
     return {
-    	isFetchingEvents,
-    	events
+    	user: state.user,
+    	isFetchingEvents: state.isFetchingEvents,
+    	events: state.events
     }
 };
 

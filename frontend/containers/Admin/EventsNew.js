@@ -16,13 +16,14 @@ import Event from '../../components/Event';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 
-import { Redirect } from 'react-router-dom';
+import { withRouter,Redirect } from 'react-router-dom';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 class AdminEventsNew extends Component {
 	constructor(props) {
 		super(props);
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
 		this.state = {
 			name: '',
 			description: '',
@@ -116,6 +117,7 @@ AdminEventsNew.PropTypes = {
 
 const mapStateToProps = (state) => {
 	return {
+		user: state.user,
 		loading: state.loading || false,
 		error: state.error,
 		newEvent: state.newEvent
@@ -128,7 +130,7 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(AdminEventsNew);
+)(AdminEventsNew));

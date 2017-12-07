@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
@@ -10,12 +9,15 @@ import LoadingIcon from '../../components/LoadingIcon';
 
 import { fetchEventsIfNeeded } from '../../actions';
 
-import { Redirect } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import AdminEventsNew from './EventsNew';
 
 class EventsEdit extends Component {
 	constructor(props) {
 		super(props);
+
+		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
+
 		this.state = {
 			event: this.props.events.find(e => e._id === this.props.match.params.id),
 			loading: true
@@ -63,6 +65,7 @@ EventsEdit.PropTypes = {
 
 const mapStateToProps = (state) => {
 	return {
+		user: state.user,
 		loading: state.loading || false,
 		error: state.error,
 		events: state.events,
@@ -74,6 +77,6 @@ const mapDispatchToProps = dispatch => {
 	return {};
 }
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps
-)(EventsEdit);
+)(EventsEdit));
