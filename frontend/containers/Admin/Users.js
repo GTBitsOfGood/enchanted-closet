@@ -70,7 +70,7 @@ class Users extends Component {
 										{users && users[role] !== null ?
 											<Table>
 												<Table.Body>
-													{users[role].map(u => {
+													{users[role].length > 0 ? users[role].map(u => {
 														return (
 															<Table.Row key={u._id} style={{cursor:'pointer'}} onClick={() => history.push(`/admin/users/${u._id}`)}>
 																<Table.Cell>{u.name || (<i>&lt;No Name&gt;</i>)}</Table.Cell>
@@ -79,7 +79,10 @@ class Users extends Component {
 															</Table.Row>
 														)
 													})
-													}
+													:
+													(<Table.Row>
+														<Table.Cell>{(<p>There are no users for this role</p>)}</Table.Cell>
+													</Table.Row>)}
 												</Table.Body>
 											</Table>
 										:
