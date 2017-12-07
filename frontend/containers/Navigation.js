@@ -21,31 +21,32 @@ class Navigation extends Component {
     }
 
     render() {
-	var styles = {
-	    base: {
-	      background: '#3B0086',
-              borderRadius: 0
-	    },
-	    button: {
-	      background: '#6200B3',
-		':hover': {
-		  background: '#7E2EC0',
-		  boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
-		},
-		':active': {
-		  background: '#7E2EC0',
-		  boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
-		}
-	    }
-	};
-        const { applicationName, loggedIn, logoutUser } = this.props;
+    	var styles = {
+            base: {
+                background: '#3B0086',
+                borderRadius: 0
+            },
+            button: {
+                background: '#6200B3',
+                ':hover': {
+                    background: '#7E2EC0',
+                    boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
+                },
+                ':active': {
+                    background: '#7E2EC0',
+                    boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
+                }
+            }
+        };
+        const { applicationName, user, logoutUser } = this.props;
         return (
             <Menu style={styles.base} inverted stackable size='massive'>
                 <Menu.Item header onClick={() => this.navigate('/')}>{applicationName}</Menu.Item>
-                {loggedIn &&
+                {user &&
                     <Menu.Menu position='right'>
                         <Menu.Item style={styles.button} onClick={() => this.navigate('/events')}>Events</Menu.Item>
                         <Menu.Item style={styles.button} onClick={() => this.navigate('/profile')}>My Profile</Menu.Item>
+                        {user.role.toLowerCase() === 'admin' &&
                         <Dropdown item text='Admin' style={styles.button} >
                             <Dropdown.Menu>
                                 <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/dashboard')}>Dashboard</Dropdown.Item>
@@ -53,10 +54,11 @@ class Navigation extends Component {
                                 <Dropdown.Item style={styles.button} onClick={() => this.navigate('/admin/events')}>Events</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
+                        }
                         <Menu.Item onClick={logoutUser}>Log out</Menu.Item>
                     </Menu.Menu>
                 }
-                {!loggedIn &&
+                {!user &&
                  <Menu.Item position='right' style={styles.button}  onClick={() => {this.navigate('/login')}}>Log In</Menu.Item>
                 }
     	    </Menu>
@@ -67,7 +69,7 @@ class Navigation extends Component {
 const mapStateToProps = (state) => {
     return {
         applicationName: state.applicationName,
-        loggedIn: state.user
+        user: state.user
     };
 };
 
