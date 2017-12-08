@@ -86,7 +86,7 @@ class AdminAttendance extends Component {
 		if (event) {
 	        return (
 				<Container>
-					<PageTitle title={event.name} showLoadingIcon />
+					<PageTitle title={event.name} showLoadingIcon link="admin/users/create" linkTitle="Register" />
 					<ECSearchBarCard filterFunction={this.searchFilterUsers}/>
 					<ECUserList event={event} users={users} filter={filter} />
 				</Container>

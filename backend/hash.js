@@ -2,7 +2,7 @@ let bcrypt = require('bcrypt');
 const User = require('mongoose').model('User');
 
 module.exports.genNew = (password) => {
-    return bcrypt.hashSync(password, 15);
+    return bcrypt.hashSync(password);
 }
 
 module.exports.checkAgainst = (data, callback) => {

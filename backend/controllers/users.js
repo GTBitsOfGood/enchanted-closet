@@ -241,11 +241,14 @@ module.exports.update = (req, res, next) => {
     if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
         newProps.grade = req.body.grade;
     }
+    if (req.body.age) {
+        newProps.age = req.body.age;
+    }
+    if (req.body.leader) {
+        newProps.leader = req.body.leader;
+    }
     if (req.body.phone) {
         newProps.phone = req.body.phone;
-    }
-    if (req.body.grade && req.body.grade > 0 && req.body.grade <= 12) {
-        newProps.grade = req.body.grade;
     }
     if (req.body.race && req.body.race.length > 2) {
         newProps.race = req.body.race;
@@ -288,3 +291,76 @@ module.exports.update = (req, res, next) => {
         }
     });
 }
+
+
+module.exports.create = (req, res, next) => {
+    console.log('create')
+    let newProps = {};
+    if (matchesComplexityRequirements(req.body.password)) {
+        newProps.password = hash.genNew(req.body.password);
+    } else {
+        res.locals.error = {
+            status: 400,
+            msg: 'Invalid password'
+        };
+        return next(new Error(res.locals.error));
+    }
+    if (req.body.name && req.body.name.length >= 2) {
+        newProps.name = req.body.name;
+    }
+    if (req.body.email && isEmail.test(req.body.email)) {
+        newProps.email = req.body.email;
+    } else {
+        res.locals.error = {
+            status: 400,
+            msg: 'Invalid email'
+        };
+        return next(new Error(res.locals.error));
+    }
+    if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
+        newProps.grade = req.body.grade;
+    }
+    if (req.body.age) {
+        newProps.age = req.body.age;
+    }
+    if (req.body.leader) {
+        newProps.leader = req.body.leader;
+    }
+    if (req.body.phone) {
+        newProps.phone = req.body.phone;
+    }
+    if (req.body.race && req.body.race.length > 2) {
+        newProps.race = req.body.race;
+    }
+    if (req.body.school && req.body.school.length > 2) {
+        newProps.school = req.body.school;
+    }
+    if (req.body.emergencyContactName && req.body.emergencyContactName.length > 2) {
+        newProps.emergencyContactName = req.body.emergencyContactName;
+    }
+    if (req.body.emergencyContactPhone && req.body.emergencyContactPhone.length > 2) {
+        newProps.emergencyContactPhone = req.body.emergencyContactPhone;
+    }
+    if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
+        newProps.emergencyContactRelation = req.body.emergencyContactRelation;
+    }
+
+    console.log(newProps);
+
+    User.create(newProps, (err, user) => {
+        if (err) {
+            console.log(err);
+            res.locals.error = {
+                status: 400,
+                msg: "User unable to be created"
+            }
+            return next(new Error(res.locals.error));
+        } else {
+            res.locals.data = {
+                user: user
+            };
+            return next();
+        }
+    });
+}
+
