@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FileForm } from '../components/CustomForm';
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image } from 'semantic-ui-react'
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image, Button } from 'semantic-ui-react'
 
 import { performLogin } from '../actions/index';
+
+import { withRouter } from 'react-router-dom';
 
 import { Redirect } from 'react-router-dom';
 import Radium from 'radium';
@@ -37,22 +39,29 @@ class Login extends Component {
 			</Grid.Column>
 			<Grid.Column width={8}>
 			    <Container fluid text centered>
-				<Dimmer active={modalLoaderActive}>
-				    <Loader>Loading</Loader>
-				</Dimmer>
-				{errorMessage &&
-				 <Message
-				     error
-				     header='Oops an error occurred!'
-				     content={errorMessage}
-				 />
-				}
-				<Card fluid color='purple' >
-				    <Card.Content header='Login' />
-				    <Card.Content>
-					<FileForm type="login" isInline="true" submitRoute="login" buttonAction={performLogin} />
-				    </Card.Content>
-				</Card>
+					<Dimmer active={modalLoaderActive}>
+					    <Loader>Loading</Loader>
+					</Dimmer>
+					{errorMessage &&
+					 <Message
+					     error
+					     header='Oops an error occurred!'
+					     content={errorMessage}
+					 />
+					}
+					<Card fluid color='purple' >
+					    <Card.Content header='Login' />
+					    <Card.Content>
+						<FileForm type="login" isInline="true" submitRoute="login" buttonAction={performLogin} />
+					    </Card.Content>
+					</Card>
+					<Card fluid color='purple' >
+					    <Card.Content style={{textAlign: 'center'}}>
+							<Container>
+								<Button onClick={() => this.props.history.push('/register')}>Register a New Account</Button>
+							</Container>
+					    </Card.Content>
+					</Card>
 			    </Container>
 			</Grid.Column>
 			<Grid.Column width={4}>
@@ -79,7 +88,7 @@ const mapDispatchToProps = dispatch => {
     }, dispatch);
 }
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(Login);
+)(Login));
