@@ -17,10 +17,22 @@ module.exports.RegisterForm = {
 		 "type" : "email",
 		 "name" : "email",
 		 "placeholder" : "gburdell@gatech.edu"
+	     },
+	     {
+		 "label" : "Password",
+		 "type" : "password",
+		 "name" : "password",
+		 "placeholder" : "••••••••"
+	     },
+	     {
+		 "label" : "Confirm Password",
+		 "type" : "password",
+		 "name" : "confirm_password",
+		 "placeholder" : "••••••••"
 	     }
 	 ]
 	},
-	{"title" : "Some details",
+	{"title" : "Important Information",
 	 "data" : [
 	     {
 		 "label" : "Phone number",
@@ -30,7 +42,7 @@ module.exports.RegisterForm = {
 	     },
 	     {
 		 "label" : "Birthday",
-		 "type" : "number",
+		 "type" : "text",
 		 "name" : "birthday",
 		 "placeholder" : "01/01/2000"
 	     },
@@ -76,19 +88,19 @@ module.exports.RegisterForm = {
 		 "label" : "Emergency Contact Name",
 		 "type" : "text",
 		 "name" : "emergencyContactName",
-		 "placeholder" : "EC Name"
+		 "placeholder" : "John Smith"
 	     },
 	     {
 		 "label" : "Emergency Contact Phone",
 		 "type" : "text",
 		 "name" : "emergencyContactPhone",
-		 "placeholder" : "EC Phone"
+		 "placeholder" : "(123) 705-1232"
 	     },
 	     {
 		 "label" : "Emergency Contact Relation",
 		 "type" : "text",
 		 "name" : "emergencyContactRelation",
-		 "placeholder" : "EC Relation"
+		 "placeholder" : "Teacher"
 	     },
 	 ]
 	}
