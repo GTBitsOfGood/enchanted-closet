@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Segment, List, Icon } from 'semantic-ui-react';
 
+import moment from 'moment';
+
 const demographicsFields = ['grade', 'birthday', 'age', 'race', 'school', 'leader'];
 
 const ECDemographicsCard = ( props ) => {
 	const {user} = props;
 
 	if (hasAtLeastOneDemographic(user)) {
+		if (user.birthday) user.birthday = moment(new Date(user.birthday)).format('MMMM Do, YYYY')
 		return (
 			<Segment>
 				<h3>Demographics</h3>

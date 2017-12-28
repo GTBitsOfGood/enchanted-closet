@@ -105,7 +105,7 @@ class EventsDetail extends Component {
 							<h3>Description</h3>
 							<p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>
 						</Segment>
-						<Speakers presenters={detail.presenters}/>
+						<Speakers speakers={detail.speakers}/>
 						{displayMapLocationError || (latitude && longitude) ?
 							<ECMap
 								isMarkerShown

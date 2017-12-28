@@ -101,16 +101,16 @@ class Profile extends Component {
                                <Form.Input required label='Phone Number' type='phone' value={user.phone} name='phone' onChange={this.inputUpdate} placeholder="(516) 123-4321"/>
                                {user.role.toLowerCase() !== 'admin' &&
                                    <div>
-                                       <Form.Input label='Grade' type='number' value={user.grade} name='grade' onChange={this.inputUpdate} placeholder="10"/>
-                                       <Form.Input label='Age' type='number' value={user.age} name='age' onChange={this.inputUpdate} placeholder="16"/>
-                                       <Form.Input label='Race/Ethnicity' type='text' value={user.race} name='race' onChange={this.inputUpdate} placeholder=""/>
+                                       <Form.Input required label='Grade' type='number' value={user.grade} name='grade' onChange={this.inputUpdate} placeholder="10"/>
+                                       <Form.Input required label='Age' type='number' value={user.age} name='age' onChange={this.inputUpdate} placeholder="16"/>
+                                       <Form.Input required label='Race/Ethnicity' type='text' value={user.race} name='race' onChange={this.inputUpdate} placeholder=""/>
                                        <Header as='h3'>Affiliations</Header>
-                                       <Form.Input label='School' type='text' value={user.school} name='school' onChange={this.inputUpdate} placeholder="Atlanta High School"/>
-                                       <Form.Input label='Leader' type='text' value={user.leader} name='leader' onChange={this.inputUpdate} placeholder="Jessica Smith"/>
+                                       <Form.Input required label='School' type='text' value={user.school} name='school' onChange={this.inputUpdate} placeholder="Atlanta High School"/>
+                                       <Form.Input required label='Leader' type='text' value={user.leader} name='leader' onChange={this.inputUpdate} placeholder="Jessica Smith"/>
                                        <Header as='h3'>Emergency Contact</Header>
-                                       <Form.Input label='Name' type='text' value={user.emergencyContactName} name='emergencyContactName' onChange={this.inputUpdate} placeholder="Mary Smith"/>
-                                       <Form.Input label='Phone Number' type='phone' value={user.emergencyContactPhone} name='emergencyContactPhone' onChange={this.inputUpdate} placeholder="(404) 002-2999"/>
-                                       <Form.Input label='Relation' type='text' value={user.emergencyContactRelation} name='emergencyContactRelation' onChange={this.inputUpdate} placeholder="Mother"/>
+                                       <Form.Input required label='Name' type='text' value={user.emergencyContactName} name='emergencyContactName' onChange={this.inputUpdate} placeholder="Mary Smith"/>
+                                       <Form.Input required label='Phone Number' type='phone' value={user.emergencyContactPhone} name='emergencyContactPhone' onChange={this.inputUpdate} placeholder="(404) 002-2999"/>
+                                       <Form.Input required label='Relation' type='text' value={user.emergencyContactRelation} name='emergencyContactRelation' onChange={this.inputUpdate} placeholder="Teacher"/>
                                    </div>
                                }
                                <Button disabled={!hasChanged} loading={loading} primary type='submit'>Update Profile</Button>

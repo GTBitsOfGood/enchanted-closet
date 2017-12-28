@@ -29,6 +29,7 @@ class AdminEventsNew extends Component {
 			description: '',
 			location: '',
 			datetime: moment(),
+			speakers: '',
 			loading: this.props.loading,
 			error: this.props.error
 		};
@@ -46,6 +47,7 @@ class AdminEventsNew extends Component {
 				name: event.name,
 				description: event.description,
 				location: event.location,
+				speakers: event.speakers.join(', '),
 				datetime: moment(new Date(event.datetime))
 			});
 		}
@@ -58,9 +60,9 @@ class AdminEventsNew extends Component {
 
 	upsertEvent() {
 		const { processEvent } = this.props;
-		const {_id, name, description, location, datetime} = this.state;
+		const {_id, name, description, location, speakers, datetime} = this.state;
 		this.setState({loading: true});
-		processEvent({_id, name, description, location, datetime});
+		processEvent({_id, name, description, location, speakers, datetime});
 	}
 
 	handleInputChange(e, {name, value}) {
@@ -92,6 +94,8 @@ class AdminEventsNew extends Component {
 								<Form.Input required label='Event Name' value={this.state.name} name='name' placeholder='Event Name' onChange={this.handleInputChange} />
 								<Form.TextArea required label='Description' rows={12} value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />
 								<Form.Input required label='Event Address' value={this.state.location} name='location' placeholder='123 Main Street, Atlanta GA 30318' onChange={this.handleInputChange} />
+								<Form.Input required label='Speakers' value={this.state.speakers} name='speakers' placeholder='John Smith, Jessica Hornbuckle' onChange={this.handleInputChange} />
+								<p>* Enter a comma-separated list of names for the speakers of this event</p>
 								<Form.Field
 									label='Starting date & time'
 									control={DatePicker}

@@ -310,7 +310,7 @@ module.exports.update = (req, res, next) => {
         if (req.body.description && req.body.description.length > 2) newValues.description = req.body.description;
         if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location;
         if (req.body.datetime && req.body.datetime.length > 2) newValues.datetime = req.body.datetime;
-        if (req.body.presenters) newValues.presenters = JSON.parse(req.body.presenters);
+        if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(e => e.trim());
 
         event.set(newValues);
         event.save((err, updatedEvent) => {

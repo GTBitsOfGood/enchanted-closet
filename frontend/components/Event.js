@@ -36,7 +36,7 @@ class Event extends Component {
     	    }
     	}
 
-            const adminAllowed = this.props.user.role === 'Admin';
+        const adminAllowed = this.props.user.role === 'Admin';
     	return (
         <div key={uniqueId('event_')} style={{paddingTop: 10, paddingBottom: 10}}>
             <div onClick={() => history.push(link)} style={{cursor:'pointer'}}>

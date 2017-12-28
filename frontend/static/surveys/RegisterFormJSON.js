@@ -35,9 +35,9 @@ module.exports.RegisterForm = {
 		"data" : [
 			{
 				"label" : "Phone number",
-				"type" : "number",
+				"type" : "phone",
 				"name" : "phone",
-				"placeholder" : "12345667890",
+				"placeholder" : "(123) 456-6789",
 			},
 			{
 				"label" : "Birthday",
@@ -93,7 +93,7 @@ module.exports.RegisterForm = {
 			},
 			{
 				"label" : "Emergency Contact Phone",
-				"type" : "text",
+				"type" : "phone",
 				"name" : "emergencyContactPhone",
 				"placeholder" : "(123) 705-1232"
 			},

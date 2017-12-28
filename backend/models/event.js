@@ -18,8 +18,8 @@ var EventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    presenters: {
-        type: [mongoose.Schema.Types.Mixed],
+    speakers: {
+        type: [String],
         required: false
     },
     photo: {

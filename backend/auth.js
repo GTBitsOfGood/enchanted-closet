@@ -34,11 +34,12 @@ const isAdmin = (id, callback) => {
 
 function lacksAny(obj, props) {
     for (p in props) {
-        if (!(obj[p])) {
-            return p;
+        let k = props[p];
+        if (!(obj[k])) {
+            return k;
         }
     }
-    return false;
+    return null;
 }
 
 const matchesComplexityRequirements = password => {
@@ -59,8 +60,8 @@ const matchesComplexityRequirements = password => {
 
 
 const validateUser = (data, callback) => {
-    let tmp = lacksAny(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-    if (!tmp) return callback({reason: `Data object missing ${tmp} property`}, null);
+    let tmp = lacksAny(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader", "emergencycontactname", "emergencycontactphone", "emergencycontactrelation"]);
+    if (tmp !== null) return callback({reason: `Data object missing ${tmp} property`}, null);
 
     if (data.name.length < 2) return callback({reason: "Name must be at least 3 characters"}, null);
 
@@ -70,6 +71,12 @@ const validateUser = (data, callback) => {
 
     if (grades.indexOf(data.grade) === -1) return callback({reason: "Grade is not valid"}, null);
 
+    data.emergencyContactName = data.emergencycontactname;
+    delete data.emergencycontactname;
+    data.emergencyContactPhone = data.emergencycontactphone;
+    delete data.emergencycontactphone;
+    data.emergencyContactRelation = data.emergencycontactrelation;
+    delete data.emergencycontactrelation;
     return callback(null, Object.assign({}, data, {"password": hash.genNew(data.password)}));
 }
 
@@ -196,6 +203,7 @@ module.exports.login = (data, callback) => {
 }
 
 module.exports.register = (data, callback) => {
+    console.log(data);
     validateUser(data, (err, validatedUserData) => {
         if (err) return callback(err.reason, null);
         User.create(validatedUserData, (err, user) => {
