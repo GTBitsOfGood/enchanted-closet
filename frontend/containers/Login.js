@@ -38,7 +38,7 @@ class Login extends Component {
 			    <Image src={imgL} size='medium' centered />
 			</Grid.Column>
 			<Grid.Column width={8}>
-			    <Container fluid text centered>
+			    <Container fluid text>
 					<Dimmer active={modalLoaderActive}>
 					    <Loader>Loading</Loader>
 					</Dimmer>

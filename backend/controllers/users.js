@@ -51,30 +51,6 @@ function matchesComplexityRequirements(password) {
     return false;
 }
 
-let validateUser = (data, callback) => {
-    let tmp = lacksAny(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-    if (tmp) {
-        return callback({reason: "Data object missing " + tmp + " property"}, false);
-    }
-    if (data.name.length < 2) {
-        return callback({reason: "Name must be at least 3 characters"}, false);
-    }
-    if (!isEmail.test(data.email)) {
-        return callback({reason: "Email invalid"}, false);
-    }
-    if (!matchesComplexityRequirements(data.password)) {
-        return callback({reason: "Password doesn't match complexity requirements"}, false);
-    }
-    if (grades.indexOf(data.grade) == -1) {
-        return callback({reason: "Grade is not valid"}, false);
-    }
-    //TODO: constraint checks for race, school, leader_name
-    if (!isPhone.test(data.emergency_contact.phone)) {
-        return callback({reason: "Invalid phone number"}, false);
-    }
-    return Object.assign({}, data, {"password": hash.genNew(data.password)});
-}
-
 let validateAdmin = (data, callback) => {
     let tmp = lacksAny(data, ["email", "password", "name"]);
     if (tmp) {
@@ -90,76 +66,6 @@ let validateAdmin = (data, callback) => {
         return callback({reason: "Name must be at least 3 characters"}, false);
     }
     return Object.assign({}, data, {"password": hash.genNew(data.password)});
-}
-
-module.exports.register = (req, res, next) => {
-    let errResp = (err, success) => {
-        if (!success) {
-            res.error = {
-                status: 400,
-                msg: err.reason
-            };
-        }
-    }
-    if (req.role == "Participant" || req.role == "Volunteer") {
-        let add = validateUser(req.body.data, errResp);
-        User.create(add, (err, instance) => {
-            if (err) {
-                res.locals.error = {
-                    status: 500,
-                    msg: "Couldn't save user"
-                };
-            }
-            return next();
-        });        
-    } else if (req.role = "Admin") {
-        //only admins can create other admins
-        let token = req.header("Authorization");
-        if (!token.startsWith("Bearer ")) {
-            res.locals.error = {
-                status: 403,
-                msg: 'Not authorized (must be admin)'
-            };
-            return next();
-        }
-        token = token.substring(7);
-        auth.currentUser(token, (err, curr) => {
-            if (err) {
-                res.locals.error = {
-                    status: 403,
-                    msg: "Not authorized or redis error"
-                };
-                return next(new Error(res.locals.error));
-            }
-            auth.isAdmin(curr, (err, state) => {
-                if (err) {
-                    res.locals.error = {
-                        status: 403,
-                        msg: "Not authorized or redis error"
-                    };
-                    return next(new Error(res.locals.error));
-                }
-                if (state) {
-                    let add = validateAdmin(req.body.data, errResp);
-                    User.create(add, (err, instance) => {
-                        if (err) {
-                            res.locals.error = {
-                                status: 500,
-                                msg: "Couldn't save user"
-                            };
-                        }
-                        return next();
-                    });
-                } else {
-                    res.locals.error = {
-                        status: 403,
-                        msg: "Can't register admin"
-                    }
-                    return next();
-                }
-            });
-        });
-    }
 }
 
 module.exports.get = (req, res, next) => {

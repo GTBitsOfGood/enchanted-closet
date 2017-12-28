@@ -43,6 +43,7 @@ class Homepage extends Component {
                         <LoadingIcon active={loading}/>
                         {events && events.length > 0 ?
                             events.slice(0, LIMIT).map(event => {
+                                event.showAdminControls = false;
                                 return (<Event data={event} history={history} />);
                             })
                         :
