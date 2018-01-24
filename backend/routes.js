@@ -26,6 +26,7 @@ router.delete('/events/:id', auth.checkAdmin, controllers.events.delete);
 router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.events.present);
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent);
 router.put('/events/:id', auth.checkAdmin, controllers.events.update);
-router.get('/events/:id/report', controllers.reporting.generateReport);
+router.get('/events/:id/report', controllers.reporting.eventReport);
+router.get('/report/year', controllers.reporting.yearReport);
 
 module.exports = router;

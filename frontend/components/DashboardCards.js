@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Loader, Container, Card } from 'semantic-ui-react';
+import { Loader, Container, Card, Icon } from 'semantic-ui-react';
 import Clearfix from './Clearfix';
 
 const DashboardCards = ( props ) => {
@@ -16,6 +16,9 @@ const DashboardCards = ( props ) => {
 		);
 	}
 
+	// Year-long Attendance Card
+	cards.push({content: (<Icon name='cloud download'/>), title: 'Download Year Attendance', specific_url: '/api/report/year'});
+
 	return (
 		<Card.Group>
 			{cards.map(DashboardCard)}
@@ -23,10 +26,10 @@ const DashboardCards = ( props ) => {
 	);
 };
 
-const DashboardCard = ( props ) => {
-	let link = `#/${props.url}`;
+const DashboardCard = props => {
+	const link = props.specific_url ? `${props.specific_url}` : `#/${props.url}`;
 	return (
-		<Card href={link} centered key={`#${props.content}${props.title}`}>
+		<Card href={link} target="_blank" centered key={`#${props.content}${props.title}`}>
 			{props.content !== null ?
 				<Card.Content style={{textAlign: 'center'}}><h1>{props.content}</h1></Card.Content>
 			:
