@@ -31,7 +31,7 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default function Root({ store }) {
     return (
-        <Provider store={store}>
+        <Provider Store={store}>
             <div>
                 <Helmet bodyAttributes={{style: 'background-color : #E2D0F1'}}/>
                 <Router>
