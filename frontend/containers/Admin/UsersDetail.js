@@ -17,88 +17,88 @@ import ECContactCard from '../../components/ECContactCard';
 import ECPastEventsCard from '../../components/ECPastEventsCard';
 
 class AdminUsersDetail extends Component {
-	constructor(props) {
-		super(props);
-		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
-		const {updateUserStore, users, match} = this.props;
-		this.state = {
-			user_id: match.params.id,
-			loading: false,
-			hasPerformedUpdate: false
-		};
+  constructor(props) {
+    super(props);
+    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
+    const {updateUserStore, users, match} = this.props;
+    this.state = {
+      user_id: match.params.id,
+      loading: false,
+      hasPerformedUpdate: false
+    };
 
-		if (!users) {
-			this.loadUsers();
-		} else {
-			const usr = users.filter(u => u._id === this.state.user_id);
-			if (usr.length === 1) {
-				this.state = Object.assign({}, this.state, {
-					user: usr[0]
-				});
-			} else {
-				this.loadUsers();
-			}
-		}
-		this.loadUsers = this.loadUsers.bind(this);
-	}
+    if (!users) {
+      this.loadUsers();
+    } else {
+      const usr = users.filter(u => u._id === this.state.user_id);
+      if (usr.length === 1) {
+	this.state = Object.assign({}, this.state, {
+	  user: usr[0]
+	});
+      } else {
+	this.loadUsers();
+      }
+    }
+    this.loadUsers = this.loadUsers.bind(this);
+  }
 
-	loadUsers() {
-		const {updateUserStore} = this.props;
-		this.state = Object.assign({}, this.state, {
-			loading: true,
-			hasPerformedUpdate: true
-		});
-		updateUserStore();
-	}
+  loadUsers() {
+    const {updateUserStore} = this.props;
+    this.state = Object.assign({}, this.state, {
+      loading: true,
+      hasPerformedUpdate: true
+    });
+    updateUserStore();
+  }
 
-	componentWillReceiveProps(nextProps) {
-		const {users} = nextProps;
-		const {user_id} = this.state;
-		const usr = users.filter(u => u._id === user_id);
-		if (usr.length === 1) {
-			this.setState({user: usr[0], loading: false});
-		} else {
-			this.setState({loading: false, hasPerformedUpdate: true});
-		}
-	}
+  componentWillReceiveProps(nextProps) {
+    const {users} = nextProps;
+    const {user_id} = this.state;
+    const usr = users.filter(u => u._id === user_id);
+    if (usr.length === 1) {
+      this.setState({user: usr[0], loading: false});
+    } else {
+      this.setState({loading: false, hasPerformedUpdate: true});
+    }
+  }
 
-	render() {
-		const {loading, hasPerformedUpdate, user} = this.state;
-		return (
-			<Container>
-				{loading &&
-					<div style={{paddingTop:50}}>
-						<LoadingIcon active/>
-					</div>
-				}
-				{!loading && hasPerformedUpdate && !user &&
-					<ErrorComponent redir='#/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
-				}
-				{!loading && user &&
-					<div>
-						<PageTitle title={user.name || (<i>&lt;No Name&gt;</i>)}/>
-						<ECContactCard user={user}/>
-						<ECDemographicsCard user={user}/>
-						<ECEmergencyContactCard user={user}/>
-						<ECPastEventsCard user={user}/>
-					</div>
-				}
-			</Container>
-		)
+  render() {
+    const {loading, hasPerformedUpdate, user} = this.state;
+    return (
+      <Container>
+	{loading &&
+	 <div style={{paddingTop:50}}>
+	   <LoadingIcon active/>
+	 </div>
 	}
+	{!loading && hasPerformedUpdate && !user &&
+	 <ErrorComponent redir='#/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
+	}
+	{!loading && user &&
+	 <div>
+	   <PageTitle title={user.name || (<i>&lt;No Name&gt;</i>)}/>
+	   <ECContactCard user={user}/>
+	   <ECDemographicsCard user={user}/>
+	   <ECEmergencyContactCard user={user}/>
+	   <ECPastEventsCard user={user}/>
+	 </div>
+	}
+      </Container>
+    )
+  }
 }
 
 const mapStateToProps = state => {
-	return {
-		user: state.user,
-		users: state.users
-	};
+  return {
+    user: state.user,
+    users: state.users
+  };
 }
 
 const mapDispatchToProps = dispatch => {
-	return bindActionCreators({
-		updateUserStore: fetchUsers
-	}, dispatch);
+  return bindActionCreators({
+    updateUserStore: fetchUsers
+  }, dispatch);
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminUsersDetail));

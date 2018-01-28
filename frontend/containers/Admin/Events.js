@@ -15,65 +15,65 @@ import Event from '../../components/Event';
 import { withRouter } from 'react-router-dom';
 
 class AdminEvents extends Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
-			this.props.history.goBack();
-		}
-	}
+    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
+      this.props.history.goBack();
+    }
+  }
 
-	componentDidMount() {
-		const { dispatch } = this.props;
-		dispatch(fetchEventsIfNeeded());
-	}
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchEventsIfNeeded());
+  }
 
-	render() {
-		const { isFetchingEvents, history } = this.props;
-		let { events } = this.props;
-		events = events.map(e => {
-			e.showAdminControls = true;
-			return e;
-		});
-		return (
-			<Container>
-				<PageTitle title="Events" link="admin/events/create" linkTitle="Create New"/>
-				<div style={{paddingTop:50}}>
-					{isFetchingEvents &&
-						<LoadingIcon active/>
-					}
-					{ !isFetchingEvents && events.length > 0 &&
-					    events.map(e => {
-					        return <Event key={e._id} data={e} history={history}/>
-					    })
-					}
-					{!isFetchingEvents && events.length === 0 &&
-						<h1>No events!</h1>
-					}
-				</div>
-			</Container>
-		);
-	}
+  render() {
+    const { isFetchingEvents, history } = this.props;
+    let { events } = this.props;
+    events = events.map(e => {
+      e.showAdminControls = true;
+      return e;
+    });
+    return (
+      <Container>
+	<PageTitle title="Events" link="admin/events/create" linkTitle="Create New"/>
+	<div style={{paddingTop:50}}>
+	  {isFetchingEvents &&
+	   <LoadingIcon active/>
+	  }
+	  { !isFetchingEvents && events.length > 0 &&
+	    events.map(e => {
+	      return <Event key={e._id} data={e} history={history}/>
+	    })
+	  }
+	  {!isFetchingEvents && events.length === 0 &&
+	   <h1>No events!</h1>
+	  }
+	</div>
+      </Container>
+    );
+  }
 }
 
 AdminEvents.PropTypes = {
-	events: PropTypes.array,
-	isFetchingEvents: PropTypes.bool,
-	dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  events: PropTypes.array,
+  isFetchingEvents: PropTypes.bool
 }
 
 const mapStateToProps = (state) => {
-    return {
-    	user: state.user,
-    	isFetchingEvents: state.isFetchingEvents,
-    	events: state.events
-    }
+  return {
+    events: state.events,
+    isFetchingEvents: state.isFetchingEvents,
+    user: state.user
+  }
 };
 
 const mapDispatchToProps = dispatch => {
-	return {};
+  return {};
 }
 
 export default withRouter(connect(
-    mapStateToProps
+  mapStateToProps
 )(AdminEvents));

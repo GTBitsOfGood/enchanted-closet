@@ -12,55 +12,51 @@ import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Radium from 'radium';
 
+
 class Events extends Component {
-	constructor(props) {
-		super(props);
-		this.handleRefreshClick = this.handleRefreshClick.bind(this)
-	}
+  constructor(props) {
+    super(props);
+    this.handleRefreshClick = this.handleRefreshClick.bind(this)
+  }
 
-	componentDidMount() {
-		const { dispatch } = this.props;
-		dispatch(fetchEvents());
-		// dispatch(fetchEventsIfNeeded());
-	}
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchEvents());
+    // dispatch(fetchEventsIfNeeded());
+  }
 
-	handleRefreshClick(e) {
-		e.preventDefault()
+  handleRefreshClick(e) {
+    e.preventDefault()
 
-		const { dispatch } = this.props;
-		dispatch(invalidateEvents())
-		dispatch(fetchEventsIfNeeded());
-	}
+    const { dispatch } = this.props;
+    dispatch(invalidateEvents())
+    dispatch(fetchEventsIfNeeded());
+  }
 
-	render() {
-		const { isFetchingEvents, lastUpdatedEvents, history } = this.props
-		let { events } = this.props;
-		events = events.map(e => {
-			e.showAdminControls = false;
-			return e;
-		});
-	let style = {
-		base: {
-		padding: "2em"
-		}
+  render() {
+    const { isFetchingEvents, lastUpdatedEvents, history } = this.props
+    let { events } = this.props;
+    events = events.map(e => {
+      e.showAdminControls = false;
+      return e;
+    });
+    return (
+      <Container>
+	<Segment textAlign="center" style={styles.base}>
+	  <Header as="h1">Upcoming Events</Header>
+	</Segment>
+	<Loader active={isFetchingEvents}>Loading</Loader>
+	{ events.length > 0 &&
+	  events.map(e => {
+	    return <Event key={e._id} data={e} history={history}/>
+	  })
 	}
-		return (
-			<Container>
-				<Segment textAlign="center" style={style.base}>
-					<Header as="h1">Upcoming Events</Header>
-				</Segment>
-				<Loader active={isFetchingEvents}>Loading</Loader>
-				{ events.length > 0 &&
-					events.map(e => {
-						return <Event key={e._id} data={e} history={history}/>
-					})
-				}
-				{ !isFetchingEvents && events.length === 0 &&
-					<h1>No events</h1>
-				}
-			</Container>
-		);
+	{ !isFetchingEvents && events.length === 0 &&
+	  <h1>No events</h1>
 	}
+      </Container>
+    );
+  }
 }
 
 Events.propTypes = {
@@ -70,20 +66,26 @@ Events.propTypes = {
   dispatch: PropTypes.func.isRequired
 }
 
-function mapStateToProps(state) {
-	const {
-		isFetchingEvents,
-		lastUpdatedEvents,
-		events
-	} = state;
+const styles = {
+  base: {
+    padding: "2em"
+  }
+}
 
-	return {
-		events,
-		isFetchingEvents,
-		lastUpdatedEvents
-	}
+function mapStateToProps(state) {
+  const {
+    events,
+    isFetchingEvents,
+    lastUpdatedEvents
+  } = state;
+
+  return {
+    events,
+    isFetchingEvents,
+    lastUpdatedEvents
+  }
 }
 
 export default withRouter(connect(
-	mapStateToProps
+  mapStateToProps
 )(Events));
