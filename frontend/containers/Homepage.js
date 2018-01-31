@@ -26,12 +26,15 @@ class Homepage extends Component {
   render() {
     const LIMIT = 3;
     const {loading, events, history} = this.props;
-
     const processedEvents =
       events && events.length > 0 ?
       events.slice(0, LIMIT).map(event => {
 	event.showAdminControls = false;
-	return <Event data={event} history={history} />;
+	return <Event
+		 data={event}
+		 history={history}
+		 key={`home_event_${event._id}`}
+	/>;
       }) :
       <p>No upcoming events</p>;
 			    

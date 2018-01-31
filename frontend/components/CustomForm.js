@@ -83,8 +83,6 @@ class CustomForm extends Component {
 					}
 					break;
 		}
-		console.log("Sending off formData");
-		console.log(formData);
 		//strip section labels and convert keys to db keynames
 		buttonAction(formData);
 		//dispatch(saveFormData(props.submitRoute, dbValues))

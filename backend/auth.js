@@ -42,7 +42,7 @@ function lacksAny(obj, props) {
     return null;
 }
 
-const matchesComplexityRequirements = password => {
+const matchesComplexityRequirements = password => { // TODO: put these requirements on frontend
     if (password.length < 7) return false;
     let hasAlpha = false;
     let hasNum = false;
