@@ -27,7 +27,7 @@ import EventsAttendance from './Admin/Attendance';
 
 import Auth from './Auth';
 
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default function Root({ store }) {
   return (
