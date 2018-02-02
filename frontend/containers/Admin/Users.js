@@ -63,7 +63,7 @@ class Users extends Component {
 		      <h1>{`${role.charAt(0).toUpperCase()}${role.substr(1)}s`}</h1>
 		    </Grid.Column>
 		    <Grid.Column textAlign="right">
-		      <a href={`#/admin/users/create`}>Create New</a>
+		      <a href={`/admin/users/create`}>Create New</a>
 		    </Grid.Column>
 		  </Grid.Row>
 		  <Grid.Row style={{padding: '20px'}}>

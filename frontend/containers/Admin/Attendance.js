@@ -86,7 +86,7 @@ class AdminAttendance extends Component {
     if (event) {
       return (
 	<Container>
-	  <PageTitle title={event.name} showLoadingIcon link="admin/users/create" linkTitle="Register" />
+	  <PageTitle title={event.name} showLoadingIcon link="/admin/users/create" linkTitle="Register" />
 	  <ECSearchBarCard filterFunction={this.searchFilterUsers}/>
 	  <ECUserList event={event} users={users} filter={filter} />
 	</Container>
@@ -94,7 +94,7 @@ class AdminAttendance extends Component {
     } else {
       if (!loading && hasAttemptedRefresh) {
 	return (
-	  <ErrorComponent redir='#/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
+	  <ErrorComponent redir='/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
 	)
       } else {
 	return (

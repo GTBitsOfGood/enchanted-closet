@@ -1,44 +1,63 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Container, Card, Icon, Loader } from 'semantic-ui-react';
 
-import { Loader, Container, Card, Icon } from 'semantic-ui-react';
 import Clearfix from './Clearfix';
 
 const DashboardCards = ( props ) => {
-	let { cards } = props;
-	cards = cards || [];
-	if (cards.length === 0) {
-		return (
-			<Container>
-				<Card fluid>
-					<Card.Content><h1>Loading...</h1></Card.Content>
-				</Card>
-			</Container>
-		);
-	}
-
-	// Year-long Attendance Card
-	cards.push({content: (<Icon name='cloud download'/>), title: 'Download Year Attendance', specific_url: '/api/report/year'});
-
-	return (
-		<Card.Group>
-			{cards.map(DashboardCard)}
-		</Card.Group>
-	);
+  console.log(props)
+  let { cards } = props;
+  cards = cards || [];
+  if (cards.length === 0) {
+    return (
+      <Container>
+	<Card fluid>
+	  <Card.Content><h1>Loading...</h1></Card.Content>
+	</Card>
+      </Container>
+    );
+  }
+  
+  return (
+    <Card.Group>
+      {cards.map((card) => <DashboardCard
+      {...card}
+			     key={`admin_card_${card.title}`}
+      />)}
+      <Card
+	onClick={() =>
+	  window.open(`/api/report/year`, '_blank')}
+        centered	
+      >
+	<Card.Content style={{textAlign: 'center'}}>
+	  <h1><Icon name='cloud download'/></h1>
+	</Card.Content>
+	<Card.Content style={{textAlign: 'center'}}>
+	  <h3>'Download Year Attendance'</h3>
+	</Card.Content>
+      </Card>
+    </Card.Group>
+  );
 };
 
-const DashboardCard = props => {
-	const link = props.specific_url ? `${props.specific_url}` : `#/${props.url}`;
-	return (
-		<Card href={link} target="_blank" centered key={`#${props.content}${props.title}`}>
-			{props.content !== null ?
-				<Card.Content style={{textAlign: 'center'}}><h1>{props.content}</h1></Card.Content>
-			:
-			<Clearfix style={{padding: '20px'}}>
-				<Loader active inline='centered'/>
-			</Clearfix>
-			}
-			<Card.Content style={{textAlign: 'center'}}><h3>{props.title}</h3></Card.Content>
-		</Card>
-	);
-}
-export default DashboardCards;
+const DashboardCard = withRouter(props => (
+  <Card
+    onClick={() => {
+	props.history.push({pathname: props.url})
+    }}
+    target="_blank"
+    centered
+    key={`#${props.content}${props.title}`}
+  >
+    {props.content !== null ?
+     <Card.Content style={{textAlign: 'center'}}><h1>{props.content}</h1></Card.Content>
+     :
+     <Clearfix style={{padding: '20px'}}>
+       <Loader active inline='centered'/>
+     </Clearfix>
+    }
+    <Card.Content style={{textAlign: 'center'}}><h3>{props.title}</h3></Card.Content>
+  </Card>
+));
+
+export default DashboardCards

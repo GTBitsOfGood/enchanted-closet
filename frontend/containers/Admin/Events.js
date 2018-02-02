@@ -37,7 +37,7 @@ class AdminEvents extends Component {
     });
     return (
       <Container>
-	<PageTitle title="Events" link="admin/events/create" linkTitle="Create New"/>
+	<PageTitle title="Events" link="/admin/events/create" linkTitle="Create New"/>
 	<div style={{paddingTop:50}}>
 	  {isFetchingEvents &&
 	   <LoadingIcon active/>

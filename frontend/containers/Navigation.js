@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Menu, Dropdown } from 'semantic-ui-react'
-
-import { logoutUser } from '../actions/index';
-
 import { withRouter } from 'react-router-dom'
 import Radium from 'radium';
 
+import { logoutUser } from '../actions/index'
+
+import { Menu, Dropdown } from 'semantic-ui-react'
+import { COLORS } from '../constants'
 
 class Navigation extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class Navigation extends Component {
     const navFactory = route => () => this.navigate(route)
 
     const { applicationName, user, logoutUser } = this.props
+
     const isAdmin = user ? user.role.toLowerCase() === 'admin' : false
     const adminLinks = [
       ['Dashboard', '/dashboard'],
@@ -36,7 +37,7 @@ class Navigation extends Component {
       {adminLinks.map(pair => (
 	<Dropdown.Item
           style={styles.button}
-          onClick={navFactory(`/admin/${pair[1]}`)}
+          onClick={navFactory(`/admin${pair[1]}`)}
 	  key={`${pair[1]}NavLink`}
         >
           {pair[0]}
@@ -85,17 +86,17 @@ class Navigation extends Component {
 
 const styles = {
   base: {
-    background: '#3B0086',
+    background: COLORS.BACKGROUND,
     borderRadius: 0
   },
   button: {
-    background: '#6200B3',
+    background: COLORS.BUTTON,
     ':hover': {
-      background: '#7E2EC0',
+      background: COLORS.HOVER,
       boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
     },
     ':active': {
-      background: '#7E2EC0',
+      background: COLORS.HOVER,
       boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
     }
   }

@@ -15,25 +15,25 @@ const DEFAULT_CARDS = [
   {
     content: null,
     title: 'Users',
-    url: 'admin/users'
+    url: '/admin/users' // TODO: investigate how to use absolute paths (semantic)
   },
   {
     content: null,
     title: 'Admins',
-    url: 'admin/users'
+    url: '/admin/users'
   },
   {
     content: null,
     title: 'Events',
-    url: 'admin/events'
+    url: '/admin/events'
   }
 ];
 
 class AdminDashboard extends Component {
   constructor(props) {
     super(props);
-
-    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
+    if (this.props.user.role !== 'Volunteer' &&
+	this.props.user.role !== 'Admin') {
       this.props.history.goBack();
     }
   }

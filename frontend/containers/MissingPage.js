@@ -6,7 +6,7 @@ const MissingPage = () => {
   return (
     <ErrorComponent
       message={errorMessage}
-      redir='/#'
+      redir='/'
       redirMsg='Home'
       errMsg='404 - Page Not Found'
     />

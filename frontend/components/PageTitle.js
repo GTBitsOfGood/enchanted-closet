@@ -1,65 +1,66 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import {connect} from 'react-redux';
-
-import { Container, Card, Grid, Button, Loader } from 'semantic-ui-react';
-
 import { withRouter } from 'react-router-dom';
 import Radium from 'radium';
 
-class PageTitle extends Component {
-    constructor(props) {
-	super(props);
-    }
+import { Container, Card, Grid, Button, Loader } from 'semantic-ui-react';
 
-    render() {
-    	var styles = {
-            background: {
-                backgroundColor: '#733D9D',
-                color: 'white'
-            },
-            button: {
-            	backgroundColor: '#6200B3',
-                border: '1px solid white',
-            	fontFamily: 'Lato',
-            	color: 'white',
-            	':active': {
-            	    backgroundColor: '#7E2EC0'
-            	}
-    	    }
-    	}
-    	const { title, link, linkTitle, showLoadingIcon, loading } = this.props;
-    	return (
-    	    <Container>
-                <Card fluid style={styles.background}>
-                    <Card.Content>
-                        <Grid>
-                            <Grid.Row columns={link && linkTitle ? 2 : 1}>
-                                <Grid.Column>
-                                    <h2>{title}</h2>
-									{showLoadingIcon &&
-										<Loader active={loading} inline size='small' style={{marginLeft: '20px', marginTop: '-5px'}}/>
-									}
-                                </Grid.Column>
-                                {link && linkTitle &&
-                                    <Grid.Column textAlign="right">
-                                        <Button style={styles.button} as='a' href={`#/${link}`}>{linkTitle}</Button>
-                                    </Grid.Column>
-                                }
-                            </Grid.Row>
-                        </Grid>
-                    </Card.Content>
-                </Card>
-    	    </Container>
-    	);
+import { COLORS } from '../constants'
+
+class PageTitle extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const { title, link, linkTitle, showLoadingIcon, loading } = this.props;
+    return (
+      <Container>
+        <Card fluid style={styles.background}>
+          <Card.Content>
+            <Grid>
+              <Grid.Row columns={link && linkTitle ? 2 : 1}>
+                <Grid.Column>
+                  <h2>{title}</h2>
+		  {showLoadingIcon &&
+		   <Loader active={loading} inline size='small' style={{marginLeft: '20px', marginTop: '-5px'}}/>
+		  }
+                </Grid.Column>
+                {link && linkTitle &&
+                 <Grid.Column textAlign="right">
+                   <Button style={styles.button} as='a' href={`${link}`}>{linkTitle}</Button>
+                 </Grid.Column>
+                }
+              </Grid.Row>
+            </Grid>
+          </Card.Content>
+        </Card>
+      </Container>
+    );
+  }
+}
+
+const styles = {
+  background: {
+    backgroundColor: COLORS.BRAND,
+    color: COLORS.WHITE
+  },
+  button: {
+    backgroundColor: COLORS.BUTTON,
+    border: `1px solid ${COLORS.WHITE}`,
+    fontFamily: 'Lato',
+    color: COLORS.WHITE,
+    ':active': {
+      backgroundColor: COLORS.HOVER
     }
+  }
 }
 
 const mapStateToProps = state => {
-	return {
-		loading: state.loading
-	}
+  return {
+    loading: state.loading
+  }
 }
 
 export default withRouter(Radium(connect(mapStateToProps)(PageTitle)));

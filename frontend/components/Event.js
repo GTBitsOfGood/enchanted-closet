@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
+import { uniqueId } from 'lodash';
+import moment from 'moment';
 
 import { deleteEvent } from '../actions';
 
-import { uniqueId } from 'lodash';
-
-import moment from 'moment';
-
+import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
 import Clearfix from './Clearfix';
 import {Edit} from './Buttons';
+import { COLORS } from '../constants'
+
 
 class Event extends Component {
   constructor(props) {
@@ -99,15 +98,15 @@ const pruneDescription = (description) => {
 
 const style = {
   cardLeft: {
-    backgroundColor: '#733D9D',
+    backgroundColor: COLORS.BRAND,
     padding: '2em',
     paddingLeft: '2em'
   },
   whiteText: {
-    color: '#FFFFFF'
+    color: COLORS.WHITE
   },
   cardRight: {
-    backgroundColor: 'white'
+    backgroundColor: COLORS.WHITE
   }
 }
 

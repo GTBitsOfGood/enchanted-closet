@@ -1,0 +1,10 @@
+const COLORS = {
+  BACKGROUND: '#3B0086',
+  BODY_BACKGROUND: '#E2D0F1',
+  BRAND: '#733D9D',
+  BUTTON: '#6200B3',
+  HOVER: '#7E2EC0',
+  WHITE: '#FFFFFF',
+};
+
+export { COLORS };

@@ -72,7 +72,7 @@ class AdminUsersDetail extends Component {
 	 </div>
 	}
 	{!loading && hasPerformedUpdate && !user &&
-	 <ErrorComponent redir='#/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
+	 <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
 	}
 	{!loading && user &&
 	 <div>

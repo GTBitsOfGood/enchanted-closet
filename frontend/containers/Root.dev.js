@@ -29,11 +29,13 @@ import Auth from './Auth';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+import { COLORS } from '../constants'
+
 export default function Root({ store }) {
   return (
     <Provider store={store}>
       <div>
-	<Helmet bodyAttributes={{style: 'background-color : #E2D0F1'}}/>
+	<Helmet bodyAttributes={styles.helmetStyle}/>
 	<Router>
 	  <div>
 	    <Navigation />
@@ -72,3 +74,9 @@ export default function Root({ store }) {
 Root.propTypes = {
   store: PropTypes.object.isRequired
 };
+
+const styles = {
+  helmetStyle: {
+    style : `background-color : ${COLORS.BODY_BACKGROUND}`
+  }
+}
