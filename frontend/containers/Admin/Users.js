@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom';
+
 import {fetchUsers} from '../../actions/';
 
-import Clearfix from '../../components/Clearfix'
 import { Container, Loader, Segment, Grid, Table, Icon } from 'semantic-ui-react';
-
-import {withRouter} from 'react-router-dom';
+import Clearfix from '../../components/'
 
 const roles = ['admin', 'volunteer', 'participant'];
 

@@ -1,19 +1,14 @@
 import React,{Component} from 'react';
-
+import {withRouter} from 'react-router-dom';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {Container, Segment} from 'semantic-ui-react';
-
-import {withRouter} from 'react-router-dom';
-
-import PageTitle from '../../components/PageTitle';
-import ErrorComponent from '../../components/ErrorComponent';
-import LoadingIcon from '../../components/LoadingIcon';
-import ECUserList from '../../components/ECUserList';
-import ECSearchBarCard from '../../components/ECSearchBarCard';
-
 import {fetchEvents, fetchUsers} from '../../actions/';
+
+import {Container, Segment} from 'semantic-ui-react';
+import { ErrorComponent, LoadingIcon, PageTitle, SearchBarCard, UserList } from '../../components' 
+
+
 
 class AdminAttendance extends Component {
   constructor(props) {
@@ -87,8 +82,8 @@ class AdminAttendance extends Component {
       return (
 	<Container>
 	  <PageTitle title={event.name} showLoadingIcon link="/admin/users/create" linkTitle="Register" />
-	  <ECSearchBarCard filterFunction={this.searchFilterUsers}/>
-	  <ECUserList event={event} users={users} filter={filter} />
+	  <SearchBarCard filterFunction={this.searchFilterUsers}/>
+	  <UserList event={event} users={users} filter={filter} />
 	</Container>
       );
     } else {

@@ -8,13 +8,7 @@ import {fetchUsers} from '../../actions/';
 import {Segment, Container, Button, Icon, Modal} from 'semantic-ui-react';
 import {withRouter} from 'react-router-dom';
 
-import PageTitle from '../../components/PageTitle';
-import ErrorComponent from '../../components/ErrorComponent';
-import LoadingIcon from '../../components/LoadingIcon';
-import ECEmergencyContactCard from '../../components/ECEmergencyContactCard';
-import ECDemographicsCard from '../../components/ECDemographicsCard';
-import ECContactCard from '../../components/ECContactCard';
-import ECPastEventsCard from '../../components/ECPastEventsCard';
+import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, LoadingIcon, PageTitle, PastEventsCard } from '../../components'
 
 class AdminUsersDetail extends Component {
   constructor(props) {
@@ -77,10 +71,10 @@ class AdminUsersDetail extends Component {
 	{!loading && user &&
 	 <div>
 	   <PageTitle title={user.name || (<i>&lt;No Name&gt;</i>)}/>
-	   <ECContactCard user={user}/>
-	   <ECDemographicsCard user={user}/>
-	   <ECEmergencyContactCard user={user}/>
-	   <ECPastEventsCard user={user}/>
+	   <ContactCard user={user}/>
+	   <DemographicsCard user={user}/>
+	   <EmergencyContactCard user={user}/>
+	   <PastEventsCard user={user}/>
 	 </div>
 	}
       </Container>

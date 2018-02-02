@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Card } from 'semantic-ui-react';
-import ErrorComponent from '../components/ErrorComponent.js';
+import { ErrorComponent } from '../components/';
 
 const MissingPage = () => {
   return (

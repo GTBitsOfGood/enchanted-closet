@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-
-import { Button, Container, Icon, Dimmer, Loader, Segment, Header } from 'semantic-ui-react';
-
-import Event from '../components/Event';
-
-import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
-
 import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Radium from 'radium';
+
+import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
+
+import { Button, Container, Icon, Dimmer, Loader, Segment, Header } from 'semantic-ui-react';
+import { Event } from '../components/';
+
 
 
 class Events extends Component {

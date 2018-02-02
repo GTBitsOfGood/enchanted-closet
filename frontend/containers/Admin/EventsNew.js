@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import { withRouter,Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-import { Container, Segment, Form, Message } from 'semantic-ui-react';
-
-import { upsertEvent } from '../../actions';
-
-import PageTitle from '../../components/PageTitle';
-import LoadingIcon from '../../components/LoadingIcon';
-
-import Event from '../../components/Event';
 
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 
-import { withRouter,Redirect } from 'react-router-dom';
-
 import 'react-datepicker/dist/react-datepicker.css';
+
+import { upsertEvent } from '../../actions';
+
+import { Container, Segment, Form, Message } from 'semantic-ui-react';
+import { Event, LoadingIcon, PageTitle } from '../../components/';
+
 
 class AdminEventsNew extends Component {
   constructor(props) {

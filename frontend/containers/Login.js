@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { FileForm } from '../components/CustomForm';
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image, Button } from 'semantic-ui-react'
+import { Link, Redirect, withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import Radium from 'radium';
 
 import { performLogin } from '../actions/index';
 
-import { withRouter } from 'react-router-dom';
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image, Button } from 'semantic-ui-react'
+import { FileForm } from '../components/';
 
-import { Link, Redirect } from 'react-router-dom';
-import Radium from 'radium';
 
 class Login extends Component {
   constructor(props) {

@@ -1,21 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-
+import { Redirect } from 'react-router-dom';
 import {bindActionCreators} from 'redux';
-
-import { Button, Container, Card, Form, Header, Message } from 'semantic-ui-react';
-
-import PageTitle from '../components/PageTitle';
-import LoadingIcon from '../components/LoadingIcon';
-
-import {CustomForm, enhance} from '../components/CustomForm';
-import ProfileForm from '../static/surveys/ProfileFormJSON.js';
 
 import {fetchUsers, clearErrors, upsertUser} from '../actions';
 
-import { Redirect } from 'react-router-dom';
+import { Button, Container, Card, Form, Header, Message } from 'semantic-ui-react';
+import { CustomForm, PageTitle, LoadingIcon } from '../components'
+import ProfileForm from '../static/surveys/ProfileFormJSON.js';
 
+// TODO: end this hardcode...
 const fields = ['name', 'role', 'email', 'phone', 'grade', 'age', 'race', 'school', 'leader', 'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation'];
 
 class Profile extends Component {

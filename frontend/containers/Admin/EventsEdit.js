@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { withRouter, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-import { Container } from 'semantic-ui-react';
-
-import LoadingIcon from '../../components/LoadingIcon';
 
 import { fetchEventsIfNeeded } from '../../actions';
 
-import { withRouter, Redirect } from 'react-router-dom';
 import AdminEventsNew from './EventsNew';
+import { Container } from 'semantic-ui-react';
+import { LoadingIcon } from '../../components/';
+
 
 class EventsEdit extends Component {
   constructor(props) {

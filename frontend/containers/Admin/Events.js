@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
+import { fetchEventsIfNeeded } from '../../actions';
 import PropTypes from 'prop-types';
 
 import { Container, Card } from 'semantic-ui-react';
-
-import { fetchEventsIfNeeded } from '../../actions';
-
-import PageTitle from '../../components/PageTitle';
-import LoadingIcon from '../../components/LoadingIcon';
-
-import Event from '../../components/Event';
-import { withRouter } from 'react-router-dom';
+import { Event, LoadingIcon, PageTitle } from '../../components'
 
 class AdminEvents extends Component {
   constructor(props) {

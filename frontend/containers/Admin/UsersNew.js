@@ -1,16 +1,13 @@
 import React,{ Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import { Container, Segment, Header, Form, Button, Dropdown, Icon, Message } from 'semantic-ui-react';
-
+import {withRouter, Redirect} from 'react-router-dom';
 import {upsertUser} from '../../actions/';
 
-import ECRole from '../../components/ECRole';
+import { Container, Segment, Header, Form, Button, Dropdown, Icon, Message } from 'semantic-ui-react';
+import { CustomForm, Role } from '../../components/';
 
-import CustomForm from '../../components/CustomForm';
 
-import {withRouter, Redirect} from 'react-router-dom';
 
 class UsersNew extends Component {
 
@@ -60,7 +57,7 @@ class UsersNew extends Component {
 	      <Form.Input required label='Name' type='text' name='name' placeholder='John Smith' onChange={this.handleInputChange}/>
 	      <Form.Input required autoComplete="off" label='Email Address' type='email' name='email' placeholder='john.smith@gmail.com' onChange={this.handleInputChange}/>
 	      <Form.Input required autoComplete="off" label='Password' type='password' name='password' placeholder='•••••••••' onChange={this.handleInputChange}/>
-	      <ECRole required onChange={this.handleInputChange}/>
+	      <Role required onChange={this.handleInputChange}/>
 	      {this.state.role === 'participant' &&
 	       <div>
 		 <Form.Input label='Grade' type='number' value={this.state.grade} name='grade' onChange={this.handleInputChange} placeholder="10"/>

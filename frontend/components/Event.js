@@ -8,8 +8,7 @@ import moment from 'moment';
 import { deleteEvent } from '../actions';
 
 import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
-import Clearfix from './Clearfix';
-import {Edit} from './Buttons';
+import { Clearfix, EditButton } from './'
 import { COLORS } from '../constants'
 
 
@@ -60,7 +59,7 @@ class Event extends Component {
              <Segment>
                <Clearfix>
                  <Button.Group floated='right'>
-                   <Edit history={history} route={`admin/events/${data._id}/edit`}/>
+                   <EditButton history={history} route={`admin/events/${data._id}/edit`}/>
                    <Modal
                      trigger={
                        <Button animated="vertical" color="red">

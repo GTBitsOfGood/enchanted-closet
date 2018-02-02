@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { FileForm } from '../components/CustomForm';
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment, Message } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom';
 
 import { performRegistration } from '../actions/';
-// TODO : test that removing index works above
-import { Redirect } from 'react-router-dom';
+
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment, Message } from 'semantic-ui-react'
+import { FileForm } from '../components/';
 
 class Register extends Component {
   constructor(props) {

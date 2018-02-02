@@ -2,12 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Container, Card, Icon, Loader } from 'semantic-ui-react';
 
-import Clearfix from './Clearfix';
+import { Clearfix } from './'
 
 const DashboardCards = ( props ) => {
-  console.log(props)
-  let { cards } = props;
-  cards = cards || [];
+  let { cards = [] } = props;
   if (cards.length === 0) {
     return (
       <Container>
@@ -17,13 +15,12 @@ const DashboardCards = ( props ) => {
       </Container>
     );
   }
-  
   return (
     <Card.Group>
-      {cards.map((card) => <DashboardCard
-      {...card}
-			     key={`admin_card_${card.title}`}
-      />)}
+      {cards.map((card) => (<DashboardCard
+			      {...card}
+			      key={`admin_card_${card.title}`}
+      />))}
       <Card
 	onClick={() =>
 	  window.open(`/api/report/year`, '_blank')}
@@ -40,7 +37,7 @@ const DashboardCards = ( props ) => {
   );
 };
 
-const DashboardCard = withRouter(props => (
+const DashboardCard = withRouter( props => (
   <Card
     onClick={() => {
 	props.history.push({pathname: props.url})
@@ -59,5 +56,6 @@ const DashboardCard = withRouter(props => (
     <Card.Content style={{textAlign: 'center'}}><h3>{props.title}</h3></Card.Content>
   </Card>
 ));
+
 
 export default DashboardCards

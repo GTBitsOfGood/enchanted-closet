@@ -1,31 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import {uniqueId} from 'lodash';
+import moment from 'moment';
 
 import { geocode } from '../helpers/geocodeEngine';
 
-import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
-
-import Event from '../components/Event';
-import ErrorComponent from '../components/ErrorComponent';
-import ECMap from '../components/ECMap';
-import Speakers from '../components/Speakers';
-
 import { fetchEvents, fetchEventsIfNeeded, invalidateEvents, deleteEvent } from '../actions/index';
 
-import {uniqueId} from 'lodash';
-
-import { bindActionCreators } from 'redux';
-
-import moment from 'moment';
-
-import { withRouter } from 'react-router-dom';
-
-import PageTitle from '../components/PageTitle';
-
-import Clearfix from '../components/Clearfix';
-import { Edit } from '../components/Buttons';
-
+import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
+import { Clearfix, Map, EditButton, ErrorComponent, Event, PageTitle, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -107,7 +93,7 @@ class EventsDetail extends Component {
 	    </Segment>
 	    <Speakers speakers={detail.speakers}/>
 	    {displayMapLocationError || (latitude && longitude) ?
-	     <ECMap
+	     <Map
 	       isMarkerShown
 	       lat={latitude || DEFAULT_MAP_LOCATION.latitude}
 	       long={longitude || DEFAULT_MAP_LOCATION.longitude}
@@ -126,7 +112,7 @@ class EventsDetail extends Component {
 	       <h3>Admin Controls</h3>
 	       <Clearfix>
 		 <Button.Group>
-		   <Edit history={history} route={`admin/events/${detail._id}/edit`}/>
+		   <EditButton history={history} route={`admin/events/${detail._id}/edit`}/>
 		   <Modal
 		     trigger={
 		       <Button animated="vertical" color="red">
