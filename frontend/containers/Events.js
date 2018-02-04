@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
@@ -7,10 +7,8 @@ import Radium from 'radium';
 
 import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
 
-import { Button, Container, Icon, Dimmer, Loader, Segment, Header } from 'semantic-ui-react';
-import { Event } from '../components/';
-
-
+import { Button, Container, Icon, Dimmer, Segment, Header } from 'semantic-ui-react';
+import { EventBody } from '../components/';
 
 class Events extends Component {
   constructor(props) {
@@ -39,22 +37,8 @@ class Events extends Component {
       e.showAdminControls = false;
       return e;
     });
-    return (
-      <Container>
-	<Segment textAlign="center" style={styles.base}>
-	  <Header as="h1">Upcoming Events</Header>
-	</Segment>
-	<Loader active={isFetchingEvents}>Loading</Loader>
-	{ events.length > 0 &&
-	  events.map(e => {
-	    return <Event key={e._id} data={e} history={history}/>
-	  })
-	}
-	{ !isFetchingEvents && events.length === 0 &&
-	  <h1>No events</h1>
-	}
-      </Container>
-    );
+    const bodyProps = { events, isFetchingEvents };
+    return (<EventBody { ...bodyProps } />);
   }
 }
 
@@ -63,12 +47,6 @@ Events.propTypes = {
   isFetchingEvents: PropTypes.bool.isRequired,
   lastUpdatedEvents: PropTypes.number,
   dispatch: PropTypes.func.isRequired
-}
-
-const styles = {
-  base: {
-    padding: "2em"
-  }
 }
 
 function mapStateToProps(state) {
