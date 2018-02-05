@@ -99,7 +99,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
         return next(new Error(res.locals.error));
     }
     token = token.substring(7);
-    module.exports.currentUser(token, (err, curr) => {
+    currentUser(token, (err, curr) => { // TODO put back in module.exports if broken
         if (err) {
             res.locals.error = {
                 status: 403,
@@ -107,7 +107,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
             };
             return next(new Error(res.locals.error));
         }
-        module.exports.isAdmin(curr, (err, state) => {
+        isAdmin(curr, (err, state) => { // TODO see above
             if (err) {
                 res.locals.error = {
                     status: 403,
