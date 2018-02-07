@@ -6,7 +6,7 @@ import {withRouter} from 'react-router-dom';
 import {fetchUsers} from '../../actions/';
 
 import { Container, Loader, Segment, Grid, Table, Icon } from 'semantic-ui-react';
-import Clearfix from '../../components/'
+import { Clearfix } from '../../components/'
 
 const roles = ['admin', 'volunteer', 'participant'];
 
