@@ -85,4 +85,5 @@ export default function events(state = require('../static/defaultState'), action
         default:
             return state;
     }
+    // export default events;
 }

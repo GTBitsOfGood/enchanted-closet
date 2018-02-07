@@ -50,5 +50,6 @@ export default function otherReducers(state = require('../static/defaultState'),
 
         default:
             return state;
-        }
+    }
+    // export default otherReducers;    
 }

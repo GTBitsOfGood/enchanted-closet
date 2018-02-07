@@ -57,4 +57,5 @@ export default function userReducers(state = require('../static/defaultState'), 
         default:
             return state;
     }
+    // export default userReducers;
 }
