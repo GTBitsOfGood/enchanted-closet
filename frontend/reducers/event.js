@@ -1,6 +1,6 @@
 import * as types from '../actions/types';
 
-function events(state = require('../static/defaultState'), action) {
+export default function events(state = require('../static/defaultState'), action) {
     switch (action.type) {
         case types.RECEIVE_EVENTS:
             return Object.assign({}, state, {
@@ -43,7 +43,8 @@ function events(state = require('../static/defaultState'), action) {
             }
             eventStateUpdate.events = events;
             return Object.assign({}, state, eventStateUpdate);
-case types.MARK_ATTENDING:
+
+        case types.MARK_ATTENDING:
             const userMap = state.users.map(u => {
                 if (u._id === action.userID) {
                     u.pastEvents.push(action.event);

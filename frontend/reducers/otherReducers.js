@@ -1,6 +1,6 @@
 import * as types from '../actions/types';
 
-function otherReducers(state = require('../static/defaultState'), action) {
+export default function otherReducers(state = require('../static/defaultState'), action) {
     switch (action.type) {
         case types.TOGGLE_TITLE_STATE:
             return Object.assign({}, state, {
@@ -47,7 +47,7 @@ function otherReducers(state = require('../static/defaultState'), action) {
             return Object.assign({}, state, {
                 dashboardCards: action.cards
             });
-            
+
         default:
             return state;
         }

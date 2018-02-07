@@ -1,6 +1,6 @@
 import * as types from '../actions/types';
 
-function userReducers(state = require('../static/defaultState'), action) {
+export default function userReducers(state = require('../static/defaultState'), action) {
     switch (action.type) {
         case types.USER_UPSERT:
             let { users, user } = state;

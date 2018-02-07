@@ -1,12 +1,16 @@
+import {combineReducers} from "redux";
+import otherReducers from './otherReducers';
+import userReducers from './user';
 import events from './event';
-import other-reducers from './other-reducers';
-import users from './users';
+import * as types from '../actions/types';
 
-export default rootReducer({
+const rootReducer = combineReducers({
     events,
-    other-reducers,
-    users
-})
+    otherReducers,
+    userReducers
+});
+
+export default rootReducer;
 // import * as types from '../actions/types';
 //
 // function rootReducer(state = require('../static/defaultState'), action) {
