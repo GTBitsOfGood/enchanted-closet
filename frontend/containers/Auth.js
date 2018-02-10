@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Redirect, Switch } from 'react-router-dom';
 
 const Auth = ( props ) => {
-  const {loggedIn} = props;
-
+  const { loggedIn } = props;
+  
   if (loggedIn) 
     return (
-      <div>
+      <Switch>
 	{props.children}
-      </div>
+      </Switch>
     )
   else return <Redirect to="/login" />
 }
