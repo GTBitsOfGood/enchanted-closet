@@ -28,6 +28,7 @@ import EventsAttendance from './Admin/Attendance';
 import Auth from './Auth';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { SmartRoute } from '../components';
 
 import { COLORS } from '../constants'
 
