@@ -185,7 +185,6 @@ function rootReducer(state = require('../static/defaultState'), action) {
                 events: eventRebuild
             });
 
-
         default:
             return state;
     }
