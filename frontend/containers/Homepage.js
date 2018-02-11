@@ -8,17 +8,22 @@ import {fetchEventsIfNeeded} from '../actions';
 
 import { Segment, Container, Grid, Reveal, Menu, Header, Button, Icon, Image } from 'semantic-ui-react';
 import { Event, EventEntry, FileForm, LoadingIcon, Title} from '../components'
+import { Redirect } from 'react-router-dom';
 
 class Homepage extends Component {
   constructor(props){
     super(props);
-    const {fetchEventsIfNeeded, events} = this.props;
+
+    const { events, fetchEventsIfNeeded } = this.props;
     fetchEventsIfNeeded();
   }
 
   render() {
+    const {loading, events, history, loggedIn} = this.props;
+    if (loggedIn)
+      return <Redirect to="/dashboard" />
+
     const LIMIT = 3;
-    const {loading, events, history} = this.props;
     const processedEvents =
       events && events.length > 0 ?
       events.slice(0, LIMIT).map(event => {
@@ -77,6 +82,7 @@ const images = {
 
 const mapStateToProps = (state) => {
   return {
+    loggedIn: state.user,
     events: state.events,
     loading: state.loading
   };
