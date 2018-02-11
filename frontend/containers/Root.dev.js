@@ -37,7 +37,7 @@ export default function Root({ store }) {
   return (
     <Provider store={store}>
       <div>
-	<Helmet bodyAttributes={styles.helmetStyle}/>
+	<Helmet bodyAttributes={styles.helmetStyle} />
 	<Router>
 	  <div>
 	    <Navigation />
