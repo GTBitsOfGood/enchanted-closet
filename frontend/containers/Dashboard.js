@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import PageTitle from '../components/PageTitle';
-import { Container, Card } from 'semantic-ui-react';
-
-
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+import { PageTitle,
+	 AdminDashboard,
+	 ParticipantDashboard,
+	 VolunteerDashboard
+} from '../components/'
+import { Container, Card } from 'semantic-ui-react'
 
 
 class Dashboard extends Component {
@@ -14,13 +17,26 @@ class Dashboard extends Component {
   }
 
   render() {
-  	const role = this.props.user.role;
+    const { role } = this.props.user
+    const dashBlock = (role => {
+      switch (role) {
+	case 'Admin':
+	  return <AdminDashboard />
+	  break
+	case 'Participant':
+	  return <ParticipantDashboard />
+	  break
+	case 'Volunteer':
+	  return <VolunteerDashboard />
+	  break
+      }
+      return null
+    })(role)
+
     return (
       <Container>
-	<PageTitle title="Dashboard" />
-	<div>
-	  <p> {role} </p>
-	</div>
+	<PageTitle title={`${role} Dashboard`} />
+	{ dashBlock }
       </Container>
     );
   }
@@ -28,7 +44,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-  	user: state.user,
+    user: state.user,
   }
 };
 

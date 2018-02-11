@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 
 import { Container, Card } from 'semantic-ui-react';
 
-import PageTitle from '../../components/PageTitle';
-import DashboardCards from '../../components/DashboardCards';
+import { DashboardCards, PageTitle } from '../../components/'
 
-import {loadDashboardCards} from '../../actions/';
+import { loadDashboardCards } from '../../actions/';
 
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const DEFAULT_CARDS = [
   {
@@ -39,12 +38,12 @@ class AdminDashboard extends Component {
   }
 
   componentDidMount() {
-    const {loadDashboardCards} = this.props;
+    const { loadDashboardCards } = this.props;
     loadDashboardCards();
   }
 
   render() {
-    const {cards} = this.props;
+    const { cards } = this.props;
     return (
       <Container>
 	<PageTitle title="Dashboard" />
