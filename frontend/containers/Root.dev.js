@@ -5,6 +5,7 @@ import Homepage from './Homepage.js';
 import Login from './Login.js';
 import Register from './Register';
 import Profile from './Profile.js';
+import Dashboard from './Dashboard.js';
 import Events from './Events.js';
 import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
@@ -45,6 +46,7 @@ export default function Root({ store }) {
 	      <Route path="/login" component={Login} />
 	      <Route path="/register" component={Register} />
 	      <Route path="/profile" component={Profile} />
+	      <Route path="/dashboard" component={Dashboard} />
 	      <Route exact path="/events" component={Events} />
 	      <Route path="/events/:id" component={EventsDetail} />
 	      <Route path="/admin/dashboard" component={AdminDashboard} />

@@ -1,3 +1,4 @@
+export * from './dashboards'
 export * from './events'
 
 export { EditButton } from './Buttons'
