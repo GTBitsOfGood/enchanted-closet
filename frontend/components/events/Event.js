@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { uniqueId } from 'lodash';
 import moment from 'moment';
 
-import { deleteEvent } from '../actions';
+import { deleteEvent } from '../../actions';
 
 import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
-import { Clearfix, EditButton } from './'
-import { COLORS } from '../constants'
+import { Clearfix, EditButton } from '../'
+import { COLORS } from '../../constants'
 
 
 class Event extends Component {
