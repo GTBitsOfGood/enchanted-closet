@@ -165,6 +165,30 @@ module.exports.checkAdmin = (req, res, next) => {
     });
 }
 
+module.exports.makeAdmin = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token.startsWith("Bearer ")) {
+        res.locals.error = {
+            status: 403,
+            msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+    }
+    token = token.substring(7);
+    currentUser(token, (err, curr) => {
+        if (err) {
+            res.locals.error = {
+                status: 403,
+                msg: 'Not authorized or redis error'
+            };
+            return next(new Error(res.locals.error));
+        } else {
+            curr.role = "Admin";
+            return next();
+        }
+    });
+}
+
 module.exports.idMatches = (req, res, next) => {
     let token = req.header("Authorization");
     if (!token.startsWith("Bearer ")) {
@@ -207,6 +231,7 @@ module.exports.register = (data, callback) => {
     validateUser(data, (err, validatedUserData) => {
         if (err) return callback(err.reason, null);
         User.create(validatedUserData, (err, user) => {
+ 
             if (err) return callback(err, null);
             return callback(null, user);
         });

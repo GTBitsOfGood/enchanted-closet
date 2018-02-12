@@ -22,7 +22,7 @@ var UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Participant', 'Volunteer', 'Admin'],
+    enum: ['Participant', 'Volunteer'],
     index: true,
     default: 'Participant',
     required: true
