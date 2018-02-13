@@ -11,6 +11,7 @@ router.post('/register', controllers.auth.register);
 
 router.get('/users', auth.checkAdmin, controllers.users.index);
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
+router.get('/users/admin/:id', auth.makeAdmin);
 //more complex permissions checking (need admin to create admin) done in function
 router.post('/users', controllers.users.create);
 router.delete('/users/:id', auth.idMatchesOrAdmin, controllers.users.delete);
