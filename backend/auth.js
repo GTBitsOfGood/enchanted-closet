@@ -175,18 +175,13 @@ module.exports.makeAdmin = (req, res, next) => {
         };
         return next(new Error(res.locals.error));
     }
-    token = token.substring(7);
-    currentUser(token, (err, curr) => {
+    var query = {'_id' : req.params.id};
+    User.findOneAndUpdate(query, {"role" : "Admin"}, {upsert:false}, function(err, doc) {
         if (err) {
-            res.locals.error = {
-                status: 403,
-                msg: 'Not authorized or redis error'
-            };
+            res.locals.error = err;
             return next(new Error(res.locals.error));
-        } else {
-            curr.role = "Admin";
-            return next();
         }
+        return next();
     });
 }
 
