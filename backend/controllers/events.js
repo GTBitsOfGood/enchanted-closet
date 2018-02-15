@@ -2,6 +2,8 @@ const Event = require('mongoose').model('Event');
 const User = require('mongoose').model('User');
 const async = require('async');
 
+var currDate = new Date();
+
 module.exports.index = (req, res, next) => {
     Event
         .find({})
@@ -10,6 +12,48 @@ module.exports.index = (req, res, next) => {
             if (events) {
                 res.locals.data = {
                     events: events
+                };
+                return next();
+            } else {
+                res.locals.error = {
+                    msg: 'There are no events in the database',
+                    status: 404
+                };
+                return next();
+            }
+        });
+}
+
+module.exports.fetchFutureEvents = (req, res, next) => {
+    Event
+        .find({"datetime":{$gt: currDate}})
+        .populate('participants')
+        .exec((err, events) => {
+            if (events) {
+                // futureevents = events.find({"datetime": {$gt:currDate}});
+                res.locals.data = {
+                    events: events
+                };
+                return next();
+            } else {
+                res.locals.error = {
+                    msg: 'There are no events in the database',
+                    status: 404
+                };
+                return next();
+            }
+        });
+}
+
+module.exports.fetchPastEvents = (req, res, next) => {
+    Event
+        .find({datetime: {$lte: currDate}})
+        .populate('participants')
+        .exec((err, events) => {
+            if (events) {
+                // pastevents = events.find({"datetime":{$lte: currDate}});
+                res.locals.data = {
+                    event: events
                 };
                 return next();
             } else {
