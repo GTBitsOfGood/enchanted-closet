@@ -19,7 +19,8 @@ router.put('/users/:id', auth.idMatches, controllers.users.update);
 
 router.get('/dashboard', auth.checkAdmin, controllers.admin.cards);
 
-router.get('/events', controllers.events.index);
+router.get('/events', controllers.events.fetchFutureEvents);
+router.get('/eventsPast', controllers.events.fetchPastEvents);
 
 router.get('/events/:id', controllers.events.get);
 router.post('/events/', auth.checkAdmin, controllers.events.create);
