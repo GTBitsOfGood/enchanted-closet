@@ -43,8 +43,18 @@ export default function Root({ store }) {
 	    <Navigation />
 	    <Switch>
 	      <Route exact path="/" component={Homepage}/>
-	      <Route path="/login" component={Login} />
-	      <Route path="/register" component={Register} />
+	      <SmartRoute
+		accepts={['loggedOut']}
+		path="/login"
+		component={Login}
+		redirect="/"
+	      />
+	      <SmartRoute
+		accepts={['loggedOut']}
+		path="/register"
+		component={Register}
+		redirect="/"
+	      />
 	      <Route path="/profile" component={Profile} />
 	      <Route path="/dashboard" component={Dashboard} />
 	      <Route exact path="/events" component={Events} />
