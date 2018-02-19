@@ -11,6 +11,7 @@ router.post('/register', controllers.auth.register);
 
 router.get('/users', auth.checkAdmin, controllers.users.index);
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
+router.get('/users/admin/:id', auth.makeAdmin, controllers.users.get);
 //more complex permissions checking (need admin to create admin) done in function
 router.post('/users', controllers.users.create);
 router.delete('/users/:id', auth.idMatchesOrAdmin, controllers.users.delete);
@@ -36,7 +37,6 @@ router.use((req, res, next) => {
     });
     return res.status(200).json(response);
   } else if (res.locals.error) {
-    console.log(res.locals.error);
     let statusCode = res.locals.error.code || 500;
     let response = Object.assign({}, res.locals.error, {
       'status': 'error'
