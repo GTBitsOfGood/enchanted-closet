@@ -317,7 +317,7 @@ export function fetchEventsIfNeeded() {
   return (dispatch, getState) => {
     if (shouldFetchEvents(getState())) {
       dispatch(loading());
-      return dispatch(fetchEvents());
+      return dispatch(fetchFutureEvents());
     }
   }
 }

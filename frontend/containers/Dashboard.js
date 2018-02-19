@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { PageTitle,
@@ -15,8 +15,13 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   render() {
+    if (!this.props.user) {
+      return (
+	<Redirect to="/" />
+      );
+    }
     const { role } = this.props.user
     const dashBlock = (role => {
       switch (role) {
