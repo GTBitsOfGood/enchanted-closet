@@ -227,7 +227,6 @@ module.exports.register = (data, callback) => {
     validateUser(data, (err, validatedUserData) => {
         if (err) return callback(err.reason, null);
         User.create(validatedUserData, (err, user) => {
- 
             if (err) return callback(err, null);
             return callback(null, user);
         });

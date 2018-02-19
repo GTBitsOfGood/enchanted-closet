@@ -8,7 +8,6 @@ const auth = require('./auth')
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
 
-
 router.get('/users', auth.checkAdmin, controllers.users.index);
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
 router.get('/users/admin/:id', auth.makeAdmin, controllers.users.get);

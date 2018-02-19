@@ -1,5 +1,7 @@
 export * from './dashboards'
 export * from './events'
+export * from './forms'
+export * from './profile'
 
 export { EditButton } from './Buttons'
 export { default as Clearfix } from './Clearfix'
