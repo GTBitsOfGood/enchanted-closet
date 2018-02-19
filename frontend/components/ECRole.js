@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form, Dropdown } from 'semantic-ui-react';
 
 const roles = [
   {
@@ -27,7 +27,7 @@ const ECRole = (props) => {
 	options={roles}
 	closeOnChange={true}
 	onChange={onChange}
-	{...this.props}
+	{...props}
     />
   )
 }
