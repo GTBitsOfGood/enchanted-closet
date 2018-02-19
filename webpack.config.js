@@ -20,7 +20,7 @@ module.exports = {
                     failOnError: false
                 }
             },
-            { test: /\.js?$/, loader: 'babel-loader', exclude: /node_modules/, query: { presets: ['es2015', 'react', 'stage-2'] } },
+            { test: /\.js?$/, loader: 'babel-loader', exclude: /node_modules/, query: { presets: ['es2015', 'react', 'stage-2', 'stage-3'] } },
             { test: /\.less/, loader: 'style-loader!css-loader!less-loader' },
             { test: /\.css/, loader: 'style-loader!css-loader' },
             {test:/\.png$/,loader:'url-loader',query:{mimetype:'image/png',name:'./public/css/semantic/themes/default/assets/images/flags.png'}},
