@@ -60,39 +60,15 @@ module.exports.register = (req, res, next) => {
     return next();
   }
 
-  if (!req.body.confirm_password) {
+  if (!req.body.userType) {
     res.locals.error = {
       status: 400,
-      msg: 'Please enter the Confirm Password field'
-    };
-    return next();
-  }
-
-  if (req.body.confirm_password !== req.body.password) {
-    res.locals.error = {
-      status: 400,
-      msg: 'Your passwords do not match'
-    };
-    return next();
-  }
-
-  if (!req.body.role) {
-    res.locals.error = {
-      status: 400,
-      msg: 'No role specified'
+      msg: 'No user type specified'
     };
     return next();
   }
 
   // Leaving this in to make someone's life easier down the road
-
-  // if (!req.body.name) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'A name is required'
-  //   };
-  //   return next();
-  // }
 
   // if (!req.body.age) {
   //   res.locals.error = {
@@ -165,14 +141,6 @@ module.exports.register = (req, res, next) => {
   //   };
   //   return next();
   // }
-
-  if (!req.body.password.length > 6) {
-    res.locals.error = {
-      status: 400,
-      msg: 'Password must be at least 7 characters long'
-    };
-    return next();
-  }
 
   auth.register(req.body, (err, user) => {
     console.log(err);

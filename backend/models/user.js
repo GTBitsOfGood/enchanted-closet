@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 // const Event = mongoose.model('event');
 
 var UserSchema = new mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    index: true
+  },
+  lastName: {
     type: String,
     index: true
   },
@@ -20,7 +24,7 @@ var UserSchema = new mongoose.Schema({
     type: Number,
     index: true
   },
-  role: {
+  userType: {
     type: String,
     enum: ['Participant', 'Volunteer', 'Admin'],
     index: true,
