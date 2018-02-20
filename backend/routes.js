@@ -21,6 +21,9 @@ router.get('/dashboard', auth.checkAdmin, controllers.admin.cards);
 router.get('/events', controllers.events.fetchFutureEvents);
 router.get('/eventsPast', controllers.events.fetchPastEvents);
 
+router.post('/events/:eventID/register/:userID', controllers.users.registerevent);
+router.post('/events/:eventID/cancel/:userID', controllers.users.cancelevent);
+
 router.get('/events/:id', controllers.events.get);
 router.post('/events/', auth.checkAdmin, controllers.events.create);
 router.delete('/events/:id', auth.checkAdmin, controllers.events.delete);

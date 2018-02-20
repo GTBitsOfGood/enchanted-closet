@@ -41,7 +41,7 @@ var UserSchema = new mongoose.Schema({
   emergencyContactPhone: String,
   emergencyContactRelation: String,
   image: String,
-  pastEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}]
+  events: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}]
 });
 
 UserSchema.methods.toJSON = function() {
