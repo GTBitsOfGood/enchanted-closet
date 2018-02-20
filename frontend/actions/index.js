@@ -221,7 +221,6 @@ export function performLogin(data) {
 }
 
 export function performRegistration(data) {
-  console.log(data);
   return (dispatch, getState) => {
     dispatch(showModalLoader());
     return fetchHelper(`/api/register`, null, {
