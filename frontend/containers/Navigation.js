@@ -61,7 +61,7 @@ class Navigation extends Component {
           My Profile
         </Menu.Item>
         {isAdmin && adminBlock}
-        <Menu.Item onClick={logoutUser}> Log out </Menu.Item>
+        <Menu.Item onClick={navFactory('/logout')}> Log out </Menu.Item>
       </Menu.Menu>
     )
     
