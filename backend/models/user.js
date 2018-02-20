@@ -24,7 +24,7 @@ var UserSchema = new mongoose.Schema({
     type: Number,
     index: true
   },
-  userType: {
+  role: {
     type: String,
     enum: ['Participant', 'Volunteer', 'Admin'],
     index: true,

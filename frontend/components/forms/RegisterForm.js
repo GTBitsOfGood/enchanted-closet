@@ -14,7 +14,7 @@ class RegisterForm extends Component {
       email: '',
       password: '',
       confirmPass: '',
-      userType: 'participant'
+      role: 'participant'
     }
   }
 
@@ -24,19 +24,19 @@ class RegisterForm extends Component {
   setUserType = tar => {
     return () => {
       this.setState({
-	userType: tar
+	role: tar
       });
     }
   }
   
   onSubmit = () => {
     const { confirmPass, ...formData } = this.state;
-    performRegistration(formData);
+    this.props.performRegistration(formData);
   }
   
   render() {
     const { firstName, lastName, email,
-	    password, confirmPass, userType } = this.state;
+	    password, confirmPass, role } = this.state;
     return (
       <div>
 	<Form>
@@ -87,12 +87,12 @@ class RegisterForm extends Component {
 	    <label>I am a: </label>
 	    <Form.Radio label='Participant'
 			value='participant'
-			checked={userType === 'participant'}
+			checked={role === 'participant'}
 			onChange={this.setUserType('participant')}
 	    />
 	    <Form.Radio label='Volunteer'
 			value='volunteer'
-			checked={userType === 'volunteer'}
+			checked={role === 'volunteer'}
 			onChange={this.setUserType('volunteer')}
 	    />
           </Form.Group>

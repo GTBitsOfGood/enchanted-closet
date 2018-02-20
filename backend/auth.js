@@ -62,13 +62,15 @@ const matchesComplexityRequirements = password => { // TODO: put these requireme
 
 
 const validateUser = (data, callback) => {
+  // TODO: Reinstate backend validation (Low business value)
+  /*
     let tmp = lacksAny(data, ["name", "email", "password", "birthday", "grade", "race", "school", "leader", "emergencycontactname", "emergencycontactphone", "emergencycontactrelation"]);
     if (tmp !== null) return callback({reason: `Data object missing ${tmp} property`}, null);
 
     if (data.name.length < 2) return callback({reason: "Name must be at least 3 characters"}, null);
 
     if (!isEmail.test(data.email)) return callback({reason: "Email invalid"}, null);
-
+  
     if (!matchesComplexityRequirements(data.password)) return callback({reason: "Password doesn't match complexity requirements"}, null);
 
     if (grades.indexOf(data.grade) === -1) return callback({reason: "Grade is not valid"}, null);
@@ -79,7 +81,12 @@ const validateUser = (data, callback) => {
     delete data.emergencycontactphone;
     data.emergencyContactRelation = data.emergencycontactrelation;
     delete data.emergencycontactrelation;
-    return callback(null, Object.assign({}, data, {"password": hash.genNew(data.password)}));
+  */
+  const capitalized = data.role.charAt(0).toUpperCase() + data.role.slice(1);
+  return callback(null, Object.assign(
+    {}, data, {"password": hash.genNew(data.password)},
+    {"role": capitalized}
+  ));
 }
 
 const currentUser = (tok, callback) => {
@@ -225,14 +232,15 @@ module.exports.login = (data, callback) => {
 }
 
 module.exports.register = (data, callback) => {
-    console.log(data);
-    validateUser(data, (err, validatedUserData) => {
-        if (err) return callback(err.reason, null);
-        User.create(validatedUserData, (err, user) => {
-            if (err) return callback(err, null);
-            return callback(null, user);
-        });
+  /* Redo validation scheme... */
+
+  validateUser(data, (err, validatedUserData) => {
+    if (err) return callback(err.reason, null);
+    User.create(validatedUserData, (err, user) => {
+      if (err) return callback(err, null);
+      return callback(null, user);
     });
+  });
 }
 
 

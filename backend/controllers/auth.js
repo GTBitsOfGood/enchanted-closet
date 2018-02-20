@@ -60,10 +60,10 @@ module.exports.register = (req, res, next) => {
     return next();
   }
 
-  if (!req.body.userType) {
+  if (!req.body.role) {
     res.locals.error = {
       status: 400,
-      msg: 'No user type specified'
+      msg: 'No user role specified'
     };
     return next();
   }
