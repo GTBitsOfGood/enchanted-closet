@@ -5,7 +5,7 @@ import {uniqueId} from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Radium from 'radium';
 
-import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
+import { fetchEventsIfNeeded, invalidateEvents, fetchFutureEvents, fetchPastEvents } from '../actions/index';
 
 import { Button, Container, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
 import { EventFilter, EventTab } from '../components/';
@@ -18,12 +18,13 @@ class Events extends Component {
       filters: {'Name': true, 'Location': false}
     }
     this.handleRefreshClick = this.handleRefreshClick.bind(this)
-
+    this.fetchPastHandler = this.fetchPastHandler.bind(this)
+    this.fetchFutureHandler = this.fetchFutureHandler.bind(this)
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchEvents());
+    dispatch(fetchFutureEvents());
     // dispatch(fetchEventsIfNeeded());
   }
 
@@ -31,7 +32,7 @@ class Events extends Component {
     e.preventDefault()
 
     const { dispatch } = this.props;
-    dispatch(invalidateEvents())
+    dispatch(invalidateEvents());
     dispatch(fetchEventsIfNeeded());
   }
 
@@ -44,7 +45,15 @@ class Events extends Component {
     filts[data.label] = !filts[data.label];
     this.setState({filters: filts});
   }
+  fetchPastHandler() {
+    const { dispatch } = this.props;
+    dispatch(fetchPastEvents());
+  }
 
+  fetchFutureHandler() {
+    const { dispatch } = this.props;
+    dispatch(fetchFutureEvents());
+  }
 
   render() {
     const { isFetchingEvents, lastUpdatedEvents, history } = this.props;
@@ -53,6 +62,7 @@ class Events extends Component {
       e.showAdminControls = false;
       return e;
     });
+
     
     const bodyProps = {
       query: this.state.query,
@@ -93,6 +103,19 @@ class Events extends Component {
 	    onClick={
 	      (e, data) => this.changeFilter(data)
 	    }/>
+ 	  <div>
+	    <Button
+	      style={styles.pastButton}
+	      content="View Future Events"
+	      onClick={this.fetchFutureHandler}	      
+	    />
+	    <Button
+	      style={styles.pastButton}
+	      content="View Past Events"
+	      onClick={this.fetchPastHandler}
+	    />
+	  </div>
+
 	</Segment>
 	
 	{ processedEvents.length > 0 && 
@@ -104,6 +127,19 @@ class Events extends Component {
   }
 }
 
+
+const styles = {
+  base: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "2em"
+  },
+  pastButton: {
+    float: "right"
+  }
+}
 
 
 Events.propTypes = {

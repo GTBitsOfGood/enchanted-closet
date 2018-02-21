@@ -17,9 +17,7 @@ class Login extends Component {
   }
 
   render() {
-    const {loggedIn, modalLoaderActive, performLogin, errorMessage} = this.props;
-
-    if (loggedIn) return <Redirect to="/" />;
+    const { modalLoaderActive, performLogin, errorMessage } = this.props;
     
     return (
       <Grid style={styles.margin} columns='three' relaxed centered>
@@ -88,7 +86,6 @@ const images = {
 const mapStateToProps = (state) => {
   return {
     modalLoaderActive: state.modalLoaderActive,
-    loggedIn: state.user,
     errorMessage: state.errorMessage
   };
 };

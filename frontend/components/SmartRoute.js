@@ -3,26 +3,28 @@ import { connect } from 'react-redux';
 
 import { withRouter, Route, Redirect, Switch } from 'react-router-dom';
 
+// SmartRoute: AuthedRoutes
+// accepts : ['Admin', 'Volunteer', 'Participant', 'loggedIn', 'loggedOut']
+// redirect: redirect url
+// component: on success render
 const SmartRoute = ( props ) => {
-  // accepts is an array of strings for accepted user status.
-  // loggedOut - must not be logged in
-  // loggedIn - must be logged in
-  // Admin, Volunteer, Participant - must be that user type
-  const { accepts, loggedIn, component: Component, ...other } = props;
-  const canView = loggedIn; // modify this condition
-  if ( canView ) 
+  const { accepts, redirect, user, ...other } = props;
+  if (( !accepts || accepts.length === 0 ) ||
+      ( !user && accepts.includes('loggedOut') ) ||
+      ( user && accepts.includes('loggedIn')) ||
+      ( user && accepts.includes(user.role) )) {
     return (
-      <Route
-        { ...other }
-	render={ <Component /> }
-      />);
-  
-    return <Redirect to="/error" /> // ideally make this redirect smarter, depending on accepts
+      <Route {...other} />
+    );
+  }
+
+  if (redirect) return <Redirect to={redirect} />;
+  else return <Redirect to="/error" />;
 };
 
 const mapStateToProps = (state) => {
   return {
-    loggedIn: state.user
+    user: state.user
   };
 }
 

@@ -9,7 +9,7 @@ import { Event } from './'
 const EventBody = ( props ) => {
   const { events, filter, isFetchingEvents, page } = props
   const culled = filter ? events.map(filter) : events
-
+  
   const noEvent = !isFetchingEvents && events.length === 0 ? 
 		    <h1> No events </h1> : null 
 
@@ -32,12 +32,6 @@ EventBody.propTypes = {
   events: PropTypes.array.isRequired,
   filter: PropTypes.func,
   isFetchingEvents: PropTypes.bool.isRequired
-}
-
-const styles = {
-  base: {
-    padding: "2em"
-  }
 }
 
 export default EventBody;
