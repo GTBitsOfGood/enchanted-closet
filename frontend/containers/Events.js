@@ -53,13 +53,13 @@ class Events extends Component {
       return e;
     });
     const bodyProps = { query: this.state.query, filterBy:this.state.filters, events: processedEvents, isLoading: isFetchingEvents };
-
     return (
     <Container>
   <Input
     placeholder = 'Search'
     type = 'text'
     size = 'big'
+    disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
     onChange={
       (e, data) => this.changeQuery(e)
     }/> 
