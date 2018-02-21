@@ -8,12 +8,15 @@ import Radium from 'radium';
 import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
 
 import { Button, Container, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
-import { EventFilter } from '../components/';
+import { EventFilter, EventTab } from '../components/';
 
 class Events extends Component {
   constructor(props) {
     super(props);
-    this.state = {query: '', filters: {'Name': true, 'Location': false}}
+    this.state = {
+      query: '',
+      filters: {'Name': true, 'Location': false}
+    }
     this.handleRefreshClick = this.handleRefreshClick.bind(this)
 
   }
@@ -32,13 +35,11 @@ class Events extends Component {
     dispatch(fetchEventsIfNeeded());
   }
 
-  changeQuery(event)
-  {
+  changeQuery = (event) => {
     this.setState({query: event.target.value});
   }
 
-  changeFilter(data)
-  {
+  changeFilter = (data) => {
     var filts = this.state.filters;
     filts[data.label] = !filts[data.label];
     this.setState({filters: filts});
@@ -52,51 +53,57 @@ class Events extends Component {
       e.showAdminControls = false;
       return e;
     });
-    const bodyProps = { query: this.state.query, filterBy:this.state.filters, events: processedEvents, isLoading: isFetchingEvents };
-    return (
-    <Container>
-  <Input
-    placeholder = 'Search'
-    type = 'text'
-    size = 'big'
-    disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
-    onChange={
-      (e, data) => this.changeQuery(e)
-    }/> 
-
-    <Segment textAlign='left' vertical>
-  <Header as="l1">Search By:</Header>
-    </Segment>
-    <Segment textAlign='left' vertical >
-  <Button
-    active = {this.state.filters['Name']}
-    label = 'Name'
-    labelPosition = 'left'
-    size = 'small'
-    toggle
-    onClick={
-      (e, data) => this.changeFilter(data)
-    }/>
-  <Button
-    active = {this.state.filters['Location']}
-    label = 'Location'
-    labelPosition = 'left'
-    size = 'small'
-    toggle
-    onClick={
-      (e, data) => this.changeFilter(data)
-    }/>
-    </Segment>
     
-    { processedEvents.length > 0 && 
-  <EventFilter query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
-    }
-      
+    const bodyProps = {
+      query: this.state.query,
+      filterBy:this.state.filters,
+      events: processedEvents,
+      isLoading: isFetchingEvents
+    };
+    
+    return (
+      <Container>
+	<Segment textAlign='left' vertical>
+	  <Input
+	    placeholder = 'Search'
+	    label="Search"
+	    labelPosition="left"
+	    type = 'text'
+	    size = 'big'
+	    disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
+	    onChange={
+	      (e, data) => this.changeQuery(e)
+	    }/>
+	  <Header as="h4"> Filter By: </Header>
+	  <Button
+	    active = {this.state.filters['Name']}
+	    label = 'Name'
+	    labelPosition = 'left'
+	    size = 'small'
+	    toggle
+	    onClick={
+	      (e, data) => this.changeFilter(data)
+	    }/>
+	  <Button
+	    active = {this.state.filters['Location']}
+	    label = 'Location'
+	    labelPosition = 'left'
+	    size = 'small'
+	    toggle
+	    onClick={
+	      (e, data) => this.changeFilter(data)
+	    }/>
+	</Segment>
+	
+	{ processedEvents.length > 0 && 
+	  <EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
+	}
+	
 
-    </Container>)
+      </Container>)
   }
 }
-  
+
 
 
 Events.propTypes = {

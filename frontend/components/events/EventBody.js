@@ -7,8 +7,8 @@ import { Event } from './'
 //display for an event entry - extend generic entry?
 
 const EventBody = ( props ) => {
-  const { events, isFetchingEvents, page } = props
-  //const culled = filter ? events.map(filter) : events
+  const { events, filter, isFetchingEvents, page } = props
+  const culled = filter ? events.map(filter) : events
 
   const noEvent = !isFetchingEvents && events.length === 0 ? 
 		    <h1> No events </h1> : null 
@@ -22,16 +22,13 @@ const EventBody = ( props ) => {
 	  Loading
       </Loader>
       { events.length > 0 && 
-      events.map( e => {
-	return(<Event key={e._id} data={e} history={history}/>)
-      })}
+	events.map(e => (<Event key={e._id} data={e} history={history}/>))}
       { noEvent }
      </Container>
       )
 }
 
 EventBody.propTypes = {
-  query: PropTypes.string,
   events: PropTypes.array.isRequired,
   filter: PropTypes.func,
   isFetchingEvents: PropTypes.bool.isRequired
