@@ -24,6 +24,7 @@ class Events extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+
     dispatch(fetchFutureEvents());
     // dispatch(fetchEventsIfNeeded());
   }
@@ -73,37 +74,39 @@ class Events extends Component {
     
     return (
       <Container>
-	<Segment textAlign='left' vertical>
+	<Segment style={styles.control} textAlign='left' vertical>
+	  <div style={styles.searchSection}>
 	  <Input
 	    placeholder = 'Search'
 	    label="Search"
 	    labelPosition="left"
 	    type = 'text'
-	    size = 'big'
+	    size = 'medium'
 	    disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
 	    onChange={
 	      (e, data) => this.changeQuery(e)
 	    }/>
-	  <Header as="h4"> Filter By: </Header>
-	  <Button
-	    active = {this.state.filters['Name']}
-	    label = 'Name'
-	    labelPosition = 'left'
-	    size = 'small'
-	    toggle
-	    onClick={
-	      (e, data) => this.changeFilter(data)
-	    }/>
-	  <Button
-	    active = {this.state.filters['Location']}
-	    label = 'Location'
-	    labelPosition = 'left'
-	    size = 'small'
-	    toggle
-	    onClick={
-	      (e, data) => this.changeFilter(data)
-	    }/>
- 	  <div>
+	  </div>
+	  <div style={styles.filterSection}>
+	    <Header as="h4" style={styles.filterByHeader}> Filter By: </Header>
+	    <Button
+	      active = {this.state.filters['Name']}
+	      label = 'Name'
+	      labelPosition = 'left'
+	      size = 'small'
+	      toggle
+	      onClick={(e, data) => this.changeFilter(data)}
+	    />
+	    <Button
+	      active = {this.state.filters['Location']}
+	      label = 'Location'
+	      labelPosition = 'left'
+	      size = 'small'
+	      toggle
+	      onClick={(e, data) => this.changeFilter(data)}
+	    />
+	  </div>
+ 	  <div style={styles.futurePast}>
 	    <Button
 	      style={styles.pastButton}
 	      content="View Future Events"
@@ -115,11 +118,15 @@ class Events extends Component {
 	      onClick={this.fetchPastHandler}
 	    />
 	  </div>
-
 	</Segment>
 	
 	{ processedEvents.length > 0 && 
 	  <EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
+	}
+	{
+	  <Header as='h3'>
+	    No events found.
+	  </Header>
 	}
 	
 
@@ -129,15 +136,31 @@ class Events extends Component {
 
 
 const styles = {
-  base: {
+  control: {
+    clear: "both",
+    height: "90px"
+  },
+  filterByHeader: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  filterSection: {
+    marginLeft: "5px",
+    display: "flex",
     alignItems: "center",
-    padding: "2em"
+    flexDirection: "row",
+    float: "left",
+  },
+  futurePast: {
+    marginLeft: "5px",
+    float: "left"
   },
   pastButton: {
     float: "right"
+  },
+  searchSection: {
+    float: "left"
   }
 }
 
