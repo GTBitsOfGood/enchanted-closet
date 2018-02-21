@@ -14,15 +14,9 @@ class Register extends Component {
 
   render() {
     const { errorMessage, 
-	    modalLoaderActive,
-	    performRegistration,
-	    user } = this.props;
+	    modalLoaderActive
+	  } = this.props;
 
-    if (user) {
-      return (
-        <Redirect to="/" />
-      );
-    }
     // TODO: Remove
     /*
     const formBlock = (

@@ -6,7 +6,9 @@ import { Container, Header, Loader, Segment } from 'semantic-ui-react'
 const ProfileAdmin = ( props ) => {
   return (
     <Container>
-      Admin Profile
+      <Header as='h3'>Admin Profile</Header>
+
+      
     </Container>
   )
 }

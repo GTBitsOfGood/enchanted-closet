@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
-import {fetchUsers, clearErrors, upsertUser} from '../actions';
+import { clearErrors, upsertUser } from '../actions';
 
 import { Button, Container, Card, Form, Header, Message } from 'semantic-ui-react';
 import { CustomForm, PageTitle, LoadingIcon } from '../components';
@@ -18,6 +18,7 @@ const fields = ['name', 'role', 'email', 'phone', 'grade', 'age', 'race', 'schoo
 class Profile extends Component {
   constructor(props){
     super(props);
+    
     const {clearErrors} = this.props;
     clearErrors();
 
