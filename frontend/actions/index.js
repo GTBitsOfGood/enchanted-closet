@@ -130,7 +130,6 @@ export function upsertUser(data) {
       .then(json => dispatch(processUserUpsert(json, isUpdate)))
   }
 }
-
 export function invalidateEvents() {
   return {
     type: types.INVALIDATE_EVENTS
@@ -141,6 +140,12 @@ export function logoutUser() {
   return {
     type: types.LOGOUT_USER
   }
+}
+
+export function performLogout(id) {
+  return (dispatch, getState) => {
+    dispatch(showModalLoader());
+    dispatch(deleteLocalData('user', id));
 }
 
 function fetchHelper(route, apiToken, obj) {
