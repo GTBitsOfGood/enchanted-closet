@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Container, Card } from 'semantic-ui-react';
+import { Container, Card, Icon } from 'semantic-ui-react';
 
 import { loadDashboardCards } from '../../actions/';
+
+import DashboardCard from './DashboardCard'
 
 const DEFAULT_CARDS = [
   {

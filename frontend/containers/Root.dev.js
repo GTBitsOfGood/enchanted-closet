@@ -15,18 +15,7 @@ import Navigation from './Navigation';
 import DevTools from './DevTools';
 import Helmet from 'react-helmet';
 
-import AdminDashboard from './Admin/Dashboard';
-import AdminEvents from './Admin/Events';
-import AdminUsers from './Admin/Users';
-import AdminUsersNew from './Admin/UsersNew';
-import AdminUsersDetail from './Admin/UsersDetail';
-import AdminEventsNew from './Admin/EventsNew';
-import AdminEventsEdit from './Admin/EventsEdit';
-import AdminEventsDetail from './Admin/EventsDetail';
-
-import EventsAttendance from './Admin/Attendance';
-
-import Auth from './Auth';
+import * as Admin from './Admin'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { SmartRoute } from '../components';
@@ -74,15 +63,48 @@ export default function Root({ store }) {
 	      />
 	      <Route exact path="/events" component={Events} /> 
 	      <Route path="/events/:id" component={EventsDetail} />
-	      <Route path="/admin/dashboard" component={AdminDashboard} />
-	      <Route exact path="/admin/events" component={AdminEvents} />
-	      <Route path="/admin/events/create" component={AdminEventsNew} />
-	      <Route path="/admin/events/:id/attendance" component={EventsAttendance} />
-	      <Route path="/admin/events/:id/edit" component={AdminEventsEdit} />
-	      <Route exact path="/admin/events/:id" component={AdminEventsDetail} />		
-	      <Route exact path="/admin/users" component={AdminUsers} />
-	      <Route exact path="/admin/users/create" component={AdminUsersNew} />
-	      <Route path="/admin/users/:id" component={AdminUsersDetail} />		
+
+	      <SmartRoute
+		accepts={['Admin']}
+		exact path="/admin/events"
+		component={Admin.Events}
+	      />
+	      <SmartRoute
+		accepts={['Admin']}
+		path="/admin/events/create"
+		component={Admin.EventsNew}
+	      />	      
+	      <SmartRoute
+		accepts={['Admin']}
+		path="/admin/events/:id/attendance"
+		component={Admin.EventsAttendance}
+	      />
+	      <SmartRoute
+		accepts={['Admin']}
+		path="/admin/events/:id/edit"
+		component={Admin.EventsEdit}
+	      />
+	      <SmartRoute
+		accepts={['Admin']}
+		exact path="/admin/events/:id"
+		component={Admin.EventsDetail}
+	      />
+	      <SmartRoute
+		accepts={['Admin']}
+		exact path="/admin/users"
+		component={Admin.Users}
+	      />	      
+	      <SmartRoute
+		accepts={['Admin']}
+		exact path="/admin/users/create"
+		component={Admin.UsersNew}
+	      />
+	      <SmartRoute
+		accepts={['Admin']}
+		path="/admin/users/:id"
+		component={Admin.UsersDetail}
+	      />
+	      
 	      <Route path="/error" component={MissingPage} />
 	      <Route component={MissingPage} />
 	    </Switch>
