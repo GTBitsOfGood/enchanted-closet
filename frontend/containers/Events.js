@@ -13,7 +13,7 @@ import { EventFilter } from '../components/';
 class Events extends Component {
   constructor(props) {
     super(props);
-    this.state = {query: '', filters: {'Name': true, 'Location': false}, currentPage: 1}
+    this.state = {query: '', filters: {'Name': true, 'Location': false}}
     this.handleRefreshClick = this.handleRefreshClick.bind(this)
 
   }
@@ -44,13 +44,6 @@ class Events extends Component {
     this.setState({filters: filts});
   }
 
-  tabinate(inc)
-  {
-    var newPage = this.state.currentPage + inc;
-    if (newPage <= 0)
-      newPage = 1
-    this.setState({currentPage: newPage});
-  }
 
   render() {
     const { isFetchingEvents, lastUpdatedEvents, history } = this.props;
@@ -96,22 +89,8 @@ class Events extends Component {
     </Segment>
     
     { processedEvents.length > 0 && 
-  <EventFilter query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} page = {this.state.currentPage}/>
+  <EventFilter query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
     }
-    <Segment textAlign='center' vertical>
-  <Button
-    size = 'small'
-    icon = 'angle double left'
-    onClick={
-      () => this.tabinate(-1)
-    }/>
-  <Button
-    size = 'small'
-    icon = 'angle double right'
-    onClick={
-      () => this.tabinate(1)
-    }/>
-    </Segment>
       
 
     </Container>)

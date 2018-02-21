@@ -7,7 +7,7 @@ import { Event } from './'
 //display for an event entry - extend generic entry?
 
 const EventBody = ( props ) => {
-  const { events, isFetchingEvents, page, length } = props
+  const { events, isFetchingEvents, page } = props
   //const culled = filter ? events.map(filter) : events
 
   const noEvent = !isFetchingEvents && events.length === 0 ? 
@@ -26,16 +26,7 @@ const EventBody = ( props ) => {
 	return(<Event key={e._id} data={e} history={history}/>)
       })}
       { noEvent }
-      <Segment textAlign='center' vertical>
-    <Header as="l1"> Current Page: {page}</Header>
-      {page * 10 <= length &&
-    <p>Showing: {(page - 1) * 10 + 1} - {page * 10} of {length}</p>
-      }
-      {page * 10 > length &&
-    <p>Showing: {(page - 1) * 10 + 1} - {length} of {length}</p>
-      }
-      </Segment>
-      </Container>
+     </Container>
       )
 }
 
