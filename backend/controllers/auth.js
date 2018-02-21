@@ -61,6 +61,7 @@ module.exports.register = (req, res, next) => {
   }
 
   if (!req.body.role) {
+    console.log(req.body);
     res.locals.error = {
       status: 400,
       msg: 'No user role specified'

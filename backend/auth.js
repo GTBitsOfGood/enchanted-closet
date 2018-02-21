@@ -25,11 +25,9 @@ const isAdmin = (id, callback) => {
         return callback(null, false);
     }
     User.findById(id, (err, result) => {
-        if (!err && result.userType === "Admin") {
+        if (!err && result.role === "Admin") {
             return callback(err, true);
         }
-        console.log(result);
-        console.log(err);
         callback(err, false);
     });
 }
