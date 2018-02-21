@@ -17,11 +17,6 @@ class Dashboard extends Component {
   }
   
   render() {
-    if (!this.props.user) {
-      return (
-	<Redirect to="/" />
-      );
-    }
     const { role } = this.props.user
     const dashBlock = (role => {
       switch (role) {
@@ -53,11 +48,6 @@ const mapStateToProps = (state) => {
   }
 };
 
-const mapDispatchToProps = dispatch => {
-  return {};
-}
-
 export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Dashboard));

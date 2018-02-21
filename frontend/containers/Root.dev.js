@@ -33,7 +33,7 @@ import { SmartRoute } from '../components';
 
 import { COLORS } from '../constants'
 
-export default function Root({ store }) {
+export default function Root({ store }) {  
   return (
     <Provider store={store}>
       <div>
@@ -42,7 +42,12 @@ export default function Root({ store }) {
 	  <div>
 	    <Navigation />
 	    <Switch>
-	      <Route exact path="/" component={Homepage}/>
+	      <SmartRoute
+		accepts={['loggedOut']}
+		exact path="/"
+		component={Homepage}
+		redirect="/dashboard"
+	      />
 	      <SmartRoute
 		accepts={['loggedOut']}
 		path="/login"
@@ -59,10 +64,15 @@ export default function Root({ store }) {
 		accepts={['loggedIn']}
 		path="/profile"
 		component={Profile}
-		redirect="/"
+		redirect="/login"
 	      />
-	      <Route path="/dashboard" component={Dashboard} />
-	      <Route exact path="/events" component={Events} />
+	      <SmartRoute
+		accepts={['loggedIn']}
+		path="/dashboard"
+		component={Dashboard}
+		redirect="/login"
+	      />
+	      <Route exact path="/events" component={Events} /> 
 	      <Route path="/events/:id" component={EventsDetail} />
 	      <Route path="/admin/dashboard" component={AdminDashboard} />
 	      <Route exact path="/admin/events" component={AdminEvents} />

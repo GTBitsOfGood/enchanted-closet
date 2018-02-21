@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {uniqueId} from 'lodash';
+import { uniqueId } from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Radium from 'radium';
 
@@ -46,6 +46,7 @@ class Events extends Component {
     filts[data.label] = !filts[data.label];
     this.setState({filters: filts});
   }
+
   fetchPastHandler() {
     const { dispatch } = this.props;
     dispatch(fetchPastEvents());
@@ -63,7 +64,6 @@ class Events extends Component {
       e.showAdminControls = false;
       return e;
     });
-
     
     const bodyProps = {
       query: this.state.query,

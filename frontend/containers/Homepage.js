@@ -19,9 +19,7 @@ class Homepage extends Component {
   }
 
   render() {
-    const {loading, events, history, loggedIn} = this.props;
-    if (loggedIn)
-      return <Redirect to="/dashboard" />
+    const { loading, events, history } = this.props;
 
     const LIMIT = 3;
     const processedEvents =
