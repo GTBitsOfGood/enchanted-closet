@@ -55,7 +55,12 @@ export default function Root({ store }) {
 		component={Register}
 		redirect="/"
 	      />
-	      <Route path="/profile" component={Profile} />
+	      <SmartRoute
+		accepts={['loggedIn']}
+		path="/profile"
+		component={Profile}
+		redirect="/"
+	      />
 	      <Route path="/dashboard" component={Dashboard} />
 	      <Route exact path="/events" component={Events} />
 	      <Route path="/events/:id" component={EventsDetail} />

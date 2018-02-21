@@ -72,11 +72,11 @@ class ProfileParticipant extends Component {
 
     const softBlock = softFields.map(field => (
       <MutableEntry
-      key={`soft${field}`}
-      locked={false}
-      label={field}
-      value={this.state.userData.field}
-      onChange={this.onChangeFactory(field)}
+	key={`soft${field}`}
+	locked={false}
+	label={field}
+	value={this.state.userData[field]}
+	onChange={this.onChangeFactory(field)}
       />))
     
     return (

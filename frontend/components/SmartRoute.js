@@ -12,7 +12,7 @@ const SmartRoute = ( props ) => {
   if (( !accepts || accepts.length === 0 ) ||
       ( !user && accepts.includes('loggedOut') ) ||
       ( user && accepts.includes('loggedIn')) ||
-      ( accepts.includes(user.role) )) {
+      ( user && accepts.includes(user.role) )) {
     return (
       <Route {...other} />
     );
