@@ -4,11 +4,7 @@ import { connect } from 'react-redux';
 
 import { Container, Card } from 'semantic-ui-react';
 
-import { DashboardCards, PageTitle } from '../../components/'
-
 import { loadDashboardCards } from '../../actions/';
-
-import { withRouter } from 'react-router-dom';
 
 const DEFAULT_CARDS = [
   {
@@ -31,10 +27,6 @@ const DEFAULT_CARDS = [
 class AdminDashboard extends Component {
   constructor(props) {
     super(props);
-    if (this.props.user.role !== 'Volunteer' &&
-  this.props.user.role !== 'Admin') {
-      this.props.history.goBack();
-    }
   }
 
   componentDidMount() {
@@ -43,12 +35,38 @@ class AdminDashboard extends Component {
   }
 
   render() {
-    const { cards } = this.props;
+    const { cards = [] } = this.props;
+    const body = cards.length === 0 ? (
+      <Card fluid>
+	<Card.Content>
+	  <h1>Loading...</h1>
+	</Card.Content>
+      </Card>
+    ) : (
+      <Card.Group>
+	{ cards.map( card => (
+	  <DashboardCard {...card}
+			 key={`admin_card_${card.title}`} />)) }
+	<Card
+	  onClick={() =>
+	    window.open(`/api/report/year`, '_blank')}
+          centered	
+	>
+	  <Card.Content style={{textAlign: 'center'}}>
+	    <h1><Icon name='cloud download'/></h1>
+	  </Card.Content>
+	  <Card.Content style={{textAlign: 'center'}}>
+	    <h3>'Download Year Attendance'</h3>
+	  </Card.Content>
+	</Card>	
+      </Card.Group>
+    )
+
     return (
       <Container>
-  <div style={styles.cardWrap}>
-    <DashboardCards cards={cards} />
-  </div>
+	<div style={styles.cardWrap}>
+	  { body }
+	</div>
       </Container>
     );
   }
@@ -56,13 +74,12 @@ class AdminDashboard extends Component {
 
 const styles = {
   cardWrap: {
-    paddingTop: '50px'
+    marginTop: '50px'
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
     cards: state.dashboardCards
   };
 };
@@ -73,7 +90,7 @@ const mapDispatchToProps = dispatch => {
   }, dispatch);
 }
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AdminDashboard));
+)(AdminDashboard);
