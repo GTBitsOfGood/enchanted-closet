@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 
 
 const VolunteerDashboard = ( props ) => {
-	const registedEvents = {
+	const registeredEvents = {
 		content: "Registered Events will go here!",
 		title: "Registered Events",
 		url: "dummy"
