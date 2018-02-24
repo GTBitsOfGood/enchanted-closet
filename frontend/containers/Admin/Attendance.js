@@ -1,11 +1,12 @@
-import React,{Component} from 'react';
-import {withRouter} from 'react-router-dom';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import {fetchEvents, fetchUsers} from '../../actions/';
+// TODO: Disallow editing of past events
+import { fetchFutureEvents, fetchPastEvents, fetchUsers } from '../../actions/';
 
-import {Container, Segment} from 'semantic-ui-react';
+import { Container, Segment } from 'semantic-ui-react';
 import { ErrorComponent, LoadingIcon, PageTitle, SearchBarCard, UserList } from '../../components' 
 
 
@@ -15,10 +16,6 @@ class AdminAttendance extends Component {
     super(props);
 
     const { match, users, events, user, history } = this.props;
-
-    if (user.role !== 'Volunteer' && user.role !== 'Admin') {
-      history.goBack();
-    }
 
     this.state = {
       event_id: match.params.id,
@@ -39,12 +36,13 @@ class AdminAttendance extends Component {
   }
 
   componentDidMount() {
-    const {event_id} = this.state;
-    const {fetchEvents, fetchUsers, events, users} = this.props;
+    const { event_id } = this.state;
+    const { fetchFutureEvents, fetchPastEvents, fetchUsers, events, users } = this.props;
     let event = events.filter(e => e._id === event_id);
     if (!event || event.length === 0) {
       this.setState({loading: true, hasAttemptedRefresh: true});
-      fetchEvents();
+      fetchFutureEvents();
+      fetchPastEvents();
     } else {
       this.setState({event: event[0]});
     }
@@ -89,7 +87,7 @@ class AdminAttendance extends Component {
     } else {
       if (!loading && hasAttemptedRefresh) {
 	return (
-	  <ErrorComponent redir='/events/' redirMsg='Return to all events' errMsg='404 - Event not Found'/>
+	  <ErrorComponent redir='/events/' redirMsg='Return to all events' errMsg='404 - Cannot mark attendance for past or unavailable event'/>
 	)
       } else {
 	return (
@@ -110,7 +108,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    fetchEvents: fetchEvents,
+    fetchFutureEvents: fetchFutureEvents,
+    fetchPastEvents: fetchPastEvents,
     fetchUsers: fetchUsers
   }, dispatch);
 }
