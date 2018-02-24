@@ -9,7 +9,7 @@ import { performLogout } from '../actions/index.js';
 const Logout = ( props ) => {
   const { loggedIn, performLogout } = props;
   if (loggedIn) {
-    performLogout(loggedIn._id);
+    performLogout();
   }
   return <Redirect to="/" />
 }
