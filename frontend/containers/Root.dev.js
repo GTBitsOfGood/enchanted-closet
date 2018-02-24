@@ -77,7 +77,7 @@ export default function Root({ store }) {
 	      <SmartRoute
 		accepts={['Admin']}
 		path="/admin/events/:id/attendance"
-		component={Admin.EventsAttendance}
+		component={Admin.Attendance}
 	      />
 	      <SmartRoute
 		accepts={['Admin']}
