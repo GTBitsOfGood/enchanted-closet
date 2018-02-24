@@ -144,8 +144,7 @@ export function logoutUser() {
 
 export function performLogout(id) {
   return (dispatch, getState) => {
-    dispatch(showModalLoader());
-    dispatch(deleteLocalData('user', id));
+    dispatch(logoutUser());
   }
 }
 

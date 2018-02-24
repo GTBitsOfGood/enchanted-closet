@@ -143,8 +143,6 @@ module.exports.register = (req, res, next) => {
   // }
 
   auth.register(req.body, (err, user) => {
-    console.log(err);
-    console.log(user);
     if (err) {
       res.locals.error = {
         status: 500,
