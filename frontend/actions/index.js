@@ -145,7 +145,7 @@ export function logoutUser() {
 export function performLogout() {
   return (dispatch, getState) => {
     dispatch(logoutUser());
-  }
+  }  
 }
 
 function fetchHelper(route, apiToken, obj) {

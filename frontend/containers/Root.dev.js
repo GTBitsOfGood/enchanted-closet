@@ -62,7 +62,7 @@ export default function Root({ store }) {
 		component={Dashboard}
 		redirect="/login"
 	      />
-		<SmartRoute
+	      <SmartRoute
 		accepts={['loggedIn']}
 		path="/logout"
 		component={Logout}

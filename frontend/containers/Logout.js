@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import { withRouter, Redirect, Switch } from 'react-router-dom';
+import { withRouter, Link, Switch } from 'react-router-dom';
 
 import { performLogout } from '../actions/index.js';
 
-const Logout = ( props ) => {
-  const { loggedIn, performLogout } = props;
-  if (loggedIn) {
-    performLogout();
+class Logout extends Component {
+  constructor( props ) {
+    super(props);
   }
-  return <Redirect to="/" />
+
+  componentWillMount(){
+    this.props.performLogout();
+  }
+
+  render() {
+    return (
+      <div>
+	Click <Link to="/">here </Link> if you are not redirected.
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-  return {
-    loggedIn: state.user
-  };
+  return {};
 }
 
 const mapDispatchToProps = dispatch => {

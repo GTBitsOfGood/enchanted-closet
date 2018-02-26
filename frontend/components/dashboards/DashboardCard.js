@@ -13,7 +13,7 @@ const DashboardCard = withRouter( props => (
     centered
     key={`#${props.content}${props.title}`}
   >
-    {props.content ?
+    {props.content !== null ?
      <Card.Content style={{textAlign: 'center'}}>
        <h1>{props.content}</h1>
      </Card.Content>
@@ -27,6 +27,5 @@ const DashboardCard = withRouter( props => (
     </Card.Content>
   </Card>
 ));
-
 
 export default DashboardCard
