@@ -7,11 +7,7 @@ import { fetchUsers, upsertUser } from '../../actions'
 import { Button, Card, Container, Header, Loader, Segment } from 'semantic-ui-react'
 import MutableEntry from './MutableEntry'
 
-
-const hardFields = ['name', 'role', 'email']
 const softFields = ['phone', 'grade', 'age', 'race', 'school', 'leader', 'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation']
-
-
 
 class ProfileParticipant extends Component {
   
@@ -144,6 +140,5 @@ const mapDispatchToProps = dispatch => {
     upsertUser: upsertUser
   }, dispatch)
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileParticipant)
