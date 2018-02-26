@@ -173,7 +173,6 @@ module.exports.checkAdmin = (req, res, next) => {
 }
 
 module.exports.makeAdmin = (req, res, next) => {
-  console.log(req);
   let token = req.header("Authorization");
   if (!token.startsWith("Bearer ")) {
     res.locals.error = {

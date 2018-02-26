@@ -65,8 +65,6 @@ module.exports.yearReport = (req, res, next) => {
         };
         return next();
       }
-
-      console.log(users);
     });
 
   Event

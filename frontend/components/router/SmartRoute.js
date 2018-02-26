@@ -12,11 +12,11 @@ const SmartRoute = ( props ) => {
   if (( accepts.length === 0 ) ||
       ( !user && accepts.includes('loggedOut') ) ||
       ( user && accepts.includes('loggedIn')) ||
-      ( user && accepts.includes(user.role) )) 
+      ( user && accepts.includes(user.role) ))  {
     return (
       <Route {...other} />
     );
-
+  }
   return <Redirect to={redirect} />;
 };
 

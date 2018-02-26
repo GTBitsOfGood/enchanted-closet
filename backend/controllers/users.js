@@ -113,7 +113,6 @@ module.exports.update = (req, res, next) => {
   }
   let newProps = {};
 
-  console.log(req.body);
   if (req.body.password) {
     //TODO: verify old password
     let token = req.headers.authorization;
