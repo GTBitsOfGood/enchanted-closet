@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { PageTitle,
@@ -15,7 +15,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   render() {
     const { role } = this.props.user
     const dashBlock = (role => {
@@ -48,11 +48,6 @@ const mapStateToProps = (state) => {
   }
 };
 
-const mapDispatchToProps = dispatch => {
-  return {};
-}
-
 export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Dashboard));

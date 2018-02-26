@@ -1,0 +1,8 @@
+export { default as Attendance } from './Attendance'
+export { default as Events } from './Events'
+export { default as EventsDetail } from './EventsDetail'
+export { default as EventsEdit } from './EventsEdit'
+export { default as EventsNew } from './EventsNew'
+export { default as Users } from './Users'
+export { default as UsersDetail } from './UsersDetail'
+export { default as UsersNew } from './UsersNew'
