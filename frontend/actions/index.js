@@ -142,11 +142,10 @@ export function logoutUser() {
   }
 }
 
-export function performLogout(id) {
+export function performLogout() {
   return (dispatch, getState) => {
-    dispatch(showModalLoader());
-    dispatch(deleteLocalData('user', id));
-  }
+    dispatch(logoutUser());
+  }  
 }
 
 function fetchHelper(route, apiToken, obj) {

@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import Homepage from './Homepage.js';
 import Login from './Login.js';
+import Logout from './Logout.js';
 import Register from './Register';
 import Profile from './Profile.js';
 import Dashboard from './Dashboard.js';
@@ -60,6 +61,12 @@ export default function Root({ store }) {
 		path="/dashboard"
 		component={Dashboard}
 		redirect="/login"
+	      />
+	      <SmartRoute
+		accepts={['loggedIn']}
+		path="/logout"
+		component={Logout}
+		redirect="/"
 	      />
 	      <Route exact path="/events" component={Events} /> 
 	      <Route path="/events/:id" component={EventsDetail} />

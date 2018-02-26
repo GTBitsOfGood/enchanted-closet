@@ -54,14 +54,19 @@ class Navigation extends Component {
         >
           Events
         </Menu.Item>
+
         <Menu.Item
           style={styles.button}
           onClick={navFactory('/profile')}
         >
           My Profile
         </Menu.Item>
-        {isAdmin && adminBlock}
-        <Menu.Item onClick={navFactory('/logout')}> Log out </Menu.Item>
+        
+        <Menu.Item 
+          onClick={navFactory('/logout')}
+        > 
+          Log out 
+        </Menu.Item>
       </Menu.Menu>
     )
     
