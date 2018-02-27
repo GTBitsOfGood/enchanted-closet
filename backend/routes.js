@@ -18,6 +18,9 @@ router.put('/users/:id', auth.idMatches, controllers.users.update);
 
 router.get('/dashboard', auth.checkAdmin, controllers.admin.cards);
 
+router.get('/events/:eventID/register/:userID', controllers.users.registerevent);
+router.get('/events/:eventID/cancel/:userID', controllers.users.cancelevent);
+
 router.get('/events', controllers.events.fetchFutureEvents);
 router.get('/eventsPast', controllers.events.fetchPastEvents);
 
