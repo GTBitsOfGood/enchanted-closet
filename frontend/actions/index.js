@@ -284,6 +284,15 @@ export function fetchPastEvents() {
   }
 }
 
+// TODO: Finish this
+export function fetchEventById(id){
+  return (dispatch, getState) => {
+    return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
+      .then(response => response.json())
+      .then(json => dispatch(receiveEvents(json)))
+  }
+}
+
 function requestUsers() {
   return {
     type: types.REQUEST_USERS

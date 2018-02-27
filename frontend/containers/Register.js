@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment, Message } from 'semantic-ui-react';
-import { RegisterForm, FileForm } from '../components/';
+import { RegisterForm, FormWrap } from '../components/';
 
 class Register extends Component {
   constructor(props) {
