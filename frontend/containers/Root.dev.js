@@ -50,7 +50,7 @@ export default function Root({ store }) {
 	      <Route exact path="/events" component={Events} />
 	      <Route path="/events/:id" component={EventsDetail} />
 	      <Route path="/admin/dashboard" component={AdminDashboard} />
-	      <Route exact path="/admin/events" component={AdminEvents} />
+	      //<Route exact path="/admin/events" component={AdminEvents} />
 	      <Route path="/admin/events/create" component={AdminEventsNew} />
 	      <Route path="/admin/events/:id/attendance" component={EventsAttendance} />
 	      <Route path="/admin/events/:id/edit" component={AdminEventsEdit} />

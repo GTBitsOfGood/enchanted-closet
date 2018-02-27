@@ -7,8 +7,8 @@ import Radium from 'radium';
 
 import { fetchEventsIfNeeded, invalidateEvents, fetchEvents } from '../actions/index';
 
-import { Button, Container, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
-import { EventFilter } from '../components/';
+import { Button, Container, Card, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
+import { EventFilter, LoadingIcon, PageTitle } from '../components/';
 
 class Events extends Component {
   constructor(props) {
@@ -46,15 +46,22 @@ class Events extends Component {
 
 
   render() {
+    var isAdmin = true;
+    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
+      isAdmin = false;
+    }
     const { isFetchingEvents, lastUpdatedEvents, history } = this.props;
     const { events } = this.props;
     const processedEvents = events.map(e => {
-      e.showAdminControls = false;
+      e.showAdminControls = isAdmin;
       return e;
     });
     const bodyProps = { query: this.state.query, filterBy:this.state.filters, events: processedEvents, isLoading: isFetchingEvents };
     return (
     <Container>
+    {isAdmin &&
+      <PageTitle title="Events" link="/admin/events/create" linkTitle="Create New"/>
+    }
   <Input
     placeholder = 'Search'
     type = 'text'
@@ -110,13 +117,15 @@ function mapStateToProps(state) {
   const {
     events,
     isFetchingEvents,
-    lastUpdatedEvents
+    lastUpdatedEvents,
+    user
   } = state;
 
   return {
     events,
     isFetchingEvents,
-    lastUpdatedEvents
+    lastUpdatedEvents,
+    user
   }
 }
 

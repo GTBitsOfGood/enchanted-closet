@@ -29,7 +29,6 @@ class Navigation extends Component {
     const adminLinks = [
       ['Dashboard', '/dashboard'],
       ['Users', '/users'],
-      ['Events', '/events']
     ]
     const adminBlock = (
       <Dropdown item text='Admin' style={styles.button}>
