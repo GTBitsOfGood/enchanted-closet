@@ -2,12 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
-import { performRegistration } from '../actions/';
-
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment, Message } from 'semantic-ui-react'
-import { FileForm } from '../components/';
+import { Container, Card, Grid, Reveal, Dimmer, Loader, Image, Segment, Message } from 'semantic-ui-react';
+import { RegisterForm } from '../components/';
 
 class Register extends Component {
   constructor(props) {
@@ -16,36 +13,36 @@ class Register extends Component {
 
   render() {
     const { errorMessage, 
-	    modalLoaderActive,
-	    performRegistration,
-	    user } = this.props;
+	    modalLoaderActive
+    } = this.props;
 
-    if (user) {
-      return (
-        <Redirect to="/events" />
-      );
-    }
-
+    // TODO: Remove
+    /*
+       const formBlock = (
+       <FileForm
+       type="register"
+       submitRoute='register'
+       buttonAction={performRegistration}
+       />
+       );
+     */
+    const errorBlock = errorMessage && (
+      <Message
+        error
+        header='Oops an error occurred!'
+        content={errorMessage}
+      />
+    );
     return (
       <Container>
         <Dimmer active={modalLoaderActive}>
           <Loader>Loading</Loader>
         </Dimmer>
-        {errorMessage &&
-         <Message
-           error
-           header='Oops an error occurred!'
-           content={errorMessage}
-         />
-        }
+        {errorBlock}
         <Card fluid color='purple'>
           <Card.Content header='Register' />
           <Card.Content>
-            <FileForm
-	      type="register"
-	      submitRoute='register'
-	      buttonAction={performRegistration}
-	    />
+	    <RegisterForm />
           </Card.Content>
         </Card>
       </Container>
@@ -61,13 +58,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    performRegistration: performRegistration
-  }, dispatch);
-}
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Register);

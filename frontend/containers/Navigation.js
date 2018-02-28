@@ -23,49 +23,38 @@ class Navigation extends Component {
   render() {
     const navFactory = route => () => this.navigate(route)
 
-    const { applicationName, user, logoutUser } = this.props
+    const { applicationName, user } = this.props
 
-    const isAdmin = user ? user.role.toLowerCase() === 'admin' : false
-    const adminLinks = [
+    const userLinks = [
       ['Dashboard', '/dashboard'],
-      ['Users', '/users'],
+      ['Browse Events', '/events'],
+      ['Logout', '/logout']
     ]
-    const adminBlock = (
-      <Dropdown item text='Admin' style={styles.button}>
-      <Dropdown.Menu>
-      {adminLinks.map(pair => (
-	<Dropdown.Item
-          style={styles.button}
-          onClick={navFactory(`/admin${pair[1]}`)}
-	  key={`${pair[1]}NavLink`}
-        >
-          {pair[0]}
-	</Dropdown.Item>
-      ))}
-      </Dropdown.Menu>
-      </Dropdown>
-    )
+    
     const userBlock = (
       <Menu.Menu position='right'>
-        <Menu.Item
-          style={styles.button}
-          onClick={navFactory('/events')}
-        >
-          Events
-        </Menu.Item>
-        <Menu.Item
-          style={styles.button}
-          onClick={navFactory('/profile')}
-        >
-          My Profile
-        </Menu.Item>
-        {isAdmin && adminBlock}
-        <Menu.Item onClick={logoutUser}> Log out </Menu.Item>
+	<Dropdown item icon='home' style={styles.button}>
+	  <Dropdown.Menu>
+	    {userLinks.map(pair => (
+	      <Dropdown.Item
+		style={styles.button}
+		onClick={navFactory(`${pair[1]}`)}
+		key={`${pair[1]}NavLink`}
+		>
+		{pair[0]}
+	      </Dropdown.Item>
+	    ))}
+	  </Dropdown.Menu>
+	</Dropdown>
       </Menu.Menu>
     )
     
-    return (
-      <Menu style={styles.base} inverted stackable size='massive'>
+    return (      
+      <Menu
+	style={styles.base}
+	inverted
+	size='huge'
+      >
         <Menu.Item header onClick={navFactory('/')}>
           {applicationName}
         </Menu.Item>
@@ -92,11 +81,9 @@ const styles = {
     background: COLORS.BUTTON,
     ':hover': {
       background: COLORS.HOVER,
-      boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
     },
     ':active': {
       background: COLORS.HOVER,
-      boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
     }
   }
 }

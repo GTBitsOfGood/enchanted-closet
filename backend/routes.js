@@ -8,9 +8,9 @@ const auth = require('./auth')
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
 
-
 router.get('/users', auth.checkAdmin, controllers.users.index);
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
+router.get('/users/admin/:id', auth.makeAdmin, controllers.users.get);
 //more complex permissions checking (need admin to create admin) done in function
 router.post('/users', controllers.users.create);
 router.delete('/users/:id', auth.idMatchesOrAdmin, controllers.users.delete);
@@ -18,7 +18,11 @@ router.put('/users/:id', auth.idMatches, controllers.users.update);
 
 router.get('/dashboard', auth.checkAdmin, controllers.admin.cards);
 
-router.get('/events', controllers.events.index);
+router.get('/events/:eventID/register/:userID', controllers.users.registerevent);
+router.get('/events/:eventID/cancel/:userID', controllers.users.cancelevent);
+
+router.get('/events', controllers.events.fetchFutureEvents);
+router.get('/eventsPast', controllers.events.fetchPastEvents);
 
 router.get('/events/:id', controllers.events.get);
 router.post('/events/', auth.checkAdmin, controllers.events.create);
@@ -36,7 +40,6 @@ router.use((req, res, next) => {
     });
     return res.status(200).json(response);
   } else if (res.locals.error) {
-    console.log(res.locals.error);
     let statusCode = res.locals.error.code || 500;
     let response = Object.assign({}, res.locals.error, {
       'status': 'error'

@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {fetchUsers} from '../../actions/';
 
 import {Segment, Container, Button, Icon, Modal} from 'semantic-ui-react';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, LoadingIcon, PageTitle, PastEventsCard } from '../../components'
 

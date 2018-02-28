@@ -28,8 +28,17 @@ var EventSchema = new mongoose.Schema({
   },
   participants: {
     type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  },
+  volunteers: {
+    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  },
+  images: {
+    type: [String]
+  },
+  imagedescriptions: {
+    type: [String]
   }
-});
+}, { usePushEach: true });
 
 var Event = mongoose.model('Event', EventSchema);
 

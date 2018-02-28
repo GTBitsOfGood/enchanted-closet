@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { uniqueId } from 'lodash';
 import moment from 'moment';
-
+import { withRouter } from 'react-router-dom'
 import { deleteEvent } from '../../actions';
 
 import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
@@ -121,7 +121,7 @@ const mapDispatchToProps = dispatch => {
   }, dispatch);
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Event);
+)(Event));

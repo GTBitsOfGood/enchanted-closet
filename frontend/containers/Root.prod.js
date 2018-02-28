@@ -14,7 +14,6 @@ import Navigation from './Navigation';
 import DevTools from './DevTools';
 import Helmet from 'react-helmet';
 
-import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
 import AdminUsers from './Admin/Users';
 import AdminUsersNew from './Admin/UsersNew';

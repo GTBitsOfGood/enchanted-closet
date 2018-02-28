@@ -3,14 +3,19 @@ const mongoose = require('mongoose');
 // const Event = mongoose.model('event');
 
 var UserSchema = new mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    index: true
+  },
+  lastName: {
     type: String,
     index: true
   },
   email: {
     type: String,
     index: true,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -36,8 +41,10 @@ var UserSchema = new mongoose.Schema({
   emergencyContactName: String,
   emergencyContactPhone: String,
   emergencyContactRelation: String,
+  image: String,
+  events: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
   pastEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}]
-});
+}, { usePushEach: true });
 
 UserSchema.methods.toJSON = function() {
   let usr = this.toObject();
