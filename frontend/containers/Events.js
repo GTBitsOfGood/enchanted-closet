@@ -58,10 +58,7 @@ class Events extends Component {
   }
 
   render() {
-    var isAdmin = true;
-    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') {
-      isAdmin = false;
-    }
+    const isAdmin = this.props.user && this.props.user.role === 'Admin';
     const { isFetchingEvents, lastUpdatedEvents, history } = this.props;
     const { events } = this.props;
     const processedEvents = events.map(e => {
