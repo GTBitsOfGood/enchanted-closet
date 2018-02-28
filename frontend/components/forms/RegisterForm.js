@@ -90,50 +90,56 @@ class RegisterForm extends Component {
     'firstName': e => {
       if (this.regFinalTest('firstName', e.target.value)) {
 	this.props.setValid();
-	this.state.status['firstName'] = 0;
+	this.updateStatus('firstName', 0);
       } else {
 	this.props.setError("Field is required.");
-	this.state.status['firstName'] = 1;
+	this.updateStatus('firstName', 1);
       }
     },
     'lastName': e => {
       if (this.regFinalTest('lastName', e.target.value)) {
 	this.props.setValid();
-	this.state.status['lastName'] = 0;
+	this.updateStatus('lastName', 0);
       } else {
 	this.props.setError("Field is required.");
-	this.state.status['lastName'] = 1;
+	this.updateStatus('lastName', 1);
       }
     },
     'password': e => {
       if (this.regFinalTest('password', e.target.value)) {
 	this.props.setValid();
-	this.state.status['password'] = 0;
+	this.updateStatus('password', 0);
       } else {
 	this.props.setError("Minimum length of 7 characters, one number required.");
-	this.state.status['password'] = 1;
+	this.updateStatus('password', 1);
       }
     },
     'confirmPass': e => {
       if (this.state.password === e.target.value) {
 	this.props.setValid();
-	this.state.status['confirmPass'] = 0;
+	this.updateStatus('confirmPass', 0);
       } else {
 	this.props.setError("Passwords do not match.");
-	this.state.status['confirmPass'] = 1;
+	this.updateStatus('confirmPass', 1);
       }
     },
     'email': e => {
       if (this.regFinalTest('email', e.target.value)) {
 	this.props.setValid();
-	this.state.status['email'] = 0;
+	this.updateStatus('email', 0);
       } else {
 	this.props.setError();
-	this.state.status['email'] = 1;
+	this.updateStatus('email', 1);
       }
     }
   }
 
+  updateStatus = (field, val) => {
+    this.setState({
+      status: { ...this.state.status, [field]: val }
+    });
+  }
+  
   blurFunctionFactory = field => (e) => {
     this.blurFunctions[field](e);
     if (this.verifyAll()) {
@@ -164,74 +170,69 @@ class RegisterForm extends Component {
     const { setError, setValid, setComplete, setMessage } = this.props;
     return (
       <div>
-      <Form>
-      <Form.Field>
-      <label>First Name</label>
-      <Input
-      error={this.errorFactory("firstName")}
-      name="firstName"
-      value={firstName}
-      onChange={this.changeFunctionFactory("firstName", "Alphabetic characters only.", capitalize)}
-      placeholder="George"
-      onBlur={this.blurFunctionFactory('firstName')}
-      />
-      </Form.Field>
-      <Form.Field>
-      <label>Last Name</label>
-      <Input
-      error={this.errorFactory("lastName")}
-      name="lastName"
-      value={lastName}
-      onChange={this.changeFunctionFactory("lastName", "Alphabetic characters only.", capitalize)}
-      placeholder="Burdell"
-      onBlur={this.blurFunctionFactory('lastName')}
-      />
-      </Form.Field>
-      <Form.Field>
-      <label>Email</label>
-      <Input
-      error={this.errorFactory("email")}
-      name="email"
-      type="email"
-      value={email}
-      onChange={this.changeFunctionFactory("email", "Email characters only.")}
-      placeholder='gburdell@gatech.edu'
-      onBlur={this.blurFunctionFactory('email')}
-      />
-      </Form.Field>
-      <Form.Field>
-      <label>Password</label>
-      <Input
-      error={this.errorFactory("password")}
-      name="password"
-      type="password"
-      onChange={this.changeFunctionFactory("password", "That character is illegal.")}
-      value={password}
-      onBlur={this.blurFunctionFactory('password')}
-      />
-      </Form.Field>
-      <Form.Field>
-      <label>Confirm Password</label>
-      <Input
-      error={this.errorFactory("confirmPass")}
-      name="confirmPass"
-      type="password"
-      onChange={this.changeFunctionFactory("confirmPass", "That character is illegal.")}
-      value={confirmPass}
-      onBlur={this.blurFunctionFactory('confirmPass')}
-      />
-	  </Form.Field>
+	<Form>
+	  <Form.Input
+	    label="First Name"
+	    required
+	    error={this.errorFactory("firstName")}
+	    name="firstName"
+	    value={firstName}
+	    onChange={this.changeFunctionFactory("firstName", "Alphabetic characters only.", capitalize)}
+	    placeholder="George"
+	    onBlur={this.blurFunctionFactory('firstName')}
+	  />
+	  <Form.Input
+	    label="Last Name"
+	    required
+	    error={this.errorFactory("lastName")}
+	    name="lastName"
+	    value={lastName}
+	    onChange={this.changeFunctionFactory("lastName", "Alphabetic characters only.", capitalize)}
+	    placeholder="Burdell"
+	    onBlur={this.blurFunctionFactory('lastName')}
+	  />
+	  <Form.Input
+	    label="Email"
+	    required
+	    error={this.errorFactory("email")}
+	    name="email"
+	    type="email"
+	    value={email}
+	    onChange={this.changeFunctionFactory("email", "Email characters only.")}
+	    placeholder='gburdell@gatech.edu'
+	    onBlur={this.blurFunctionFactory('email')}
+	  />
+	  <Form.Input
+	    label="Password"
+	    required
+	    error={this.errorFactory("password")}
+	    name="password"
+	    type="password"
+	    onChange={this.changeFunctionFactory("password", "That character is illegal.")}
+	    value={password}
+	    onBlur={this.blurFunctionFactory('password')}
+	  />
+	  <Form.Input
+	    label="Confirm Password"
+	    required
+	    error={this.errorFactory("confirmPass")}
+	    name="confirmPass"
+	    type="password"
+	    onChange={this.changeFunctionFactory("confirmPass", "That character is illegal.")}
+	    value={confirmPass}
+	    onBlur={this.blurFunctionFactory('confirmPass')}
+	  />
 	  <Form.Group inline>
 	    <label>I am a: </label>
 	    <Form.Radio label='Participant'
-	    value='participant'
-	    checked={role === 'participant'}
-	    onChange={this.changeFunctions['role']('participant')}
+			value='participant'
+			checked={role === 'participant'}
+			onChange={this.changeFunctions['role']('participant')}
 	    />
 	    <Form.Radio label='Volunteer'
-	    value='volunteer'
-	    checked={role === 'volunteer'}
-	    onChange={this.changeFunctions['role']('volunteer')}
+			value='volunteer'
+			checked={role === 'volunteer'}
+			onChange={this.changeFunctions['role']('volunteer')}
 	    />
           </Form.Group>
 	  <Button
@@ -240,7 +241,7 @@ class RegisterForm extends Component {
 	    content='Register'
 	    type='submit'
 	  />
-      </Form>
+	</Form>
       </div>
     );
   }

@@ -36,7 +36,7 @@ class LoginForm extends Component {
 	return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
 	break
       default:
-	return this.regLegalTest(field, val)
+	return this.regLegalTest(field, val) && val.length !== 0
 	break
     }
   }
@@ -49,29 +49,36 @@ class LoginForm extends Component {
 	this.setState({
 	  [field]: filter ? filter(e.target.value) : e.target.value
 	});
+	this.updateStatus(field, 0);
       } else {
 	this.props.setError(warningMessage);
       }
     }
   }
 
+  updateStatus = (field, val) => {
+    this.setState({
+      status: { ...this.state.status, [field]: val }
+    });
+  }
+
   blurFunctions = {
     'password': e => {
       if (this.regFinalTest('password', e.target.value)) {
 	this.props.setValid();
-	this.state.status['password'] = 0;
+	this.updateStatus('password', 0);
       } else {
 	this.props.setError("Illegal password value");
-	this.state.status['password'] = 1;
+	this.updateStatus('password', 1);
       }
     },
     'email': e => {
       if (this.regFinalTest('email', e.target.value)) {
 	this.props.setValid();
-	this.state.status['email'] = 0;
+	this.updateStatus('email', 0);
       } else {
 	this.props.setError();
-	this.state.status['email'] = 1;
+	this.updateStatus('email', 1);
       }
     }
   }
@@ -106,31 +113,28 @@ class LoginForm extends Component {
     return (
       <div>
 	<Form>
-	  <Form.Field>
-	    <label>Email</label>
-	    <Input
-	      error={this.errorFactory("email")}
-	      name="email"
-	      type="email"
-	      value={email}
-	      onChange={this.changeFunctionFactory("email", "Email characters only.")}
-	      required
-	      placeholder='gburdell@gatech.edu'
-	      onBlur={this.blurFunctionFactory('email')}
-	    />
-	  </Form.Field>
-	  <Form.Field>
-	    <label>Password</label>
-	    <Input
-	      error={this.errorFactory("password")}
-	      name="password"
-	      type="password"
-	      onChange={this.changeFunctionFactory("password", "That character is illegal.")}
-	      value={password}
-	      required
-	      onBlur={this.blurFunctionFactory('password')}
-	    />
-	  </Form.Field>
+	  <Form.Input
+	    label="Email"
+	    required
+	    error={this.errorFactory("email")}
+	    name="email"
+	    type="email"
+	    value={email}
+	    onChange={this.changeFunctionFactory("email", "Email characters only.")}
+	    placeholder='gburdell@gatech.edu'
+	    onBlur={this.blurFunctionFactory('email')}
+	  />
+	  <Form.Input
+	    label="Password"
+	    required
+	    error={this.errorFactory("password")}
+	    name="password"
+	    type="password"
+	    onChange={this.changeFunctionFactory("password", "That character is illegal.")}
+	    value={password}
+	    required
+	    onBlur={this.blurFunctionFactory('password')}
+	  />
 	  <Button
 	    color="violet"
 	    onClick={this.onSubmit}
