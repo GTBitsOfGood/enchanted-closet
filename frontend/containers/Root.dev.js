@@ -70,7 +70,6 @@ export default function Root({ store }) {
 	      />
 	      <Route exact path="/events" component={Events} /> 
 	      <Route path="/events/:id" component={EventsDetail} />
-
 	      <SmartRoute
 		accepts={['Admin']}
 		exact path="/admin/events"
@@ -111,7 +110,6 @@ export default function Root({ store }) {
 		path="/admin/users/:id"
 		component={Admin.UsersDetail}
 	      />
-	      
 	      <Route path="/error" component={MissingPage} />
 	      <Route component={MissingPage} />
 	    </Switch>
