@@ -7,8 +7,8 @@ import Radium from 'radium';
 
 import { fetchEventsIfNeeded, invalidateEvents, fetchFutureEvents, fetchPastEvents } from '../actions/index';
 
-import { Button, Container, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
-import { EventFilter, EventTab } from '../components/';
+import { Button, Container, Card, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
+import { EventFilter, EventTab, LoadingIcon, PageTitle } from '../components/';
 
 class Events extends Component {
   constructor(props) {
@@ -58,10 +58,11 @@ class Events extends Component {
   }
 
   render() {
+    const isAdmin = this.props.user && this.props.user.role === 'Admin';
     const { isFetchingEvents, lastUpdatedEvents, history } = this.props;
     const { events } = this.props;
     const processedEvents = events.map(e => {
-      e.showAdminControls = false;
+      e.showAdminControls = isAdmin;
       return e;
     });
     
@@ -176,13 +177,15 @@ function mapStateToProps(state) {
   const {
     events,
     isFetchingEvents,
-    lastUpdatedEvents
+    lastUpdatedEvents,
+    user
   } = state;
 
   return {
     events,
     isFetchingEvents,
-    lastUpdatedEvents
+    lastUpdatedEvents,
+    user
   }
 }
 

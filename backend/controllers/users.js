@@ -302,7 +302,7 @@ module.exports.registerevent = (req, res, next) => {
         };
         return next();
       }
-
+      // update event.users
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
       if (uDoc.role == "Participant") {
@@ -311,7 +311,7 @@ module.exports.registerevent = (req, res, next) => {
           } else {
               res.locals.error = {
                 status: 400,
-                msg: 'That user has already registered for this event'
+                msg: 'This participant has already registered for this event'
               };
               return next();
           }
@@ -321,12 +321,12 @@ module.exports.registerevent = (req, res, next) => {
           } else {
             res.locals.error = {
               status: 400,
-              msg: 'That user has already registered for this event'
+              msg: 'This volunteer has already registered for this event'
             };
             return next();
           }
       } 
-
+      // update users.events
       if (!uDoc.events) uDoc.events = [];
       if (uDoc.role == "Volunteer") {
         if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
@@ -399,9 +399,9 @@ module.exports.cancelevent = (req, res, next) => {
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
       if (eDoc.participants.map(String).includes(req.params.userID)) {
-          var temp = eDoc.participants.map(String);
-          temp.splice(temp.indexOf(req.params.userID), 1);
-          eDoc.participants = temp;
+        var temp = eDoc.participants.map(String);
+        temp.splice(temp.indexOf(req.params.userID), 1);
+        eDoc.participants = temp;
       } else if (eDoc.volunteers.map(String).includes(req.params.userID)) {
         var temp = eDoc.volunteers.map(String);
         temp.splice(temp.indexOf(req.params.userID), 1);
@@ -413,7 +413,7 @@ module.exports.cancelevent = (req, res, next) => {
         };
         return next();
       }
-
+      // TODO: Some kind of warning if things don't add up
       if (!uDoc.events) uDoc.events = [];
       if (uDoc.role == "Volunteer" && uDoc.pendingEvents.map(String).includes(req.params.eventID)) {
         if (!uDoc.pendingEvents) uDoc.events = [];

@@ -65,3 +65,5 @@ public/*
 
 # macOS Index File
 .DS_Store
+
+dump.rdb
