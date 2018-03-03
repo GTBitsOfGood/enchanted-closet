@@ -109,8 +109,8 @@ module.exports.present = (req, res, next) => {
         return next();
       }
 
-      if (!uDoc.pastEvents) uDoc.pastEvents = [];
-      uDoc.pastEvents.push(req.params.eventID);
+      if (!uDoc.events) uDoc.events = [];
+      uDoc.events.push(req.params.eventID);
 
       uDoc.save((err) => {
         if (err) {
@@ -181,10 +181,10 @@ module.exports.absent = (req, res, next) => {
         }
       }
 
-      if (uDoc.pastEvents) {
-        let ind = uDoc.pastEvents.indexOf(req.params.eventID);
+      if (uDoc.events) {
+        let ind = uDoc.events.indexOf(req.params.eventID);
         if (ind != -1) {
-          uDoc.pastEvents.splice(ind, 1);
+          uDoc.events.splice(ind, 1);
 
         }
       }

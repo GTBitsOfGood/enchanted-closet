@@ -176,6 +176,15 @@ function processAuthenticationAttempt(json) {
   }
 }
 
+export function refreshUser(user) {
+  return (dispatch, getState) => {
+    dispatch(requestUsers());
+    return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
+      .then(response => response.json())
+      .then(() => dispatch(stopLoading()));
+  }
+}
+
 function processEventUpsert(json, isUpdate) {
   if (json.status === 'ok') {
     return {

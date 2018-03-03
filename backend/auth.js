@@ -187,6 +187,24 @@ module.exports.makeAdmin = (req, res, next) => {
       res.locals.error = err;
       return next(new Error(res.locals.error));
     }
+    User
+    .findById(req.params.id)
+    .populate('events')
+    .exec((err, user) => {
+      if (user) {
+        res.locals.data = {
+          user: user
+        };
+        localStorage.setItem("user", user);
+        return next();
+      } else {
+        res.locals.error = {
+          status: 404,
+          msg: 'That user no longer exists'
+        };
+        return next();
+      }
+    });
     return next();
   });
 }

@@ -10,7 +10,7 @@ const hash = require("../hash");
 module.exports.index = (req, res, next) => {
   User
     .find({})
-    .populate('pastEvents')
+    .populate('events')
     .exec((err, users) => {
       if (users) {
         res.locals.data = {
@@ -72,7 +72,7 @@ let validateAdmin = (data, callback) => {
 module.exports.get = (req, res, next) => {
   User
     .findById(req.params.id)
-    .populate('pastEvents')
+    .populate('events')
     .exec((err, user) => {
       if (user) {
         res.locals.data = {
@@ -328,7 +328,12 @@ module.exports.registerevent = (req, res, next) => {
       } 
 
       if (!uDoc.events) uDoc.events = [];
-      uDoc.events.push(req.params.eventID);
+      if (uDoc.role == "Volunteer") {
+        if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
+        uDoc.pendingEvents.push(req.params.eventID);
+      } else {
+        uDoc.events.push(req.params.eventID);
+      }
 
       uDoc.save(err => {
         if (err) {
@@ -410,9 +415,16 @@ module.exports.cancelevent = (req, res, next) => {
       }
 
       if (!uDoc.events) uDoc.events = [];
-      var temp = uDoc.events.map(String);
-      temp.splice(temp.indexOf(req.params.eventID), 1);
-      uDoc.events = temp;
+      if (uDoc.role == "Volunteer" && uDoc.pendingEvents.map(String).includes(req.params.eventID)) {
+        if (!uDoc.pendingEvents) uDoc.events = [];
+        var temp = uDoc.pendingEvents.map(String);
+        temp.splice(temp.indexOf(req.params.eventID), 1);
+        uDoc.pendingEvents = temp;
+      } else {
+        var temp = uDoc.events.map(String);
+        temp.splice(temp.indexOf(req.params.eventID), 1);
+        uDoc.events = temp;
+      }
 
       uDoc.save((err) => {
         if (err) {

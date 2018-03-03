@@ -43,7 +43,7 @@ var UserSchema = new mongoose.Schema({
   emergencyContactRelation: String,
   image: String,
   events: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
-  pastEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}]
+  pendingEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}]
 }, { usePushEach: true });
 
 UserSchema.methods.toJSON = function() {
