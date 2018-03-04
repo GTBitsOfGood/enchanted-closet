@@ -109,7 +109,22 @@ module.exports.present = (req, res, next) => {
         return next();
       }
 
-      if (!uDoc.events) uDoc.events = [];
+      eDoc.save(err => {
+	if (err) {
+          console.log(err);
+          res.locals.error = {
+            code: 500,
+            msg: err
+          };
+        }
+
+        res.locals.data = {
+          present: true
+        }
+        return next();
+      });
+      /* Attendance doesn't affect users 
+      If (!uDoc.events) uDoc.events = [];
       uDoc.events.push(req.params.eventID);
 
       uDoc.save((err) => {
@@ -121,21 +136,8 @@ module.exports.present = (req, res, next) => {
           };
           return next();
         }
-        eDoc.save(err => {
-          if (err) {
-            console.log(err);
-            res.locals.error = {
-              code: 500,
-              msg: err
-            };
-          }
-
-          res.locals.data = {
-            present: true
-          }
-          return next();
-        });
       });
+      */
     });
   });
 }
@@ -181,6 +183,7 @@ module.exports.absent = (req, res, next) => {
         }
       }
 
+      /* Same as above, though this would be odd...
       if (uDoc.events) {
         let ind = uDoc.events.indexOf(req.params.eventID);
         if (ind != -1) {
@@ -188,6 +191,7 @@ module.exports.absent = (req, res, next) => {
 
         }
       }
+      */
       eDoc.save(err => {
         if (err) {
           console.log(err);
@@ -196,6 +200,8 @@ module.exports.absent = (req, res, next) => {
             msg: err
           };
         }
+	return next();
+	/*
         uDoc.save(err => {
           if (err) {
             console.log(err);
@@ -210,6 +216,7 @@ module.exports.absent = (req, res, next) => {
           }
           return next();
         });
+	*/
       });
     });
   });
