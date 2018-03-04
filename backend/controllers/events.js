@@ -30,9 +30,8 @@ module.exports.fetchFutureEvents = (req, res, next) => {
     .populate('participants')
     .exec((err, events) => {
       if (events) {
-        // futureevents = events.find({"datetime": {$gt:currDate}});
         res.locals.data = {
-          events: events
+          events
         };
         return next();
       } else {
@@ -51,9 +50,8 @@ module.exports.fetchPastEvents = (req, res, next) => {
     .populate('participants')
     .exec((err, events) => {
       if (events) {
-        // pastevents = events.find({"datetime":{$lte: currDate}});
         res.locals.data = {
-          events: events
+          events
         };
         return next();
       } else {
