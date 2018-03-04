@@ -13,7 +13,7 @@ const store = configureStore({user: loadAuthState()});
 
 store.subscribe(() => {
     saveAuthState(store.getState());
-})
+});
 
 render(
     <Root store={store} history={history} />,

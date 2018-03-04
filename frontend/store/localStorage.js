@@ -1,6 +1,7 @@
 export const loadAuthState = () => {
 	try {
 		const serializedAuth = localStorage.getItem('user');
+		// console.log(serializedAuth);
 		if (serializedAuth === null) {
 			return undefined;
 		}
