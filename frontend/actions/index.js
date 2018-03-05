@@ -1,7 +1,7 @@
 // Action Creators
 export * from './userEvent';
 export * from './auth';
-import { loading, stopLoading } from './loading';
+import { loading, stopLoading, requestUsers, receiveUsers } from './loading';
 import { fetchHelper, getAPIToken } from './helpers';
 import FormData from 'form-data';
 
@@ -202,19 +202,6 @@ export function fetchEventById(id){
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => dispatch(receiveEvents(json)))
-  }
-}
-
-function requestUsers() {
-  return {
-    type: types.REQUEST_USERS
-  }
-}
-
-function receieveUsers(json) {
-  return {
-    type: types.RECEIVE_USERS,
-    users: json.users
   }
 }
 

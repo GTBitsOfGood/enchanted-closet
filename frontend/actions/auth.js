@@ -1,4 +1,4 @@
-import { loading, stopLoading } from './loading';
+import { loading, stopLoading, requestUsers, receiveUsers } from './loading';
 import { fetchHelper, getAPIToken } from './helpers';
 
 import * as types from './types';
