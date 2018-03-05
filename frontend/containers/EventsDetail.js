@@ -8,7 +8,8 @@ import moment from 'moment';
 
 import { geocode } from '../helpers/geocodeEngine';
 
-import { fetchEvents, fetchEventsIfNeeded, invalidateEvents, deleteEvent } from '../actions/index';
+import { // fetchEvents,
+	 fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 
 import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
 import { Clearfix, Map, EditButton, ErrorComponent, Event, PageTitle, Speakers } from '../components/';
@@ -32,11 +33,12 @@ class EventsDetail extends Component {
   }
 
   componentDidMount() {
-    const { fetchEventsIfNeeded, fetchEvents, events, location } = this.props;
+    const { fetchEventsIfNeeded, // fetchEvents,
+	    events, location } = this.props;
     fetchEventsIfNeeded();
     const detail = events.filter(event => event._id === this.state.eventId);
     if (detail.length === 0) { //in case local store is old
-      fetchEvents();
+      // fetchEvents(); // TODO: Restore
     } else {
       this.setState( {detail: detail[0]} );
       geocode(detail[0].location)
@@ -77,10 +79,18 @@ class EventsDetail extends Component {
   }
 
   render() {
-    const { events, deleteEvent, isFetchingEvents, location, history } = this.props;
+    const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
     const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
     return (
       <Container>
+	<Container>
+	  <Button onClick={() => registerEvent(detail._id, user._id)}>
+	    Register
+	  </Button>
+	  <Button onClick={() => cancelEvent(detail._id, user._id)}>
+	    Cancel Register
+	  </Button>
+	</Container>
 	<Dimmer active={isFetchingEvents}>
 	  <Loader>Loading</Loader>
 	</Dimmer>
@@ -157,13 +167,15 @@ const mapStateToProps = state => {
   const {
     isFetchingEvents,
     lastUpdatedEvents,
-    events
+    events,
+    user
   } = state;
 
   return {
     events,
     isFetchingEvents,
-    lastUpdatedEvents
+    lastUpdatedEvents,
+    user
   }
 }
 
@@ -171,7 +183,9 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     deleteEvent: deleteEvent,
     fetchEventsIfNeeded: fetchEventsIfNeeded,
-    fetchEvents: fetchEvents
+//    fetchEvents: fetchEvents,
+    registerEvent: registerEvent,
+    cancelEvent: cancelEvent
   }, dispatch);
 }
 

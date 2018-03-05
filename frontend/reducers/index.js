@@ -105,7 +105,13 @@ function rootReducer(state = require('../static/defaultState'), action) {
       return Object.assign({}, state, {
         modalLoaderActive: false
       });
-
+      
+    case types.USER_UPDATE:
+      return Object.assign({}, state, {
+	user: action.user,
+	errorMessage: null
+      });
+      
     case types.USER_AUTHENTICATED:
       return Object.assign({}, state, {
         user: action.user,
