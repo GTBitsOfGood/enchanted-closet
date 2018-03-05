@@ -448,3 +448,36 @@ export function markUnattending(event, user) {
 function getAPIToken(getState) {
   return getState().user ? getState().user.token : null;
 }
+
+
+/* Temp */
+export function registerEvent(eventID, userID) {
+  return (dispatch, getState) => {
+    return fetchHelper(`/api/events/${eventID}/register/${userID}`, getAPIToken(getState))
+      .then(response => response.json())
+      .then(json => {
+	if (json.status !== "error") // fail silently for now
+	  return dispatch(updateUser(json.user))
+      })
+      .then(() => dispatch(stopLoading()));
+  }
+}
+
+export function cancelEvent(eventID, userID) {
+  return (dispatch, getState) => {
+    return fetchHelper(`/api/events/${eventID}/cancel/${userID}`, getAPIToken(getState))
+      .then(response => response.json())
+      .then(json => {
+	if (json.status !== "error")
+	  dispatch(updateUser(json.user))
+      })
+      .then(() => dispatch(stopLoading()));
+  }
+}
+
+function updateUser(user) {
+  return {
+    type: types.USER_UPDATE,
+    user
+  }
+}
