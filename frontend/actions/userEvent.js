@@ -1,6 +1,6 @@
 // For user event interactions e.g. register
 import { loading, stopLoading } from './loading';
-import { fetchHelper, getAPIToken } from './helpers';
+import { fetchHelper, getAPIToken } from './util';
 import * as types from './types';
 
 /* Registration */

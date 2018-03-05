@@ -6,7 +6,7 @@ import Radium from 'radium';
 
 import { Container, Card, Grid, Button, Loader } from 'semantic-ui-react';
 
-import { COLORS } from '../constants'
+import { COLORS } from '../../constants'
 
 class PageTitle extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class PageTitle extends Component {
                 <Grid.Column>
                   <h2>{title}</h2>
 		  {showLoadingIcon &&
-		   <Loader active={loading} inline size='small' style={{marginLeft: '20px', marginTop: '-5px'}}/>
+		   <Loader active={loading} inline size='small' style={styles.loader}/>
 		  }
                 </Grid.Column>
                 {link && linkTitle &&
@@ -54,6 +54,10 @@ const styles = {
     ':active': {
       backgroundColor: COLORS.HOVER
     }
+  },
+  loader: {
+    marginLeft: '20px',
+    marginTop: '-5px'
   }
 }
 

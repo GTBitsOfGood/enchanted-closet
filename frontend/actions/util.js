@@ -18,3 +18,8 @@ export function fetchHelper( route, apiToken, obj ) {
 export function getAPIToken( getState ) {
   return getState().user ? getState().user.token : null;
 }
+
+export const DEFAULT_HEADERS = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
+};

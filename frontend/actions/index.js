@@ -1,9 +1,8 @@
 // Action Creators
 export * from './userEvent';
 export * from './auth';
-import { loading, stopLoading, requestUsers, receiveUsers } from './loading';
-import { fetchHelper, getAPIToken } from './helpers';
-import FormData from 'form-data';
+import { hideModalLoader, showModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './loading';
+import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
 
 import * as types from './types';
 
@@ -35,23 +34,6 @@ const DEFAULT_CARDS = [
   }
 ];
 
-const DEFAULT_HEADERS = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json'
-};
-
-export function toggleTitleState() {
-  return {
-    type: types.TOGGLE_TITLE_STATE
-  };
-}
-
-export function showModalLoader() {
-  return {
-    type: types.SHOW_MODAL_LOADER
-  };
-}
-
 export function clearErrors() {
   return {
     type: types.CLEAR_ERRORS
@@ -76,12 +58,6 @@ function deleteLocalData(type, id) {
     type: types.DELETE_DATA_LOCALLY,
     data_type: type,
     id: id
-  }
-}
-
-export function hideModalLoader() {
-  return {
-    type: types.HIDE_MODAL_LOADER
   }
 }
 

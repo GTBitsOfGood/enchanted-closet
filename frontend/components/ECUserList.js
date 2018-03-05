@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
 
-import LoadingIcon from './LoadingIcon';
+import { LoadingIcon } from './';
 
 import {Segment, List, Checkbox} from 'semantic-ui-react';
 

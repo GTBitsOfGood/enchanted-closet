@@ -24,3 +24,15 @@ export function receieveUsers(json) {
     users: json.users
   }
 }
+
+export function hideModalLoader() {
+  return {
+    type: types.HIDE_MODAL_LOADER
+  }
+}
+
+export function showModalLoader() {
+  return {
+    type: types.SHOW_MODAL_LOADER
+  };
+}
