@@ -40,6 +40,8 @@ router.use((req, res, next) => {
     let response = Object.assign({}, res.locals.data, {
       'status': 'ok'
     });
+    console.log(response.user);
+    console.log('second point');
     return res.status(200).json(response);
   } else if (res.locals.error) {
     console.error(res.locals.error);

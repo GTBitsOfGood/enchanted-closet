@@ -72,12 +72,14 @@ let validateAdmin = (data, callback) => {
 module.exports.get = (req, res, next) => {
   User
     .findById(req.params.id)
-    .populate('events')
+    .populate('events', 'name _id')
     .exec((err, user) => {
       if (user) {
         res.locals.data = {
           user: user
         };
+	console.log(user);
+	console.log('first point')
         return next();
       } else {
         res.locals.error = {
