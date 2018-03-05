@@ -17,46 +17,50 @@ class ProfileParticipant extends Component {
     this.state = {
       loading: false,
       userData: other, // Dictionary of field (for softFields) names: values
-      changed: {}
+      userLastData: other, // Cache
+      hasChanged: false // to save on calculations
     }
   }
 
   setChangedFactory = field => value => {
     const newChanged = { ...this.state.changed, [field]: value }
-    this.setState({ changed: newChanged })
+    this.setState({ changed: newChanged });
   }
 
   onChangeFactory = field => {
     const changeFunc = this.setChangedFactory(field)
     return event => {
-      const newVal = event.target.innerHTML
+      const newVal = event.target.value
       this.setState({ userData: { ...this.state.userData, [field]: newVal } })
       changeFunc(newVal)
     }
   }
 
   onSave = () => {
-    this.setState({loading: true});
+    // diff the two things
+    this.setState({ loading: true, hasChanged: false });
+    Object.keys(this.state.userData) 
     const { upsertUser } = this.props;
     upsertUser({ ...this.state.changed, _id: this.props.user._id });  
   }
   
   componentWillReceiveProps( { user } ) {
+    const { lastName, firstName, role, email, ...other } = user
     this.setState(
-      { loading: false, changed: {} }
+      { loading: false }
     )
     if (!user) {
-      this.setState({ userData: {} })
+      this.setState({ userLastData: {}, userData: {} })
       console.error("ProfileParticipant null user error")
     } else {
-      this.setState({ userData: user })
+      this.setState({ userLastData: other, userData: other })
     }
   }
   // each component that corresponds to a profile piece should take the following: - setChanged() callback, value prop, and onChange() prop
   // each component should correspond to a field
   render() {
     const { lastName, firstName, role, email } = this.props.user
-    const { userData, changed } = this.state
+    const { userData, userLastData } = this.state
     const name = firstName + " " + lastName
     const hardBlock = (
       <div>
@@ -69,12 +73,14 @@ class ProfileParticipant extends Component {
     const softBlock = softFields.map(field => (
       <MutableEntry
 	key={`soft${field}`}
-	locked={false}
 	label={field}
 	value={this.state.userData[field]}
+	initialValue={this.state.userLastData[field]}
 	onChange={this.onChangeFactory(field)}
-      />))
-    
+      />
+    ));
+
+    const allSame = Object.keys();
     return (
       <Container style={styles.wrap}>
 	<div style={styles.header}>

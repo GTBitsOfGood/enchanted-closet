@@ -1,21 +1,25 @@
-import React from 'react'
-import { Card, Button } from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Input, Label } from 'semantic-ui-react'
 import { startCase } from 'lodash'
 
-const MutableEntry = ( { label, locked, value, onChange } ) => {
+const MutableEntry = ( props ) => {
+  const { label, value, changed, initialValue, onChange, ...other } = props;
+  const hasNewInfo = value !== initialValue; // Do something more pleasing with this
   const content = (
-    <span contentEditable={!locked}
-	  onInput={onChange}
-	  suppressContentEditableWarning={true}
-    >
-      {value ? value : "No data found. (Fill me in!)"}
-    </span>
+    <Input
+      label={startCase(label)}
+      transparent
+      onChange={onChange}
+      placeholder={initialValue ? initialValue : "No data found. (Fill me in!)"}
+      value={value}
+      {...other}
+    />
   );
-  
   return (
     <div style={styles.main}>
-      {startCase(label)}: {content}
-    </div>
+      {hasNewInfo && "!"}
+      {content}
+    </div>    
   );
 }
 
@@ -25,4 +29,4 @@ const styles = {
   }
 }
 
-export default MutableEntry
+export default MutableEntry;
