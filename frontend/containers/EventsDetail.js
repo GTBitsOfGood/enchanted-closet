@@ -22,11 +22,12 @@ const DEFAULT_MAP_LOCATION = {
 class EventsDetail extends Component {
   constructor(props) {
     super(props);
-    const { match, adminControls } = this.props;
+    const { match } = this.props;
     const eventId = match.params.id;
+    const isAdmin = this.props.user && this.props.user.role === 'Admin';
     this.state = {
       detail : '',
-      adminControls: adminControls ? adminControls : false,
+      adminControls: isAdmin,
       eventId,
       displayMapLocationError: false
     }
@@ -96,7 +97,7 @@ class EventsDetail extends Component {
 	</Dimmer>
 	{ !isFetchingEvents && detail &&
 	  <div>
-	    <PageTitle title={detail.name} />
+	    <PageTitle title={detail.name} link="/events" linkTitle="Back to All Events" />
 	    <Segment key="information">
 	      <h3>Description</h3>
 	      <p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>

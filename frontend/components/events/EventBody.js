@@ -7,8 +7,6 @@ import { Event } from './'
 //display for an event entry - extend generic entry?
 
 const EventBody = ( props ) => {
-  console.log("e ho");
-  console.log(isFetchingEvents)
   const { events, filter, isFetchingEvents, page } = props
   const culled = filter ? events.map(filter) : events
   
@@ -17,9 +15,6 @@ const EventBody = ( props ) => {
 
   return (
     <Container>
-      <Segment textAlign="center" style={styles.base}>
-	<Header as="h1">Upcoming Events</Header>
-      </Segment>
       <Loader active={isFetchingEvents}>
 	Loading
       </Loader>
@@ -28,16 +23,6 @@ const EventBody = ( props ) => {
       { noEvent }
     </Container>
   )
-}
-
-const styles = {
-  base: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "2em"
-  }
 }
 
 EventBody.propTypes = {

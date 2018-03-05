@@ -72,11 +72,15 @@ class Events extends Component {
       events: processedEvents,
       isLoading: isFetchingEvents
     };
+
+    const titleBlock = isAdmin ?
+		       <PageTitle title="Events" link="/events/create" linkTitle="Create New"/> : <PageTitle title="Events" />;
     
     return (
-      <Container>
-	<Segment style={styles.control} textAlign='left' vertical>
-	  <div style={styles.searchSection}>
+    <Container>
+      { titleBlock }
+      <Segment style={styles.control} textAlign='left' vertical>
+	<div style={styles.searchSection}>
 	  <Input
 	    placeholder = 'Search'
 	    label="Search"
@@ -87,51 +91,51 @@ class Events extends Component {
 	    onChange={
 	      (e, data) => this.changeQuery(e)
 	    }/>
-	  </div>
-	  <div style={styles.filterSection}>
-	    <Header as="h4" style={styles.filterByHeader}> Filter By: </Header>
-	    <Button
-	      active = {this.state.filters['Name']}
-	      label = 'Name'
-	      labelPosition = 'left'
-	      size = 'small'
-	      toggle
-	      onClick={(e, data) => this.changeFilter(data)}
-	    />
-	    <Button
-	      active = {this.state.filters['Location']}
-	      label = 'Location'
-	      labelPosition = 'left'
-	      size = 'small'
-	      toggle
-	      onClick={(e, data) => this.changeFilter(data)}
-	    />
-	  </div>
- 	  <div style={styles.futurePast}>
-	    <Button
-	      style={styles.pastButton}
-	      content="View Future Events"
-	      onClick={this.fetchFutureHandler}	      
-	    />
-	    <Button
-	      style={styles.pastButton}
-	      content="View Past Events"
-	      onClick={this.fetchPastHandler}
-	    />
-	  </div>
-	</Segment>
-	
-	{ processedEvents.length > 0 && 
-	  <EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
-	}
-	{
-	  <Header as='h3'>
-	    No events found.
-	  </Header>
-	}
-	
+	</div>
+	<div style={styles.filterSection}>
+	  <Header as="h4" style={styles.filterByHeader}> Filter By: </Header>
+	  <Button
+	    active = {this.state.filters['Name']}
+	    label = 'Name'
+	    labelPosition = 'left'
+	    size = 'small'
+	    toggle
+	    onClick={(e, data) => this.changeFilter(data)}
+	  />
+	  <Button
+	    active = {this.state.filters['Location']}
+	    label = 'Location'
+	    labelPosition = 'left'
+	    size = 'small'
+	    toggle
+	    onClick={(e, data) => this.changeFilter(data)}
+	  />
+	</div>
+ 	<div style={styles.futurePast}>
+	  <Button
+	    style={styles.pastButton}
+	    content="View Future Events"
+	    onClick={this.fetchFutureHandler}	      
+	  />
+	  <Button
+	    style={styles.pastButton}
+	    content="View Past Events"
+	    onClick={this.fetchPastHandler}
+	  />
+	</div>
+      </Segment>
+      
+      { processedEvents.length > 0 && 
+	<EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
+      }
+      {
+	<Header as='h3'>
+	  No events found.
+	</Header>
+      }
+      
 
-      </Container>)
+    </Container>)
   }
 }
 

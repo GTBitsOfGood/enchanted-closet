@@ -18,7 +18,6 @@ import { Event, LoadingIcon, PageTitle } from '../../components/';
 class AdminEventsNew extends Component {
   constructor(props) {
     super(props);
-    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
     this.state = {
       name: '',
       description: '',
@@ -49,7 +48,7 @@ class AdminEventsNew extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { loading, error, newEvent} = nextProps;
+    const { loading, error, newEvent } = nextProps;
     this.setState({ loading, error, newEvent });
   }
 
@@ -71,14 +70,17 @@ class AdminEventsNew extends Component {
   render() {
     const { loading, error, newEvent } = this.state;
     if (newEvent) {
-      return <Redirect to={`/admin/events/${newEvent._id}`}/>
+      return <Redirect to={`/events/${newEvent._id}`}/>
     } else {
       return (
 	<Container>
-	  <PageTitle title={this.state._id ? `Update Event` : `New Event`} />
+	  <PageTitle title={this.state._id ? `Update Event` : `New Event`} link="/events" linkTitle="Back to All" />
 	  <div style={{paddingTop:50}}>
 	    <Segment>
-	      <Form error={error !== undefined || error !== null} loading={loading} onSubmit={this.upsertEvent}>
+	      <Form
+		error={error !== undefined || error !== null}
+		loading={loading} onSubmit={this.upsertEvent}
+	      >
 		{error &&
 		 <Message
 		 error
@@ -100,7 +102,9 @@ class AdminEventsNew extends Component {
 		showTimeSelect
 		timeFormat="HH:mm"
 		timeIntervals={15}/>
-		<Form.Button>{this.state._id ? 'Update Event' : 'Create Event'}</Form.Button>
+		<Form.Button>
+		  {this.state._id ? 'Update Event' : 'Create Event'}
+		</Form.Button>
 	      </Form>
 	    </Segment>
 	  </div>

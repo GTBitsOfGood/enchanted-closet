@@ -23,8 +23,8 @@ class ProfileParticipant extends Component {
   }
 
   setChangedFactory = field => value => {
-    const newChanged = { ...this.state.changed, [field]: value }
-    this.setState({ changed: newChanged });
+    // const newChanged = { ...this.state.changed, [field]: value }
+    // this.setState({ changed: newChanged });
   }
 
   onChangeFactory = field => {
@@ -39,9 +39,9 @@ class ProfileParticipant extends Component {
   onSave = () => {
     // diff the two things
     this.setState({ loading: true, hasChanged: false });
-    Object.keys(this.state.userData) 
+    // Object.keys(this.state.userData)  // TODO
     const { upsertUser } = this.props;
-    upsertUser({ ...this.state.changed, _id: this.props.user._id });  
+    // upsertUser({ ...this.state.changed, _id: this.props.user._id });  
   }
   
   componentWillReceiveProps( { user } ) {
@@ -74,13 +74,13 @@ class ProfileParticipant extends Component {
       <MutableEntry
 	key={`soft${field}`}
 	label={field}
-	value={this.state.userData[field]}
+	value={this.state.userData[field]} 
 	initialValue={this.state.userLastData[field]}
 	onChange={this.onChangeFactory(field)}
       />
     ));
 
-    const allSame = Object.keys();
+    // const allSame = Object.keys();
     return (
       <Container style={styles.wrap}>
 	<div style={styles.header}>
@@ -88,7 +88,7 @@ class ProfileParticipant extends Component {
 	    Participant Profile
 	  </Header>
 	  <Button
-	    disabled={ Object.keys(changed).length === 0 }
+	    disabled={true /* Object.keys(changed).length === 0 */ }
 	    onClick={this.onSave}
 	  >
 	    Save Profile

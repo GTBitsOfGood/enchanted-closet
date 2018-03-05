@@ -19,10 +19,8 @@ class Event extends Component {
 
   render() {
     const { data, deleteEvent, history, user } = this.props;
-    const link = `${data.showAdminControls ? '/admin' : ''}/events/${data._id}`;
+    const link = `/events/${data._id}`;
 
-    const adminAllowed = this.props.user &&
-			 this.props.user.role === 'Admin';
     return (
       <div key={uniqueId('event_')} style={{paddingTop: 10, paddingBottom: 10}}>
         <div onClick={() => history.push(link)} style={{cursor:'pointer'}}>
@@ -55,7 +53,7 @@ class Event extends Component {
                 </Container>
               </Segment>
             </Segment.Group>
-            {data.showAdminControls && adminAllowed &&
+            {data.showAdminControls && 
              <Segment>
                <Clearfix>
                  <Button.Group floated='right'>

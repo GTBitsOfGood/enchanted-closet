@@ -14,8 +14,6 @@ class EventsEdit extends Component {
   constructor(props) {
     super(props);
 
-    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
-
     this.state = {
       event: this.props.events.find(e => e._id === this.props.match.params.id),
       loading: true
@@ -41,7 +39,7 @@ class EventsEdit extends Component {
   render() {
     const { loading, event, newEvent} = this.state;
     if (newEvent) {
-      return <Redirect to={`/admin/events/${newEvent._id}`}/>
+      return <Redirect to={`/events/${newEvent._id}`}/>
     } else {
       return (
 	<Container>

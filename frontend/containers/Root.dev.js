@@ -68,46 +68,36 @@ export default function Root({ store }) {
 		component={Logout}
 		redirect="/"
 	      />
-	      <Route exact path="/events" component={Events} /> 
+	      <Route exact path="/events" component={Events} />
+	      <SmartRoute
+		accepts={['Admin']}
+		exact path="/events/create"
+		component={Admin.EventsNew}
+	      />	      
 	      <Route path="/events/:id" component={EventsDetail} />
 	      <SmartRoute
 		accepts={['Admin']}
-		exact path="/admin/events"
-		component={Admin.Events}
-	      />
-	      <SmartRoute
-		accepts={['Admin']}
-		path="/admin/events/create"
-		component={Admin.EventsNew}
-	      />	      
-	      <SmartRoute
-		accepts={['Admin']}
-		path="/admin/events/:id/attendance"
-		component={Admin.Attendance}
-	      />
-	      <SmartRoute
-		accepts={['Admin']}
-		path="/admin/events/:id/edit"
+		path="/events/:id/edit"
 		component={Admin.EventsEdit}
 	      />
 	      <SmartRoute
 		accepts={['Admin']}
-		exact path="/admin/events/:id"
-		component={Admin.EventsDetail}
+		path="/events/:id/attendance"
+		component={Admin.Attendance}
 	      />
 	      <SmartRoute
 		accepts={['Admin']}
-		exact path="/admin/users"
+		exact path="/users"
 		component={Admin.Users}
 	      />	      
 	      <SmartRoute
 		accepts={['Admin']}
-		exact path="/admin/users/create"
+		exact path="/users/create"
 		component={Admin.UsersNew}
 	      />
 	      <SmartRoute
 		accepts={['Admin']}
-		path="/admin/users/:id"
+		path="/users/:id"
 		component={Admin.UsersDetail}
 	      />
 	      <Route path="/error" component={MissingPage} />
