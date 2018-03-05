@@ -2,6 +2,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { refreshUser } from '../actions/index.js';
+import { loadAuthState } from '../store/localStorage.js';
 
 import { PageTitle,
 	 AdminDashboard,
@@ -15,9 +19,15 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
   }
+
+  componentWillMount(){
+    console.log(loadAuthState());
+    this.props.refreshUser(this.props.user);
+  }
   
   render() {
-    const { role } = this.props.user
+    const { role } = this.props.user;
+    // console.log(role);
     const dashBlock = (role => {
       switch (role) {
 	case 'Admin':
@@ -44,10 +54,16 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    user: state.user
   }
 };
 
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({
+    refreshUser: refreshUser
+  }, dispatch);
+};
+
 export default withRouter(connect(
-  mapStateToProps
+  mapStateToProps, mapDispatchToProps
 )(Dashboard));

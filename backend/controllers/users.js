@@ -10,7 +10,7 @@ const hash = require("../hash");
 module.exports.index = (req, res, next) => {
   User
     .find({})
-    .populate('pastEvents')
+    .populate('events')
     .exec((err, users) => {
       if (users) {
         res.locals.data = {
@@ -72,7 +72,7 @@ let validateAdmin = (data, callback) => {
 module.exports.get = (req, res, next) => {
   User
     .findById(req.params.id)
-    .populate('pastEvents')
+    .populate('events')
     .exec((err, user) => {
       if (user) {
         res.locals.data = {
@@ -328,7 +328,28 @@ module.exports.registerevent = (req, res, next) => {
       } 
       // update users.events
       if (!uDoc.events) uDoc.events = [];
-      uDoc.events.push(req.params.eventID);
+      if (uDoc.role == "Volunteer") {
+        if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
+	if (uDoc.pendingEvents.map(String).includes(req.params.eventID) || uDoc.events.map(String).includes(req.params.eventID)) {
+	  res.locals.error = {
+	    status: 400,
+	    msg: "This volunteer already has this event register data."
+	  }
+	  return next();
+	} else {
+          uDoc.pendingEvents.push(req.params.eventID);
+	}
+      } else {
+	if (uDoc.events.map(String).includes(req.params.eventID)) {
+	  res.locals.error = {
+	    status: 400,
+	    msg: "This volunteer already has this event register data."
+	  }
+	  return next();
+	} else {
+          uDoc.events.push(req.params.eventID);
+	}
+      }
 
       uDoc.save(err => {
         if (err) {
@@ -393,7 +414,7 @@ module.exports.cancelevent = (req, res, next) => {
 
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
-      if (eDoc.participants.map(String).includes(req.params.userID)) {
+      if (eDoc.participants.map(String).includes(req.params.userID)) { // TODO: Add in role checks (this works for now though)
         var temp = eDoc.participants.map(String);
         temp.splice(temp.indexOf(req.params.userID), 1);
         eDoc.participants = temp;
@@ -410,9 +431,22 @@ module.exports.cancelevent = (req, res, next) => {
       }
       // TODO: Some kind of warning if things don't add up
       if (!uDoc.events) uDoc.events = [];
-      var temp = uDoc.events.map(String);
-      temp.splice(temp.indexOf(req.params.eventID), 1);
-      uDoc.events = temp;
+      if (uDoc.role == "Volunteer" && uDoc.pendingEvents.map(String).includes(req.params.eventID)) { // TODO: Some way for admins to remove volunteers from confirmed events
+        if (!uDoc.pendingEvents) uDoc.events = [];
+        var temp = uDoc.pendingEvents.map(String);
+        temp.splice(temp.indexOf(req.params.eventID), 1);
+        uDoc.pendingEvents = temp;
+      } else if (uDoc.events.map(String).includes(req.params.eventID)) {
+        var temp = uDoc.events.map(String);
+        temp.splice(temp.indexOf(req.params.eventID), 1);
+        uDoc.events = temp;
+      } else {
+        res.locals.error = {
+          status: 400,
+          msg: 'This event cannot be found in user data.'
+        };
+        return next();
+      }
 
       uDoc.save((err) => {
         if (err) {

@@ -30,9 +30,8 @@ module.exports.fetchFutureEvents = (req, res, next) => {
     .populate('participants')
     .exec((err, events) => {
       if (events) {
-        // futureevents = events.find({"datetime": {$gt:currDate}});
         res.locals.data = {
-          events: events
+          events
         };
         return next();
       } else {
@@ -51,9 +50,8 @@ module.exports.fetchPastEvents = (req, res, next) => {
     .populate('participants')
     .exec((err, events) => {
       if (events) {
-        // pastevents = events.find({"datetime":{$lte: currDate}});
         res.locals.data = {
-          events: events
+          events
         };
         return next();
       } else {
@@ -109,8 +107,23 @@ module.exports.present = (req, res, next) => {
         return next();
       }
 
-      if (!uDoc.pastEvents) uDoc.pastEvents = [];
-      uDoc.pastEvents.push(req.params.eventID);
+      eDoc.save(err => {
+	if (err) {
+          console.log(err);
+          res.locals.error = {
+            code: 500,
+            msg: err
+          };
+        }
+
+        res.locals.data = {
+          present: true
+        }
+        return next();
+      });
+      /* Attendance doesn't affect users 
+      If (!uDoc.events) uDoc.events = [];
+      uDoc.events.push(req.params.eventID);
 
       uDoc.save((err) => {
         if (err) {
@@ -121,21 +134,8 @@ module.exports.present = (req, res, next) => {
           };
           return next();
         }
-        eDoc.save(err => {
-          if (err) {
-            console.log(err);
-            res.locals.error = {
-              code: 500,
-              msg: err
-            };
-          }
-
-          res.locals.data = {
-            present: true
-          }
-          return next();
-        });
       });
+      */
     });
   });
 }
@@ -181,13 +181,15 @@ module.exports.absent = (req, res, next) => {
         }
       }
 
-      if (uDoc.pastEvents) {
-        let ind = uDoc.pastEvents.indexOf(req.params.eventID);
+      /* Same as above, though this would be odd...
+      if (uDoc.events) {
+        let ind = uDoc.events.indexOf(req.params.eventID);
         if (ind != -1) {
-          uDoc.pastEvents.splice(ind, 1);
+          uDoc.events.splice(ind, 1);
 
         }
       }
+      */
       eDoc.save(err => {
         if (err) {
           console.log(err);
@@ -196,6 +198,8 @@ module.exports.absent = (req, res, next) => {
             msg: err
           };
         }
+	return next();
+	/*
         uDoc.save(err => {
           if (err) {
             console.log(err);
@@ -210,6 +214,7 @@ module.exports.absent = (req, res, next) => {
           }
           return next();
         });
+	*/
       });
     });
   });
