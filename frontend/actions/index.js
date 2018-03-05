@@ -1,6 +1,8 @@
 // Action Creators
-
-import fetch from 'isomorphic-fetch';
+export * from './userEvent';
+export * from './auth';
+import { loading, stopLoading } from './loading';
+import { fetchHelper, getAPIToken } from './helpers';
 import FormData from 'form-data';
 
 import * as types from './types';
@@ -83,18 +85,6 @@ export function hideModalLoader() {
   }
 }
 
-export function loading() {
-  return {
-    type: types.LOADING
-  }
-}
-
-export function stopLoading() {
-  return {
-    type: types.NOT_LOADING
-  }
-}
-
 export function upsertEvent(data) {
   return (dispatch, getState) => {
     dispatch(loading());
@@ -136,55 +126,6 @@ export function invalidateEvents() {
   };
 }
 
-export function logoutUser() {
-  return {
-    type: types.LOGOUT_USER
-  }
-}
-
-export function performLogout() {
-  return (dispatch, getState) => {
-    dispatch(logoutUser());
-  }  
-}
-
-function fetchHelper(route, apiToken, obj) {
-  if (!apiToken) {
-    return fetch(route, obj);
-  }
-  let headers = {'Authorization': 'Bearer ' + apiToken};
-  if (obj && obj.headers) {
-    obj.headers = Object.assign({}, obj.headers, headers);
-  } else {
-    if (!obj) obj = {};
-    obj.headers = Object.assign({}, obj.headers || {}, headers);
-  }
-  return fetch(route, obj)
-}
-
-function processAuthenticationAttempt(json) {
-  if (json.status === 'ok') {
-    return {
-      type: types.USER_AUTHENTICATED,
-      user: json.user
-    }
-  } else {
-    return {
-      type: types.USER_NOT_AUTHENTICATED,
-      errorMessage: json.msg
-    }
-  }
-}
-
-export function refreshUser(user) {
-  return (dispatch, getState) => {
-    dispatch(requestUsers());
-    return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
-      .then(response => response.json())
-      .then(() => dispatch(stopLoading()));
-  }
-}
-
 function processEventUpsert(json, isUpdate) {
   if (json.status === 'ok') {
     return {
@@ -212,44 +153,6 @@ function processUserUpsert(json, isUpdate) {
       type: types.API_ERROR,
       error: json.msg
     }
-  }
-}
-
-export function performLogin(data) {
-  return (dispatch, getState) => {
-    dispatch(showModalLoader());
-    return fetchHelper(`/api/login`, null, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(json => {
-        dispatch(hideModalLoader());
-        dispatch(processAuthenticationAttempt(json));
-      });
-  }
-}
-
-export function performRegistration(data) {
-  return (dispatch, getState) => {
-    dispatch(showModalLoader());
-    return fetchHelper(`/api/register`, null, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(json => {
-        dispatch(hideModalLoader());
-        dispatch(processAuthenticationAttempt(json));
-      });
   }
 }
 
@@ -391,28 +294,6 @@ function formatCards(cards) {
   }
 }
 
-function updateUser(user) {
-  return (dispatch, getState) => {
-    dispatch(loading());
-  }
-}
-
-function userMarkedAsAttended(event, user) {
-  return {
-    type: types.MARK_ATTENDING,
-    event: event,
-    user: user
-  };
-}
-
-function userMarkedAsUnAttended(event, user) {
-  return {
-    type: types.MARK_UNATTENDING,
-    event: event,
-    user: user
-  };
-}
-
 export function loadDashboardCards() {
   return (dispatch, getState) => {
     dispatch(loading());
@@ -425,59 +306,3 @@ export function loadDashboardCards() {
   }
 }
 
-export function markAttending(event, user) {
-  return (dispatch, getState) => {
-    dispatch(loading());
-    return fetchHelper(`/api/events/${event._id}/present/${user._id}`, getAPIToken(getState))
-      .then(response => response.json())
-      .then(json => dispatch(userMarkedAsAttended(event, user)))
-      .then(() => dispatch(stopLoading()));
-  }
-}
-
-export function markUnattending(event, user) {
-  return (dispatch, getState) => {
-    dispatch(loading());
-    return fetchHelper(`/api/events/${event._id}/absent/${user._id}`, getAPIToken(getState))
-      .then(response => response.json())
-      .then(json => dispatch(userMarkedAsUnAttended(event, user)))
-      .then(() => dispatch(stopLoading()));
-  }
-}
-
-function getAPIToken(getState) {
-  return getState().user ? getState().user.token : null;
-}
-
-
-/* Temp */
-export function registerEvent(eventID, userID) {
-  return (dispatch, getState) => {
-    return fetchHelper(`/api/events/${eventID}/register/${userID}`, getAPIToken(getState))
-      .then(response => response.json())
-      .then(json => {
-	if (json.status !== "error") // fail silently for now
-	  return dispatch(updateUser(json.user))
-      })
-      .then(() => dispatch(stopLoading()));
-  }
-}
-
-export function cancelEvent(eventID, userID) {
-  return (dispatch, getState) => {
-    return fetchHelper(`/api/events/${eventID}/cancel/${userID}`, getAPIToken(getState))
-      .then(response => response.json())
-      .then(json => {
-	if (json.status !== "error")
-	  dispatch(updateUser(json.user))
-      })
-      .then(() => dispatch(stopLoading()));
-  }
-}
-
-function updateUser(user) {
-  return {
-    type: types.USER_UPDATE,
-    user
-  }
-}

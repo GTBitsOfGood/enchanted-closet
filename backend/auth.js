@@ -28,7 +28,7 @@ const isAdmin = (id, callback) => {
     if (!err && result.role == "Admin") {
       return callback(err, true);
     }
-    callback(err, false);
+    callback(null, false);
   });
 }
 

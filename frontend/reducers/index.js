@@ -45,7 +45,6 @@ function rootReducer(state = require('../static/defaultState'), action) {
       }
       eventStateUpdate.events = events;
       return Object.assign({}, state, eventStateUpdate);
-
     case types.USER_UPSERT:
       let { users, user } = state;
       if (!users) users = [];
@@ -70,18 +69,15 @@ function rootReducer(state = require('../static/defaultState'), action) {
       }
       userStateUpdate.users = users;
       return Object.assign({}, state, userStateUpdate);
-
     case types.API_ERROR:
       return Object.assign({}, state, {
         loading: false,
         error: action.error
       });
-
     case types.NOT_LOADING:
       return Object.assign({}, state, {
         loading: false
       });
-
     case types.RECEIVE_EVENTS:
       return Object.assign({}, state, {
         isFetchingEvents: false,
@@ -89,23 +85,45 @@ function rootReducer(state = require('../static/defaultState'), action) {
         events: action.events,
         lastUpdatedEvents: action.receivedAt
       });
-
     case types.REQUEST_EVENTS:
       return Object.assign({}, state, {
         isFetchingEvents: true,
         didInvalidateEvents: false
       });
-
     case types.SHOW_MODAL_LOADER:
       return Object.assign({}, state, {
         modalLoaderActive: true
       });
-
     case types.HIDE_MODAL_LOADER:
       return Object.assign({}, state, {
         modalLoaderActive: false
       });
-      
+    case types.VOLUNTEER_UPDATE:
+      return Object.assign({}, state, {
+
+      }); // TODO FINISH!
+      break;
+    case types.USER_EVENT_UPDATE: {
+      const { pendingEvents, events } = action.payload;      
+      const newUser = { ...state.user, pendingEvents, events }
+      return { ...state,  
+	       user: newUser,
+	       errorMessage: null };
+    }
+    case types.EVENT_USER_UPDATE: {// TODO: make users ref event store array
+      const { eventID, participants, volunteers } = action.payload;
+      // find old event
+      const { events } = state;
+      const eventsFiltered = events ? events.filter( e => e._uid === eventID ) : [];
+      const event = eventsFiltered.length != 0 ? eventsFiltered[0] : null;
+      const newEvent = event ? { ...event, participants, volunteers } : null;
+      if ( newEvent ) {
+	events[events.indexOf(event)] = newEvent;
+      }
+      return { ...state,
+	       events,
+	       errorMessage: null };
+    }
     case types.USER_UPDATE:
       return Object.assign({}, state, {
 	user: action.user,

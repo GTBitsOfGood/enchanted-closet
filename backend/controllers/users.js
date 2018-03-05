@@ -286,7 +286,10 @@ module.exports.registerevent = (req, res, next) => {
     };
     return next();
   }
-  Event.findById(req.params.eventID, function(err, eDoc){
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
+  
+  Event.findById(eventID, function(err, eDoc){
     if (err || !eDoc) {
       res.locals.error = {
         status: 404,
@@ -294,7 +297,7 @@ module.exports.registerevent = (req, res, next) => {
       };
       return next();
     }
-    User.findById(req.params.userID, function(err, uDoc){
+    User.findById(userID, function(err, uDoc){
       if (err || !uDoc) {
         res.locals.error = {
           status: 404,
@@ -306,8 +309,8 @@ module.exports.registerevent = (req, res, next) => {
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
       if (uDoc.role == "Participant") {
-          if (!eDoc.participants.map(String).includes(req.params.userID)) {
-              eDoc.participants.push(req.params.userID);
+          if (!eDoc.participants.map(String).includes(userID)) {
+              eDoc.participants.push(userID);
           } else {
               res.locals.error = {
                 status: 400,
@@ -316,8 +319,8 @@ module.exports.registerevent = (req, res, next) => {
               return next();
           }
       } else if (uDoc.role == "Volunteer" || uDoc.role == "Admin") {
-          if (!eDoc.volunteers.map(String).includes(req.params.userID)) {
-              eDoc.volunteers.push(req.params.userID);
+          if (!eDoc.volunteers.map(String).includes(userID)) {
+              eDoc.volunteers.push(userID);
           } else {
             res.locals.error = {
               status: 400,
@@ -330,24 +333,24 @@ module.exports.registerevent = (req, res, next) => {
       if (!uDoc.events) uDoc.events = [];
       if (uDoc.role == "Volunteer") {
         if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
-	if (uDoc.pendingEvents.map(String).includes(req.params.eventID) || uDoc.events.map(String).includes(req.params.eventID)) {
+	if (uDoc.pendingEvents.map(String).includes(eventID) || uDoc.events.map(String).includes(eventID)) {
 	  res.locals.error = {
 	    status: 400,
 	    msg: "This volunteer already has this event register data."
 	  }
 	  return next();
 	} else {
-          uDoc.pendingEvents.push(req.params.eventID);
+          uDoc.pendingEvents.push(eventID);
 	}
       } else {
-	if (uDoc.events.map(String).includes(req.params.eventID)) {
+	if (uDoc.events.map(String).includes(eventID)) {
 	  res.locals.error = {
 	    status: 400,
 	    msg: "This volunteer already has this event register data."
 	  }
 	  return next();
 	} else {
-          uDoc.events.push(req.params.eventID);
+          uDoc.events.push(eventID);
 	}
       }
 
@@ -370,8 +373,11 @@ module.exports.registerevent = (req, res, next) => {
           }
 
           res.locals.data = {
-            user: uDoc,
-            event: eDoc
+	    eventID,
+            newEvents: uDoc.events,
+	    newPending: uDoc.pendingEvents,
+	    newParticipants: eDoc.participants,
+            newVolunteers: eDoc.volunteers
           }
           return next();
         });
@@ -395,7 +401,10 @@ module.exports.confirmRegistration = (req, res, next) => {
     };
     return next();
   }
-  Event.findById(req.params.eventID, function(err, eDoc){
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
+
+  Event.findById(eventID, function(err, eDoc){
     if (err || !eDoc) {
       res.locals.error = {
         status: 404,
@@ -403,7 +412,7 @@ module.exports.confirmRegistration = (req, res, next) => {
       };
       return next();
     }
-    User.findById(req.params.userID, function(err, uDoc){
+    User.findById(userID, function(err, uDoc){
       if (err || !uDoc) {
         res.locals.error = {
           status: 404,
@@ -414,7 +423,7 @@ module.exports.confirmRegistration = (req, res, next) => {
 
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
-      if (!eDoc.volunteers.map(String).includes(req.params.userID)) {
+      if (!eDoc.volunteers.map(String).includes(userID)) {
         res.locals.error = {
           status: 400,
           msg: 'That user has not registered for that event.'
@@ -424,11 +433,11 @@ module.exports.confirmRegistration = (req, res, next) => {
 
       if (!uDoc.events) uDoc.events = [];
       if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
-      if (uDoc.pendingEvents.map(String).includes(req.params.eventID)) {
+      if (uDoc.pendingEvents.map(String).includes(eventID)) {
         var temp = uDoc.pendingEvents.map(String);
-        temp.splice(temp.indexOf(req.params.eventID), 1);
+        temp.splice(temp.indexOf(eventID), 1);
         uDoc.pendingEvents = temp;
-        uDoc.events.push(req.params.eventID);
+        uDoc.events.push(eventID);
       } else {
         res.locals.error = {
           status: 400,
@@ -455,10 +464,13 @@ module.exports.confirmRegistration = (req, res, next) => {
             };
           }
 
-          res.locals.data = {
-            user: uDoc,
-            event: eDoc
-          }
+	  res.locals.data = {
+	    eventID,
+            newEvents: uDoc.events,
+	    newPending: uDoc.pendingEvents,
+	    newParticipants: eDoc.participants,
+            newVolunteers: eDoc.volunteers
+          } 
           return next();
         });
       });
@@ -481,7 +493,9 @@ module.exports.cancelevent = (req, res, next) => {
     };
     return next();
   }
-  Event.findById(req.params.eventID, function(err, eDoc){
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
+  Event.findById(eventID, function(err, eDoc){
     if (err || !eDoc) {
       res.locals.error = {
         status: 404,
@@ -489,7 +503,7 @@ module.exports.cancelevent = (req, res, next) => {
       };
       return next();
     }
-    User.findById(req.params.userID, function(err, uDoc){
+    User.findById(userID, function(err, uDoc){
       if (err || !uDoc) {
         res.locals.error = {
           status: 404,
@@ -500,13 +514,13 @@ module.exports.cancelevent = (req, res, next) => {
 
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
-      if (eDoc.participants.map(String).includes(req.params.userID)) { // TODO: Add in role checks (this works for now though)
+      if (eDoc.participants.map(String).includes(userID)) { // TODO: Add in role checks (this works for now though)
         var temp = eDoc.participants.map(String);
-        temp.splice(temp.indexOf(req.params.userID), 1);
+        temp.splice(temp.indexOf(userID), 1);
         eDoc.participants = temp;
-      } else if (eDoc.volunteers.map(String).includes(req.params.userID)) {
+      } else if (eDoc.volunteers.map(String).includes(userID)) {
         var temp = eDoc.volunteers.map(String);
-        temp.splice(temp.indexOf(req.params.userID), 1);
+        temp.splice(temp.indexOf(userID), 1);
         eDoc.volunteers = temp;
       } else {
         res.locals.error = {
@@ -517,14 +531,14 @@ module.exports.cancelevent = (req, res, next) => {
       }
       // TODO: Some kind of warning if things don't add up
       if (!uDoc.events) uDoc.events = [];
-      if (uDoc.role == "Volunteer" && uDoc.pendingEvents.map(String).includes(req.params.eventID)) { // TODO: Some way for admins to remove volunteers from confirmed events
+      if (uDoc.role == "Volunteer" && uDoc.pendingEvents.map(String).includes(eventID)) { // TODO: Some way for admins to remove volunteers from confirmed events
         if (!uDoc.pendingEvents) uDoc.events = [];
         var temp = uDoc.pendingEvents.map(String);
-        temp.splice(temp.indexOf(req.params.eventID), 1);
+        temp.splice(temp.indexOf(eventID), 1);
         uDoc.pendingEvents = temp;
-      } else if (uDoc.events.map(String).includes(req.params.eventID)) {
+      } else if (uDoc.events.map(String).includes(eventID)) {
         var temp = uDoc.events.map(String);
-        temp.splice(temp.indexOf(req.params.eventID), 1);
+        temp.splice(temp.indexOf(eventID), 1);
         uDoc.events = temp;
       } else {
         res.locals.error = {
@@ -551,11 +565,14 @@ module.exports.cancelevent = (req, res, next) => {
               msg: err
             };
           }
-
-          res.locals.data = {
-            user: uDoc,
-            event: eDoc
-          }
+         
+	  res.locals.data = {
+	    eventID,
+            newEvents: uDoc.events,
+	    newPending: uDoc.pendingEvents,
+	    newParticipants: eDoc.participants,
+            newVolunteers: eDoc.volunteers
+          }          
           return next();
         });
       });
