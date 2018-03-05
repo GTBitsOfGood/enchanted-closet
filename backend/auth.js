@@ -122,7 +122,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
         };
         return next(new Error(res.locals.error));
       }
-      if (curr == null || (curr != req.id && !state)) {
+      if (curr == null || (curr != req.params.id && !state)) {
         res.locals.error = {
           status: 403,
           msg: 'Not authorized'

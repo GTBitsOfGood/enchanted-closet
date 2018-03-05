@@ -34,6 +34,7 @@ router.put('/events/:id', auth.checkAdmin, controllers.events.update);
 router.get('/events/:id/report', controllers.reporting.eventReport);
 router.get('/report/year', controllers.reporting.yearReport);
 
+// Package and finish
 router.use((req, res, next) => {
   if (res.locals.data) {
     let response = Object.assign({}, res.locals.data, {
@@ -41,6 +42,7 @@ router.use((req, res, next) => {
     });
     return res.status(200).json(response);
   } else if (res.locals.error) {
+    console.error(res.locals.error);
     let statusCode = res.locals.error.code || 500;
     let response = Object.assign({}, res.locals.error, {
       'status': 'error'
@@ -55,24 +57,5 @@ router.use((req, res, next) => {
     });
   }
 });
-
-// Error handler
-router.use((err, req, res, next) => {
-  console.log(err);
-  if (res.locals.error) {
-    let statusCode = res.locals.error.code || 500;
-    let response = Object.assign({}, res.locals.error, {
-      'status': 'error'
-    });
-    return res.status(statusCode).json(response);
-  } else {
-    return res.status(500).json({
-      'status': 'error',
-      'code': 500,
-      'msg': 'Internal Server Error'
-    });
-  }
-});
-
 
 module.exports = router;
