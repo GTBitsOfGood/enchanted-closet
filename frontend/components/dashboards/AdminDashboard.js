@@ -12,17 +12,17 @@ const DEFAULT_CARDS = [
   {
     content: null,
     title: 'Users',
-    url: '/admin/users' // TODO: investigate how to use absolute paths (semantic)
+    url: '/users' // TODO: investigate how to use absolute paths (semantic)
   },
   {
     content: null,
     title: 'Admins',
-    url: '/admin/users'
+    url: '/users'
   },
   {
     content: null,
     title: 'Events',
-    url: '/admin/events'
+    url: '/events'
   }
 ];
 
@@ -38,6 +38,7 @@ class AdminDashboard extends Component {
 
   render() {
     const { cards = [] } = this.props;
+    console.log(this.props);
     const body = cards.length === 0 ? (
       <Card fluid>
 	<Card.Content>

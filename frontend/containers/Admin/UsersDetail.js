@@ -13,7 +13,6 @@ import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, Lo
 class AdminUsersDetail extends Component {
   constructor(props) {
     super(props);
-    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
     const {updateUserStore, users, match} = this.props;
     this.state = {
       user_id: match.params.id,
@@ -57,7 +56,9 @@ class AdminUsersDetail extends Component {
   }
 
   render() {
-    const {loading, hasPerformedUpdate, user} = this.state;
+    const { loading, hasPerformedUpdate, user } = this.state;
+    const name = user ? `${user.firstName} ${user.lastName}` :
+		 'Name not found';
     return (
       <Container>
 	{loading &&
@@ -70,7 +71,7 @@ class AdminUsersDetail extends Component {
 	}
 	{!loading && user &&
 	 <div>
-	   <PageTitle title={user.name || (<i>&lt;No Name&gt;</i>)}/>
+	   <PageTitle title={name}/>
 	   <ContactCard user={user}/>
 	   <DemographicsCard user={user}/>
 	   <EmergencyContactCard user={user}/>

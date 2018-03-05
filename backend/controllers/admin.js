@@ -31,7 +31,6 @@ module.exports.cards = (req, res, next) => {
       };
       return next();
     }
-
     res.locals.data = {
       cards: results
     };

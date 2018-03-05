@@ -1,9 +1,9 @@
-import React,{Component} from 'react';
+import React,{ Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-import {fetchUsers} from '../../actions/';
+import { fetchUsers } from '../../actions/';
 
 import { Container, Loader, Segment, Grid, Table, Icon } from 'semantic-ui-react';
 import { Clearfix } from '../../components/'
@@ -13,7 +13,6 @@ const roles = ['admin', 'volunteer', 'participant'];
 class Users extends Component {
   constructor(props) {
     super(props);
-    if (this.props.user.role !== 'Volunteer' && this.props.user.role !== 'Admin') this.props.history.goBack();
     this.state = {
       users: {
 	'admin': null,
@@ -63,7 +62,7 @@ class Users extends Component {
 		      <h1>{`${role.charAt(0).toUpperCase()}${role.substr(1)}s`}</h1>
 		    </Grid.Column>
 		    <Grid.Column textAlign="right">
-		      <a href={`/admin/users/create`}>Create New</a>
+		      <a href={`/users/create`}>Create New</a>
 		    </Grid.Column>
 		  </Grid.Row>
 		  <Grid.Row style={{padding: '20px'}}>
@@ -72,7 +71,7 @@ class Users extends Component {
 		       <Table.Body>
 			 {users[role].length > 0 ? users[role].map(u => {
 			    return (
-			      <Table.Row key={u._id} style={{cursor:'pointer'}} onClick={() => history.push(`/admin/users/${u._id}`)}>
+			      <Table.Row key={u._id} style={{cursor:'pointer'}} onClick={() => history.push(`/users/${u._id}`)}>
 				<Table.Cell>{u.name || (<i>&lt;No Name&gt;</i>)}</Table.Cell>
 				<Table.Cell>{u.email || (<i>&lt;No Email&gt;</i>)}</Table.Cell>
 				<Table.Cell style={{textAlign: 'right'}}>View <Icon name='right chevron' /></Table.Cell>
