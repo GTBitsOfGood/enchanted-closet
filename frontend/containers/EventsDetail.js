@@ -82,11 +82,12 @@ class EventsDetail extends Component {
   render() {
     const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
     const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
+    const date = new Date(detail.datetime);
     return (
       <Container>
-    {user ?
-      (!adminControls ?
-      	(detail.datetime < Date.now ? //i know this won't work, more of a placeholder. How?
+    {date.getTime() > Date.now() ? 
+      (user ?
+      	(!adminControls ? 
 			<Container>
 			  <Button onClick={() => registerEvent(detail._id, user._id)}>
 			    Register
@@ -97,9 +98,9 @@ class EventsDetail extends Component {
 			</Container>
 			: false
 		)
-		: false
+	  	: <Link to='/login'> Login to Register </Link>
 	  )
-	: <Link to='/login'> Login to Register </Link>
+	  : false
 	}
 	<Dimmer active={isFetchingEvents}>
 	  <Loader>Loading</Loader>
