@@ -202,7 +202,6 @@ module.exports.update = (req, res, next) => {
 
 
 module.exports.create = (req, res, next) => {
-  console.log('create')
   let newProps = {};
   if (matchesComplexityRequirements(req.body.password)) {
     newProps.password = hash.genNew(req.body.password);

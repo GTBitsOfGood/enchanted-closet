@@ -121,7 +121,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
     }
     case types.USER_UPDATE:
       return Object.assign({}, state, {
-	user: action.user,
+	user: { ...state.user, ...action.user },
 	errorMessage: null
       });
       
