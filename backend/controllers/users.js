@@ -72,8 +72,8 @@ let validateAdmin = (data, callback) => {
 module.exports.get = (req, res, next) => {
   User
     .findById(req.params.id)
-    .populate('events', 'name _id')
-    .populate('pendingEvents', 'name _id')
+    .populate('events')
+    .populate('pendingEvents')
     .exec((err, user) => {
       if (user) {
         res.locals.data = {
