@@ -40,8 +40,6 @@ export function refreshUser(user) {
 	} else {
 	  // TODO: error toast
 	}
-	console.log(json.user);
-	console.log("third point");
       })
       .then(() => dispatch(stopLoading()));
   }
