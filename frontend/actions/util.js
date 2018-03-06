@@ -14,6 +14,14 @@ export function getAPIToken( getState ) {
   return getState().user && getState().user.token ? getState().user.token : null;
 }
 
+export function deleteLocalData(type, id) {
+  return {
+    type: types.DELETE_DATA_LOCALLY,
+    data_type: type,
+    id: id
+  }
+}
+
 export const DEFAULT_HEADERS = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'
