@@ -16,6 +16,7 @@ class ParticipantDashboard extends Component {
   render() {
     const { events = [] } = this.props.user;
     console.log(events);
+    
     const data = {
       description: "Hello There"
     }
