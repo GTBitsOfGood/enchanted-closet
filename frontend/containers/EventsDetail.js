@@ -8,8 +8,7 @@ import moment from 'moment';
 
 import { geocode } from '../helpers/geocodeEngine';
 
-import { // fetchEvents,
-	 fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
+import { fetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 
 import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
 import { Clearfix, Map, EditButton, ErrorComponent, Event, PageTitle, Speakers } from '../components/';
@@ -36,10 +35,11 @@ class EventsDetail extends Component {
   componentDidMount() {
     const { fetchEventsIfNeeded, // fetchEvents,
 	    events, location } = this.props;
+    const eventId = this.props.match.params.id;
     fetchEventsIfNeeded();
-    const detail = events.filter(event => event._id === this.state.eventId);
+    const detail = events.filter(event => event._id === eventId);
     if (detail.length === 0) { //in case local store is old
-      // fetchEvents(); // TODO: Restore
+      fetchEventById(eventId);
     } else {
       this.setState( {detail: detail[0]} );
       geocode(detail[0].location)
@@ -184,7 +184,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     deleteEvent: deleteEvent,
     fetchEventsIfNeeded: fetchEventsIfNeeded,
-//    fetchEvents: fetchEvents,
+    fetchEventById: fetchEventById,
     registerEvent: registerEvent,
     cancelEvent: cancelEvent
   }, dispatch);

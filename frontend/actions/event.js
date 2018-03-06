@@ -122,7 +122,6 @@ export function fetchPastEvents() {
   }
 }
 
-// TODO: Finish this
 export function fetchEventById(id){
   return (dispatch, getState) => {
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
