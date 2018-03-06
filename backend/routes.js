@@ -21,6 +21,7 @@ router.get('/dashboard', auth.checkAdmin, controllers.admin.cards);
 router.get('/events/:eventID/register/:userID', controllers.users.registerevent);
 router.get('/events/:eventID/cancel/:userID', controllers.users.cancelevent);
 router.get('/events/:eventID/confirm/:userID', auth.checkAdmin, controllers.users.confirmRegistration);
+router.get('/events/:eventID/deny/:userID', auth.checkAdmin, controllers.users.confirmRegistration);
 
 router.get('/events', controllers.events.fetchFutureEvents);
 router.get('/eventsPast', controllers.events.fetchPastEvents);

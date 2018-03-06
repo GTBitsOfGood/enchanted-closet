@@ -466,6 +466,92 @@ module.exports.confirmRegistration = (req, res, next) => {
   });
 }
 
+module.exports.denyRegistration = (req, res, next) => {
+  if (!req.params.eventID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Event ID required'
+    };
+    return next();
+  }
+  if (!req.params.userID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'User ID required'
+    };
+    return next();
+  }
+  Event.findById(req.params.eventID, function(err, eDoc){
+    if (err || !eDoc) {
+      res.locals.error = {
+        status: 404,
+        msg: 'That event was not found in the database'
+      };
+      return next();
+    }
+    User.findById(req.params.userID, function(err, uDoc){
+      if (err || !uDoc) {
+        res.locals.error = {
+          status: 404,
+          msg: 'That user was not found in the database'
+        };
+        return next();
+      }
+
+      if (!eDoc.participants) eDoc.participants = [];
+      if (!eDoc.volunteers) eDoc.volunteers = [];
+      if (!eDoc.volunteers.map(String).includes(req.params.userID)) {
+        res.locals.error = {
+          status: 400,
+          msg: 'That user has not registered for that event.'
+        };
+        return next();
+      }
+
+      if (!uDoc.deniedEvents) uDoc.deniedEvents = [];
+      if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
+      if (uDoc.pendingEvents.map(String).includes(req.params.eventID)) {
+        var temp = uDoc.pendingEvents.map(String);
+        temp.splice(temp.indexOf(req.params.eventID), 1);
+        uDoc.pendingEvents = temp;
+        uDoc.deniedEvents.push(req.params.eventID);
+      } else {
+        res.locals.error = {
+          status: 400,
+          msg: 'That user has not registered for that event.'
+        };
+        return next();
+      }
+
+      uDoc.save((err) => {
+        if (err) {
+          console.log(err);
+          res.locals.error = {
+            code: 500,
+            msg: err
+          };
+          return next();
+        }
+        eDoc.save(err => {
+          if (err) {
+            console.log(err);
+            res.locals.error = {
+              code: 500,
+              msg: err
+            };
+          }
+
+          res.locals.data = {
+            user: uDoc,
+            event: eDoc
+          }
+          return next();
+        });
+      });
+    });
+  });
+}
+
 module.exports.cancelevent = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
