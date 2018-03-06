@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import {uniqueId} from 'lodash';
 import moment from 'moment';
@@ -84,14 +84,23 @@ class EventsDetail extends Component {
     const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
     return (
       <Container>
-	<Container>
-	  <Button onClick={() => registerEvent(detail._id, user._id)}>
-	    Register
-	  </Button>
-	  <Button onClick={() => cancelEvent(detail._id, user._id)}>
-	    Cancel Register
-	  </Button>
-	</Container>
+    {user ?
+      (!adminControls ?
+      	(detail.datetime < Date.now ? //i know this won't work, more of a placeholder. How?
+			<Container>
+			  <Button onClick={() => registerEvent(detail._id, user._id)}>
+			    Register
+			  </Button>
+			  <Button onClick={() => cancelEvent(detail._id, user._id)}>
+			    Cancel Register
+			  </Button>
+			</Container>
+			: false
+		)
+		: false
+	  )
+	: <Link to='/login'> Login to Register </Link>
+	}
 	<Dimmer active={isFetchingEvents}>
 	  <Loader>Loading</Loader>
 	</Dimmer>
