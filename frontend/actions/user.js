@@ -1,5 +1,6 @@
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
 import { fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
+import { receiveEvents, receiveMoreEvents } from './';
 
 import * as types from './types';
 
@@ -21,17 +22,20 @@ export function upsertUser(data) {
   }
 }
 
-function processUserUpsert(json, isUpdate) {
-  if (json.status === 'ok') {
-    return {
-      type: types.USER_UPSERT,
-      user: json.user,
-      isUpdate: isUpdate
-    };
-  } else {
-    return {
-      type: types.API_ERROR,
-      error: json.msg
+function processUserUpsert(json, isUpdate) { // updates users array as well (only relevant for admin)
+  return (dispatch, getState) => {
+    if (json.status === 'ok') {
+      dispatch(updateUserWithEvents(json.user)); // whatever, not gonna strip users array
+      return {
+	type: types.USERS_UPSERT,
+	user: json.user,
+	isUpdate: isUpdate
+      };
+    } else {
+      return {
+	type: types.API_ERROR,
+	error: json.msg
+      }
     }
   }
 }
@@ -55,5 +59,23 @@ export function receieveUsers(json) {
   return {
     type: types.RECEIVE_USERS,
     users: json.users
+  }
+}
+
+export function updateUserWithEvents(user) {
+  return (dispatch, getState) => {
+    const events = user.events ? user.events.map(e => e._id) : [];
+    const pendingEvents = user.pendingEvents ? user.pendingEvents.map(e => e._id) : [];
+    const newUser = { ...user, events, pendingEvents };
+    dispatch(updateUser(newUser));
+    dispatch(receiveEvents(user.events)); // these are unstripped
+    dispatch(receiveMoreEvents(user.pendingEvents));
+  }
+}
+
+function updateUser(user) {
+  return {
+    type: types.USER_UPDATE,
+    user
   }
 }

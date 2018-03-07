@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
-import {fetchEventsIfNeeded} from '../actions';
+import { fetchEventsIfNeeded } from '../actions';
 
 import { Segment, Container, Grid, Reveal, Menu, Header, Button, Icon, Image } from 'semantic-ui-react';
 import { Event, EventEntry, FileForm, LoadingIcon, Title} from '../components'

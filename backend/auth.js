@@ -98,10 +98,6 @@ const currentUser = (tok, callback) => {
 
 module.exports.idMatchesOrAdmin = (req, res, next) => {
   let token = req.header("Authorization");
-  console.log('\n\n');
-  console.log(req.header('Authorization'));
-  console.log(req);
-  console.log('\n\n');
   if (!token || !token.startsWith("Bearer ")) {
     res.locals.error = {
       status: 403,

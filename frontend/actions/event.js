@@ -94,12 +94,19 @@ function requestPastEvents() {
   }; 
 }
 
-function receiveEvents(json) {
+export function receiveEvents(jsonEvents) {
   return {
     type: types.RECEIVE_EVENTS,
-    events: json.events,
+    events: jsonEvents,
     receivedAt: Date.now()
   };
+}
+
+export function receiveMoreEvents(pendingEvents) {
+  return {
+    type: types.RECEIVE_MORE_EVENTS,
+    events: pendingEvents
+  }
 }
 
 export function fetchFutureEvents() {
@@ -107,7 +114,7 @@ export function fetchFutureEvents() {
     dispatch(requestFutureEvents());
     return fetchHelper(`/api/events`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveEvents(json)))
+      .then(json => dispatch(receiveEvents(json.events)))
       .then(() => dispatch(stopLoading()));
   }
 }
@@ -117,7 +124,7 @@ export function fetchPastEvents() {
     dispatch(requestPastEvents());
     return fetchHelper(`/api/eventsPast`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveEvents(json)))
+      .then(json => dispatch(receiveEvents(json.events)))
       .then(() => dispatch(stopLoading()));
   }
 }
@@ -126,6 +133,7 @@ export function fetchEventById(id){
   return (dispatch, getState) => {
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveEvents(json)))
+      .then(json => dispatch(receiveEvents(json.events)))
   }
 }
+
