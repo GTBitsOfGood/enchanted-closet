@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { loading, stopLoading, requestUsers, receiveUsers, } from './loading';
 import { fetchHelper, getAPIToken } from './util';
+=======
+import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
+import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
+>>>>>>> fabc9b2364d513b9ec934454c2888295b6d3d381
 
 import * as types from './types';
 
@@ -34,7 +39,21 @@ export function refreshUser(user) {
     dispatch(requestUsers());
     return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
       .then(response => response.json())
+      .then(json => {
+	if (json.status === 'ok' && json.user) {
+	  dispatch(updateUser(json.user));
+	} else {
+	  // TODO: error toast
+	}
+      })
       .then(() => dispatch(stopLoading()));
+  }
+}
+
+export function updateUser(user) {
+  return {
+    type: types.USER_UPDATE,
+    user
   }
 }
 
@@ -43,10 +62,7 @@ export function performLogin(data) {
     dispatch(showModalLoader());
     return fetchHelper(`/api/login`, null, {
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
+      headers: DEFAULT_HEADERS,
       body: JSON.stringify(data)
     })
       .then(response => response.json())
@@ -62,10 +78,7 @@ export function performRegistration(data) {
     dispatch(showModalLoader());
     return fetchHelper(`/api/register`, null, {
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
+      headers: DEFAULT_HEADERS,
       body: JSON.stringify(data)
     })
       .then(response => response.json())

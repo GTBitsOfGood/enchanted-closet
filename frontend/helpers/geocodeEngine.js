@@ -7,7 +7,6 @@ export function geocode(address) {
     })
       .then(response => response.json())
       .then(json => {
-	console.log(json)
 	if (json && json.results && json.results.length > 0 && json.results[0] && json.results[0].geometry) {
 	  return resolve(json.results[0].geometry.location);
 	} else {

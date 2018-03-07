@@ -21,13 +21,11 @@ class Dashboard extends Component {
   }
 
   componentWillMount(){
-    console.log(loadAuthState());
     this.props.refreshUser(this.props.user);
   }
   
   render() {
     const { role } = this.props.user;
-    // console.log(role);
     const dashBlock = (role => {
       switch (role) {
 	case 'Admin':

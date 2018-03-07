@@ -14,7 +14,7 @@ class PageTitle extends Component {
   }
 
   render() {
-    const { title, link, linkTitle, showLoadingIcon, loading } = this.props;
+    const { title, link, linkTitle, showLoadingIcon, loading, history } = this.props;
     return (
       <Container>
         <Card fluid style={styles.background}>
@@ -29,7 +29,11 @@ class PageTitle extends Component {
                 </Grid.Column>
                 {link && linkTitle &&
                  <Grid.Column textAlign="right">
-                   <Button style={styles.button} as='a' href={`${link}`}>{linkTitle}</Button>
+                  <Button style={styles.button} onClick={() => {
+		    history.push({pathname: link})
+		  }}>
+		     {linkTitle}
+		   </Button>
                  </Grid.Column>
                 }
               </Grid.Row>

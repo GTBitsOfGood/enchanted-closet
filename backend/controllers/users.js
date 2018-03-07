@@ -73,6 +73,7 @@ module.exports.get = (req, res, next) => {
   User
     .findById(req.params.id)
     .populate('events')
+    .populate('pendingEvents')
     .exec((err, user) => {
       if (user) {
         res.locals.data = {
@@ -201,7 +202,6 @@ module.exports.update = (req, res, next) => {
 
 
 module.exports.create = (req, res, next) => {
-  console.log('create')
   let newProps = {};
   if (matchesComplexityRequirements(req.body.password)) {
     newProps.password = hash.genNew(req.body.password);

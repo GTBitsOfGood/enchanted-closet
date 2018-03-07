@@ -3,13 +3,11 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-// TODO: Disallow editing of past events
+// TODO: Disallow editing of past/future events
 import { fetchFutureEvents, fetchPastEvents, fetchUsers } from '../../actions/';
 
 import { Container, Segment } from 'semantic-ui-react';
 import { ErrorComponent, LoadingIcon, PageTitle, SearchBarCard, UserList } from '../../components' 
-
-
 
 class AdminAttendance extends Component {
   constructor(props) {
