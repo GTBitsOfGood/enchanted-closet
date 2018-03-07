@@ -19,12 +19,17 @@ class VolunteerDashboard extends Component {
     const { events = [] } = this.props.user;
     const upcomingEvents = events.filter(event => (new Date(event.datetime) > currentDateTime));
     const pastEvents = events.filter(event => (new Date(event.datetime) <= currentDateTime));
-    
+    const pendingEvents = [];
+
     const upcomingEventsRender = upcomingEvents.length === 0 ? (<h2> You are not registered for any upcoming events </h2>) : (upcomingEvents.map(event => (
       <Event key={ `${event._id}upcomingEvent` } data = { event } /> )));
 
     const pastEventsRender = pastEvents.length === 0 ? (<h2> You have not registered for events before! </h2>) : (pastEvents.map(event => (
       <Event key={ `${event._id}pastEvent` } data = { event } /> )));
+
+    const pendingEventsRender = pendingEvents.length === 0 ? (<h2> You have no pending events. </h2>) : (pastEvents.map(event => (
+      <Event key={ `${event._id}pendingEvent` } data = { event } /> )));
+
 
     return (
       <div>
@@ -40,6 +45,13 @@ class VolunteerDashboard extends Component {
     <h1 style={style.header} > Past Events </h1>
     <div style={ style.overflowDiv }>
     { pastEventsRender }
+    </div>
+    </Container>
+
+    <Container style={ style.eventsContainer }>
+    <h1 style={style.header} > Pending Events </h1>
+    <div style={ style.overflowDiv }>
+    { pendingEventsRender }
     </div>
     </Container>
 
