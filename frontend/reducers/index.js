@@ -40,30 +40,27 @@ function rootReducer(state = require('../static/defaultState'), action) {
       }
       eventStateUpdate.events = events;
       return Object.assign({}, state, eventStateUpdate);
-    case types.USER_UPSERT:
-      let { users, user } = state;
-      if (!users) users = [];
+    case types.USERS_UPSERT:
+      let { users = [] } = state;
       let userStateUpdate = {
         loading: false,
         error: '',
         newUser: action.user,
         users: [],
-        user: user
       };
       if (action.isUpdate) {
-        users = users.map(e => {
+        users = users.map(e => { // make sure users list also updates
           if (e._id === action.user._id) {
             return action.user;
           } else {
             return e;
           }
         });
-        userStateUpdate.user = Object.assign({}, userStateUpdate.user, action.user);
       } else {
         users.push(action.user);
       }
       userStateUpdate.users = users;
-      return Object.assign({}, state, userStateUpdate);
+      return { ...state, ...userStateUpdate };
     case types.API_ERROR:
       return Object.assign({}, state, {
         loading: false,
@@ -78,6 +75,14 @@ function rootReducer(state = require('../static/defaultState'), action) {
         isFetchingEvents: false,
         didInvalidateEvents: false,
         events: action.events, // [ ...state.events, ...action.events],
+        lastUpdatedEvents: action.receivedAt
+      });    
+    case types.RECEIVE_MORE_EVENTS: // Merge
+      const newEvents = action.events;
+      const alreadyIn = newEvents.map(e => e._id);
+      const persist = state.events ? state.events.filter(e => !alreadyIn.includes(e._id)) : [];
+      return Object.assign({}, state, {
+        events: [ ...newEvents, ...persist],
         lastUpdatedEvents: action.receivedAt
       });
     case types.REQUEST_EVENTS:
@@ -121,7 +126,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
     }
     case types.USER_UPDATE:
       return Object.assign({}, state, {
-	user: { ...state.user, ...action.user },
+	user: { ...(state.user ? state.user: null), ...action.user },
 	errorMessage: null
       });
       

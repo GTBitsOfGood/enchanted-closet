@@ -371,7 +371,7 @@ module.exports.registerevent = (req, res, next) => {
               msg: err
             };
           }
-
+	  
           res.locals.data = {
 	    eventID,
             newEvents: uDoc.events,

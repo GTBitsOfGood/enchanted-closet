@@ -1,6 +1,5 @@
-import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
+import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents } from './';
 import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
-
 import * as types from './types';
 
 export function logoutUser() {
@@ -15,16 +14,16 @@ export function performLogout() {
   }  
 }
 
+
 function processAuthenticationAttempt(json) {
-  if (json.status === 'ok') {
-    return {
-      type: types.USER_AUTHENTICATED,
-      user: json.user
-    }
-  } else {
-    return {
-      type: types.USER_NOT_AUTHENTICATED,
-      errorMessage: json.msg
+  return (dispatch, getState) => {
+    if (json.status === 'ok') {
+      dispatch(updateUserWithEvents(json.user));
+    } else {
+      return {
+	type: types.USER_NOT_AUTHENTICATED,
+	errorMessage: json.msg
+      }
     }
   }
 }
@@ -36,19 +35,13 @@ export function refreshUser(user) {
       .then(response => response.json())
       .then(json => {
 	if (json.status === 'ok' && json.user) {
-	  dispatch(updateUser(json.user));
+	  // Normalize the data:
+	  dispatch(updateUserWithEvents(json.user));
 	} else {
 	  // TODO: error toast
 	}
       })
       .then(() => dispatch(stopLoading()));
-  }
-}
-
-export function updateUser(user) {
-  return {
-    type: types.USER_UPDATE,
-    user
   }
 }
 
