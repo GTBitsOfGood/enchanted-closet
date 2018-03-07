@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { loading, stopLoading, requestUsers, receiveUsers, } from './loading';
-import { fetchHelper, getAPIToken } from './util';
-=======
 import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
 import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
->>>>>>> fabc9b2364d513b9ec934454c2888295b6d3d381
 
 import * as types from './types';
 
@@ -40,11 +35,11 @@ export function refreshUser(user) {
     return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
       .then(response => response.json())
       .then(json => {
-	if (json.status === 'ok' && json.user) {
-	  dispatch(updateUser(json.user));
-	} else {
-	  // TODO: error toast
-	}
+  if (json.status === 'ok' && json.user) {
+    dispatch(updateUser(json.user));
+  } else {
+    // TODO: error toast
+  }
       })
       .then(() => dispatch(stopLoading()));
   }
