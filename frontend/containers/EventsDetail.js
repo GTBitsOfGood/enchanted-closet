@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import {uniqueId} from 'lodash';
 import moment from 'moment';
@@ -82,16 +82,44 @@ class EventsDetail extends Component {
   render() {
     const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
     const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
+    const date = new Date(detail.datetime);
+    const registerBlock = (() => {
+      if (date.getTime() > Date.now()) {
+	if (user) {
+	  if ((user.events && user.events.includes(detail._id)) ||
+	      (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
+	    return (
+	      <Container>
+		<Button onClick={() => cancelEvent(detail._id, user._id)}>
+		  Cancel
+		</Button>
+	      </Container>
+	    );
+	  } else {
+	    return (
+	      <Container>
+		<Button onClick={() => registerEvent(detail._id, user._id)}>
+		  Register
+		</Button>
+	      </Container>
+	    );
+	  }
+	} else {
+	  return (
+	    <Container>
+	      <Button>
+		<Link to='/login'>
+		  Login to Register
+		</Link>
+	      </Button>
+	    </Container>
+	  );
+	}
+      } else return null;
+    })();
     return (
       <Container>
-	<Container>
-	  <Button onClick={() => registerEvent(detail._id, user._id)}>
-	    Register
-	  </Button>
-	  <Button onClick={() => cancelEvent(detail._id, user._id)}>
-	    Cancel Register
-	  </Button>
-	</Container>
+	{ registerBlock }
 	<Dimmer active={isFetchingEvents}>
 	  <Loader>Loading</Loader>
 	</Dimmer>
