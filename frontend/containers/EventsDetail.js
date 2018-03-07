@@ -83,25 +83,43 @@ class EventsDetail extends Component {
     const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
     const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
     const date = new Date(detail.datetime);
+    const registerBlock = (() => {
+      if (date.getTime() > Date.now()) {
+	if (user) {
+	  if ((user.events && user.events.includes(detail._id)) ||
+	      (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
+	    return (
+	      <Container>
+		<Button onClick={() => cancelEvent(detail._id, user._id)}>
+		  Cancel
+		</Button>
+	      </Container>
+	    );
+	  } else {
+	    return (
+	      <Container>
+		<Button onClick={() => registerEvent(detail._id, user._id)}>
+		  Register
+		</Button>
+	      </Container>
+	    );
+	  }
+	} else {
+	  return (
+	    <Container>
+	      <Button>
+		<Link to='/login'>
+		  Login to Register
+		</Link>
+	      </Button>
+	    </Container>
+	  );
+	}
+      } else return null;
+    })();
     return (
       <Container>
-    {date.getTime() > Date.now() ? 
-      (user ?
-      	(!adminControls ? 
-			<Container>
-			  <Button onClick={() => registerEvent(detail._id, user._id)}>
-			    Register
-			  </Button>
-			  <Button onClick={() => cancelEvent(detail._id, user._id)}>
-			    Cancel Register
-			  </Button>
-			</Container>
-			: false
-		)
-	  	: <Link to='/login'> Login to Register </Link>
-	  )
-	  : false
-	}
+	{ registerBlock }
 	<Dimmer active={isFetchingEvents}>
 	  <Loader>Loading</Loader>
 	</Dimmer>

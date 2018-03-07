@@ -35,11 +35,11 @@ export function refreshUser(user) {
     return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
       .then(response => response.json())
       .then(json => {
-  if (json.status === 'ok' && json.user) {
-    dispatch(updateUser(json.user));
-  } else {
-    // TODO: error toast
-  }
+	if (json.status === 'ok' && json.user) {
+	  dispatch(updateUser(json.user));
+	} else {
+	  // TODO: error toast
+	}
       })
       .then(() => dispatch(stopLoading()));
   }
