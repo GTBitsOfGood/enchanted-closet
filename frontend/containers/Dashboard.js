@@ -43,7 +43,7 @@ class Dashboard extends Component {
 
     return (
       <Container>
-	<PageTitle title={`${role} Dashboard`} />
+	<PageTitle title={`${role} Dashboard`} link = { "/profile" } linkTitle = { "My Profile" } />
 	{ dashBlock }
       </Container>
     );

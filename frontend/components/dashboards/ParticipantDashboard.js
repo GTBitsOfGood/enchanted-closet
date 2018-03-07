@@ -5,7 +5,8 @@ import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card } fr
 import { COLORS } from '../../constants'
 import moment from 'moment';
 
-import { DashboardCard } from './'
+import { DashboardCard } from './';
+import { Event } from '../events';
 
 
 class ParticipantDashboard extends Component {
@@ -14,58 +15,34 @@ class ParticipantDashboard extends Component {
   }
 
   render() {
+    var currentDateTime = new Date();
     const { events = [] } = this.props.user;
-    console.log(events);
+    const upcomingEvents = events.filter(event => (new Date(event.datetime) > currentDateTime));
+    const pastEvents = events.filter(event => (new Date(event.datetime) <= currentDateTime));
     
-    const data = {
-      description: "Hello There"
-    }
+    const upcomingEventsRender = upcomingEvents.length === 0 ? (<h2> You are not registered for any upcoming events </h2>) : (upcomingEvents.map(event => (
+      <Event key={ `${event._id}upcomingEvent` } data = { event } /> )));
 
-    const upcomingEvents = (events.map(event => (<Segment.Group>
-            <Segment.Group horizontal>
-              <Segment style={style.SegmentLeft}>
-              <div style={style.header}>
-                <Header as='h3' inverted>{event.name}</Header>
-                </div>
-                
-              </Segment>
-              <Segment style={style.SegmentRight}>
-                <Container textAlign="right" style={{paddingRight: 10, paddingTop: 10}}>
-                  <p>{pruneDescription(event._id)}</p>
-                </Container>
-              </Segment>
-            </Segment.Group>
-      </Segment.Group>)));
+    const pastEventsRender = pastEvents.length === 0 ? (<h2> You have not registered for events before! </h2>) : (pastEvents.map(event => (
+      <Event key={ `${event._id}pastEvent` } data = { event } /> )));
 
     return (
       <div>
 
-
     <Container style={ style.eventsContainer }>
-
     <h1 style={style.header} > Upcoming Events </h1>
     <div style={ style.overflowDiv }>
-    { upcomingEvents }
-    { upcomingEvents }
-    { upcomingEvents }
+    { upcomingEventsRender }
     </div>
-
     </Container>
 
     <Container style={ style.eventsContainer }>
-
     <h1 style={style.header} > Past Events </h1>
     <div style={ style.overflowDiv }>
-    { upcomingEvents }
-    { upcomingEvents }
-    { upcomingEvents }
+    { pastEventsRender }
     </div>
-    
     </Container>
 
-    <DashboardCard {...profilePage} />
-
-      
       </div>
     );
   }
@@ -100,7 +77,8 @@ const style = {
     backgroundColor: COLORS.WHITE
   },
   header: {
-    padding: '0.5em',
+    paddingTop: '0.5em',
+    paddingLeft: '0.5em',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'
@@ -110,15 +88,12 @@ const style = {
   }
 }
 
-
-
 const pruneDescription = (description) => {
   const cutoff = 20; // 20 words;
   const split = description.split(' ');
   if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`;
   return description;
 }
-
 
 const mapStateToProps = (state) => {
   return {
