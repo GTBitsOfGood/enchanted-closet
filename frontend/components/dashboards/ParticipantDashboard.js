@@ -8,6 +8,9 @@ import moment from 'moment';
 import { DashboardCard } from './';
 import { Event } from '../events';
 
+import { fetchEventById } from '../../actions/';
+
+
 
 class ParticipantDashboard extends Component {
   constructor(props) {
@@ -15,11 +18,18 @@ class ParticipantDashboard extends Component {
   }
 
   render() {
+    //console.log(this.props);
     var currentDateTime = new Date();
     const { events = [] } = this.props.user;
-    const upcomingEvents = events.filter(event => (new Date(event.datetime) > currentDateTime));
-    const pastEvents = events.filter(event => (new Date(event.datetime) <= currentDateTime));
+   
+    // Get only the user's events from the store using the event ids
+    const userEventsDict = this.props.events.filter(e => ((events.includes(e._id))));
+
+    // Filter based on time
+    const upcomingEvents = userEventsDict.filter(event => (new Date(event.datetime) > currentDateTime));
+    const pastEvents = userEventsDict.filter(event => (new Date(event.datetime) <= currentDateTime));
     
+    // Render events using Event component
     const upcomingEventsRender = upcomingEvents.length === 0 ? (<h2> You are not registered for any upcoming events </h2>) : (upcomingEvents.map(event => (
       <Event key={ `${event._id}upcomingEvent` } data = { event } /> )));
 
@@ -97,7 +107,8 @@ const pruneDescription = (description) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    events: state.events
   };
 };
 

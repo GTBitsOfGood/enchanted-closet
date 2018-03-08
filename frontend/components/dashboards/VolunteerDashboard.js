@@ -16,18 +16,27 @@ class VolunteerDashboard extends Component {
 
   render() {
     var currentDateTime = new Date();
+    console.log(this.props);
     const { events = [] } = this.props.user;
-    const upcomingEvents = events.filter(event => (new Date(event.datetime) > currentDateTime));
-    const pastEvents = events.filter(event => (new Date(event.datetime) <= currentDateTime));
-    const pendingEvents = [];
+    const { pendingEvents = [] } = this.props.user;
 
+    // Get only the user's events from the store using the event ids
+    const pendingEventsDict = this.props.events.filter(e => ( (pendingEvents.includes(e._id))));
+    const userEventsDict = this.props.events.filter(e => ( (events.includes(e._id))));
+
+
+    // Filter approved events on time
+    const upcomingEvents = userEventsDict.filter(event => (new Date(event.datetime) > currentDateTime));
+    const pastEvents = userEventsDict.filter(event => (new Date(event.datetime) <= currentDateTime));
+
+    // Render events
     const upcomingEventsRender = upcomingEvents.length === 0 ? (<h2> You are not registered for any upcoming events </h2>) : (upcomingEvents.map(event => (
       <Event key={ `${event._id}upcomingEvent` } data = { event } /> )));
 
     const pastEventsRender = pastEvents.length === 0 ? (<h2> You have not registered for events before! </h2>) : (pastEvents.map(event => (
       <Event key={ `${event._id}pastEvent` } data = { event } /> )));
 
-    const pendingEventsRender = pendingEvents.length === 0 ? (<h2> You have no pending events. </h2>) : (pastEvents.map(event => (
+    const pendingEventsRender = pendingEventsDict.length === 0 ? (<h2> You have no pending events. </h2>) : (pendingEventsDict.map(event => (
       <Event key={ `${event._id}pendingEvent` } data = { event } /> )));
 
 
@@ -109,7 +118,8 @@ const pruneDescription = (description) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    events: state.events
   };
 };
 
