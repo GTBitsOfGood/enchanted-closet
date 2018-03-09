@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card } from 'semantic-ui-react';
+import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card, Message } from 'semantic-ui-react';
 import { COLORS } from '../../constants'
 import moment from 'moment';
 
@@ -17,7 +17,15 @@ class VolunteerDashboard extends Component {
   render() {
     var currentDateTime = new Date();
     console.log(this.props);
-    const { events = [] } = this.props.user;
+
+    const { events = [], age, birthday, email, 
+      emergencyContactName, emergencyContactPhone, emergencyContactRelation, grade,
+      leader, name, race, phone, school } = this.props.user;
+
+    const incompleteProfile = (age === undefined || birthday === undefined || emergencyContactName === undefined || 
+        emergencyContactPhone === undefined || emergencyContactRelation === undefined || leader === undefined ||
+        race === undefined || phone === undefined || school === undefined);
+
     const { pendingEvents = [] } = this.props.user;
 
     // Get only the user's events from the store using the event ids
@@ -42,6 +50,12 @@ class VolunteerDashboard extends Component {
 
     return (
       <div>
+
+    { incompleteProfile ? (<Message style={ style.wrap } error
+    header='Please fill in your profile.'
+    content='We noticed that your profile is missing important information. Please enter all information into your profile'
+  />) : (null) }
+
 
     <Container style={ style.eventsContainer }>
     <h1 style={style.header} > Upcoming Events </h1>
@@ -105,7 +119,7 @@ const style = {
     justifyContent: 'space-between'
   },
   wrap: {
-    padding: '1em'
+    marginTop: '1em'
   }
 }
 

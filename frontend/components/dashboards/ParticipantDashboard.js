@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card } from 'semantic-ui-react';
+import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card, Message } from 'semantic-ui-react';
 import { COLORS } from '../../constants'
 import moment from 'moment';
 
 import { DashboardCard } from './';
 import { Event } from '../events';
-
-import { fetchEventById } from '../../actions/';
-
 
 
 class ParticipantDashboard extends Component {
@@ -17,11 +14,21 @@ class ParticipantDashboard extends Component {
     super(props);
   }
 
+ 
+
   render() {
-    //console.log(this.props);
+    console.log(this.props);
     var currentDateTime = new Date();
-    const { events = [] } = this.props.user;
-   
+
+
+    const { events = [], age, birthday, email, 
+      emergencyContactName, emergencyContactPhone, emergencyContactRelation, grade,
+      leader, name, race, phone, school } = this.props.user;
+
+    const incompleteProfile = (age === undefined || birthday === undefined || emergencyContactName === undefined || 
+        emergencyContactPhone === undefined || emergencyContactRelation === undefined || leader === undefined ||
+        race === undefined || phone === undefined || school === undefined);
+
     // Get only the user's events from the store using the event ids
     const userEventsDict = this.props.events.filter(e => ((events.includes(e._id))));
 
@@ -38,6 +45,11 @@ class ParticipantDashboard extends Component {
 
     return (
       <div>
+
+      { incompleteProfile ? (<Message style={ style.wrap } error
+    header='Please fill in your profile.'
+    content='We noticed that your profile is missing important information. Please enter all information into your profile'
+  />) : (null) }
 
     <Container style={ style.eventsContainer }>
     <h1 style={style.header} > Upcoming Events </h1>
@@ -94,7 +106,7 @@ const style = {
     justifyContent: 'space-between'
   },
   wrap: {
-    padding: '1em'
+    marginTop: '1em'
   }
 }
 
