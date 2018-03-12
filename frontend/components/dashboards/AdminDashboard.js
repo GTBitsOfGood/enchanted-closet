@@ -38,7 +38,6 @@ class AdminDashboard extends Component {
 
   render() {
     const { cards = [] } = this.props;
-    console.log(this.props);
     const body = cards.length === 0 ? (
       <Card fluid>
 	<Card.Content>
