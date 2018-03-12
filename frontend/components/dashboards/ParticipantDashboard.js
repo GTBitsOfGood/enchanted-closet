@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card, Message } from 'semantic-ui-react';
 import { COLORS } from '../../constants'
 import moment from 'moment';
-
+import isProfileComplete from '../../helpers/util';
 import { DashboardCard } from './';
 import { Event } from '../events';
 
@@ -14,69 +14,63 @@ class ParticipantDashboard extends Component {
     super(props);
   }
 
- 
-
   render() {
-    console.log(this.props);
     var currentDateTime = new Date();
 
-
-    const { events = [], age, birthday, email, 
-      emergencyContactName, emergencyContactPhone, emergencyContactRelation, grade,
-      leader, name, race, phone, school } = this.props.user;
-
-    const incompleteProfile = (age === undefined || birthday === undefined || emergencyContactName === undefined || 
-        emergencyContactPhone === undefined || emergencyContactRelation === undefined || leader === undefined ||
-        race === undefined || phone === undefined || school === undefined);
+    const { events = [], age, birthday, email } = this.props.user;
 
     // Get only the user's events from the store using the event ids
-    const userEventsDict = this.props.events.filter(e => ((events.includes(e._id))));
+    const userEventsDict = this.props.events.filter(
+      e => ((events.includes(e._id))));
 
     // Filter based on time
-    const upcomingEvents = userEventsDict.filter(event => (new Date(event.datetime) > currentDateTime));
-    const pastEvents = userEventsDict.filter(event => (new Date(event.datetime) <= currentDateTime));
+    const upcomingEvents = userEventsDict.filter(
+      event => (new Date(event.datetime) > currentDateTime));
+    const pastEvents = userEventsDict.filter(
+      event => (new Date(event.datetime) <= currentDateTime));
     
     // Render events using Event component
-    const upcomingEventsRender = upcomingEvents.length === 0 ? (<h2> You are not registered for any upcoming events </h2>) : (upcomingEvents.map(event => (
-      <Event key={ `${event._id}upcomingEvent` } data = { event } /> )));
+    const upcomingEventsRender = 
+      upcomingEvents.length === 0 ? 
+      (<h2> You are not registered for any upcoming events </h2>) : 
+      (upcomingEvents.map(event => (
+	<Event key={ `${event._id}upcomingEvent` } data = { event } /> 
+      )));
 
-    const pastEventsRender = pastEvents.length === 0 ? (<h2> You have not registered for events before! </h2>) : (pastEvents.map(event => (
-      <Event key={ `${event._id}pastEvent` } data = { event } /> )));
+    const pastEventsRender = 
+      pastEvents.length === 0 ? 
+      (<h2> No past events found </h2>) : 
+      (pastEvents.map(event => (
+	<Event key={ `${event._id}pastEvent` } data = { event } /> 
+      )));
 
     return (
       <div>
-
-      { incompleteProfile ? (<Message style={ style.wrap } error
-    header='Please fill in your profile.'
-    content='We noticed that your profile is missing important information. Please enter all information into your profile'
-  />) : (null) }
-
-    <Container style={ style.eventsContainer }>
-    <h1 style={style.header} > Upcoming Events </h1>
-    <div style={ style.overflowDiv }>
-    { upcomingEventsRender }
-    </div>
-    </Container>
-
-    <Container style={ style.eventsContainer }>
-    <h1 style={style.header} > Past Events </h1>
-    <div style={ style.overflowDiv }>
-    { pastEventsRender }
-    </div>
-    </Container>
-
+	{ !isProfileComplete(this.props.user) ?
+	  (<Message style={ styles.wrap } error
+		    header='Please fill in your profile.'
+		    content='We noticed that your profile is missing important information. Please enter all information into your profile'
+	  />) : (null)
+	}
+	<Container style={ styles.eventsContainer }>
+	  <h1 style={styles.header} > Upcoming Events </h1>
+	  <div style={ styles.overflowDiv }>
+	    { upcomingEventsRender }
+	  </div>
+	</Container>
+	
+	<Container style={ styles.eventsContainer }>
+	  <h1 style={styles.header} > Past Events </h1>
+	  <div style={ styles.overflowDiv }>
+	    { pastEventsRender }
+	  </div>
+	</Container>
       </div>
     );
   }
 }
 
-  const profilePage = {
-    content: "Here is the link to your profile",
-    title: "My Profile",
-    url: "/profile"
-  }
-
-const style = {
+const styles = {
   eventsContainer: {
     backgroundColor: COLORS.WHITE,
     marginTop: '1em',
