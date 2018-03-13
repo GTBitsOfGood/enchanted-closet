@@ -19,18 +19,19 @@ class Navigation extends Component {
   navigate(route) {
     this.props.history.push(route);
   }
-  
+
   render() {
     const navFactory = route => () => this.navigate(route)
 
     const { applicationName, user } = this.props
 
     const userLinks = [
+      ['Upload', '/upload'],
       ['Dashboard', '/dashboard'],
       ['Browse Events', '/events'],
       ['Logout', '/logout']
     ]
-    
+
     const userBlock = (
       <Menu.Menu position='right'>
 	<Dropdown item icon='home' style={styles.button}>
@@ -48,8 +49,8 @@ class Navigation extends Component {
 	</Dropdown>
       </Menu.Menu>
     )
-    
-    return (      
+
+    return (
       <Menu
 	style={styles.base}
 	inverted

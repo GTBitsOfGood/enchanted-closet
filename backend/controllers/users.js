@@ -200,6 +200,44 @@ module.exports.update = (req, res, next) => {
   });
 }
 
+module.exports.upload = (req, res, next) => {
+  if (!req.params.id) {
+    res.locals.error = {
+      status: 400,
+      msg: 'User ID required'
+    };
+    return next();
+  }
+  let newProps = {};
+  if (req.file) {
+      newProps.image = req.file.path;
+  }
+
+  User.findById(req.params.id, (err, doc) => {
+    if (err) {
+      res.locals.error = {
+        status: 404,
+        msg: "User not found with desired ID"
+      }
+      return next(new Error(res.locals.error));
+    } else {
+      doc.set(newProps);
+      doc.save((err, updated) => {
+        console.log(err)
+        if (err) {
+          res.locals.error = {
+            status: 500,
+            msg: "Unable to save changes to db"
+          }
+        }
+        res.locals.data = {
+          user: updated
+        };
+        return next();
+      });
+    }
+  });
+}
 
 module.exports.create = (req, res, next) => {
   let newProps = {};
@@ -288,7 +326,7 @@ module.exports.registerevent = (req, res, next) => {
   }
   const userID = req.params.userID;
   const eventID = req.params.eventID;
-  
+
   Event.findById(eventID, function(err, eDoc){
     if (err || !eDoc) {
       res.locals.error = {
@@ -328,7 +366,7 @@ module.exports.registerevent = (req, res, next) => {
             };
             return next();
           }
-      } 
+      }
       // update users.events
       if (!uDoc.events) uDoc.events = [];
       if (uDoc.role == "Volunteer") {
@@ -371,7 +409,7 @@ module.exports.registerevent = (req, res, next) => {
               msg: err
             };
           }
-	  
+
           res.locals.data = {
 	    eventID,
             newEvents: uDoc.events,
@@ -470,7 +508,7 @@ module.exports.confirmRegistration = (req, res, next) => {
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
             newVolunteers: eDoc.volunteers
-          } 
+          }
           return next();
         });
       });
@@ -565,14 +603,14 @@ module.exports.cancelevent = (req, res, next) => {
               msg: err
             };
           }
-         
+
 	  res.locals.data = {
 	    eventID,
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
             newVolunteers: eDoc.volunteers
-          }          
+          }
           return next();
         });
       });

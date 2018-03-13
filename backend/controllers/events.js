@@ -121,7 +121,7 @@ module.exports.present = (req, res, next) => {
         }
         return next();
       });
-      /* Attendance doesn't affect users 
+      /* Attendance doesn't affect users
       If (!uDoc.events) uDoc.events = [];
       uDoc.events.push(req.params.eventID);
 
@@ -245,6 +245,57 @@ module.exports.get = (req, res, next) => {
         };
         return next();
       }
+    });
+}
+
+module.exports.upload = (req, res, next) => {
+    if (!req.params.id) {
+      res.locals.error = {
+        status: 404,
+        msg: 'That Event was not found in the database'
+      };
+      return next();
+    }
+
+    Event.findById(req.params.id, (err, event) => {
+      if (err) {
+        console.error(err);
+        res.locals.errors = {
+          status: 500,
+          msg: err
+        };
+        return next();
+      }
+
+      if (!event) {
+        res.locals.error = {
+          status: 404,
+          msg: 'That Event was not found in the database'
+        };
+        return next();
+      }
+
+      let newValues = {};
+      console.log(req.file);
+      if (req.file) {
+          newValues.image = req.file.path;
+      }
+
+      event.set(newValues);
+      event.save((err, updatedEvent) => {
+        if (err) {
+          res.locals.error = {
+            code: 500,
+            msg: 'Internal Server Error'
+          }
+          console.log(err);
+          return next(new Error(res.locals.error));
+        }
+        res.locals.data = {
+          event: updatedEvent
+        };
+        return next();
+      });
     });
 }
 

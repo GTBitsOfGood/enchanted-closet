@@ -10,6 +10,7 @@ import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
 
 import Navigation from './Navigation';
+import Upload from './Upload.js';
 
 import DevTools from './DevTools';
 import Helmet from 'react-helmet';
@@ -45,6 +46,7 @@ export default function Root({ store }) {
               <Auth>
                 <Route path="/profile" component={Profile} />
                 <Route exact path="/events" component={Events} />
+                <Route path="/upload" component={Upload} />
                 <Route path="/events/:id" component={EventsDetail} />
                 <Route path="/admin/dashboard" component={AdminDashboard} />
                 <Route exact path="/admin/events" component={AdminEvents} />

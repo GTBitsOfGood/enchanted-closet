@@ -10,6 +10,25 @@ export function fetchHelper( route, apiToken, obj = {} ) {
   return fetch(route, obj)
 }
 
+export function uploadImage(data) {
+    return (dispatch, getState) => {
+        console.log(data);
+        try {
+            fetch(`/api/events/${data.id}`);
+            fetchHelper(`api/events/uploadImage/${data.id}`,
+            getAPIToken(getState)).then(response => response.json());
+        } catch (err) {
+            console.log("Not an event");
+        }
+        try {
+            fetch(`/api/users/${data.id}`);
+            fetchHelper(`api/users/uploadImage/${data.id}`, getAPIToken(getState)).then(response => response.json());
+        } catch (err) {
+            console.log("Not a user");
+        }
+    }
+}
+
 export function getAPIToken( getState ) {
   return getState().user && getState().user.token ? getState().user.token : null;
 }

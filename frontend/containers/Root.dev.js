@@ -10,6 +10,7 @@ import Dashboard from './Dashboard.js';
 import Events from './Events.js';
 import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
+import Upload from './Upload.js';
 
 import Navigation from './Navigation';
 
@@ -23,7 +24,7 @@ import { SmartRoute } from '../components';
 
 import { COLORS } from '../constants'
 
-export default function Root({ store }) {  
+export default function Root({ store }) {
   return (
     <Provider store={store}>
       <div>
@@ -56,6 +57,12 @@ export default function Root({ store }) {
 		component={Profile}
 		redirect="/login"
 	      />
+          <SmartRoute
+        accepts={['loggedIn']}
+        path="/upload"
+        component={Upload}
+        redirect="/login"
+          />
 	      <SmartRoute
 		accepts={['loggedIn']}
 		path="/dashboard"
@@ -73,7 +80,7 @@ export default function Root({ store }) {
 		accepts={['Admin']}
 		exact path="/events/create"
 		component={Admin.EventsNew}
-	      />	      
+	      />
 	      <Route path="/events/:id" component={EventsDetail} />
 	      <SmartRoute
 		accepts={['Admin']}
@@ -89,7 +96,7 @@ export default function Root({ store }) {
 		accepts={['Admin']}
 		exact path="/users"
 		component={Admin.Users}
-	      />	      
+	      />
 	      <SmartRoute
 		accepts={['Admin']}
 		exact path="/users/create"
