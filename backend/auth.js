@@ -1,5 +1,4 @@
 const hash = require('./hash');
-
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const randomBytes = require('crypto').randomBytes;

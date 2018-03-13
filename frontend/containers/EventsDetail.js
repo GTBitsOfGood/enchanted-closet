@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import {uniqueId} from 'lodash';
 import moment from 'moment';
-
+import isProfileComplete from '../helpers/util';
 import { geocode } from '../helpers/geocodeEngine';
 
 import { fetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
@@ -86,20 +86,23 @@ class EventsDetail extends Component {
     const registerBlock = (() => {
       if (date.getTime() > Date.now()) {
 	if (user) {
+	  if (!isProfileComplete(user)) {
+	    return (
+	      <Container>
+		<Button>		  
+		  <Link to='/profile'>
+		    Complete Profile to Register
+		  </Link>
+		</Button>
+	      </Container>
+	    );
+	  }
 	  if ((user.events && user.events.includes(detail._id)) ||
 	      (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
 	    return (
 	      <Container>
 		<Button onClick={() => cancelEvent(detail._id, user._id)}>
 		  Cancel
-		</Button>
-	      </Container>
-	    );
-	  } else {
-	    return (
-	      <Container>
-		<Button onClick={() => registerEvent(detail._id, user._id)}>
-		  Register
 		</Button>
 	      </Container>
 	    );
