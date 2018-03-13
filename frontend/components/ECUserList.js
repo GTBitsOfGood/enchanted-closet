@@ -9,12 +9,14 @@ import ECUserListItem from './ECUserListItem';
 
 const ECUserList = ( props ) => {
   const {users, event, filter} = props;
+  console.log('user list');
+  console.log(users);
   return (
     <Segment>
       {users &&
        <List selection verticalAlign='middle'>
 	 {users.map(user => {
-	    const attending = user.pastEvents.filter(e => e._id === event._id).length === 1;
+	    const attending = user.events.filter(e => e._id === event._id).length === 1;
 	    return (<ECUserListItem
 		      attending={attending}
 		      event={event}

@@ -9,6 +9,7 @@ import { withRouter, Route, Redirect, Switch } from 'react-router-dom';
 // component: on success render
 const SmartRoute = ( props ) => {
   const { accepts = [], redirect='/error', user, ...other } = props;
+  
   if (( accepts.length === 0 ) ||
       ( !user && accepts.includes('loggedOut') ) ||
       ( user && accepts.includes('loggedIn')) ||
