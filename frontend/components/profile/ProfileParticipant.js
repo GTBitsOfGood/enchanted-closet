@@ -34,9 +34,6 @@ class ProfileParticipant extends Component {
     // diff the two things
     this.setState({ loading: true, hasChanged: false });    
     const changedKeys = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]);
-    console.log(changedKeys);
-    console.log(this.state.userData);
-    console.log(this.state.userLastData);
     let diffDict= {};
     changedKeys.forEach(key => {
       diffDict[key] = this.state.userData[key];
