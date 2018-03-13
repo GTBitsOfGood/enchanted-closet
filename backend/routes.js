@@ -42,7 +42,7 @@ router.use((req, res, next) => {
     });
     return res.status(200).json(response);
   } else if (res.locals.error) {
-    console.error(res.locals.error);
+    console.error(res.locals.error); // remove this in future
     let statusCode = res.locals.error.code || 500;
     let response = Object.assign({}, res.locals.error, {
       'status': 'error'

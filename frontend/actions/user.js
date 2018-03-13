@@ -1,7 +1,7 @@
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
 import { fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 import { receiveEvents, receiveMoreEvents } from './';
-
+import moment from 'moment';
 import * as types from './types';
 
 export function upsertUser(data) {
@@ -25,6 +25,9 @@ export function upsertUser(data) {
 function processUserUpsert(json, isUpdate) { // updates users array as well (only relevant for admin)
   return (dispatch, getState) => {
     if (json.status === 'ok') {
+      const { birthday } = json.user;
+      const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
+      json.user = { ...json.user, birthday: formatBDay };
       dispatch(updateUserWithEvents(json.user)); // whatever, not gonna strip users array
       return {
 	type: types.USERS_UPSERT,
@@ -32,6 +35,7 @@ function processUserUpsert(json, isUpdate) { // updates users array as well (onl
 	isUpdate: isUpdate
       };
     } else {
+      // Todo: toast here
       return {
 	type: types.API_ERROR,
 	error: json.msg

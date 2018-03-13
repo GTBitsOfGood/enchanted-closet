@@ -2,46 +2,47 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
+import moment from 'moment';
 import { fetchUsers, upsertUser } from '../../actions'
 import { Button, Card, Container, Header, Loader, Segment } from 'semantic-ui-react'
 import MutableEntry from './MutableEntry'
 
-const softFields = ['phone', 'grade', 'age', 'race', 'school', 'leader', 'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation']
+const softFields = ['phone', 'grade', 'birthday', 'age', 'race', 'school', 'leader', 'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation']
 
 class ProfileParticipant extends Component {
   
   constructor( props ) {
     super(props)
-    const { lastName, firstName, role, email, ...other } = props.user
+    const { lastName, firstName, role, email, birthday, ...other } = props.user
+    const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
+    const userData = { ...other, birthday: formatBDay };
     this.state = {
       loading: false,
-      userData: other, // Dictionary of field (for softFields) names: values
-      userLastData: other, // Cache
-      hasChanged: false // to save on calculations
+      userData, // Dictionary of field (for softFields) names: values
+      userLastData: userData, // Cache
     }
   }
 
-  setChangedFactory = field => value => {
-    // const newChanged = { ...this.state.changed, [field]: value }
-    // this.setState({ changed: newChanged });
-  }
-
   onChangeFactory = field => {
-    const changeFunc = this.setChangedFactory(field)
     return event => {
       const newVal = event.target.value
       this.setState({ userData: { ...this.state.userData, [field]: newVal } })
-      changeFunc(newVal)
     }
   }
 
   onSave = () => {
     // diff the two things
-    this.setState({ loading: true, hasChanged: false });
-    // Object.keys(this.state.userData)  // TODO
+    this.setState({ loading: true, hasChanged: false });    
+    const changedKeys = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]);
+    console.log(changedKeys);
+    console.log(this.state.userData);
+    console.log(this.state.userLastData);
+    let diffDict= {};
+    changedKeys.forEach(key => {
+      diffDict[key] = this.state.userData[key];
+    });
     const { upsertUser } = this.props;
-    // upsertUser({ ...this.state.changed, _id: this.props.user._id });  
+    upsertUser({ ...diffDict, _id: this.props.user._id });  
   }
   
   componentWillReceiveProps( { user } ) {
@@ -69,7 +70,9 @@ class ProfileParticipant extends Component {
 	<div> { role } </div>
       </div>
     )
-
+    
+    const hasChanged = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]).length === 0;
+    
     const softBlock = softFields.map(field => (
       <MutableEntry
 	key={`soft${field}`}
@@ -88,7 +91,7 @@ class ProfileParticipant extends Component {
 	    Participant Profile
 	  </Header>
 	  <Button
-	    disabled={true /* Object.keys(changed).length === 0 */ }
+	    disabled={hasChanged}
 	    onClick={this.onSave}
 	  >
 	    Save Profile

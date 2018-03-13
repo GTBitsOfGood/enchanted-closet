@@ -3,7 +3,7 @@ import { Input, Label } from 'semantic-ui-react'
 import { startCase } from 'lodash'
 
 const MutableEntry = ( props ) => {
-  const { label, value, changed, initialValue, onChange, ...other } = props;
+  const { label, value = "", initialValue = "", onChange, ...other } = props;
   const hasNewInfo = value !== initialValue; // Do something more pleasing with this
   const content = (
     <Input

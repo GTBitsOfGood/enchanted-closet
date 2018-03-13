@@ -139,12 +139,10 @@ module.exports.update = (req, res, next) => {
       }
     });
   }
-  if (req.body.name && req.body.name.length >= 2) {
-    newProps.name = req.body.name;
-  }
+
   //["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-  if (req.body.email && isEmail.test(req.body.email)) {
-    newProps.email = req.body.email;
+  if (req.body.birthday) {
+    newProps.birthday = new Date(req.body.birthday);
   }
   if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
     newProps.grade = req.body.grade;
@@ -184,16 +182,16 @@ module.exports.update = (req, res, next) => {
     } else {
       doc.set(newProps);
       doc.save((err, updated) => {
-        console.log(err)
         if (err) {
           res.locals.error = {
             status: 500,
-            msg: "Unable to save changes to db"
+            msg: "Unable to save user changes to db"
           }
-        }
-        res.locals.data = {
-          user: updated
-        };
+        } else {
+          res.locals.data = {
+            user: updated
+          };
+	}
         return next();
       });
     }

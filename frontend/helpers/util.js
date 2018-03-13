@@ -3,7 +3,7 @@ export default function isProfileComplete( user ) {
     "Participant": [
       "birthday", "leader", "race", "phone", "school",
       "emergencyContactName", "emergencyContactPhone",
-      "emergencyContactRelation", "grade"  
+      "emergencyContactRelation", "grade", "age"
     ],
     "Volunteer": [
       "birthday",
@@ -14,5 +14,5 @@ export default function isProfileComplete( user ) {
     ],
     "Admin": []
   };
-  return profileFields[user.role].reduce( (flag, s) => flag && Object.keys(user).includes(s),  true );
+  return profileFields[user.role].reduce( (flag, s) => flag && Object.keys(user).includes(s),  true ); // todo: robustify, can probably trick this
 }
