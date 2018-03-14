@@ -201,6 +201,7 @@ module.exports.update = (req, res, next) => {
 }
 
 module.exports.upload = (req, res, next) => {
+  console.log(req);
   if (!req.params.id) {
     res.locals.error = {
       status: 400,

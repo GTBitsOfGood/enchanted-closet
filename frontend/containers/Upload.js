@@ -10,19 +10,16 @@ import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image,
 
 class Upload extends Component {
     constructor(props) {
-    super(props);
-        this.state ={
+        super(props);
+        this.state = {
             file: null
         }
-        this.onFormSubmit = this.onFormSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
     }
 
     onFormSubmit(e) {
         e.preventDefault()
         const {dispatch} = this.props;
-        console.log(this.state);
-        console.log(this.props);
         dispatch(uploadImage(this.state));// Stop form submit
     }
 
@@ -43,10 +40,10 @@ class Upload extends Component {
   }
 };
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
     return {
         file: state.file
-    };
-};
+    }
+}
 
 export default connect(mapStateToProps)(Upload);
