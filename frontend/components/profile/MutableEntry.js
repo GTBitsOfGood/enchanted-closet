@@ -3,8 +3,11 @@ import { Input, Label } from 'semantic-ui-react'
 import { startCase } from 'lodash'
 
 const MutableEntry = ( props ) => {
-  const { label, value = "", initialValue = "", onChange, ...other } = props;
+  const { isLegal, label, value = "", initialValue = "", onChange, ...other } = props;
   const hasNewInfo = value !== initialValue; // Do something more pleasing with this
+
+  // do something with status  
+  
   const content = (
     <Input
       label={startCase(label)}
@@ -17,7 +20,7 @@ const MutableEntry = ( props ) => {
   );
   return (
     <div style={styles.main}>
-      {hasNewInfo && "!"}
+      {hasNewInfo && "!"} | {!isLegal && "Improper format"}
       {content}
     </div>    
   );

@@ -7,26 +7,58 @@ import { fetchUsers, upsertUser } from '../../actions'
 import { Button, Card, Container, Header, Loader, Segment } from 'semantic-ui-react'
 import MutableEntry from './MutableEntry'
 
-const softFields = ['phone', 'grade', 'birthday', 'age', 'race', 'school', 'leader', 'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation']
+const softFields = [
+  {name: 'phone',
+   isLegal: val => /^[1-9][0-9]*$/.test(val)},
+  {name: 'grade',
+   isLegal: val => /^[1-9]|1[0-2]|college]$/.test(val)},
+  {name: 'race',
+   isLegal: val => /^[a-zA-Z\s]*$/.test(val)},
+  {name: 'school',
+   isLegal: val => /^\w*$/.test(val)},
+  {name: 'leader',
+   isLegal: val => /^[a-zA-Z\s]$/.test(val)},
+  {name: 'emergencyContactName',
+   isLegal: val => /^[a-zA-Z\s]$/.test(val)},
+  {name: 'emergencyContactPhone',
+   isLegal: val => /^[1-9][0-9]*$/.test(val)},
+  {name: 'emergencyContactRelation',
+   isLegal: val => /^[a-zA-Z\s]$/.test(val)}]
+
+const legalTest = (() => {
+  let legalDict = {};
+  softFields.forEach(entry =>
+    legalDict[entry.name] = entry.isLegal
+  );
+  return legalDict;
+})();
+
 
 class ProfileParticipant extends Component {
   
   constructor( props ) {
-    super(props)
-    const { lastName, firstName, role, email, birthday, ...other } = props.user
-    const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
-    const userData = { ...other, birthday: formatBDay };
+    super(props);
+    const { lastName, firstName, role, email, birthday, ...userData } = props.user;
+    let legalData = {};
+    Object.keys(userData).forEach( key => {
+      legalData[key] = true;
+    });
     this.state = {
       loading: false,
       userData, // Dictionary of field (for softFields) names: values
       userLastData: userData, // Cache
+      legalData, // names: legal
     }
   }
 
   onChangeFactory = field => {
     return event => {
-      const newVal = event.target.value
-      this.setState({ userData: { ...this.state.userData, [field]: newVal } })
+      const newVal = event.target.value;
+      const newLegal = legalTest[field](newVal);
+      this.setState({
+	userData: { ...this.state.userData, [field]: newVal },
+	legalData: { ...this.state.legalData, [field]: newLegal}
+      });
     }
   }
 
@@ -57,7 +89,7 @@ class ProfileParticipant extends Component {
   // each component that corresponds to a profile piece should take the following: - setChanged() callback, value prop, and onChange() prop
   // each component should correspond to a field
   render() {
-    const { lastName, firstName, role, email } = this.props.user
+    const { lastName, firstName, role, email, birthday } = this.props.user
     const { userData, userLastData } = this.state
     const name = firstName + " " + lastName
     const hardBlock = (
@@ -65,22 +97,28 @@ class ProfileParticipant extends Component {
 	<div> { name } </div>
 	<div> { email } </div>
 	<div> { role } </div>
+	<div> { moment(birthday).format("MM/DD/YYYY") } </div>
       </div>
     )
     
-    const hasChanged = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]).length === 0;
+    const hasNotChanged = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]).length === 0;
     
-    const softBlock = softFields.map(field => (
-      <MutableEntry
+    const softBlock = softFields.map(entry => {
+      const field = entry.name;
+      const value = this.state.userData[field];
+      return (
+	<MutableEntry
+	isLegal={this.state.legalData[field]}
 	key={`soft${field}`}
 	label={field}
-	value={this.state.userData[field]} 
+	value={value} 
 	initialValue={this.state.userLastData[field]}
 	onChange={this.onChangeFactory(field)}
-      />
-    ));
-
-    // const allSame = Object.keys();
+	/>
+      )
+    });
+    
+    const allLegal = Object.values(this.state.legalData).reduce((a,b) => a && b);
     return (
       <Container style={styles.wrap}>
 	<div style={styles.header}>
@@ -88,7 +126,7 @@ class ProfileParticipant extends Component {
 	    Participant Profile
 	  </Header>
 	  <Button
-	    disabled={hasChanged}
+	    disabled={!(!hasNotChanged && allLegal)}
 	    onClick={this.onSave}
 	  >
 	    Save Profile
