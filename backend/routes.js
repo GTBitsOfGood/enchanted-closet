@@ -7,6 +7,7 @@ const auth = require('./auth')
 
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
+router.post('/session/:id', auth.verifySession);
 
 router.get('/users', auth.checkAdmin, controllers.users.index);
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
@@ -50,6 +51,7 @@ router.use((req, res, next) => {
     return res.status(statusCode).json(response);
   } else {
     console.log('generic server error');
+    console.log(req.params);
     return res.status(500).json({
       'status': 'error',
       'code': 500,
