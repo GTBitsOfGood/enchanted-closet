@@ -7,7 +7,6 @@ import * as types from './types';
 export function upsertUser(data) {
   return (dispatch, getState) => {
     dispatch(loading());
-    console.log(data);
     const url = data._id ? `/api/users/${data._id}` : `/api/users`;
     const method = data._id ? 'PUT' : 'POST';
     const isUpdate = data._id ? true : false;

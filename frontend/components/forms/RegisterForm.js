@@ -5,6 +5,8 @@ import { capitalize } from 'lodash';
 import { Button, Input, Form } from 'semantic-ui-react';
 import { performRegistration } from '../../actions/';
 import { formWrapper } from './';
+import moment from 'moment';
+import DatePicker from 'react-datepicker';
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -22,7 +24,8 @@ class RegisterForm extends Component {
       email: '',
       password: '',
       confirmPass: '',
-      role: 'participant'
+      role: 'participant',
+      birthday: moment()
     }
   }
 
@@ -34,7 +37,7 @@ class RegisterForm extends Component {
 	break
       case "password":
       case "confirmPass":
-	return /^[a-zA-Z0-9.!"@?#$%&:';()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
+	return /^[a-zA-Z0-9.!@?#$%&:';()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
 	break
       case "email":
 	return /^[\w@.]*$/.test(val)
@@ -53,16 +56,17 @@ class RegisterForm extends Component {
 	return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/.test(val);
 	break
       case "email":
-	return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
+	return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
 	break
       default:
 	return this.regLegalTest(field, val)
 	break
     }
   }
-
+  
   // filter is what to filter to apply to value into state
   changeFunctionFactory = (field, warningMessage, filter) => {
+    
     return e => {
       if (this.regLegalTest(field, e.target.value)) {
 	this.props.setValid();
@@ -131,7 +135,8 @@ class RegisterForm extends Component {
 	this.props.setError();
 	this.updateStatus('email', 1);
       }
-    }
+    },
+    'birthday': e => true    
   }
 
   updateStatus = (field, val) => {
@@ -163,6 +168,10 @@ class RegisterForm extends Component {
       this.props.setError("The form is completed incorrectly.");
     }
   }
+
+  handleBirthdayChange(updated) {
+    this.setState({'birthday': updated});
+  };
   
   render() {
     const { firstName, lastName, email,
@@ -201,6 +210,13 @@ class RegisterForm extends Component {
 	    onChange={this.changeFunctionFactory("email", "Email characters only.")}
 	    placeholder='gburdell@gatech.edu'
 	    onBlur={this.blurFunctionFactory('email')}
+	  />
+	  <Form.Field
+	    label="Birthday"
+	    control={DatePicker}
+	    selected={this.state.birthday}
+	    onChange={this.handleBirthdayChange}
+	    name="birthday"
 	  />
 	  <Form.Input
 	    label="Password"

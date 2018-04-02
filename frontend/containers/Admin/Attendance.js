@@ -12,8 +12,7 @@ import { ErrorComponent, LoadingIcon, PageTitle, SearchBarCard, UserList } from 
 class AdminAttendance extends Component {
   constructor(props) {
     super(props);
-
-    const { match, users, events, user, history } = this.props;
+    const { match, users, events, user } = this.props;
 
     this.state = {
       event_id: match.params.id,
@@ -76,11 +75,20 @@ class AdminAttendance extends Component {
 
   render() {
     const { loading, event, users, hasAttemptedRefresh, filter } = this.state;
+<<<<<<< HEAD
     //alert(users)
+=======
+    console.log(users);
+>>>>>>> 75c00bd08b8c10abb30973f59599bdb3ef25a346
     if (event) {
       return (
 	<Container>
-	  <PageTitle title={event.name} showLoadingIcon link="/admin/users/create" linkTitle="Register" />
+	  <PageTitle
+	    title={event.name}
+	    showLoadingIcon
+	    link="/admin/users/create"
+	    linkTitle="Register"
+	  />
 	  <SearchBarCard filterFunction={this.searchFilterUsers}/>
 	  <UserList event={event} users={users} filter={filter} />
 	</Container>

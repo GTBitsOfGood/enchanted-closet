@@ -35,36 +35,37 @@ export default function Root({ store }) {
 	    <Navigation />
 	    <Switch>
 	      <SmartRoute
-		accepts={['loggedOut']}
-		exact path="/"
-		component={Homepage}
-		redirect="/dashboard"
+	      accepts={['loggedOut']}
+	      exact path="/"
+	      component={Homepage}
+	      redirect="/dashboard"
 	      />
 	      <SmartRoute
-		accepts={['loggedOut']}
-		path="/login"
-		component={Login}
-		redirect="/"
+	      accepts={['loggedOut']}
+	      path="/login"
+	      component={Login}
+	      redirect="/"
 	      />
 	      <SmartRoute
-		accepts={['loggedOut']}
-		path="/register"
-		component={Register}
-		redirect="/"
+	      accepts={['loggedOut']}
+	      path="/register"
+	      component={Register}
+	      redirect="/"
 	      />
 	      <SmartRoute
-		accepts={['loggedIn']}
-		path="/profile"
-		component={Profile}
-		redirect="/login"
+	      accepts={['loggedIn']}
+	      path="/profile"
+	      component={Profile}
+	      redirect="/login"
 	      />
 	      <SmartRoute
-		accepts={['loggedIn']}
-		path="/dashboard"
-		component={Dashboard}
-		redirect="/login"
+	      accepts={['loggedIn']}
+	      path="/dashboard"
+	      component={Dashboard}
+	      redirect="/login"
 	      />
 	      <SmartRoute
+<<<<<<< HEAD
 		accepts={['loggedIn']}
 		path="/logout"
 		component={Logout}
@@ -74,34 +75,48 @@ export default function Root({ store }) {
 		accepts={['Admin', 'Volunteer']}
 		path="/events/:id/attendance"
 		component={Attendance}
+=======
+	      accepts={['loggedIn']}
+	      path="/logout"
+	      component={Logout}
+	      redirect="/"
+>>>>>>> 75c00bd08b8c10abb30973f59599bdb3ef25a346
 	      />
 	      <Route exact path="/events" component={Events} />
 	      <SmartRoute
-		accepts={['Admin']}
-		exact path="/events/create"
-		component={Admin.EventsNew}
-	      />	      
-	      <Route path="/events/:id" component={EventsDetail} />
-	      <SmartRoute
-		accepts={['Admin']}
-		path="/events/:id/edit"
-		component={Admin.EventsEdit}
+	      accepts={['Admin']}
+	      exact path="/events/create"
+	      component={Admin.EventsNew}
 	      />
+	      <SmartRoute
+	      accepts={['Admin']}
+	      path="/events/:id/edit"
+	      component={Admin.EventsEdit}
+	      />
+<<<<<<< HEAD
 	      
+=======
 	      <SmartRoute
-		accepts={['Admin']}
-		exact path="/users"
-		component={Admin.Users}
+	      accepts={['Admin', 'Volunteer']}
+	      path="/events/:id/attendance"
+	      component={Admin.Attendance}
+	      />
+	      <Route path="/events/:id" component={EventsDetail} />
+>>>>>>> 75c00bd08b8c10abb30973f59599bdb3ef25a346
+	      <SmartRoute
+	      accepts={['Admin']}
+	      exact path="/users"
+	      component={Admin.Users}
 	      />	      
 	      <SmartRoute
-		accepts={['Admin']}
-		exact path="/users/create"
-		component={Admin.UsersNew}
+	      accepts={['Admin']}
+	      exact path="/users/create"
+	      component={Admin.UsersNew}
 	      />
 	      <SmartRoute
-		accepts={['Admin']}
-		path="/users/:id"
-		component={Admin.UsersDetail}
+	      accepts={['Admin']}
+	      path="/users/:id"
+	      component={Admin.UsersDetail}
 	      />
 	      <Route path="/error" component={MissingPage} />
 	      <Route component={MissingPage} />

@@ -199,7 +199,7 @@ class EventsDetail extends Component {
 		     ]}
 		     onActionClick={() => deleteEvent(detail._id)}
 		   />
-		   <Button onClick={() => history.push(`/admin/events/${detail._id}/attendance`)}>Mark Attendance</Button>
+		   <Button onClick={() => history.push(`/events/${detail._id}/attendance`)}>Mark Attendance</Button>
 		   <Button primary onClick={() => window.open(`/api/events/${detail._id}/report`, '_blank')}>Download Attendance Reord</Button>
 		 </Button.Group>
 	       </Clearfix>

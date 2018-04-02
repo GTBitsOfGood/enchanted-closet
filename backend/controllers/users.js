@@ -75,7 +75,7 @@ module.exports.get = (req, res, next) => {
     .populate('events')
     .populate('pendingEvents')
     .exec((err, user) => {
-      if (user) {
+      if (user) {	
         res.locals.data = {
           user: user
         };
@@ -181,6 +181,8 @@ module.exports.update = (req, res, next) => {
       return next(new Error(res.locals.error));
     } else {
       doc.set(newProps);
+      console.log(doc);
+      console.log(newProps);
       doc.save((err, updated) => {
         if (err) {
           res.locals.error = {
