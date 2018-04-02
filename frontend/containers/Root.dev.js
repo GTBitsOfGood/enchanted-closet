@@ -10,13 +10,15 @@ import Dashboard from './Dashboard.js';
 import Events from './Events.js';
 import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
-
+import Attendance from './Admin/Attendance.js';
 import Navigation from './Navigation';
 
 import DevTools from './DevTools';
 import Helmet from 'react-helmet';
 
 import * as Admin from './Admin'
+
+
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { SmartRoute } from '../components';
@@ -67,6 +69,11 @@ export default function Root({ store }) {
 		path="/logout"
 		component={Logout}
 		redirect="/"
+		  />
+		<SmartRoute
+		accepts={['Admin', 'Volunteer']}
+		path="/events/:id/attendance"
+		component={Attendance}
 	      />
 	      <Route exact path="/events" component={Events} />
 	      <SmartRoute
@@ -80,11 +87,7 @@ export default function Root({ store }) {
 		path="/events/:id/edit"
 		component={Admin.EventsEdit}
 	      />
-	      <SmartRoute
-		accepts={['Admin', 'Volunteer']}
-		path="/events/:id/attendance"
-		component={Admin.Attendance}
-	      />
+	      
 	      <SmartRoute
 		accepts={['Admin']}
 		exact path="/users"
