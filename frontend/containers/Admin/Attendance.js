@@ -37,17 +37,18 @@ class AdminAttendance extends Component {
     const { event_id } = this.state;
     const { fetchFutureEvents, fetchPastEvents, fetchUsers, events, users } = this.props;
     let event = events.filter(e => e._id === event_id);
+    console.log(event);
     if (!event || event.length === 0) {
       this.setState({loading: true, hasAttemptedRefresh: true});
       fetchFutureEvents();
-      fetchPastEvents();
+
     } else {
       this.setState({event: event[0]});
     }
 
     if (!users || users.length === 0) {
       this.setState({loading: true});
-      fetchUsers();
+
     }
   }
 
@@ -55,7 +56,7 @@ class AdminAttendance extends Component {
     this.setState({loading: false});
 
     const {event_id} = this.state;
-    const {events, users} = nextProps;
+    const {events} = nextProps;
 
     if (events) {
       let event = events.filter(e => e._id === event_id);
@@ -63,6 +64,7 @@ class AdminAttendance extends Component {
 	this.setState({events, event: event[0]});
       }
     }
+    let users = event.participants;
     if (users) {
       this.setState({users});
     }
@@ -74,6 +76,7 @@ class AdminAttendance extends Component {
 
   render() {
     const { loading, event, users, hasAttemptedRefresh, filter } = this.state;
+    //alert(users)
     if (event) {
       return (
 	<Container>

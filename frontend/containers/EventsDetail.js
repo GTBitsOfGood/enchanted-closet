@@ -83,6 +83,19 @@ class EventsDetail extends Component {
     const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
     const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
     const date = new Date(detail.datetime);
+    const attendanceBlock = (() => {
+    	if (user && user.role !== 'Participant') {
+		  return (
+	  	  <Container>
+	        <Button attached= 'top'>
+		  <Link to={'/events/' + detail._id + '/attendance'}>
+			  Check Attendance
+	        </Link>
+		    </Button>
+	      </Container>
+	      );
+		}
+	})();
     const registerBlock = (() => {
       if (date.getTime() > Date.now()) {
 	if (user) {
@@ -97,20 +110,34 @@ class EventsDetail extends Component {
 	      </Container>
 	    );
 	  }
-	  if ((user.events && user.events.includes(detail._id)) ||
+	  else {
+	  	if ((user.events && user.events.includes(detail._id)) ||
 	      (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
-	    return (
-	      <Container>
-		<Button onClick={() => cancelEvent(detail._id, user._id)}>
-		  Cancel
-		</Button>
-	      </Container>
-	    );
+	      return (
+	        <Container>
+	      {attendanceBlock}
+		  <Button attached = 'top' onClick={() => cancelEvent(detail._id, user._id)}>
+		    Cancel Registration
+			  </Button>
+			</Container>
+		  );  
+	  	}
+	  	else {
+	  	  return (
+	        <Container>
+	      {attendanceBlock}
+		  <Button attached = "top" onClick={() => registerEvent(detail._id, user._id)}>
+		    Register
+		  </Button>
+	        </Container>
+	      );
+	    }
+	    
 	  }
 	} else {
 	  return (
 	    <Container>
-	      <Button>
+	      <Button attached= 'top'>
 		<Link to='/login'>
 		  Login to Register
 		</Link>
