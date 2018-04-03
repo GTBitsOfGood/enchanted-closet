@@ -23,10 +23,11 @@ class ECUserListItem extends Component {
       console.log(`${this.state.user._id} is now ${this.state.attending}`)
       
       if (this.state.attending) {
-	       markAttending(event, user);
+	markAttending(event, user);
       } else {
-	       markUnattending(event, user);
+	markUnattending(event, user);
       }
+      
     });
   }
 

@@ -111,7 +111,7 @@ class EventsDetail extends Component {
 	    );
 	  }
 	  else {
-	  	if (user.pendingEvents && user.pendingEvents.includes(detail._id)) { // Already registered
+	  	if ((user.events && user.events.includes(detail._id)) || (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
 	      return (
 	        <Container>
 	      {attendanceBlock}
@@ -121,7 +121,7 @@ class EventsDetail extends Component {
 			</Container>
 		  );  
 	  	}
-	  	else if (user.events && user.events.includes(detail._id)) {
+	  	else if (false) {
 	  	  return (
 		  	<Container>
 		  <Label>Your Attendance for this Event was Recorded</Label>

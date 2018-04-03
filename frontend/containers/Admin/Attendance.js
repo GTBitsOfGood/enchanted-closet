@@ -33,7 +33,9 @@ class AdminAttendance extends Component {
 
   componentDidMount() {
     const { event_id } = this.state;
-    const { fetchFutureEvents, fetchPastEvents, fetchUsers, events, users } = this.props;
+    const { fetchFutureEvents, fetchPastEvents, fetchUsers} = this.props;
+    fetchFutureEvents();
+    const { events, users } = this.props;
     let event = events.filter(e => e._id === event_id);
     if (!event || event.length === 0) {
       this.setState({loading: true, hasAttemptedRefresh: true});
