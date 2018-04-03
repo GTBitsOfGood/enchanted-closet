@@ -21,10 +21,11 @@ class ECUserListItem extends Component {
     const {event, user} = this.state;
     this.setState({attending: !this.state.attending}, () => {
       console.log(`${this.state.user._id} is now ${this.state.attending}`)
+      
       if (this.state.attending) {
-	markAttending(event, user);
+	       markAttending(event, user);
       } else {
-	markUnattending(event, user);
+	       markUnattending(event, user);
       }
     });
   }
@@ -37,7 +38,7 @@ class ECUserListItem extends Component {
     return (
       <List.Item style={{display:filteredVisibility}} onClick={this.attendanceUpdate}>
 	<List.Content>
-	  <List.Header><Checkbox onClick={() => {}} checked={this.state.attending} label={user.name}/></List.Header>
+	  <List.Header><Checkbox checked={this.state.attending} label={user.name}/></List.Header>
 	</List.Content>
       </List.Item>
     )

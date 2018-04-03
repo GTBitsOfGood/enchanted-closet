@@ -172,6 +172,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       });
 
     case types.MARK_ATTENDING:
+    console.log(state)
       const userMap = state.users.map(u => {
         if (u._id === action.userID) {
           u.pastEvents.push(action.event);

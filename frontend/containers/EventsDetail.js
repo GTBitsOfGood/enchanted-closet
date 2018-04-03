@@ -10,7 +10,7 @@ import { geocode } from '../helpers/geocodeEngine';
 
 import { fetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 
-import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
+import { Button, Container, Icon, Dimmer, Loader, Segment, Modal, Label} from 'semantic-ui-react';
 import { Clearfix, Map, EditButton, ErrorComponent, Event, PageTitle, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
@@ -111,8 +111,7 @@ class EventsDetail extends Component {
 	    );
 	  }
 	  else {
-	  	if ((user.events && user.events.includes(detail._id)) ||
-	      (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
+	  	if (user.pendingEvents && user.pendingEvents.includes(detail._id)) { // Already registered
 	      return (
 	        <Container>
 	      {attendanceBlock}
@@ -122,6 +121,13 @@ class EventsDetail extends Component {
 			</Container>
 		  );  
 	  	}
+	  	else if (user.events && user.events.includes(detail._id)) {
+	  	  return (
+		  	<Container>
+		  <Label>Your Attendance for this Event was Recorded</Label>
+		  	</Container>
+		  );
+    	}
 	  	else {
 	  	  return (
 	        <Container>

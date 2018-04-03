@@ -13,7 +13,6 @@ class AdminAttendance extends Component {
   constructor(props) {
     super(props);
     const { match, users, events, user } = this.props;
-
     this.state = {
       event_id: match.params.id,
       users: users || [],
@@ -36,18 +35,17 @@ class AdminAttendance extends Component {
     const { event_id } = this.state;
     const { fetchFutureEvents, fetchPastEvents, fetchUsers, events, users } = this.props;
     let event = events.filter(e => e._id === event_id);
-    console.log(event);
     if (!event || event.length === 0) {
       this.setState({loading: true, hasAttemptedRefresh: true});
       fetchFutureEvents();
 
     } else {
       this.setState({event: event[0]});
+      this.setState({users: event[0].participants})
     }
-
     if (!users || users.length === 0) {
       this.setState({loading: true});
-
+      fetchUsers();
     }
   }
 
@@ -59,14 +57,16 @@ class AdminAttendance extends Component {
 
     if (events) {
       let event = events.filter(e => e._id === event_id);
+      let users = event[0].participants;
+      if (users) {
+      this.setState(users:users);
+    }
       if (event && event.length === 1) {
 	this.setState({events, event: event[0]});
       }
     }
-    let users = event.participants;
-    if (users) {
-      this.setState({users});
-    }
+    
+    
   }
 
   searchFilterUsers(filterString) {
@@ -75,11 +75,6 @@ class AdminAttendance extends Component {
 
   render() {
     const { loading, event, users, hasAttemptedRefresh, filter } = this.state;
-<<<<<<< HEAD
-    //alert(users)
-=======
-    console.log(users);
->>>>>>> 75c00bd08b8c10abb30973f59599bdb3ef25a346
     if (event) {
       return (
 	<Container>
