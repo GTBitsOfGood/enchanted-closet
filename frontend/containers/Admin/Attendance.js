@@ -12,7 +12,7 @@ import { ErrorComponent, LoadingIcon, PageTitle, SearchBarCard, UserList } from 
 class AdminAttendance extends Component {
   constructor(props) {
     super(props);
-    const { match, users, events, user } = this.props;
+    const { match, users, events, user, fetchFutureEvents } = this.props;
     this.state = {
       event_id: match.params.id,
       users: users || [],
@@ -20,7 +20,6 @@ class AdminAttendance extends Component {
       loading: false,
       filter: ''
     };
-
     if (events && events.length > 0) {
       const event = events.filter(e => e._id === this.state.event_id);
       if (event && event.length === 1) {
@@ -34,7 +33,6 @@ class AdminAttendance extends Component {
   componentDidMount() {
     const { event_id } = this.state;
     const { fetchFutureEvents, fetchPastEvents, fetchUsers} = this.props;
-    fetchFutureEvents();
     const { events, users } = this.props;
     let event = events.filter(e => e._id === event_id);
     if (!event || event.length === 0) {
@@ -48,20 +46,22 @@ class AdminAttendance extends Component {
     if (!users || users.length === 0) {
       this.setState({loading: true});
       fetchUsers();
+
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({loading: false});
-
     const {event_id} = this.state;
     const {events} = nextProps;
+    
 
     if (events) {
+
       let event = events.filter(e => e._id === event_id);
       let users = event[0].participants;
       if (users) {
-      this.setState(users:users);
+      this.setState({users:users});
     }
       if (event && event.length === 1) {
 	this.setState({events, event: event[0]});

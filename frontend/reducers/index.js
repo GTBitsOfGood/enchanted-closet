@@ -181,15 +181,15 @@ function rootReducer(state = require('../static/defaultState'), action) {
         }
         return u;
       });
-      const eventRemap = state.events.map(e => {
-        if (e._id === action.event._id) {
-          e.participants.push(action.user);
-        }
-        return e;
-      });
+      //const eventRemap = state.events.map(e => {
+        //if (e._id === action.event._id && e.participants.findIndex(u => u._id === action.user._id) === -1) {
+          //e.participants.push(action.user);
+        //}
+        //return e;
+      //});
       return Object.assign({}, state, {
         users: userMap,
-        events: eventRemap
+        //events: eventRemap
       });
 
     case types.MARK_UNATTENDING:
@@ -200,16 +200,16 @@ function rootReducer(state = require('../static/defaultState'), action) {
         }
         return u;
       });
-      const eventRebuild = state.events.map(e => {
-        if (e._id === action.event._id) {
-          const i = e.participants.findIndex(u => u._id === action.user._id);
-          if (i > -1) e.participants.splice(i, 1);
-        }
-        return e;
-      });
+      //const eventRebuild = state.events.map(e => {
+        //if (e._id === action.event._id) {
+          //const i = e.participants.findIndex(u => u._id === action.user._id);
+          //if (i > -1) e.participants.splice(i, 1);
+        //}
+        //return e;
+      //});
       return Object.assign({}, state, {
         users: userRebuild,
-        events: eventRebuild
+        //events: eventRebuild
       });
 
     default:
