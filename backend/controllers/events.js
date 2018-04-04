@@ -95,20 +95,32 @@ module.exports.present = (req, res, next) => {
         };
         return next();
       }
-
-      if (!eDoc.participants) eDoc.participants = [];
-      if (eDoc.participants.indexOf(req.params.userID) === -1) {
-        eDoc.participants.push(req.params.userID);
-      } else {
-        res.locals.error = {
-          status: 400,
-          msg: 'That user has already been marked present'
-        };
-        return next();
+      if (uDoc.role == 'Participant') {
+        if (!eDoc.participantsAttended) eDoc.participantsAttended = [];
+        if (eDoc.participantsAttended.indexOf(req.params.userID) === -1) {
+          eDoc.participantsAttended.push(req.params.userID);
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'That participant has already been marked present'
+          };
+          return next();
+        }
+      } else if (uDoc.role == 'Volunteer') {
+        if (!eDoc.volunteersAttended) eDoc.volunteersAttended = [];
+        if (eDoc.volunteersAttended.indexOf(req.params.userID) === -1) {
+          eDoc.volunteersAttended.push(req.params.userID);
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'That volunteer has already been marked present'
+          };
+          return next();
+        }
       }
 
       eDoc.save(err => {
-	if (err) {
+	    if (err) {
           console.log(err);
           res.locals.error = {
             code: 500,
@@ -121,104 +133,9 @@ module.exports.present = (req, res, next) => {
         }
         return next();
       });
-      /* Attendance doesn't affect users 
-      If (!uDoc.events) uDoc.events = [];
-      uDoc.events.push(req.params.eventID);
-
-      uDoc.save((err) => {
-        if (err) {
-          console.log(err);
-          res.locals.error = {
-            code: 500,
-            msg: err
-          };
-          return next();
-        }
-      });
-      */
     });
   });
 }
-
-module.exports.absent = (req, res, next) => {
-  if (!req.params.eventID) {
-    res.locals.error = {
-      status: 400,
-      msg: 'Event ID required'
-    };
-    return next();
-  }
-  if (!req.params.userID) {
-    res.locals.error = {
-      status: 400,
-      msg: 'User ID required'
-    };
-    return next();
-  }
-
-  Event.findById(req.params.eventID, function(err, eDoc){
-    if (err || !eDoc) {
-      res.locals.error = {
-        status: 404,
-        msg: 'That event was not found in the database'
-      };
-      return next();
-    }
-
-    User.findById(req.params.userID, function(err, uDoc){
-      if (err || !uDoc) {
-        res.locals.error = {
-          status: 404,
-          msg: 'That user was not found in the database'
-        };
-        return next();
-      }
-
-      if (eDoc.participants) {
-        let ind = eDoc.participants.indexOf(req.params.userID);
-        if (ind != -1) {
-          eDoc.participants.splice(ind, 1);
-        }
-      }
-
-      /* Same as above, though this would be odd...
-      if (uDoc.events) {
-        let ind = uDoc.events.indexOf(req.params.eventID);
-        if (ind != -1) {
-          uDoc.events.splice(ind, 1);
-
-        }
-      }
-      */
-      eDoc.save(err => {
-        if (err) {
-          console.log(err);
-          res.locals.error = {
-            code: 500,
-            msg: err
-          };
-        }
-	return next();
-	/*
-        uDoc.save(err => {
-          if (err) {
-            console.log(err);
-            res.locals.error = {
-              code: 500,
-              msg: err
-            };
-          }
-
-          res.locals.data = {
-            absent: true
-          }
-          return next();
-        });
-	*/
-      });
-    });
-  });
-};
 
 module.exports.get = (req, res, next) => {
   if (!req.params.id) {
