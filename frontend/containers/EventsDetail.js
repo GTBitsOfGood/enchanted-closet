@@ -140,6 +140,13 @@ class EventsDetail extends Component {
 	    }
 	    
 	  }
+	  return (
+	    <Container>
+	      <Button onClick={() => registerEvent(detail._id, user._id)}>
+		Register
+	      </Button>
+	    </Container>
+	  );
 	} else {
 	  return (
 	    <Container>

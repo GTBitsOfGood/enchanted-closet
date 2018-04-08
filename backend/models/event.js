@@ -32,6 +32,12 @@ var EventSchema = new mongoose.Schema({
   volunteers: {
     type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
   },
+  participantsAttended: {
+    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  },
+  volunteersAttended: {
+    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  },
   images: {
     type: [String]
   },
