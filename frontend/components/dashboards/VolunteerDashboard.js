@@ -7,6 +7,8 @@ import moment from 'moment';
 import isProfileComplete from '../../helpers/util';
 import { DashboardCard } from './';
 import { Event } from '../events';
+import { ErrorMessage } from '../common';
+
 
 class VolunteerDashboard extends Component {
   constructor(props) {
@@ -51,11 +53,11 @@ class VolunteerDashboard extends Component {
     return (
       <div>
 	{ !isProfileComplete(this.props.user) ?
-	  (<Message style={ styles.wrap } error
-		    header='Please fill in your profile.'
-		    content='We noticed that your profile is missing important information. Please enter all information into your profile'
-	  />) : (null) }
-	
+	  (<ErrorMessage header="Please complete your profile" 
+      content="We noticed that your profile is missing important information. Please enter all information into your profile
+      "/>) : (null) 
+  }
+
 	<Container style={ styles.eventsContainer }>
 	  <h1 style={styles.header} > Upcoming Events </h1>
 	  <div style={ styles.overflowDiv }>
