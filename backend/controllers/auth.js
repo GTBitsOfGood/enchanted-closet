@@ -68,80 +68,6 @@ module.exports.register = (req, res, next) => {
     return next();
   }
 
-  // Leaving this in to make someone's life easier down the road
-
-  // if (!req.body.age) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'An age is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.birthday) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'A birthday is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.emergencycontactname) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'An Emergency Contact Name is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.emergencycontactphone) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'An Emergency Contact Phone number is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.emergencycontactrelation) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'An Emergency Contact Relation is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.race) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Entering your race is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.school) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Your school is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.leader) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Your leader\'s name is required'
-  //   };
-  //   return next();
-  // }
-
-  // if (!req.body.phone) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'A phone number is required'
-  //   };
-  //   return next();
-  // }
-
   auth.register(req.body, (err, user) => {
     if (err) {
       res.locals.error = {
@@ -150,10 +76,10 @@ module.exports.register = (req, res, next) => {
       };
       return next();
     }
-
     res.locals.data = {
       user: user
     }
+    console.log(user);
     return next();
   });
 }
