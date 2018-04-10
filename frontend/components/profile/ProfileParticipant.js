@@ -6,6 +6,8 @@ import moment from 'moment';
 import { fetchUsers, upsertUser } from '../../actions'
 import { Button, Card, Container, Header, Loader, Segment } from 'semantic-ui-react'
 import MutableEntry from './MutableEntry'
+import { ProfileForm } from '../'
+
 
 const softFields = [
   {name: 'phone',
@@ -15,7 +17,7 @@ const softFields = [
   {name: 'race',
    isLegal: val => /^[a-zA-Z\s]*$/.test(val)},
   {name: 'school',
-   isLegal: val => /^\w*$/.test(val)},
+   isLegal: val => /^[\w\s]*$/.test(val)},
   {name: 'leader',
    isLegal: val => /^[a-zA-Z\s]$/.test(val)},
   {name: 'emergencyContactName',
@@ -124,7 +126,7 @@ class ProfileParticipant extends Component {
 	<div style={styles.header}>
 	  <Header as='h3'>
 	    Participant Profile
-	  </Header>
+	  </Header>	  
 	  <Button
 	    disabled={!(!hasNotChanged && allLegal)}
 	    onClick={this.onSave}
@@ -138,7 +140,7 @@ class ProfileParticipant extends Component {
 	  </Card>
 	  <Card style={styles.softCard}>
 	    Additional Details:
-	    {softBlock}
+	    <ProfileForm />	    
 	  </Card>
 	</div>
       </Container>
