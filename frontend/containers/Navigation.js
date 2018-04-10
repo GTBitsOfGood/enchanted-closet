@@ -21,7 +21,9 @@ class Navigation extends Component {
   }
   
   render() {
-    const navFactory = route => () => this.navigate(route)
+    const navFactory = route => () => {
+      this.navigate(route)
+    }
 
     const { applicationName, user } = this.props
 
