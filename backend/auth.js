@@ -273,7 +273,6 @@ module.exports.register = (data, callback) => {
       if (err) return callback(err, null);
       let tok = randomBytes(64).toString("hex");
       user.set("token", tok);
-      console.log(user);
       redisClient.set(user._id, tok, 'EX', 1800); // expire after 30 mins
       return callback(null, Object.assign({}, user._doc, {"token": tok}));
     });
