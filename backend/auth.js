@@ -90,9 +90,9 @@ const currentUser = (tok, callback) => {
   if (!tok) { //catch falsy values like null, empty string
     return callback(null, null);
   }
-  redisClient.get(tok, function(err, reply){
-    callback(err, reply)
-  });
+  // redisClient.get(tok, function(err, reply){
+  //   callback(err, reply)
+  // });
 }
 
 module.exports.idMatchesOrAdmin = (req, res, next) => {
@@ -234,7 +234,6 @@ module.exports.idMatches = (req, res, next) => {
 module.exports.login = (data, callback) => {
   hash.checkAgainst(data, function(err, usr) {
     if (err) {
-      console.error(err);
       return callback(err, null);
     }
     if (usr !== null) {

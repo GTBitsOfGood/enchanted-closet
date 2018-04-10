@@ -50,7 +50,6 @@ router.use((req, res, next) => {
     return res.status(statusCode).json(response);
   } else {
     console.log('generic server error');
-    console.log(req.params);
     return res.status(500).json({
       'status': 'error',
       'code': 500,
