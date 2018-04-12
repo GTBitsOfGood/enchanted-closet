@@ -41,7 +41,11 @@ class AdminAttendance extends Component {
 
     } else {
       this.setState({event: event[0]});
-      this.setState({users: event[0].participants})
+      console.log(event[0].participants);
+      console.log(event[0].volunteers);
+      let userList = event[0].participants.concat(event[0].volunteers)
+      console.log(userList)
+      this.setState({users: userList})
     }
     if (!users || users.length === 0) {
       this.setState({loading: true});
@@ -59,7 +63,7 @@ class AdminAttendance extends Component {
     if (events) {
 
       let event = events.filter(e => e._id === event_id);
-      let users = event[0].participants;
+      let users = event[0].participants.concat(event[0].volunteers);
       if (users) {
       this.setState({users:users});
     }

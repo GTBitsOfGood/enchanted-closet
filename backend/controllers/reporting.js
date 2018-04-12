@@ -1,4 +1,3 @@
-const fs = require('fs');
 const csv = require('fast-csv');
 const Event = require('mongoose').model('Event');
 const User = require('mongoose').model('User');
@@ -26,24 +25,45 @@ module.exports.eventReport = (req, res, next) => {
         };
         return next();
       }
-      async.each(eventInfo.participants, (e, cb) => {
-        User.findById(e._id, (err, userInfo) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          csvStream.write({Name: userInfo.name, Email: userInfo.email});
-          cb(null);
+      eventInfo.volunteers.forEach((v, ind, volunteers) => {
+          User.findById(v._id, (err, userInfo) => {
+            if (err) { 
+              console.log(err);
+              csvStream.write({Event: 'There was an Error', Role: '', Name: 'NA', Email: 'NA', Attended: 'NA'})
+            }
+            else if (userInfo){
+              if (eventInfo.volunteersAttended.filter(user => { return user._id.toString() === v._id.toString() }).length === 1)
+                csvStream.write({Event: eventInfo.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
+              else
+                csvStream.write({Event: eventInfo.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
+            }
+          });
         });
-      }, (err, res) => {
-        csvStream.end();
-      });
-    });
+        eventInfo.participants.forEach((u, ind2, users) => {
+          User.findById(u._id, (err, userInfo) => {
+            if (err) { 
+              console.log(err);
+              csvStream.write({Event: 'There was an Error', Role: '', Name: 'NA', Email: 'NA', Attended: 'NA'})
+            }
+            else if (userInfo){
+              if (e.participantsAttended.filter(user => { return user._id.toString() === u._id.toString() }).length === 1)
+                csvStream.write({Event: eventInfo.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
+              else
+                csvStream.write({Event: eventInfo.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
+            }
+            if (ind2 === users.length - 1) {
+              csvStream.end();
+            }
+            
+          });
+      });  
+  });
 }
 
 module.exports.yearReport = (req, res, next) => {
   const csvStream = csv.createWriteStream({headers: true});
-  res.setHeader("content-type", "text/csv");
+  res.setHeader('Content-disposition', 'attachment; filename=year.csv');
+  res.setHeader("Content-Type", "text/csv");
   csvStream.pipe(res);
   const currentYear = new Date().getFullYear();
   const minimumDate = new Date();
@@ -53,7 +73,7 @@ module.exports.yearReport = (req, res, next) => {
   maximumDate.setFullYear(currentYear, 11, 31);
 
   let reportMap = [];
-
+  let userList = [];
   User
     .find({
       role: 'Participant'
@@ -67,6 +87,7 @@ module.exports.yearReport = (req, res, next) => {
       }
     });
 
+
   Event
     .find({
       datetime: {
@@ -75,8 +96,11 @@ module.exports.yearReport = (req, res, next) => {
       }
     })
     .populate('participants')
+    .populate('participantsAttended')
+    .populate('volunteers')
+    .populate('volunteerAttended')
     .exec((err, events) => {
-      console.log(events);
+      //console.log(events);
       if (err) {
         res.locals.error = {
           status: 404,
@@ -84,17 +108,46 @@ module.exports.yearReport = (req, res, next) => {
         };
         return next();
       }
-      // async.each(eventInfo.participants, (e, cb) => {
-      //     User.findById(e._id, (err, userInfo) => {
-      //         if (err) {
-      //             console.log(err);
-      //             return;
-      //         }
-      //         csvStream.write({Name: userInfo.name, Email: userInfo.email});
-      //         cb(null);
-      //     });
-      // }, (err, res) => {
-      //     csvStream.end();
-      // });
+      let count = 0;
+      events.forEach((e, ind1, events) => {
+        e.volunteers.forEach((v, indVol, volunteers) => {
+          User.findById(v._id, (err, userInfo) => {
+            if (err) { 
+              console.log(err);
+              csvStream.write({Event: 'There was an Error', Role: '', Name: 'NA', Email: 'NA', Attended: 'NA'})
+            }
+            else if (userInfo){
+              if (indVol == 0)
+                count++;
+              if (e.volunteersAttended.filter(user => { return user._id.toString() === v._id.toString() }).length === 1)
+                csvStream.write({Event: e.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
+              else
+                csvStream.write({Event: e.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
+            }
+          });
+        });
+        e.participants.forEach((u, ind2, users) => {
+          User.findById(u._id, (err, userInfo) => {
+            if (err) { 
+              console.log(err);
+              csvStream.write({Event: 'There was an Error', Role: '', Name: 'NA', Email: 'NA', Attended: 'NA'})
+            }
+            else if (userInfo){
+              if (ind2 == 0)
+                count++;
+              if (e.participantsAttended.filter(user => { return user._id.toString() === u._id.toString() }).length === 1)
+                csvStream.write({Event: e.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
+              else
+                csvStream.write({Event: e.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
+            }
+            if (count === events.length && ind2 === users.length - 1) {
+              csvStream.end();
+            }
+            
+          });
+      });  
     });
+  });
 }
+
+

@@ -137,6 +137,81 @@ module.exports.present = (req, res, next) => {
   });
 }
 
+module.exports.absent = (req, res, next) => {
+  if (!req.params.eventID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Event ID required'
+    };
+    return next();
+  }
+  if (!req.params.userID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'User ID required'
+    };
+    return next();
+  }
+  Event.findById(req.params.eventID, function(err, eDoc){
+    if (err || !eDoc) {
+      res.locals.error = {
+        status: 404,
+        msg: 'That event was not found in the database'
+      };
+      return next();
+    }
+    User.findById(req.params.userID, function(err, uDoc){
+      if (err || !uDoc) {
+        res.locals.error = {
+          status: 404,
+          msg: 'That user was not found in the database'
+        };
+        return next();
+      }
+      if (uDoc.role == 'Participant') {
+        if (!eDoc.participantsAttended) eDoc.participantsAttended = [];
+        const index = eDoc.participantsAttended.indexOf(req.params.userID);
+        if (index > -1) {
+          eDoc.participantsAttended.splice(index, 1);
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'That participant has already been marked absent'
+          };
+          return next();
+        }
+      } else if (uDoc.role == 'Volunteer') {
+        if (!eDoc.volunteersAttended) eDoc.volunteersAttended = [];
+        const index = eDoc.volunteersAttended.indexOf(req.params.userID);
+        if (eDoc.volunteersAttended.indexOf(req.params.userID) > -1) {
+          eDoc.volunteersAttended.splice(index, 1);
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'That volunteer has already been marked absent'
+          };
+          return next();
+        }
+      }
+
+      eDoc.save(err => {
+      if (err) {
+          console.log(err);
+          res.locals.error = {
+            code: 500,
+            msg: err
+          };
+        }
+
+        res.locals.data = {
+          present: false
+        }
+        return next();
+      });
+    });
+  });
+}
+
 module.exports.get = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {

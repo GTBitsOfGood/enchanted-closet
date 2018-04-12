@@ -14,8 +14,7 @@ const ECUserList = ( props ) => {
       {users &&
        <List selection verticalAlign='middle'>
 	 {users.map(user => {
-
-	    const attending = user.events.filter(e => e._id === event._id).length === 1;
+	 	const attending = event.participantsAttended.filter(u => u === user._id).length === 1;
 	    return (<ECUserListItem
 		      attending={attending}
 		      event={event}

@@ -51,7 +51,7 @@ class AdminDashboard extends Component {
 			 key={`admin_card_${card.title}`} />)) }
 	<Card
 	  onClick={() =>
-	    window.open(`/api/report/year`, '_blank')}
+	    window.open(`/api/report/year`, 'year.csv')}
           centered	
 	>
 	  <Card.Content style={{textAlign: 'center'}}>
