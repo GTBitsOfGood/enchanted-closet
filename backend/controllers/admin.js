@@ -4,6 +4,7 @@ const Event = mongoose.model('Event');
 const async = require('async');
 
 module.exports.cards = (req, res, next) => {
+  console.log("\n Request for cards received \n");
   let userCounts  = {
     participant: 0,
     volunteer: 0,

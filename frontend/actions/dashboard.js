@@ -63,13 +63,13 @@ function formatCards(cards) {
   }
 }
 
-export function loadDashboardCards() {
+export function loadAdminDashboardCards() {
   return (dispatch, getState) => {
     dispatch(loading());
     dispatch(updateDashboardCards(DEFAULT_CARDS));
     return fetchHelper(`/api/dashboard`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => json.cards)
+      .then(json => { console.log(json); return json.cards})
       .then(cards => dispatch(formatCards(cards)))
       .then(() => dispatch(stopLoading()));
   }

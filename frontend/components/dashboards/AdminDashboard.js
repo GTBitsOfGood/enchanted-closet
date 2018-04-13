@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { Container, Card, Icon } from 'semantic-ui-react';
 
-import { loadDashboardCards } from '../../actions/';
+import { loadAdminDashboardCards } from '../../actions/';
 
 import DashboardCard from './DashboardCard'
 
@@ -32,8 +32,8 @@ class AdminDashboard extends Component {
   }
 
   componentDidMount() {
-    const { loadDashboardCards } = this.props;
-    loadDashboardCards();
+    const { loadAdminDashboardCards } = this.props;
+    loadAdminDashboardCards();
   }
 
   render() {
@@ -88,7 +88,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    loadDashboardCards: loadDashboardCards
+    loadAdminDashboardCards: loadAdminDashboardCards
   }, dispatch);
 }
 
