@@ -129,11 +129,11 @@ export function fetchPastEvents() {
   }
 }
 
-export function fetchEventById(id){
+export function upfetchEventById(id){
   return (dispatch, getState) => {
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveEvents(json.events)))
+      .then(json => dispatch(receiveMoreEvents(json.events)))
   }
 }
 

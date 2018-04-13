@@ -3,15 +3,15 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import {uniqueId} from 'lodash';
+import { uniqueId } from 'lodash';
 import moment from 'moment';
 import isProfileComplete from '../helpers/util';
 import { geocode } from '../helpers/geocodeEngine';
 
-import { fetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
+import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 
 import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
-import { Clearfix, Map, EditButton, ErrorComponent, Event, PageTitle, Speakers } from '../components/';
+import { DeleteButton, DownloadAttendanceButton, Clearfix, MarkAttendanceButton, Map, EditButton, ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -21,28 +21,24 @@ const DEFAULT_MAP_LOCATION = {
 class EventsDetail extends Component {
   constructor(props) {
     super(props);
-    const { match } = this.props;
+    const { match, user } = this.props;
     const eventId = match.params.id;
-    const isAdmin = this.props.user && this.props.user.role === 'Admin';
     this.state = {
-      detail : '',
-      adminControls: isAdmin,
       eventId,
       displayMapLocationError: false
     }
   }
 
   componentDidMount() {
-    const { fetchEventsIfNeeded, // fetchEvents,
+    const { match, upfetchEventById, // fetchEvents,
 	    events, location } = this.props;
-    const eventId = this.props.match.params.id;
-    fetchEventsIfNeeded();
-    const detail = events.filter(event => event._id === eventId);
-    if (detail.length === 0) { //in case local store is old
-      fetchEventById(eventId);
+    const eventId = match.params.id;
+    const event = events.find(event => event._id === eventId);
+    if (!event) { //in case local store is old
+      upfetchEventById(eventId);
     } else {
-      this.setState( {detail: detail[0]} );
-      geocode(detail[0].location)
+      this.setState( { event } );
+      geocode(event.location)
 	.then(location => {
 	  this.setState({latitude: location.lat, longitude: location.lng});
 	})
@@ -57,18 +53,18 @@ class EventsDetail extends Component {
     const eventId = this.state.eventId;
     //process it again
     if (!events) return;
-    const detail = events.find(e => e._id === eventId);
-    if (!detail) {
+    const event = events.find(e => e._id === eventId);
+    if (!event) {
       this.setState({
 	isFetchingEvents: false,
-	detail: null
+	event: null
       });
     } else {
       this.setState({
 	isFetchingEvents: false,
-	detail: detail
+	event
       });
-
+      
       geocode(detail.location)
 	.then(location => {
 	  this.setState({latitude: location.lat, longitude: location.lng});
@@ -81,8 +77,8 @@ class EventsDetail extends Component {
 
   render() {
     const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
-    const { detail, adminControls, displayMapLocationError, latitude, longitude } = this.state;
-    const date = new Date(detail.datetime);
+    const { event, displayMapLocationError, latitude, longitude } = this.state;
+    const date = new Date(event.datetime);
     const registerBlock = (() => {
       if (date.getTime() > Date.now()) {
 	if (user) {
@@ -97,11 +93,11 @@ class EventsDetail extends Component {
 	      </Container>
 	    );
 	  }
-	  if ((user.events && user.events.includes(detail._id)) ||
-	      (user.pendingEvents && user.pendingEvents.includes(detail._id))) { // Already registered
+	  if ((user.events && user.events.includes(event._id)) ||
+	      (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
 	    return (
 	      <Container>
-		<Button onClick={() => cancelEvent(detail._id, user._id)}>
+		<Button onClick={() => cancelEvent(event._id, user._id)}>
 		  Cancel
 		</Button>
 	      </Container>
@@ -109,7 +105,7 @@ class EventsDetail extends Component {
 	  }
 	  return (
 	    <Container>
-	      <Button onClick={() => registerEvent(detail._id, user._id)}>
+	      <Button onClick={() => registerEvent(event._id, user._id)}>
 		Register
 	      </Button>
 	    </Container>
@@ -133,14 +129,14 @@ class EventsDetail extends Component {
 	<Dimmer active={isFetchingEvents}>
 	  <Loader>Loading</Loader>
 	</Dimmer>
-	{ !isFetchingEvents && detail &&
+	{ !isFetchingEvents && event &&
 	  <div>
-	    <PageTitle title={detail.name} link="/events" linkTitle="Back to All Events" />
+	    <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
 	    <Segment key="information">
 	      <h3>Description</h3>
-	      <p style={{whiteSpace: 'pre-line'}}>{detail.description}</p>
+	      <p style={{whiteSpace: 'pre-line'}}>{event.description}</p>
 	    </Segment>
-	    <Speakers speakers={detail.speakers}/>
+	    <Speakers speakers={event.speakers}/>
 	    {displayMapLocationError || (latitude && longitude) ?
 	     <Map
 	       isMarkerShown
@@ -151,43 +147,41 @@ class EventsDetail extends Component {
 	     :
 	     <Segment style={{textAlign: 'center', padding: '80px'}} loading />
 	    }
-	    <Segment key="details">
-	      <h3>Details</h3>
-	      <p><Icon name='map'/> {detail.location}</p>
-	      <p><Icon name='clock'/> {moment(new Date(detail.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
+	    <Segment key="events">
+	      <h3>Events</h3>
+	      <p><Icon name='map'/> {event.location}</p>
+	      <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
 	    </Segment>
-	    {adminControls &&
-	     <Segment key="admin_controls">
-	       <h3>Admin Controls</h3>
-	       <Clearfix>
-		 <Button.Group>
-		   <EditButton history={history} route={`admin/events/${detail._id}/edit`}/>
-		   <Modal
-		     trigger={
-		       <Button animated="vertical" color="red">
-			 <Button.Content visible>Delete</Button.Content>
-			 <Button.Content hidden>
-			   <Icon name='trash' />
-			 </Button.Content>
-		       </Button>
-		     }
-		     header='Confirm Delete'
-		     content='Are you sure you want to delete this event?'
-		     actions={[
-		       'Cancel',
-		       { key: 'done', content: 'Delete', negative: true },
-		     ]}
-		     onActionClick={() => deleteEvent(detail._id)}
-		   />
-		   <Button onClick={() => history.push(`/events/${detail._id}/attendance`)}>Mark Attendance</Button>
-		   <Button primary onClick={() => window.open(`/api/events/${detail._id}/report`, '_blank')}>Download Attendance Reord</Button>
-		 </Button.Group>
-	       </Clearfix>
-	     </Segment>
-	    }
+	    <RoleCheck role="Admin">
+	      <Segment>
+		<h3>Admin Controls</h3>
+		<Clearfix>
+		  <Button.Group>
+		    <EditButton history={history} route={`admin/events/${event._id}/edit`}/>
+		    <Modal
+		      trigger={
+			<DeleteButton />
+		      }
+		      header='Confirm Delete'
+		      content='Are you sure you want to delete this event?'
+		      actions={[
+			'Cancel',
+			{ key: 'done', content: 'Delete', negative: true },
+		      ]}
+		      onActionClick={() => deleteEvent(event._id)}
+		    />
+		    <MarkAttendanceButton />
+		    <DownloadAttendanceButton />
+		  </Button.Group>
+		</Clearfix>
+	      </Segment>
+	    </RoleCheck>
+	    <RoleCheck role="Volunteer">
+	      <MarkAttendanceButton />
+	    </RoleCheck>
 	  </div>
 	}
-	{ !isFetchingEvents && !detail &&
+	{ !isFetchingEvents && !event &&
 	  <ErrorComponent
 	    redir='/events/'
 	    redirMsg='Return to all events'
@@ -222,7 +216,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     deleteEvent: deleteEvent,
     fetchEventsIfNeeded: fetchEventsIfNeeded,
-    fetchEventById: fetchEventById,
+    upfetchEventById: upfetchEventById,
     registerEvent: registerEvent,
     cancelEvent: cancelEvent
   }, dispatch);
