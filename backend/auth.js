@@ -90,9 +90,9 @@ const currentUser = (tok, callback) => {
   if (!tok) { //catch falsy values like null, empty string
     return callback(null, null);
   }
-  // redisClient.get(tok, function(err, reply){
-  //   callback(err, reply)
-  // });
+  redisClient.get(tok, function(err, reply){
+    callback(err, reply)
+  });
 }
 
 module.exports.idMatchesOrAdmin = (req, res, next) => {
@@ -102,7 +102,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
       status: 403,
       msg: 'Not authorized (must be admin)'
     };
-    return next();
+    return next(new Error(res.locals.error));
   }
   token = token.substring(7);
   currentUser(token, (err, curr) => { // TODO put back in module.exports if broken
