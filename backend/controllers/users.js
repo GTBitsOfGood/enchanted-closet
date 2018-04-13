@@ -201,6 +201,7 @@ module.exports.update = (req, res, next) => {
 }
 
 module.exports.upload = (req, res, next) => {
+  console.log("uploading");
   console.log(req);
   if (!req.params.id) {
     res.locals.error = {
@@ -210,6 +211,7 @@ module.exports.upload = (req, res, next) => {
     return next();
   }
   let newProps = {};
+  console.log(req.file);
   if (req.file) {
       newProps.image = req.file.path;
   }

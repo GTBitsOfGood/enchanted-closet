@@ -10,31 +10,62 @@ export function fetchHelper( route, apiToken, obj = {} ) {
   return fetch(route, obj)
 }
 
-export function uploadImage(data) {
-    return (dispatch, getState) => {
-        console.log(data);
-        let user = getState().user;
-        let event = getState().event;
-        if (user) {
-            try {
-                fetchHelper(`api/users/uploadImage/${user._id}`, getAPIToken(getState), {
-                    method: 'POST',
-                    body: data
-                })
-                    .then(response => response.json());
-            } catch (err) {
-                console.log("Not a user");
-            }
-        }
-        if (event) {
-            try {
-                fetchHelper(`api/events/uploadImage/${event._id}`,
-                getAPIToken(getState), {method: 'POST'}, getState().apiToken).then(response => response.json());
-            } catch (err) {
-                console.log("Not an event");
-            }
-        }
+export function uploadUserImage(data) {
+  return (dispatch, getState) => {
+    console.log(data);
+    let user = getState().user;
+    let event = getState().event;
+    if (user) {
+      console.log("user detected");
+      let packagedData = new FormData();
+      for (const key in data) {
+	packagedData.append(key, data[key]);
+	console.log("hello");
+      }
+      packagedData.append('blob', new Blob(['Hello World!\n']), 'test')
+      try {	
+        fetchHelper(`api/users/uploadImage/${user._id}`, getAPIToken(getState), {
+          method: 'POST',
+          body: packagedData
+        })
+          .then(response => response.json());
+      } catch (err) {
+        console.log("Not a user");
+      }
     }
+  }
+}
+export function uploadImage(data) {
+  return (dispatch, getState) => {
+    console.log(data);
+    let user = getState().user;
+    let event = getState().event;
+    if (user) {
+      try {
+	let packagedData = new FormData();
+	packagedData.append("image", data["file"]);
+	/* for (const key in data) {
+	  packagedData.append(key, data[key]);
+	} */
+
+        fetchHelper(`api/users/uploadImage/${user._id}`, getAPIToken(getState), {
+          method: 'POST',
+          body: packagedData
+        })
+          .then(response => response.json());
+      } catch (err) {
+        console.log("Not a user");
+      }
+    }
+    if (event) {
+      try {
+        fetchHelper(`api/events/uploadImage/${event._id}`,
+                    getAPIToken(getState), {method: 'POST'}, getState().apiToken).then(response => response.json());
+      } catch (err) {
+        console.log("Not an event");
+      }
+    }
+  }
 }
 
 export function getAPIToken( getState ) {
