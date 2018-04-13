@@ -137,6 +137,85 @@ module.exports.present = (req, res, next) => {
   });
 }
 
+module.exports.absent = (req, res, next) => {
+  if (!req.params.eventID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Event ID required'
+    };
+    return next();
+  }
+  if (!req.params.userID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'User ID required'
+    };
+    return next();
+  }
+  Event.findById(req.params.eventID, function(err, eDoc){
+    if (err || !eDoc) {
+      res.locals.error = {
+        status: 404,
+        msg: 'That event was not found in the database'
+      };
+      return next();
+    }
+    User.findById(req.params.userID, function(err, uDoc){
+      if (err || !uDoc) {
+        res.locals.error = {
+          status: 404,
+          msg: 'That user was not found in the database'
+        };
+        return next();
+      }
+      if (uDoc.role == 'Participant') {
+        if (!eDoc.participantsAttended) eDoc.participantsAttended = [];
+        if (eDoc.participantsAttended.indexOf(req.params.userID) !== -1) {
+          var temp = eDoc.participantsAttended.map(String);
+          temp.splice(temp.indexOf(req.params.userID), 1);
+          eDoc.pendingEvents = temp;
+          eDoc.events.push(eventID);
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'That participant has already been marked absent'
+          };
+          return next();
+        }
+      } else if (uDoc.role == 'Volunteer') {
+        if (!eDoc.volunteersAttended) eDoc.volunteersAttended = [];
+        if (eDoc.volunteersAttended.indexOf(req.params.userID) !== -1) {
+          var temp = eDoc.volunteersAttended.map(String);
+          temp.splice(temp.indexOf(req.params.userID), 1);
+          eDoc.pendingEvents = temp;
+          eDoc.events.push(eventID);
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'That volunteer has already been marked absent'
+          };
+          return next();
+        }
+      }
+
+      eDoc.save(err => {
+	    if (err) {
+          console.log(err);
+          res.locals.error = {
+            code: 500,
+            msg: err
+          };
+        }
+
+        res.locals.data = {
+          present: true
+        }
+        return next();
+      });
+    });
+  });
+}
+
 module.exports.get = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
