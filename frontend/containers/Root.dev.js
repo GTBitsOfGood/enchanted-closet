@@ -10,6 +10,7 @@ import Dashboard from './Dashboard.js';
 import Events from './Events.js';
 import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
+import { ErrorMessage } from '../components/'
 
 import Navigation from './Navigation';
 
@@ -31,6 +32,8 @@ export default function Root({ store }) {
 	<Router>
 	  <div>
 	    <Navigation />
+	   	<ErrorMessage />
+
 	    <Switch>
 	      <SmartRoute
 	      accepts={['loggedOut']}

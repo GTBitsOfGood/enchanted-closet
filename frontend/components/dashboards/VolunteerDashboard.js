@@ -53,9 +53,7 @@ class VolunteerDashboard extends Component {
     return (
       <div>
 	{ !isProfileComplete(this.props.user) ?
-	  (<ErrorMessage header="Please complete your profile" 
-      content="We noticed that your profile is missing important information. Please enter all information into your profile
-      "/>) : (null) 
+    (<Message error style={ styles.wrap } header="Please complete your profile." content="We noticed that your profile is missing important information. Please enter all information into your profile." />) : (null) 
   }
 
 	<Container style={ styles.eventsContainer }>

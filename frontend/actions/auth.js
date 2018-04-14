@@ -38,7 +38,10 @@ export function refreshUser(user) {
 	  // Normalize the data:
 	  dispatch(updateUserWithEvents(json.user));
 	} else {
-	  // TODO: error toast
+    return {
+	  type: types.GEN_ERROR,
+    errorMessage: 'There was an error refreshing the user.^^^Please follow the rules'
+  }
 	}
       })
       .then(() => dispatch(stopLoading()));
@@ -53,7 +56,7 @@ export function performLogin(data) {
       headers: DEFAULT_HEADERS,
       body: JSON.stringify(data)
     })
-      .then(response => response.json())
+      .then(response => {console.log(response); return response.json()})
       .then(json => {
         dispatch(hideModalLoader());
         dispatch(processAuthenticationAttempt(json));

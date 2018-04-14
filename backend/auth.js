@@ -231,7 +231,10 @@ module.exports.idMatches = (req, res, next) => {
 }
 
 module.exports.login = (data, callback) => {
+  console.log("Hello we are here");
+
   hash.checkAgainst(data, function(err, usr) {
+    console.log("Hello we are here");
     if (err) {
       console.error(err);
       return callback(err, null);
