@@ -27,7 +27,7 @@ class EventUpload extends Component {
     return (
       <center>
         <form onSubmit={e => this.onFormSubmit(e)}>
-          <h1>File Upload</h1>
+          <h1>Event Image Upload</h1>
           <input type="file" onChange={this.onChange} />
           <button type="submit">Upload</button>
         </form>

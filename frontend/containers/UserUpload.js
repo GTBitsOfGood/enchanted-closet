@@ -28,7 +28,7 @@ class UserUpload extends Component {
       <Container>
 	<center>
           <Form onSubmit={e => this.onFormSubmit(e)}>
-            <Header as='h1'> File Upload </Header>
+            <Header as='h1'> Profile Picture Upload </Header>
             <Form.Input type="file" onChange={this.onChange} />
             <Button type="submit">Upload</Button>
           </Form>
