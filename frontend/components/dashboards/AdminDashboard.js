@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 
 import { Container, Card, Icon } from 'semantic-ui-react';
 
-import { loadDashboardCards } from '../../actions/';
+import { loadDashboardCards, confirmVolunteer, fetchFutureEvents, receiveEvents } from '../../actions/';
 
 import DashboardCard from './DashboardCard'
+
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
 const DEFAULT_CARDS = [
   {
@@ -32,7 +34,7 @@ class AdminDashboard extends Component {
   }
 
   componentDidMount() {
-    const { loadDashboardCards } = this.props;
+    const { loadDashboardCards} = this.props;
     loadDashboardCards();
   }
 
@@ -52,23 +54,35 @@ class AdminDashboard extends Component {
 	<Card
 	  onClick={() =>
 	    window.open(`/api/report/year`, '_blank')}
-          centered	
+          centered
 	>
 	  <Card.Content style={{textAlign: 'center'}}>
-	    <h1><Icon name='cloud download'/></h1>
-	  </Card.Content>
-	  <Card.Content style={{textAlign: 'center'}}>
-	    <h3>'Download Year Attendance'</h3>
-	  </Card.Content>
-	</Card>	
-      </Card.Group>
+  	    <h1><Icon name='cloud download'/></h1>
+  	  </Card.Content>
+  	  <Card.Content style={{textAlign: 'center'}}>
+  	    <h3>'Download Year Attendance'</h3>
+  	  </Card.Content>
+  	</Card>
+  </Card.Group>
     )
+    const options = {
+      noDataText: 'This is custom text for empty data'
+    // withoutNoDataText: true, // this will make the noDataText hidden, means only showing the table header
+  };
+
 
     return (
-      <Container>
-	<div style={styles.cardWrap}>
-	  { body }
-	</div>
+    <Container>
+    	<div style={styles.cardWrap}>
+    	  { body }
+    	</div>,
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>,
+      <BootstrapTable data={ this.props.events } options = {options}>
+        <TableHeaderColumn dataField='event' isKey>Event</TableHeaderColumn>
+        <TableHeaderColumn dataField='volunteer'>Volunteer</TableHeaderColumn>
+        <TableHeaderColumn dataField='approve'>Approve</TableHeaderColumn>
+        <TableHeaderColumn dataField='reject'>Reject</TableHeaderColumn>
+      </BootstrapTable>
       </Container>
     );
   }
@@ -82,7 +96,8 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    cards: state.dashboardCards
+    cards: state.dashboardCards,
+    events: state.events
   };
 };
 

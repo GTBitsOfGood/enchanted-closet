@@ -65,7 +65,7 @@ class Events extends Component {
       e.showAdminControls = isAdmin;
       return e;
     });
-    
+
     const bodyProps = {
       query: this.state.query,
       filterBy:this.state.filters,
@@ -75,7 +75,7 @@ class Events extends Component {
 
     const titleBlock = isAdmin ?
 		       <PageTitle title="Events" link="/events/create" linkTitle="Create New"/> : <PageTitle title="Events" />;
-    
+
     return (
     <Container>
       { titleBlock }
@@ -115,7 +115,7 @@ class Events extends Component {
 	  <Button
 	    style={styles.pastButton}
 	    content="View Future Events"
-	    onClick={this.fetchFutureHandler}	      
+	    onClick={this.fetchFutureHandler}
 	  />
 	  <Button
 	    style={styles.pastButton}
@@ -124,8 +124,8 @@ class Events extends Component {
 	  />
 	</div>
       </Segment>
-      
-      { processedEvents.length > 0 && 
+
+      { processedEvents.length > 0 &&
 	<EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
       }
       {
@@ -133,7 +133,7 @@ class Events extends Component {
 	  No events found.
 	</Header>
       }
-      
+
 
     </Container>)
   }
