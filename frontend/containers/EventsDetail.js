@@ -11,7 +11,7 @@ import { geocode } from '../helpers/geocodeEngine';
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 
 import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
-import { DeleteButton, DownloadAttendanceButton, Clearfix, MarkAttendanceButton, Map, EditButton, ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
+import { DeleteButton, DownloadAttendanceButton, EventImageButton, Clearfix, MarkAttendanceButton, Map, EditButton, ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -170,6 +170,7 @@ class EventsDetail extends Component {
 		      ]}
 		      onActionClick={() => deleteEvent(event._id)}
 		    />
+		    <EventImageButton />
 		    <MarkAttendanceButton />
 		    <DownloadAttendanceButton />
 		  </Button.Group>

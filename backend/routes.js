@@ -4,6 +4,33 @@ const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers/');
 const auth = require('./auth')
+const multer = require('multer');
+
+// TODO: consider changing filename
+
+const userStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './public/uploaded/users');
+  },
+  filename: function(req, file, cb) {
+    let names = file.mimetype.split('/');
+    cb(null, req.params.id + '.' + names[names.length - 1]);
+  }
+});
+
+const eventStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './public/uploaded/events');
+  },
+  filename: function(req, file, cb) {
+    let names = file.mimetype.split('/');
+    cb(null, req.params.id + '.' + names[names.length - 1]);
+  }
+});
+
+const userUpload = multer({storage: userStorage});
+const eventUpload = multer({storage: eventStorage});
+
 
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
@@ -28,6 +55,8 @@ router.get('/eventsPast', controllers.events.fetchPastEvents);
 
 router.get('/events/:id', controllers.events.get);
 router.post('/events/', auth.checkAdmin, controllers.events.create);
+router.post('/events/uploadImage/:id', eventUpload.single('image'), controllers.events.upload);
+router.post('/users/uploadImage/:id', userUpload.single('image'), controllers.users.upload);
 router.delete('/events/:id', auth.checkAdmin, controllers.events.delete);
 router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.events.present);
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent);

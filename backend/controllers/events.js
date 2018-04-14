@@ -244,6 +244,48 @@ module.exports.get = (req, res, next) => {
     });
 }
 
+module.exports.upload = (req, res, next) => {
+  console.log("uploading");
+  console.log(req);
+  if (!req.params.id) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Event ID required'
+    };
+    return next();
+  }
+  let newProps = {};
+  console.log(req.file);
+  if (req.file) {
+    newProps.image = req.file.path;
+  }
+
+  Event.findById(req.params.id, (err, doc) => {
+    if (err) {
+      res.locals.error = {
+        status: 404,
+        msg: "Event not found with desired ID"
+      }
+      return next(new Error(res.locals.error));
+    } else {
+      doc.set(newProps);
+      doc.save((err, updated) => {
+        console.log(err)
+        if (err) {
+          res.locals.error = {
+            status: 500,
+            msg: "Unable to save changes to db"
+          }
+        }
+        res.locals.data = {
+          event: updated
+        };
+        return next();
+      });
+    }
+  });
+}
+
 module.exports.create = (req, res, next) => {
   if (!req.body.name) {
     res.locals.error = {

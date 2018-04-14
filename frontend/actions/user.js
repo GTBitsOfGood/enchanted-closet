@@ -52,6 +52,20 @@ export function fetchUsers() {
   }
 }
 
+export function fetchUserById(id){
+  return (dispatch, getState) => {
+    console.log("yo-ing");
+    console.log(id);
+    return fetchHelper(`/api/users/${id}`, getAPIToken(getState), {
+      header: DEFAULT_HEADERS
+    })
+      .then(response => response.json())
+      .then(json => {
+	console.log(json);
+	dispatch(updateUser(json))})
+  }
+}
+
 export function requestUsers() {
   return {
     type: types.REQUEST_USERS

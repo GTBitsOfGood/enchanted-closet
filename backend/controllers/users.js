@@ -70,12 +70,15 @@ let validateAdmin = (data, callback) => {
 }
 
 module.exports.get = (req, res, next) => {
+  console.log("Getting user\n\n");
   User
     .findById(req.params.id)
     .populate('events')
     .populate('pendingEvents')
     .exec((err, user) => {
-      if (user) {	
+      if (user) {
+	console.log(user);
+	console.log("\n\n");
         res.locals.data = {
           user: user
         };
@@ -200,6 +203,43 @@ module.exports.update = (req, res, next) => {
   });
 }
 
+module.exports.upload = (req, res, next) => {
+  if (!req.params.id) {
+    res.locals.error = {
+      status: 400,
+      msg: 'User ID required'
+    };
+    return next();
+  }
+  let newProps = {};
+  if (req.file) {
+    newProps.image = req.file.filename;
+  }
+
+  User.findById(req.params.id, (err, doc) => {
+    if (err) {
+      res.locals.error = {
+        status: 404,
+        msg: "User not found with desired ID"
+      }
+      return next(new Error(res.locals.error));
+    } else {
+      doc.set(newProps);
+      doc.save((err, updated) => {
+        if (err) {
+          res.locals.error = {
+            status: 500,
+            msg: "Unable to save changes to db"
+          }
+        }
+        res.locals.data = {
+          user: updated
+        };
+        return next();
+      });
+    }
+  });
+}
 
 module.exports.create = (req, res, next) => {
   let newProps = {};

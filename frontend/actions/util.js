@@ -26,3 +26,59 @@ export const DEFAULT_HEADERS = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 };
+
+export function uploadUserImage(data) {
+  return (dispatch, getState) => {
+    console.log("upload user image run");
+    const { user } = getState();
+    if (user) {
+      try {
+	let packagedData = new FormData();
+	packagedData.append("image", data["file"]);
+	/* for (const key in data) {
+	   packagedData.append(key, data[key]);
+	   } */ // TODO this
+        fetchHelper(`api/users/uploadImage/${user._id}`, getAPIToken(getState), {
+          method: 'POST',
+          body: packagedData
+        })
+          .then(response => response.json())
+	  .then(json => {
+	    console.log(json); // TODO: something with confirm
+	  });
+      } catch (err) {
+        console.log("Upload error");
+      }
+    } else {
+      // ERROR
+    }
+  }
+}
+
+
+export function uploadEventImage(data) {
+  return (dispatch, getState) => {
+    const { event } = getState();
+    if (event) {
+      try {
+	let packagedData = new FormData();
+	packagedData.append("image", data["file"]);
+	/* for (const key in data) {
+	   packagedData.append(key, data[key]);
+	   } */ // TODO this
+        fetchHelper(`api/events/uploadImage/${event._id}`, getAPIToken(getState), {
+          method: 'POST',
+          body: packagedData
+        })
+          .then(response => response.json())
+	  .then(json => {
+	    console.log(json); // TODO: something with confirm
+	  });
+      } catch (err) {
+        console.log("Upload error");
+      }
+    } else {
+      // ERROR
+    }
+  }
+}

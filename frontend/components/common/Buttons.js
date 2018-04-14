@@ -37,6 +37,12 @@ const markAttendanceButton = ({history}) => (
   </Button>
 );
 
+const eventImageButton = ({history}) => (
+  <Button onClick={() => history.push(`/events/${event._id}/upload`)}>
+    Change Event Image
+  </Button>
+);
+
 module.exports.DownloadAttendanceButton = downloadAttendanceButton;
 module.exports.EditButton = editButton;
 module.exports.MarkAttendanceButton = markAttendanceButton;
