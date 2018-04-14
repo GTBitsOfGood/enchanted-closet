@@ -1,5 +1,5 @@
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
-import { fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
+import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 import { receiveEvents, receiveMoreEvents } from './';
 import moment from 'moment';
 import * as types from './types';
@@ -17,7 +17,7 @@ export function upsertUser(data) {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(json => dispatch(processUserUpsert(json, isUpdate)))
+      .then(json => safeWrap(json, dispatch(processUserUpsert(json, isUpdate)))).then(() => stopLoading());
   }
 }
 
@@ -48,21 +48,21 @@ export function fetchUsers() {
     dispatch(requestUsers());
     return fetchHelper(`/api/users`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receieveUsers(json)));
+      .then(json => safeWrap(json, dispatch(receieveUsers(json))));
   }
 }
 
+// probably repeat of refreshUser in auth
 export function fetchUserById(id){
   return (dispatch, getState) => {
-    console.log("yo-ing");
-    console.log(id);
     return fetchHelper(`/api/users/${id}`, getAPIToken(getState), {
       header: DEFAULT_HEADERS
     })
       .then(response => response.json())
-      .then(json => {
-	console.log(json);
-	dispatch(updateUser(json))})
+      .then(json => safeWrap(json, () => {
+	dispatch(updateUser(json));
+      }))
+      .then(() => dispatch(stopLoading()));
   }
 }
 
@@ -86,7 +86,8 @@ export function updateUserWithEvents(user) {
     const newUser = { ...user, events, pendingEvents };
     dispatch(updateUser(newUser));
     dispatch(receiveEvents(user.events)); // these are unstripped
-    dispatch(receiveMoreEvents(user.pendingEvents));
+    dispatch(receiveMoreEvents(user.pendingEvents)).
+    dispatch(stopLoading());
   }
 }
 

@@ -1,5 +1,5 @@
 import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents } from './';
-import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
+import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
 import * as types from './types';
 
 export function logoutUser() {
@@ -13,7 +13,6 @@ export function performLogout() {
     dispatch(logoutUser());
   }  
 }
-
 
 function processAuthenticationAttempt(json) {
   return (dispatch, getState) => {
@@ -30,17 +29,13 @@ function processAuthenticationAttempt(json) {
 
 export function refreshUser(user) {
   return (dispatch, getState) => {
+    dispatch(loading());
     dispatch(requestUsers());
     return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => {
-	if (json.status === 'ok' && json.user) {
-	  // Normalize the data:
-	  dispatch(updateUserWithEvents(json.user));
-	} else {
-	  // TODO: error toast
-	}
-      })
+      .then(json => safeWrap(json, () => {
+	dispatch(updateUserWithEvents(json.user));
+      }))
       .then(() => dispatch(stopLoading()));
   }
 }

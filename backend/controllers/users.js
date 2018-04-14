@@ -234,7 +234,7 @@ module.exports.upload = (req, res, next) => {
         }
         res.locals.data = {
           user: updated
-        };
+        };	
         return next();
       });
     }

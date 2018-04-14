@@ -1,6 +1,6 @@
 // Pure event related actions
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
-import { fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
+import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 
 import * as types from './types';
 
@@ -13,11 +13,9 @@ export function deleteEvent(id) {
     }, getState().apiToken)
       .then(response => response.json())
       .then(json => {
-	if (json.status === 'ok') {
+	return safeWrap(json, () => {
 	  dispatch(deleteLocalData('events', id));
-	} else {
-	  // TODO: Error toast
-	}
+	});
       })
       .then(() => dispatch(hideModalLoader()));
   }
@@ -25,7 +23,7 @@ export function deleteEvent(id) {
 
 export function upsertEvent(data) {
   return (dispatch, getState) => {
-    dispatch(loading());
+    dispatch(showModalLoader());
     data.datetime = data.datetime.toDate(); // Convert from Moment object to JS Date Object
     const url = data._id ? `/api/events/${data._id}` : `/api/events`;
     const method = data._id ? 'PUT' : 'POST';
@@ -37,7 +35,10 @@ export function upsertEvent(data) {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(json => dispatch(processEventUpsert(json, isUpdate)));
+      .then(json => {
+	dispatch(processEventUpsert(json, isUpdate)); // Has error handlign  inside
+      })
+      .then(() => dispatch(hideModalLoader()));
   }
 }
 
@@ -75,7 +76,7 @@ function shouldFetchEvents(state) {
 
 export function fetchEventsIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchEvents(getState())) {
+    if (shouldFetchEvents(getState())) {      
       dispatch(loading());
       return dispatch(fetchFutureEvents());
     }
@@ -111,29 +112,41 @@ export function receiveMoreEvents(pendingEvents) {
 
 export function fetchFutureEvents() {
   return (dispatch, getState) => {
+    dispatch(loading());
     dispatch(requestFutureEvents());
     return fetchHelper(`/api/events`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveEvents(json.events)))
+      .then(json => {
+	return safeWrap(json, () => {
+	  dispatch(receiveEvents(json.events));
+	});
+      })
       .then(() => dispatch(stopLoading()));
   }
 }
 
 export function fetchPastEvents() {
   return (dispatch, getState) => {
+    dispatch(loading());
     dispatch(requestPastEvents());
     return fetchHelper(`/api/eventsPast`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveEvents(json.events)))
+      .then(json => safeWrap(json, () => {
+	dispatch(receiveEvents(json.events));
+      }))
       .then(() => dispatch(stopLoading()));
   }
 }
 
 export function upfetchEventById(id){
   return (dispatch, getState) => {
+    dispatch(loading());
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receiveMoreEvents(json.events)))
+      .then(json => safeWrap(json, () => {
+	dispatch(receiveMoreEvents(json.events));
+      }))
+      .then(() => dispatch(stopLoading()));
   }
 }
 

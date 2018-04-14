@@ -85,7 +85,12 @@ function rootReducer(state = require('../static/defaultState'), action) {
         events: [ ...newEvents, ...persist],
         lastUpdatedEvents: action.receivedAt
       });
-    case types.REQUEST_EVENTS:
+    case types.REQUEST_PAST_EVENTS:
+      return Object.assign({}, state, {
+        isFetchingEvents: true,
+        didInvalidateEvents: false
+      });
+    case types.REQUEST_FUTURE_EVENTS:
       return Object.assign({}, state, {
         isFetchingEvents: true,
         didInvalidateEvents: false
