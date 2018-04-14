@@ -7,7 +7,7 @@ import Radium from 'radium';
 
 import { fetchEventsIfNeeded, invalidateEvents, fetchFutureEvents, fetchPastEvents } from '../actions/index';
 
-import { Button, Container, Card, Icon, Dimmer, Segment, Header, Input, Loader } from 'semantic-ui-react';
+import { Button, Container, Card, Icon, Segment, Header, Input} from 'semantic-ui-react';
 import { EventFilter, EventTab, LoadingIcon, PageTitle } from '../components/';
 
 class Events extends Component {

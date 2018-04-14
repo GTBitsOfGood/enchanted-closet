@@ -19,10 +19,10 @@ function processAuthenticationAttempt(json) {
     if (json.status === 'ok') {
       dispatch(updateUserWithEvents(json.user));
     } else {
-      return {
-	type: types.USER_NOT_AUTHENTICATED,
-	errorMessage: json.msg
-      }
+      dispatch({
+	  type: types.USER_NOT_AUTHENTICATED,
+	  errorMessage: json.msg
+	});
     }
   }
 }

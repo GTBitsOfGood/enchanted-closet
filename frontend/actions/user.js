@@ -28,17 +28,17 @@ function processUserUpsert(json, isUpdate) { // updates users array as well (onl
       const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
       json.user = { ...json.user, birthday: formatBDay };
       dispatch(updateUserWithEvents(json.user)); // whatever, not gonna strip users array
-      return {
+      dispatch({
 	type: types.USERS_UPSERT,
 	user: json.user,
 	isUpdate: isUpdate
-      };
+      });
     } else {
       // Todo: toast here
-      return {
+      dispatch({
 	type: types.API_ERROR,
 	error: json.msg
-      }
+      });
     }
   }
 }

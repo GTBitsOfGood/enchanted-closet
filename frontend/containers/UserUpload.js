@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { uploadUserImage } from '../actions/index';
 
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image, Button } from 'semantic-ui-react'
+import { Button, Container, Form, Header } from 'semantic-ui-react'
 
 class UserUpload extends Component {
   constructor(props) {
@@ -25,13 +25,15 @@ class UserUpload extends Component {
 
   render() {
     return (
-      <center>
-        <form onSubmit={e => this.onFormSubmit(e)}>
-          <h1>File Upload</h1>
-          <input type="file" onChange={this.onChange} />
-          <button type="submit">Upload</button>
-        </form>
-      </center>
+      <Container>
+	<center>
+          <Form onSubmit={e => this.onFormSubmit(e)}>
+            <Header as='h1'> File Upload </Header>
+            <Form.Input type="file" onChange={this.onChange} />
+            <Button type="submit">Upload</Button>
+          </Form>
+	</center>
+      </Container>
     )
   }
 };

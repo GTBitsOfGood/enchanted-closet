@@ -10,7 +10,7 @@ import { geocode } from '../helpers/geocodeEngine';
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 
-import { Button, Container, Icon, Dimmer, Loader, Segment, Modal } from 'semantic-ui-react';
+import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react';
 import { DeleteButton, DownloadAttendanceButton, EventImageButton, Clearfix, MarkAttendanceButton, Map, EditButton, ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
@@ -35,7 +35,10 @@ class EventsDetail extends Component {
     const eventId = match.params.id;
     const event = events.find(event => event._id === eventId);
     if (!event) { //in case local store is old
-      upfetchEventById(eventId);
+      upfetchEventById(eventId); // fetching
+      this.setState({
+	isFetchingEvents: true
+      });
     } else {
       this.setState( { event } );
       geocode(event.location)
@@ -126,9 +129,6 @@ class EventsDetail extends Component {
     return (
       <Container>
 	{ registerBlock }
-	<Dimmer active={isFetchingEvents}>
-	  <Loader>Loading</Loader>
-	</Dimmer>
 	{ !isFetchingEvents && event &&
 	  <div>
 	    <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />

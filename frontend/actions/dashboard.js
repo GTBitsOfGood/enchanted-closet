@@ -40,10 +40,10 @@ function formatCards(cards) {
       ];
       dispatch(updateDashboardCards(formatted));
     } else {
-      return {
+      dispatch({
         type: types.API_ERROR,
         error: 'An error occurred pulling that information'
-      }
+      });
     }
   }
 }

@@ -23,7 +23,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       if (!events) events = [];
       let eventStateUpdate = {
         loading: false,
-        error: '',
+        errorMessage: '',
         newEvent: action.event,
         events: []
       };
@@ -44,7 +44,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       let { users = [] } = state;
       let userStateUpdate = {
         loading: false,
-        error: '',
+        errorMessage: '',
         newUser: action.user,
         users: [],
       };
@@ -64,7 +64,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
     case types.API_ERROR:
       return Object.assign({}, state, {
         loading: false,
-        error: action.error
+        errorMessage: action.error
       });
     case types.NOT_LOADING:
       return Object.assign({}, state, {

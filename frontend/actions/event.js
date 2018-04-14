@@ -138,15 +138,16 @@ export function fetchPastEvents() {
   }
 }
 
+// ID based fetch usually means that page depends exclusively on it
 export function upfetchEventById(id){
   return (dispatch, getState) => {
-    dispatch(loading());
+    dispatch(showModalLoader());
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
 	dispatch(receiveMoreEvents(json.events));
       }))
-      .then(() => dispatch(stopLoading()));
+      .then(() => dispatch(hideModalLoader()));
   }
 }
 

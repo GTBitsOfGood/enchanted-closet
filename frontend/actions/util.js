@@ -56,10 +56,10 @@ export function uploadUserImage(data) {
 	})
 	.then(() => dispatch(hideModalLoader()));
     } else { // unexpected error
-      return {
+      dispatch({
 	type: types.API_ERROR,
 	error: "User not found in state (unexpected error)"
-      }
+      });
     }
   }
 }
@@ -80,10 +80,10 @@ export function uploadEventImage(data) {
 	  console.log(json); // TODO: something with confirm
 	});      
     } else {
-      return {
+      dispatch({
 	type: types.API_ERROR,
 	error: "User not found in state (unexpected error)"
-      }
+      });
     }
   }
 }

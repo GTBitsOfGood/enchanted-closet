@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { uploadEventImage } from '../actions/index';
 
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image, Button } from 'semantic-ui-react'
+import { Container, Card, Grid, Reveal, Segment, Message } from 'semantic-ui-react'
 
 class EventUpload extends Component {
   constructor(props) {
