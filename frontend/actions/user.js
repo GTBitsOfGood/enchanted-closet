@@ -1,5 +1,5 @@
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
-import { fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
+import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 import { receiveEvents, receiveMoreEvents } from './';
 import moment from 'moment';
 import * as types from './types';
@@ -17,7 +17,7 @@ export function upsertUser(data) {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(json => dispatch(processUserUpsert(json, isUpdate)))
+      .then(json => safeWrap(json, dispatch(processUserUpsert(json, isUpdate)))).then(() => stopLoading());
   }
 }
 
@@ -28,17 +28,17 @@ function processUserUpsert(json, isUpdate) { // updates users array as well (onl
       const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
       json.user = { ...json.user, birthday: formatBDay };
       dispatch(updateUserWithEvents(json.user)); // whatever, not gonna strip users array
-      return {
+      dispatch({
 	type: types.USERS_UPSERT,
 	user: json.user,
 	isUpdate: isUpdate
-      };
+      });
     } else {
       // Todo: toast here
-      return {
+      dispatch({
 	type: types.API_ERROR,
 	error: json.msg
-      }
+      });
     }
   }
 }
@@ -48,7 +48,21 @@ export function fetchUsers() {
     dispatch(requestUsers());
     return fetchHelper(`/api/users`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => dispatch(receieveUsers(json)));
+      .then(json => safeWrap(json, dispatch(receieveUsers(json))));
+  }
+}
+
+// probably repeat of refreshUser in auth
+export function fetchUserById(id){
+  return (dispatch, getState) => {
+    return fetchHelper(`/api/users/${id}`, getAPIToken(getState), {
+      header: DEFAULT_HEADERS
+    })
+      .then(response => response.json())
+      .then(json => safeWrap(json, () => {
+	dispatch(updateUser(json));
+      }))
+      .then(() => dispatch(stopLoading()));
   }
 }
 
@@ -72,7 +86,8 @@ export function updateUserWithEvents(user) {
     const newUser = { ...user, events, pendingEvents };
     dispatch(updateUser(newUser));
     dispatch(receiveEvents(user.events)); // these are unstripped
-    dispatch(receiveMoreEvents(user.pendingEvents));
+    dispatch(receiveMoreEvents(user.pendingEvents)).
+    dispatch(stopLoading());
   }
 }
 

@@ -35,6 +35,8 @@ class LoginForm extends Component {
       case "email":
 	return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
 	break
+      case "password": 
+	return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]{7,}$/.test(val)
       default:
 	return this.regLegalTest(field, val) && val.length !== 0
 	break
@@ -56,43 +58,47 @@ class LoginForm extends Component {
     }
   }
 
-  updateStatus = (field, val) => {
+  // verify cb
+  updateStatus = (field, val, cb) => {
     this.setState({
       status: { ...this.state.status, [field]: val }
-    });
+    }, () => {if (cb) this.verifyCb();});
   }
 
+  verifyCb = () => {
+    if (this.verifyAll()) {
+      this.props.setComplete();
+    }
+  }
+  
   blurFunctions = {
     'password': e => {
       if (this.regFinalTest('password', e.target.value)) {
 	this.props.setValid();
-	this.updateStatus('password', 0);
+	this.updateStatus('password', 0, true);
       } else {
 	this.props.setError("Illegal password value");
-	this.updateStatus('password', 1);
+	this.updateStatus('password', 1, true);
       }
     },
     'email': e => {
       if (this.regFinalTest('email', e.target.value)) {
 	this.props.setValid();
-	this.updateStatus('email', 0);
+	this.updateStatus('email', 0, true);
       } else {
 	this.props.setError();
-	this.updateStatus('email', 1);
+	this.updateStatus('email', 1, true);
       }
     }
   }
 
   blurFunctionFactory = field => (e) => {
     this.blurFunctions[field](e);
-    if (this.verifyAll()) {
-      this.props.setComplete();
-    }
   }
   
-  verifyAll = () => {    
+  verifyAll = () => {
     const { status } = this.state;
-    return Object.keys(status).every(k => status[k] === 0)
+    return Object.values(status).every(k => k === 0);
   }
   
   errorFactory = field => this.state.status[field] === 1

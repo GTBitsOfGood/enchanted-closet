@@ -238,7 +238,7 @@ module.exports.login = (data, callback) => {
     }
     if (usr !== null) {
       let tok = randomBytes(64).toString("hex");
-      redisClient.set(usr._id, tok, 'EX', 1800); // expire after 30 mins
+      redisClient.set(usr._id.toString(), tok, 'EX', 1800); // expire after 30 mins
       return callback(err, Object.assign({}, usr, {"token": tok}));
     }
     return callback(err, usr);
@@ -273,7 +273,7 @@ module.exports.register = (data, callback) => {
       if (err) return callback(err, null);
       let tok = randomBytes(64).toString("hex");
       user.set("token", tok);
-      redisClient.set(user._id, tok, 'EX', 1800); // expire after 30 mins
+      redisClient.set(user._id.toString(), tok, 'EX', 1800); // expire after 30 mins
       return callback(null, Object.assign({}, user._doc, {"token": tok}));
     });
   });
