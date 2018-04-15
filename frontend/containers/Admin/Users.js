@@ -37,9 +37,8 @@ class Users extends Component {
     this.setState({users: userMapping});
   }
 
-  componentDidMount() {
-    const {fetchUsers, users} = this.props;
-    fetchUsers();
+  componentWillMount() {
+    this.props.fetchUsers();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,9 +69,13 @@ class Users extends Component {
 		     <Table>
 		       <Table.Body>
 			 {users[role].length > 0 ? users[role].map(u => {
+			    const name = u.firstName && u.lastName ? u.firstName + " " + u.lastName : <i>&lt;No Name&gt;</i>;
 			    return (
-			      <Table.Row key={u._id} style={{cursor:'pointer'}} onClick={() => history.push(`/users/${u._id}`)}>
-				<Table.Cell>{u.name || (<i>&lt;No Name&gt;</i>)}</Table.Cell>
+			      <Table.Row
+				key={u._id}
+				style={{cursor:'pointer'}}
+				onClick={() => history.push(`/users/${u._id}`)}>
+				<Table.Cell>{name}</Table.Cell>
 				<Table.Cell>{u.email || (<i>&lt;No Email&gt;</i>)}</Table.Cell>
 				<Table.Cell style={{textAlign: 'right'}}>View <Icon name='right chevron' /></Table.Cell>
 			      </Table.Row>

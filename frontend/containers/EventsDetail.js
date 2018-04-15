@@ -107,6 +107,14 @@ class EventsDetail extends Component {
 	      </Container>
 	    );
 	  }
+	  // check block
+	  if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
+	    return (
+	      <Container>
+		Registration denied
+	      </Container>
+	    );
+	  }
 	  if ((user.events && user.events.includes(event._id)) ||
 	      (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
 	    return (

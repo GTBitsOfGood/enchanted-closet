@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchUsers } from '../../actions/';
 
-import {fetchUsers} from '../../actions/';
-
-import {Segment, Container, Button, Icon, Modal} from 'semantic-ui-react';
-import { withRouter } from 'react-router-dom';
+import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react';
+import { withRouter, Link } from 'react-router-dom';
 
 import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, LoadingIcon, PageTitle, PastEventsCard } from '../../components'
 
 class AdminUsersDetail extends Component {
   constructor(props) {
     super(props);
-    const {updateUserStore, users, match} = this.props;
+    const { updateUserStore, users, match } = this.props;
     this.state = {
       user_id: match.params.id,
       loading: false,
@@ -71,13 +70,19 @@ class AdminUsersDetail extends Component {
 	}
 	{!loading && user &&
 	 <div>
-	   <PageTitle title={name}/>
+	   <PageTitle title={user.role + ": " + name}/>
 	   <ContactCard user={user}/>
-	   <DemographicsCard user={user}/>
+	   { user.role === 'Participant' && <DemographicsCard user={user}/>}
 	   <EmergencyContactCard user={user}/>
 	   <PastEventsCard user={user}/>
 	 </div>
 	}
+	<Button
+	  as={Link}
+	  to="/users"
+	>
+	  Back to all users
+	</Button>
       </Container>
     )
   }

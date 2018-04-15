@@ -19,6 +19,11 @@ export function confirmVolunteer(eventID, userID) {
     receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/confirm/${userID}`, getAPIToken(getState)), dispatch)
 }
 
+export function denyVolunteer(eventID, userID) {
+  return (dispatch, getState) => 
+    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/deny/${userID}`, getAPIToken(getState)), dispatch)
+}
+
 // Success callback on fetch for register, cancel, and confirm
 function receiveRegistrationInfo(initFetch, dispatch) {
   return initFetch()

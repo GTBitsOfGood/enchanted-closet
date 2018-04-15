@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
 import { Segment, List, Icon } from 'semantic-ui-react';
-
+import { capitalize, camelCase } from 'lodash';
 import moment from 'moment';
 
-const demographicsFields = ['grade', 'birthday', 'age', 'race', 'school', 'leader'];
+const demographicsFields = ['grade', 'birthday', 'race', 'school', 'leader'];
 
 const ECDemographicsCard = ( props ) => {
-  const {user} = props;
+  let { user } = props;
 
   if (hasAtLeastOneDemographic(user)) {
-    if (user.birthday) user.birthday = moment(new Date(user.birthday)).format('MMMM Do, YYYY')
+    if (user.birthday) user.birthday = moment(user.birthday).format('MMMM Do, YYYY');
     return (
       <Segment>
 	<h3>Demographics</h3>
 	<List >
 	  {demographicsFields.map(d => {
+	     const value = user[camelCase(d)] ? user[camelCase(d)] : <i>&lt;Unknown&gt;</i>;
 	     return (
 	       <List.Item key={d}>
 		 <List.Content>
-		   <b>{`${d.charAt(0).toUpperCase()}${d.substr(1)}`}: </b>{nullCheck(user[d.toLowerCase()])}
+		   <b>{capitalize(d)}: </b>{value}
 		 </List.Content>
 	       </List.Item>
 	     )
@@ -42,10 +43,6 @@ const hasAtLeastOneDemographic = user => {
     if (user[e]) hasOne = true;
   });
   return hasOne;
-}
-
-const nullCheck = (data) => {
-  return data ? data : (<i>&lt;Unknown&gt;</i>);
 }
 
 export default ECDemographicsCard;

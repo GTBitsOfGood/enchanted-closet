@@ -23,6 +23,7 @@ const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], u
 	   }
 	 }); // return list of needs approval users
 	 if (needsApprovalList.length === 0) return null;
+
 	 return (
 	   <Segment.Group key={`volApproalEvent${e._id}`}>
 	     {needsApprovalList.map( user => (
@@ -47,6 +48,7 @@ const mapStateToProps = state => ({
     users: state.users
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ confirmVolunteer, denyVolunteer }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ confirmVolunteer, denyVolunteer }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminVolunteerControl);
