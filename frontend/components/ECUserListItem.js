@@ -25,6 +25,7 @@ class ECUserListItem extends Component {
       } else {
 	markUnattending(event, user);
       }
+      
     });
   }
 

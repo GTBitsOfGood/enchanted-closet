@@ -22,7 +22,7 @@ import AdminEventsNew from './Admin/EventsNew';
 import AdminEventsEdit from './Admin/EventsEdit';
 import AdminEventsDetail from './Admin/EventsDetail';
 
-import EventsAttendance from './Admin/Attendance';
+import EventsAttendance from './Admin/Attendance.js';
 
 import Auth from './Auth';
 

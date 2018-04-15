@@ -109,7 +109,9 @@ function rootReducer(state = require('../static/defaultState'), action) {
       }); // TODO FINISH!
       break;
     case types.USER_EVENT_UPDATE: {
-      const { pendingEvents, events } = action.payload;      
+      const { pendingEvents, events } = action.payload;    
+      console.log(pendingEvents);
+
       const newUser = { ...state.user, pendingEvents, events }
       return { ...state,  
 	       user: newUser,
@@ -178,14 +180,19 @@ function rootReducer(state = require('../static/defaultState'), action) {
 
     case types.MARK_ATTENDING:
       const userMap = state.users.map(u => {
-        if (u._id === action.userID) {
+        if (u._id === action.user._id) {
           u.pastEvents.push(action.event);
         }
         return u;
       });
       const eventRemap = state.events.map(e => {
-        if (e._id === action.eventID) {
-          e.participants.push(action.user);
+        if (action.user.role === 'participant') {
+          if (e._id === action.event._id && e.participantsAttended.findIndex( u => {return u === action.user._id}) === -1) 
+            e.participantsAttended.push(action.user);
+          else {
+            if (e._id === action.event._id && e.volunteersAttended.findIndex( u => {return u === action.user._id}) === -1) 
+              e.volunteersAttended.push(action.user);    
+          }
         }
         return e;
       });
@@ -196,16 +203,23 @@ function rootReducer(state = require('../static/defaultState'), action) {
 
     case types.MARK_UNATTENDING:
       const userRebuild = state.users.map(u => {
-        if (u._id === action.userID) {
-          const i = u.pastEvents.findIndex(e => e._id === action.event._id);
+        if (u._id === action.user._id) {
+          const i = u.pastEvents.findIndex( e => {return e === action.event._id});
           if (i > -1) u.pastEvents.splice(i, 1);
         }
         return u;
       });
       const eventRebuild = state.events.map(e => {
-        if (e._id === action.eventID) {
-          const i = e.participants.findIndex(u => u._id === action.user._id);
-          if (i > -1) e.participants.splice(i, 1);
+        if (e._id === action.event._id) {
+          if (action.user.role === 'participant')
+          {
+            const i = e.participantsAttended.findIndex(u => { return u === action.user._id});
+            if (i > -1) e.participantsAttended.splice(i, 1);
+          }
+          else {
+            const i = e.volunteersAttended.findIndex(u => { return u === action.user._id});
+            if (i > -1) e.volunteersAttended.splice(i, 1);
+          }
         }
         return e;
       });

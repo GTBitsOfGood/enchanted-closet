@@ -9,7 +9,6 @@ import isProfileComplete from '../helpers/util';
 import { geocode } from '../helpers/geocodeEngine';
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
-
 import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react';
 import { DeleteButton, DownloadAttendanceButton, EventImageButton, Clearfix, MarkAttendanceButton, Map, EditButton, ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
 
@@ -117,7 +116,7 @@ class EventsDetail extends Component {
 	} else {
 	  return (
 	    <Container>
-	      <Button>
+	      <Button attached= 'top'>
 		<Link to='/login'>
 		  Login to Register
 		</Link>

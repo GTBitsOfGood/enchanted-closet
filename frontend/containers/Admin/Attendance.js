@@ -47,6 +47,7 @@ class AdminAttendance extends Component {
     if (users.length === 0) {
       this.setState({loading: true});
       fetchUsers();
+
     }
   }
 
