@@ -90,9 +90,9 @@ const currentUser = (tok, callback) => {
   if (!tok) { //catch falsy values like null, empty string
     return callback(null, null);
   }
-  // redisClient.get(tok, function(err, reply){
-  //   callback(err, reply)
-  // });
+  redisClient.get(tok, function(err, reply){
+    callback(err, reply)
+  });
 }
 
 module.exports.idMatchesOrAdmin = (req, res, next) => {
@@ -102,7 +102,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
       status: 403,
       msg: 'Not authorized (must be admin)'
     };
-    return next();
+    return next(new Error(res.locals.error));
   }
   token = token.substring(7);
   currentUser(token, (err, curr) => { // TODO put back in module.exports if broken
@@ -195,7 +195,6 @@ module.exports.makeAdmin = (req, res, next) => {
           user: user
         };
         localStorage.setItem("user", user);
-        redisClient.set(req.params.id, 'INVALID_TOKEN');
         return next();
       } else {
         res.locals.error = {
@@ -238,31 +237,31 @@ module.exports.login = (data, callback) => {
     }
     if (usr !== null) {
       let tok = randomBytes(64).toString("hex");
-      redisClient.set(usr._id.toString(), tok, 'EX', 1800); // expire after 30 mins
+      redisClient.set(tok, usr._id.toString());//, 'EX', 1800); // expire after 30 mins
       return callback(err, Object.assign({}, usr, {"token": tok}));
     }
     return callback(err, usr);
   });
 }
 
-module.exports.verifySession = (req, res, next)  => {
-      console.log(redisClient.get(req.params.id))
-      redisClient.get(req.params.id, function(error, reply) {
-        console.log(reply);
-        if (reply == req.body.token) {
-          res.locals.data = req.body.token;
-          redisClient.set(req.params.id, req.body.token, 'EX', 1800); // expire after 30 mins
-          return next();
-        } else {
-          res.locals.error = {
-            status: 404,
-            msg: 'Session Expired'
-          };
-          console.log(res.locals.error);
-          return next();
-        }
-    });
-}
+// module.exports.verifySession = (req, res, next)  => {
+//       console.log(redisClient.get(req.params.id))
+//       redisClient.get(req.params.id, function(error, reply) {
+//         console.log(reply);
+//         if (reply == req.body.token) {
+//           res.locals.data = req.body.token;
+//           redisClient.set(req.params.id, req.body.token, 'EX', 1800); // expire after 30 mins
+//           return next();
+//         } else {
+//           res.locals.error = {
+//             status: 404,
+//             msg: 'Session Expired'
+//           };
+//           console.log(res.locals.error);
+//           return next();
+//         }
+//     });
+// }
 
 module.exports.register = (data, callback) => {
   /* Redo validation scheme... */
@@ -273,7 +272,7 @@ module.exports.register = (data, callback) => {
       if (err) return callback(err, null);
       let tok = randomBytes(64).toString("hex");
       user.set("token", tok);
-      redisClient.set(user._id.toString(), tok, 'EX', 1800); // expire after 30 mins
+      redisClient.set(tok, user._id.toString());//, 'EX', 1800); // expire after 30 mins
       return callback(null, Object.assign({}, user._doc, {"token": tok}));
     });
   });
