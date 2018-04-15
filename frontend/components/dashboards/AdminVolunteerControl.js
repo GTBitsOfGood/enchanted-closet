@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { confirmVolunteer, denyVolunteer } from '../../actions/';
 import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
 
@@ -7,7 +8,7 @@ import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
 // TODO: filters and install deny volunteer
 // TODO: Style
 // Fairly convoluted 
-const AdminVolunteerControl = ({ confirmVolunteer, events, users }) => (
+const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], users = [] }) => (
   <Container>
     <Segment.Group>
       <Segment>
@@ -21,31 +22,22 @@ const AdminVolunteerControl = ({ confirmVolunteer, events, users }) => (
 	     needsApprovalList.push(user);
 	   }
 	 }); // return list of needs approval users
+	 if (needsApprovalList.length === 0) return null;
 	 return (
-	   <Segment.Group>
+	   <Segment.Group key={`volApproalEvent${e._id}`}>
 	     {needsApprovalList.map( user => (
-	       <Segment.Group horizontal>
+	       <Segment.Group horizontal key={`volApprovalEvent${e._id}Volunteer${user._id}`}>
 		 <Segment>{user.lastName}</Segment>
 		 <Segment>{user.firstName}</Segment>
 		 <Segment>
-		   <Button onClick={confirmVolunteer}>Approve</Button>
-		   <Button onClick={denyVolunteer}>Deny</Button>   
+		   <Button onClick={() => confirmVolunteer(e._id, user._id)}>Approve</Button>
+		   <Button onClick={() => denyVolunteer(e._id, user._id)}>Deny</Button>   
 		 </Segment>
 	       </Segment.Group>
 	     ))}
 	   </Segment.Group>
-	 )
-	 (
-	   <Segment.Group>
-	     {e.volunteers.filter(vId =>
-	       users.find(u => u._id === vId).pendingEvents.includes(e._id)).map(v => (
-		 <Segment>
-		   {v.name}
-		 </Segment>
-	       ))}
-	   </Segment.Group>
-
-	 );})}
+	 );
+      })}
     </Segment.Group>
   </Container>
 );
@@ -55,6 +47,6 @@ const mapStateToProps = state => ({
     users: state.users
 });
 
-const mapDispatchToProps = dispatch => ({ confirmVolunteer, denyVolunteer });
+const mapDispatchToProps = dispatch => bindActionCreators({ confirmVolunteer, denyVolunteer }, dispatch);
 
-export default connect(mapStateToProps)(AdminVolunteerControl);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminVolunteerControl);

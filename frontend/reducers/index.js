@@ -109,8 +109,6 @@ function rootReducer(state = require('../static/defaultState'), action) {
       break;
     case types.USER_EVENT_UPDATE: {
       const { pendingEvents, events } = action.payload;
-      console.log(action.payload);
-      console.log(pendingEvents);
 
       const newUser = { ...state.user, pendingEvents, events }
       return { ...state,  
@@ -168,7 +166,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       });
 
     case types.RECEIVE_USERS:
-      console.log(users);
+
       return Object.assign({}, state, {
         isFetchingUsers: false,
         users: action.users

@@ -9,9 +9,7 @@ const hash = require("../hash");
 
 module.exports.index = (req, res, next) => {
   User
-    .find({})
-    .populate('events')
-    .populate('pendingEvents')
+    .find({}) // don't populate all users, only personal user
     .exec((err, users) => {
       if (users) {
         res.locals.data = {
