@@ -1,5 +1,7 @@
-export { EditButton } from './Buttons'
+export { DeleteButton, DownloadAttendanceButton, EditButton, MarkAttendanceButton } from './Buttons'
 export { default as Clearfix } from './Clearfix'
 export { default as ErrorComponent } from './ErrorComponent'
+export { default as GenericBanner } from './GenericBanner'
 export { default as LoadingIcon } from './LoadingIcon'
 export { default as PageTitle } from './PageTitle'
+export { default as RoleCheck } from './RoleCheck'

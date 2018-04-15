@@ -10,7 +10,7 @@ module.exports.checkAgainst = (data, callback) => {
     User.findOne({
         email: data.email
     }, function (err, user) {
-        if (err) {
+        if (err) { // not found TODO: SAM throw no email
             return callback(err, null);
         }
         if (user) {

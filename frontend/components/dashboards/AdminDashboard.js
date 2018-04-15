@@ -6,25 +6,8 @@ import { Container, Card, Icon } from 'semantic-ui-react';
 
 import { loadDashboardCards } from '../../actions/';
 
-import DashboardCard from './DashboardCard'
-
-const DEFAULT_CARDS = [
-  {
-    content: null,
-    title: 'Users',
-    url: '/users' // TODO: investigate how to use absolute paths (semantic)
-  },
-  {
-    content: null,
-    title: 'Admins',
-    url: '/users'
-  },
-  {
-    content: null,
-    title: 'Events',
-    url: '/events'
-  }
-];
+import DashboardCard from './DashboardCard';
+import AdminVolunteerControl from './AdminVolunteerControl';
 
 class AdminDashboard extends Component {
   constructor(props) {
@@ -69,6 +52,7 @@ class AdminDashboard extends Component {
 	<div style={styles.cardWrap}>
 	  { body }
 	</div>
+	<AdminVolunteerControl />
       </Container>
     );
   }
@@ -80,11 +64,9 @@ const styles = {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
+const mapStateToProps = state => ({
     cards: state.dashboardCards
-  };
-};
+});
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({

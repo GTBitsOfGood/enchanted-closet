@@ -5,36 +5,15 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import Radium from 'radium';
 
-import { Container, Card, Grid, Reveal, Dimmer, Loader, Segment, Message, Image, Button } from 'semantic-ui-react'
+import { Container, Card, Grid, Reveal, Segment, Message, Image, Button } from 'semantic-ui-react'
 import { LoginForm } from '../components/';
 
-class Login extends Component {
+class Login extends Component { // TODO refactor
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { modalLoaderActive, errorMessage } = this.props;
-
-    /*
-       const formBlock = (
-       <FileForm
-       type="login"
-       isInline="true"
-       submitRoute="login"
-       buttonAction={performLogin}
-       />
-       );
-     */
-    
-    const errorBlock = errorMessage && (
-      <Message
-	error
-	header='Oops an error occurred!'
-	content={errorMessage}
-      />      
-    );
-    
     return (      
       <Grid style={styles.margin} columns='three' relaxed centered>
 	<Grid.Row>
@@ -43,10 +22,6 @@ class Login extends Component {
 	  </Grid.Column>
 	  <Grid.Column width={8}>
 	    <Container fluid text>
-	      <Dimmer active={modalLoaderActive}>
-		<Loader>Loading</Loader>
-	      </Dimmer>
-	      { errorBlock }
 	      <Card fluid color='purple' >
 		<Card.Content header='Login' />
 		<Card.Content>
@@ -84,13 +59,4 @@ const images = {
   imgR: '/images/EC_dress4-01.png'
 }
 
-const mapStateToProps = (state) => {
-  return {
-    modalLoaderActive: state.modalLoaderActive,
-    errorMessage: state.errorMessage
-  };
-};
-
-export default withRouter(connect(
-  mapStateToProps
-)(Login));
+export default withRouter(Login);

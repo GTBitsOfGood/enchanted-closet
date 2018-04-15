@@ -8,7 +8,7 @@ import { Button, Card, Container, Header, Loader, Segment } from 'semantic-ui-re
 class ProfileAdmin extends Component {
   constructor( props ) {
     super(props);
-    console.log(props);
+    // console.log(props);
     const { lastName, firstName, role, email, birthday, ...other } = props.user
     const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
     const userData = { ...other, birthday: formatBDay };

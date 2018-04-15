@@ -37,7 +37,7 @@ class RegisterForm extends Component {
 	break
       case "password":
       case "confirmPass":
-	return /^[a-zA-Z0-9.!@?#$%&:';()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
+	return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
 	break
       case "email":
 	return /^[\w@.]*$/.test(val)
@@ -79,6 +79,12 @@ class RegisterForm extends Component {
     }
   }
 
+  verifyCb = () => {
+    if (this.verifyAll()) {
+      this.props.setComplete();
+    }
+  }
+
   // Legacy haha
   changeFunctions = {
     "role": tar => {
@@ -94,62 +100,59 @@ class RegisterForm extends Component {
     'firstName': e => {
       if (this.regFinalTest('firstName', e.target.value)) {
 	this.props.setValid();
-	this.updateStatus('firstName', 0);
+	this.updateStatus('firstName', 0, true);
       } else {
 	this.props.setError("Field is required.");
-	this.updateStatus('firstName', 1);
+	this.updateStatus('firstName', 1, true);
       }
     },
     'lastName': e => {
       if (this.regFinalTest('lastName', e.target.value)) {
 	this.props.setValid();
-	this.updateStatus('lastName', 0);
+	this.updateStatus('lastName', 0, true);
       } else {
 	this.props.setError("Field is required.");
-	this.updateStatus('lastName', 1);
+	this.updateStatus('lastName', 1, true);
       }
     },
     'password': e => {
       if (this.regFinalTest('password', e.target.value)) {
 	this.props.setValid();
-	this.updateStatus('password', 0);
+	this.updateStatus('password', 0, true);
       } else {
 	this.props.setError("Minimum length of 7 characters, one number required.");
-	this.updateStatus('password', 1);
+	this.updateStatus('password', 1, true);
       }
     },
     'confirmPass': e => {
       if (this.state.password === e.target.value) {
 	this.props.setValid();
-	this.updateStatus('confirmPass', 0);
+	this.updateStatus('confirmPass', 0, true);
       } else {
 	this.props.setError("Passwords do not match.");
-	this.updateStatus('confirmPass', 1);
+	this.updateStatus('confirmPass', 1, true);
       }
     },
     'email': e => {
       if (this.regFinalTest('email', e.target.value)) {
 	this.props.setValid();
-	this.updateStatus('email', 0);
+	this.updateStatus('email', 0, true);
       } else {
 	this.props.setError();
-	this.updateStatus('email', 1);
+	this.updateStatus('email', 1, true);
       }
     },
     'birthday': e => true    
   }
 
-  updateStatus = (field, val) => {
+  updateStatus = (field, val, cb) => {
     this.setState({
       status: { ...this.state.status, [field]: val }
-    });
+    }, () => {if (cb) this.verifyCb();});
   }
   
   blurFunctionFactory = field => (e) => {
     this.blurFunctions[field](e);
-    if (this.verifyAll()) {
-      this.props.setComplete();
-    }
   }
   
   verifyAll = () => {    
