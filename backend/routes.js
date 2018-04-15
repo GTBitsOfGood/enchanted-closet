@@ -7,7 +7,7 @@ const auth = require('./auth')
 
 router.post('/login', controllers.auth.login);
 router.post('/register', controllers.auth.register);
-router.post('/session/:id', auth.verifySession);
+//router.post('/session/:id', auth.verifySession);
 
 router.get('/users', auth.checkAdmin, controllers.users.index);
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get);
