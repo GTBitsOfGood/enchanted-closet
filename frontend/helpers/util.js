@@ -1,12 +1,11 @@
 export default function isProfileComplete( user ) {
   const profileFields = {    
     "Participant": [
-      "birthday", "leader", "race", "phone", "school",
+      "leader", "race", "phone", "school",
       "emergencyContactName", "emergencyContactPhone",
-      "emergencyContactRelation", "grade", "age"
+      "emergencyContactRelation", "grade"
     ],
-    "Volunteer": [
-      "birthday",
+    "Volunteer": [      
       "phone",
       "emergencyContactName",
       "emergencyContactPhone",

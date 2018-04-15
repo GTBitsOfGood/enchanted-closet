@@ -33,7 +33,7 @@ export function refreshUser(user) {
     dispatch(requestUsers());
     return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(updateUserWithEvents(json.user))))
+      .then(json => safeWrap(json, () => dispatch(updateUserWithEvents(json.user)), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }

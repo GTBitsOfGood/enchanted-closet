@@ -108,7 +108,8 @@ function rootReducer(state = require('../static/defaultState'), action) {
       }); // TODO FINISH!
       break;
     case types.USER_EVENT_UPDATE: {
-      const { pendingEvents, events } = action.payload;    
+      const { pendingEvents, events } = action.payload;
+      console.log(action.payload);
       console.log(pendingEvents);
 
       const newUser = { ...state.user, pendingEvents, events }

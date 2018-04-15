@@ -28,7 +28,7 @@ function receiveRegistrationInfo(initFetch, dispatch) {
       const userPayload = {
 	...(json.newEvents ?
 	    {events: json.newEvents} : {}),
-	...(json.pendingEvents ?
+	...(json.newPending ?
 	    {pendingEvents: json.newPending} : {})
       };
       const eventPayload = {
@@ -39,7 +39,7 @@ function receiveRegistrationInfo(initFetch, dispatch) {
       }
       dispatch(updateUserEvents(userPayload));
       dispatch(updateEventUsers(eventPayload));
-    }))
+    }, dispatch))
     .then(() => dispatch(stopLoading()));
 }
 
@@ -63,7 +63,7 @@ export function markAttending(event, user) {
     dispatch(loading());
     return fetchHelper(`/api/events/${event._id}/present/${user._id}`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(userMarkedAsAttended(event, user))))
+      .then(json => safeWrap(json, () => dispatch(userMarkedAsAttended(event, user)), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }
@@ -73,7 +73,7 @@ export function markUnattending(event, user) {
     dispatch(loading());
     return fetchHelper(`/api/events/${event._id}/absent/${user._id}`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(userMarkedAsUnAttended(event, user))))
+      .then(json => safeWrap(json, () => dispatch(userMarkedAsUnAttended(event, user)), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }

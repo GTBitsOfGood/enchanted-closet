@@ -15,7 +15,7 @@ export function deleteEvent(id) {
       .then(json => {
 	return safeWrap(json, () => {
 	  dispatch(deleteLocalData('events', id));
-	});
+	}, dispatch);
       })
       .then(() => dispatch(hideModalLoader()));
   }
@@ -119,7 +119,7 @@ export function fetchFutureEvents() {
       .then(json => {
 	return safeWrap(json, () => {
 	  dispatch(receiveEvents(json.events));
-	});
+	}, dispatch);
       })
       .then(() => dispatch(stopLoading()));
   }
@@ -133,7 +133,7 @@ export function fetchPastEvents() {
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
 	dispatch(receiveEvents(json.events));
-      }))
+      }, dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }
@@ -146,7 +146,7 @@ export function upfetchEventById(id){
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
 	dispatch(receiveMoreEvents([json.event]));
-      }))
+      }, dispatch))
       .then(() => dispatch(hideModalLoader()));
   }
 }

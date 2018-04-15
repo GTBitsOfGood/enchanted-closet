@@ -11,6 +11,7 @@ module.exports.index = (req, res, next) => {
   User
     .find({})
     .populate('events')
+    .populate('pendingEvents')
     .exec((err, users) => {
       if (users) {
         res.locals.data = {
@@ -77,6 +78,7 @@ module.exports.get = (req, res, next) => {
     .populate('pendingEvents')
     .exec((err, user) => {
       if (user) {
+	console.log(user.pendingEvents);
 	console.log(user);
 	console.log("\n\n");
         res.locals.data = {

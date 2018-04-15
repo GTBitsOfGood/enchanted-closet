@@ -1,15 +1,16 @@
 // Helper functions
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
+import * as types from './types';
 import fetch from 'isomorphic-fetch';
 
-export function safeWrap(json, okCallback) {
+export function safeWrap(json, okCallback, dispatch) {
   if (json.status === 'ok') {
     return okCallback();
   } else {
-    return {
+    dispatch({
       type: types.API_ERROR,
       error: json.msg
-    };
+    });
   }
 }
 

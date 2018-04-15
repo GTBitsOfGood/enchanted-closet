@@ -16,7 +16,7 @@ export function upsertUser(data) {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(processUserUpsert(json, isUpdate))))
+      .then(json => safeWrap(json, () => dispatch(processUserUpsert(json, isUpdate)), dispatch))
       .then(() => stopLoading());
   }
 }
@@ -46,7 +46,7 @@ export function fetchUsers() {
     dispatch(requestUsers());
     return fetchHelper(`/api/users`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(receieveUsers(json))))
+      .then(json => safeWrap(json, () => dispatch(receieveUsers(json)), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }
@@ -58,7 +58,7 @@ export function fetchUserById(id){
       header: DEFAULT_HEADERS
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(updateUser(json.user))))
+      .then(json => safeWrap(json, () => dispatch(updateUser(json.user)), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }
