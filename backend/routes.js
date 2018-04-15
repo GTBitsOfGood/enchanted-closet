@@ -54,7 +54,7 @@ router.get('/events', controllers.events.fetchFutureEvents);
 router.get('/eventsPast', controllers.events.fetchPastEvents);
 
 router.get('/events/:id', controllers.events.get);
-router.post('/events/', auth.checkAdmin, controllers.events.create);
+router.post('/events', auth.checkAdmin, controllers.events.create);
 router.post('/events/uploadImage/:id', eventUpload.single('image'), controllers.events.upload);
 router.post('/users/uploadImage/:id', userUpload.single('image'), controllers.users.upload);
 router.delete('/events/:id', auth.checkAdmin, controllers.events.delete);
