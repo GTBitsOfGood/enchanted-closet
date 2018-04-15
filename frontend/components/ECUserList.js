@@ -9,11 +9,7 @@ import ECUserListItem from './ECUserListItem';
 
 const ECUserList = ( props ) => {
   const {users, event, filter} = props;
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 74dce4f437961feb1575c17b1d9e2c4db635fd97
   return (
     <Segment>
       {users ?

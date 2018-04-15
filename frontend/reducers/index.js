@@ -186,7 +186,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
             e.participantsAttended.push(action.user);
           else {
             if (e._id === action.event._id && e.volunteersAttended.findIndex( u => {return u === action.user._id}) === -1) 
-              e.participantsAttended.push(action.user);    
+              e.volunteersAttended.push(action.user);    
           }
         }
         return e;
