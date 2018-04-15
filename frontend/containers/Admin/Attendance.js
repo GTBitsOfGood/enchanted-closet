@@ -18,6 +18,7 @@ class AdminAttendance extends Component {
   constructor(props) {
     super(props);
     const { match, users, events, user } = this.props;
+
     this.state = {
       event_id: match.params.id,
       users: users || [],
@@ -52,6 +53,7 @@ class AdminAttendance extends Component {
 
   componentWillReceiveProps(nextProps) { // Receipt of full fetch
     this.setState({loading: false});
+
     const { event_id } = this.state;
     const { events = [], users = [] } = nextProps;
 
