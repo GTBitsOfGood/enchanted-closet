@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button, Icon } from 'semantic-ui-react';
 
 // Cosmetic Button File
-
-export const DeleteButton = () => (
-  <Button animated="vertical" color="red">
+export const DeleteButton = ({onClick}) => (
+  <Button onClick={onClick} animated="vertical" color="red">
     <Button.Content visible>Delete</Button.Content>
     <Button.Content hidden>
       <Icon name='trash' />
@@ -16,19 +15,18 @@ export const DeleteButton = () => (
 export const DownloadAttendanceButton = ({id}) => (
   <Button
     primary
-    onClick={() => window.open(`/api/events/${id}/report`, '_blank')}
+    onClick={() => window.open(`/api/events/${id}/report`, `_blank`)}
   >
     Download Attendance Record
   </Button>
 );
 
-// TODO - remove history
-export const EditButton = ({history, route}) => (
+export const EditButton = ({id}) => (
   <Button
     secondary
     animated="vertical"
     as={Link}
-    to={`/${route}`}
+    to={`/events/${id}/edit`}
   >
     <Button.Content visible>Edit</Button.Content>
     <Button.Content hidden>

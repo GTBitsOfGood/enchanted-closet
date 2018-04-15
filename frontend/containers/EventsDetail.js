@@ -171,9 +171,7 @@ class EventsDetail extends Component {
 		  <Button.Group>
 		    <EditButton id={event._id} />
 		    <Modal
-		      trigger={
-			<DeleteButton />
-		      }
+		      trigger={<DeleteButton />}
 		      header='Confirm Delete'
 		      content='Are you sure you want to delete this event?'
 		      actions={[

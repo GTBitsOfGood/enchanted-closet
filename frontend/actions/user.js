@@ -17,7 +17,7 @@ export function upsertUser(data) {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, dispatch(processUserUpsert(json, isUpdate)))).then(() => stopLoading());
+      .then(json => safeWrap(json, () => dispatch(processUserUpsert(json, isUpdate)))).then(() => stopLoading());
   }
 }
 
@@ -45,10 +45,12 @@ function processUserUpsert(json, isUpdate) { // updates users array as well (onl
 
 export function fetchUsers() {
   return (dispatch, getState) => {
+    dispatch(loading());
     dispatch(requestUsers());
     return fetchHelper(`/api/users`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, dispatch(receieveUsers(json))));
+      .then(json => safeWrap(json, () => dispatch(receieveUsers(json))))
+      .then(() => dispatch(stopLoading()));
   }
 }
 
@@ -59,9 +61,7 @@ export function fetchUserById(id){
       header: DEFAULT_HEADERS
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, () => {
-	dispatch(updateUser(json));
-      }))
+      .then(json => safeWrap(json, () => dispatch(updateUser(json))))
       .then(() => dispatch(stopLoading()));
   }
 }

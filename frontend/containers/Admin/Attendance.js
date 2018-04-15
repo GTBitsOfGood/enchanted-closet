@@ -23,45 +23,43 @@ class AdminAttendance extends Component {
       event_id: match.params.id,
       users: users || [],
       hasAttemptedRefresh: false,
-      loading: false,
+      loading: true,
       filter: ''
     };
 
     this.searchFilterUsers = this.searchFilterUsers.bind(this);
   }
 
-  componentDidMount() { // Identify the proper event for full fetch. Fetch if full fetch needed.
+  componentWillMount() { // Identify the proper event for full fetch. Fetch if full fetch needed.
     const { event_id } = this.state;
-    const { upfetchEventById, fetchUsers, events = [], users } = this.props;
+    const { upfetchEventById, fetchUsers, events = [], users = [] } = this.props;
 
     // Search for event
     let event = events.find(e => e._id === event_id);
-    if (event) {     
-      this.setState({event: event[0]});
-    } else {
-      this.setState({loading: true, hasAttemptedRefresh: true});
+    if (!event) {
+      this.setState({
+	hasAttemptedRefresh: true
+      });
       upfetchEventById(event_id);
     }
 
     // Populate users : TODO - excessive fetching - fetch with event user registry
     if (users.length === 0) {
-      this.setState({loading: true});
       fetchUsers();
+    }
 
+    if (event && users.length !== 0) {
+      this.setState({loading: false});
     }
   }
 
   componentWillReceiveProps(nextProps) { // Receipt of full fetch
-    this.setState({loading: false});
-
-    const { event_id } = this.state;
-    const { events = [], users = [] } = nextProps;
-
-    let event = events.find(e => e._id === event_id);
-    if (event)
-      this.setState({ events, event: event[0] }); // TODO: Note completely redundant fetching and overwriting of good data
-    
-    this.setState({users});
+    const { events = [], users = [] } = nextProps;    
+    this.setState({
+      events,
+      loading: false,
+      users
+    });
   }
 
   searchFilterUsers(filterString) {
@@ -69,15 +67,17 @@ class AdminAttendance extends Component {
   }
 
   render() {
-    const { event, loading, hasAttemptedRefresh, filter } = this.state; // event in state is pretty suboptimal
-    const { users, user } = this.props;
-
+    const { loading, hasAttemptedRefresh, filter, event_id } = this.state; // event in state is pretty suboptimal
+    const { events = [], users = [], user } = this.props;
+    const event = events.find(e => e._id === event_id);
     if (event) {
       // Timecheck on event: TODO CONSTANT ASSUMPTION Presume same day
       // Future TODO: Split single time into start and end
-      if (Date.now().getFullYear() === event.datetime.getFullYear() &&
-	  Date.now().getMonth() === event.datetime.getMonth() &&
-	  Date.now().getDate() === event.datetime.getDate()) {// BUG Likely source of one at least
+      const date = new Date(event.datetime);
+      const curDate = new Date(Date.now());
+      if (curDate.getFullYear() === date.getFullYear() &&
+	  curDate.getMonth() === date.getMonth() &&
+	  curDate.getDate() === date.getDate()) {
 	// Verify users
 	if (user) {	 
 	  if (user.role === 'Volunteer') { // Redirect unregistered volunteers
@@ -129,15 +129,15 @@ class AdminAttendance extends Component {
 	} else { // No user
 	  return <Redirect to="/" />;
 	}	
-      } else { // Future past check
-	if (Date.now() - event.datetime > 0) { // Past : TODO! - install DownloadAttendanceButton	  
+      } else { // Future or Past check
+	if (Date.now() - event.datetime > 0) { // Past TODO: functional - provide admin write access to past events
 	  return (
 	    <div>
 	      <GenericBanner
 		header="Archived Event"	      
 		message="This event has already happened!"
 		linkMsg="Back to event view"
-		link={`/event/${this.state.event_id}`}
+		link={`/events/${this.state.event_id}`}
 	      />
 	      <RoleCheck role="Admin">
 		<DownloadAttendanceButton id={this.state.event_id} /> 
@@ -145,14 +145,16 @@ class AdminAttendance extends Component {
 	    </div>
 	  );
 	} else { // Future
-	  <div>
-	    <GenericBanner
-	      header="Event locked"
-	      message="This event isn't happening yet!"
-	      linkMsg="Back to event view"
-	      link={`/event/${this.state.event_id}`}
-	    />
-	  </div>
+	  return (
+	    <div>
+	      <GenericBanner
+		header="Event locked"
+		message="This event isn't happening yet!"
+		linkMsg="Back to event view"
+		link={`/events/${this.state.event_id}`}
+	      />
+	    </div>
+	  );
 	}
       }
     } else { // Fetch / 404
