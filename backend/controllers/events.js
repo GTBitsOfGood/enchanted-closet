@@ -170,9 +170,11 @@ module.exports.absent = (req, res, next) => {
       }
       if (uDoc.role == 'Participant') {
         if (!eDoc.participantsAttended) eDoc.participantsAttended = [];
-        const index = eDoc.participantsAttended.indexOf(req.params.userID);
-        if (index > -1) {
-          eDoc.participantsAttended.splice(index, 1);
+        if (eDoc.participantsAttended.indexOf(req.params.userID) !== -1) {
+          var temp = eDoc.participantsAttended.map(String);
+          temp.splice(temp.indexOf(req.params.userID), 1);
+          eDoc.pendingEvents = temp;
+          eDoc.events.push(eventID);
         } else {
           res.locals.error = {
             status: 400,
@@ -182,9 +184,11 @@ module.exports.absent = (req, res, next) => {
         }
       } else if (uDoc.role == 'Volunteer') {
         if (!eDoc.volunteersAttended) eDoc.volunteersAttended = [];
-        const index = eDoc.volunteersAttended.indexOf(req.params.userID);
-        if (eDoc.volunteersAttended.indexOf(req.params.userID) > -1) {
-          eDoc.volunteersAttended.splice(index, 1);
+        if (eDoc.volunteersAttended.indexOf(req.params.userID) !== -1) {
+          var temp = eDoc.volunteersAttended.map(String);
+          temp.splice(temp.indexOf(req.params.userID), 1);
+          eDoc.pendingEvents = temp;
+          eDoc.events.push(eventID);
         } else {
           res.locals.error = {
             status: 400,
@@ -195,7 +199,7 @@ module.exports.absent = (req, res, next) => {
       }
 
       eDoc.save(err => {
-      if (err) {
+	    if (err) {
           console.log(err);
           res.locals.error = {
             code: 500,
@@ -204,7 +208,7 @@ module.exports.absent = (req, res, next) => {
         }
 
         res.locals.data = {
-          present: false
+          present: true
         }
         return next();
       });
@@ -238,6 +242,48 @@ module.exports.get = (req, res, next) => {
         return next();
       }
     });
+}
+
+module.exports.upload = (req, res, next) => {
+  console.log("uploading");
+  console.log(req);
+  if (!req.params.id) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Event ID required'
+    };
+    return next();
+  }
+  let newProps = {};
+  console.log(req.file);
+  if (req.file) {
+    newProps.image = req.file.path;
+  }
+
+  Event.findById(req.params.id, (err, doc) => {
+    if (err) {
+      res.locals.error = {
+        status: 404,
+        msg: "Event not found with desired ID"
+      }
+      return next(new Error(res.locals.error));
+    } else {
+      doc.set(newProps);
+      doc.save((err, updated) => {
+        console.log(err)
+        if (err) {
+          res.locals.error = {
+            status: 500,
+            msg: "Unable to save changes to db"
+          }
+        }
+        res.locals.data = {
+          event: updated
+        };
+        return next();
+      });
+    }
+  });
 }
 
 module.exports.create = (req, res, next) => {
