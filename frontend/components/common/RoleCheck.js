@@ -9,7 +9,7 @@ const RoleCheck = ({
   userRole
 }) => (
   <div>
-    {((role && userRole === role) ||
+    {((role && userRole === role.toLowerCase()) ||
       (roles && roles.map(r => r.toLowerCase()).includes(userRole))) &&
      children}
   </div>

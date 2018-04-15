@@ -10,7 +10,9 @@ import { geocode } from '../helpers/geocodeEngine';
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react';
-import { DeleteButton, DownloadAttendanceButton, EventImageButton, Clearfix, MarkAttendanceButton, Map, EditButton, ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
+import { DeleteButton, DownloadAttendanceButton, EventImageButton,
+	 Clearfix, MarkAttendanceButton, Map, EditButton,
+	 ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -25,25 +27,29 @@ class EventsDetail extends Component {
     const eventId = match.params.id;
     this.state = {
       eventId,
+      isFetchingEvents: true, // for loading
       displayMapLocationError: false
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { match, upfetchEventById, // fetchEvents,
 	    events, location } = this.props;
     const eventId = match.params.id;
     const event = events.find(event => event._id === eventId);
     if (!event) { //in case local store is old
       upfetchEventById(eventId); // fetching
-      this.setState({
-	isFetchingEvents: true
-      });
     } else {
-      this.setState( { event } );
+      this.setState( {
+	event,
+	isFetchingEvents: false
+      } );
       geocode(event.location)
 	.then(location => {
-	  this.setState({latitude: location.lat, longitude: location.lng});
+	  this.setState({
+	    latitude: location.lat,
+	    longitude: location.lng
+	  });
 	})
 	.catch(err => {
 	  this.setState({displayMapLocationError: true});
@@ -68,9 +74,12 @@ class EventsDetail extends Component {
 	event
       });
       
-      geocode(detail.location)
+      geocode(event.location)
 	.then(location => {
-	  this.setState({latitude: location.lat, longitude: location.lng});
+	  this.setState({
+	    latitude: location.lat,
+	    longitude: location.lng
+	  });
 	})
 	.catch(err => {
 	  this.setState({displayMapLocationError: true});
@@ -79,8 +88,10 @@ class EventsDetail extends Component {
   }
 
   render() {
-    const { user, events, deleteEvent, isFetchingEvents, location, history, registerEvent, cancelEvent } = this.props;
-    const { event, displayMapLocationError, latitude, longitude } = this.state;
+    const { user, events, deleteEvent, registerEvent, cancelEvent } = this.props;
+    const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state;
+    if (!event && isFetchingEvents) // Still processing
+      return <div />;
     const date = new Date(event.datetime);
     const registerBlock = (() => {
       if (date.getTime() > Date.now()) {
@@ -126,6 +137,7 @@ class EventsDetail extends Component {
 	}
       } else return null;
     })();
+
     return (
       <Container>
 	{ registerBlock }
@@ -149,7 +161,7 @@ class EventsDetail extends Component {
 	    }
 	    <Segment key="events">
 	      <h3>Events</h3>
-	      <p><Icon name='map'/> {event.location}</p>
+	      <p><Icon name='map'/> {event.location} </p>
 	      <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
 	    </Segment>
 	    <RoleCheck role="Admin">
@@ -192,9 +204,6 @@ class EventsDetail extends Component {
       </Container>
     );
   }
-}
-
-EventsDetail.propTypes = {
 }
 
 const mapStateToProps = state => {

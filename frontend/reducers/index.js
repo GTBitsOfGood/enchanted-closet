@@ -19,8 +19,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       });
 
     case types.EVENT_UPSERT:
-      let { events } = state;
-      if (!events) events = [];
+      let { events = [] } = state;
       let eventStateUpdate = {
         loading: false,
         errorMessage: '',
@@ -34,7 +33,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
           } else {
             return e;
           }
-        })
+        });
       } else {
         events.push(action.event);
       }

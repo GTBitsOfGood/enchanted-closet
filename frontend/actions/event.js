@@ -145,7 +145,7 @@ export function upfetchEventById(id){
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
-	dispatch(receiveMoreEvents(json.events));
+	dispatch(receiveMoreEvents([json.event]));
       }))
       .then(() => dispatch(hideModalLoader()));
   }

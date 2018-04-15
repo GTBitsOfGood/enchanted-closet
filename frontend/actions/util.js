@@ -23,7 +23,6 @@ export function fetchHelper( route, apiToken, obj = {} ) {
 }
 
 export function getAPIToken( getState ) {
-  console.log(getState())
   return getState().user && getState().user.token ? getState().user.token : null;
 }
 

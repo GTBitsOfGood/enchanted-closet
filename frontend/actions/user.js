@@ -86,7 +86,7 @@ export function updateUserWithEvents(user) {
     const newUser = { ...user, events, pendingEvents };
     dispatch(updateUser(newUser));
     dispatch(receiveEvents(user.events)); // these are unstripped
-    dispatch(receiveMoreEvents(user.pendingEvents)).
+    dispatch(receiveMoreEvents(user.pendingEvents));
     dispatch(stopLoading());
   }
 }

@@ -319,7 +319,6 @@ module.exports.create = (req, res, next) => {
     return next();
   }
 
-  console.log("we out here");
   Event.create({
     name: req.body.name,
     description: req.body.description,

@@ -4,7 +4,7 @@ import { Button, Icon } from 'semantic-ui-react';
 
 // Cosmetic Button File
 
-const deleteButton = () => (
+export const DeleteButton = () => (
   <Button animated="vertical" color="red">
     <Button.Content visible>Delete</Button.Content>
     <Button.Content hidden>
@@ -13,7 +13,7 @@ const deleteButton = () => (
   </Button>
 );
 
-const downloadAttendanceButton = ({id}) => (
+export const DownloadAttendanceButton = ({id}) => (
   <Button
     primary
     onClick={() => window.open(`/api/events/${id}/report`, '_blank')}
@@ -23,7 +23,7 @@ const downloadAttendanceButton = ({id}) => (
 );
 
 // TODO - remove history
-const editButton = ({history, route}) => (
+export const EditButton = ({history, route}) => (
   <Button
     secondary
     animated="vertical"
@@ -37,7 +37,7 @@ const editButton = ({history, route}) => (
   </Button>
 );
 
-const markAttendanceButton = ({id}) => (
+export const MarkAttendanceButton = ({id}) => (
   <Button
     as={Link}
     to={`/events/${id}/attendance`}
@@ -46,7 +46,7 @@ const markAttendanceButton = ({id}) => (
   </Button>
 );
 
-const eventImageButton = ({id}) => (
+export const EventImageButton = ({id}) => (
   <Button
     as={Link}
     to={`/events/${id}/upload`}
@@ -55,6 +55,3 @@ const eventImageButton = ({id}) => (
   </Button>
 );
 
-module.exports.DownloadAttendanceButton = downloadAttendanceButton;
-module.exports.EditButton = editButton;
-module.exports.MarkAttendanceButton = markAttendanceButton;

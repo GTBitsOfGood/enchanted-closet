@@ -28,7 +28,7 @@ function formatCards(cards) {
     if (cards) {
       const formatted = [
 	{
-	  content: Object.values(cards.users).reduce(cards.users).reduce((a, b) => a + b),
+	  content: Object.values(cards.users).reduce((a, b) => a + b),
 	  title: 'Users',
 	  url: '/users'
 	},
