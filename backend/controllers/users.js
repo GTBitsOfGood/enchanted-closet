@@ -184,8 +184,6 @@ module.exports.update = (req, res, next) => {
       return next(new Error(res.locals.error));
     } else {
       doc.set(newProps);
-      console.log(doc);
-      console.log(newProps);
       doc.save((err, updated) => {
         if (err) {
           res.locals.error = {
@@ -292,11 +290,8 @@ module.exports.create = (req, res, next) => {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation;
   }
 
-  console.log(newProps);
-
   User.create(newProps, (err, user) => {
     if (err) {
-      console.log(err);
       res.locals.error = {
         status: 400,
         msg: "User unable to be created"
@@ -317,14 +312,14 @@ module.exports.registerevent = (req, res, next) => {
       status: 400,
       msg: 'Event ID required'
     };
-    return next();
+    return next(new Error(res.locals.error));
   }
   if (!req.params.userID) {
     res.locals.error = {
       status: 400,
       msg: 'User ID required'
     };
-    return next();
+    return next(new Error(res.locals.error));
   }
   const userID = req.params.userID;
   const eventID = req.params.eventID;
@@ -335,7 +330,7 @@ module.exports.registerevent = (req, res, next) => {
         status: 404,
         msg: 'That event was not found in the database'
       };
-      return next();
+      return next(new Error(res.locals.error));
     }
     User.findById(userID, function(err, uDoc){
       if (err || !uDoc) {
@@ -343,7 +338,7 @@ module.exports.registerevent = (req, res, next) => {
           status: 404,
           msg: 'That user was not found in the database'
         };
-        return next();
+        return next(new Error(res.locals.error));
       }
       // update event.users
       if (!eDoc.participants) eDoc.participants = [];
@@ -356,9 +351,10 @@ module.exports.registerevent = (req, res, next) => {
                 status: 400,
                 msg: 'This participant has already registered for this event'
               };
-              return next();
+              return next(new Error(res.locals.error));
           }
       } else if (uDoc.role == "Volunteer" || uDoc.role == "Admin") {
+        if (uDoc.deniedEvents != null && !uDoc.deniedEvents.map(String).includes(eventID)) {
           if (!eDoc.volunteers.map(String).includes(userID)) {
               eDoc.volunteers.push(userID);
           } else {
@@ -366,8 +362,15 @@ module.exports.registerevent = (req, res, next) => {
               status: 400,
               msg: 'This volunteer has already registered for this event'
             };
-            return next();
+            return next(new Error(res.locals.error));
           }
+        } else {
+          res.locals.error = {
+            status: 400,
+            msg: 'Your registration was denied'
+          };
+          return next(new Error(res.locals.error));
+        }
       } 
       // update users.events
       if (!uDoc.events) uDoc.events = [];
@@ -378,7 +381,7 @@ module.exports.registerevent = (req, res, next) => {
 	    status: 400,
 	    msg: "This volunteer already has this event register data."
 	  }
-	  return next();
+	  return next(new Error(res.locals.error));
 	} else {
           uDoc.pendingEvents.push(eventID);
 	}
@@ -388,7 +391,7 @@ module.exports.registerevent = (req, res, next) => {
 	    status: 400,
 	    msg: "This volunteer already has this event register data."
 	  }
-	  return next();
+	  return next(new Error(res.locals.error));
 	} else {
           uDoc.events.push(eventID);
 	}
@@ -419,6 +422,109 @@ module.exports.registerevent = (req, res, next) => {
 	    newParticipants: eDoc.participants,
             newVolunteers: eDoc.volunteers
           }
+          return next();
+        });
+      });
+    });
+  });
+}
+
+module.exports.denyRegistration = (req, res, next) => {
+  if (!req.params.eventID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Event ID required'
+    };
+    return next();
+  }
+  if (!req.params.userID) {
+    res.locals.error = {
+      status: 400,
+      msg: 'User ID required'
+    };
+    return next();
+  }
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
+
+  Event.findById(eventID, function(err, eDoc){
+    if (err || !eDoc) {
+      res.locals.error = {
+        status: 404,
+        msg: 'That event was not found in the database'
+      };
+      return next();
+    }
+    User.findById(userID, function(err, uDoc){
+      if (err || !uDoc) {
+        res.locals.error = {
+          status: 404,
+          msg: 'That user was not found in the database'
+        };
+        return next();
+      }
+
+      if (!eDoc.participants) eDoc.participants = [];
+      if (!eDoc.volunteers) eDoc.volunteers = [];
+      if (!eDoc.volunteers.map(String).includes(userID)) {
+        res.locals.error = {
+          status: 400,
+          msg: 'That user has not registered for that event.'
+        };
+        return next();
+      }
+
+      if (!uDoc.events) uDoc.events = [];
+      if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
+      if (!uDoc.deniedEvents) uDoc.deniedEvents = [];
+      if (uDoc.deniedEvents.map(String).includes(eventID)) {
+        res.locals.error = {
+          status: 400,
+          msg: 'That user has already been denied.'
+        };
+        return next();
+      }
+      if (uDoc.pendingEvents.map(String).includes(eventID)) {
+        var temp = uDoc.pendingEvents.map(String);
+        temp.splice(temp.indexOf(eventID), 1);
+        uDoc.pendingEvents = temp;
+        uDoc.deniedEvents.push(eventID);
+        var tempE = eDoc.volunteers.map(String);
+        tempE.splice(tempE.indexOf(userID), 1);
+        eDoc.volunteers = temp;
+      } else {
+        res.locals.error = {
+          status: 400,
+          msg: 'That user has not registered for that event.'
+        };
+        return next();
+      }
+
+      uDoc.save((err) => {
+        if (err) {
+          console.log(err);
+          res.locals.error = {
+            code: 500,
+            msg: err
+          };
+          return next();
+        }
+        eDoc.save(err => {
+          if (err) {
+            console.log(err);
+            res.locals.error = {
+              code: 500,
+              msg: err
+            };
+          }
+
+	  res.locals.data = {
+	    eventID,
+            newEvents: uDoc.events,
+	    newPending: uDoc.pendingEvents,
+	    newParticipants: eDoc.participants,
+            newVolunteers: eDoc.volunteers
+          } 
           return next();
         });
       });
