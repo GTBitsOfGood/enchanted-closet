@@ -6,48 +6,19 @@ import { Button, Input, Form } from 'semantic-ui-react';
 import { fetchUsers, upsertUser } from '../../actions';
 import { formWrapper } from './';
 import { startCase } from 'lodash';
-// Test profileForm for participant (Only for mutable parts)
+// ProfileForm that takes soft field props (targets)
 class ProfileForm extends Component {
   
   constructor(props) {
     super(props);
-    const { user } = props;
-    // given initial data from store
-    // init status
-    this.targets = {
-      'phone': {
-	constraintMsg: "Only numbers, please",
-	isLegal: val => /^$|^[1-9][0-9]*$/.test(val),
-	isFinal: val => /^ *$/.test(val)
-      },
-      'grade': {
-	isLegal: val => /^$|^[1-9]|1[0-2]|college]$/.test(val)
-      },
-      'race': {
-	isLegal: val => /^[a-zA-Z\s]*$/.test(val)
-      },
-      'school': {
-	isLegal: val => /^[\w\s]*$/.test(val)
-      },
-      'leader': {
-	isLegal: val => /^[a-zA-Z\s]*$/.test(val)
-      },
-      'emergencyContactName': {
-	isLegal: val => /^[a-zA-Z\s]*$/.test(val)
-      },
-      'emergencyContactPhone': {
-	isLegal: val => /^$|^[1-9][0-9]*$/.test(val)
-      },
-      'emergencyContactRelation': {
-	isLegal: val => /^[a-zA-Z\s]*$/.test(val)
-      }
-    };
-    
+    const { user, targets } = props;
+    this.targets = targets;
     let initStatus = {};
     let initData = {};
+
     Object.keys(this.targets).forEach( tar => {
-      initData[tar] = user[tar];
-      initStatus[tar] = this.regFinalTest(tar, user[tar]) ? 0: -1;
+      initData[tar] = user[tar] ? user[tar] : "";
+      initStatus[tar] = this.regFinalTest(tar, user[tar] ? user[tar] : "") ? 0: -1;
     });
     
     this.state = {
@@ -66,10 +37,16 @@ class ProfileForm extends Component {
   }
 
   regFinalTest = (field, val) => {
-    return true; // TODO
+    if (!val) return false; // no falsey!
+    if (this.targets[field]) {
+      if ("isFinal" in this.targets[field])
+	return this.targets[field]["isFinal"](val);
+      return this.targets[field]["isLegal"](val) && val.length !== 0; // Fallback
+    }
+    return true; // Field not found in targets, no restrictions
   }
 
-  // filter is what to filter to apply to value into state
+  // Filter is what filter to apply to value into state
   changeFunctionFactory = (field, warningMessage, filter) => {
     return e => {
       if (this.regLegalTest(field, e.target.value)) {
@@ -85,37 +62,29 @@ class ProfileForm extends Component {
     }
   }
 
-  updateStatus = (field, val) => {
+  // verify cb
+  updateStatus = (field, val, cb) => {
     this.setState({
       status: { ...this.state.status, [field]: val }
-    });
+    }, () => {if (cb) this.verifyCb();});
   }
 
-  blurFunctions = {
-    'password': e => {
-      if (this.regFinalTest('password', e.target.value)) {
-	this.props.setValid();
-	this.updateStatus('password', 0);
-      } else {
-	this.props.setError("Illegal password value");
-	this.updateStatus('password', 1);
-      }
-    },
-    'email': e => {
-      if (this.regFinalTest('email', e.target.value)) {
-	this.props.setValid();
-	this.updateStatus('email', 0);
-      } else {
-	this.props.setError();
-	this.updateStatus('email', 1);
-      }
+  verifyCb = () => {
+    if (this.verifyAll()) {
+      this.props.setComplete();
     }
   }
 
+  blurFunctions = { // Implement finer control here
+  }
+  
   blurFunctionFactory = field => (e) => {
-    this.blurFunctions[field](e);
-    if (this.verifyAll()) {
-      this.props.setComplete();
+    if (this.regFinalTest(field, e.target.value)) {
+      this.props.setValid();
+      this.updateStatus(field, 0, true);
+    } else {
+      this.props.setError();
+      this.updateStatus(field, 1, true);
     }
   }
   
@@ -130,26 +99,14 @@ class ProfileForm extends Component {
     const { userData } = this.state;
     if (this.verifyAll()) {
       // diff the objects
-      this.props.setComplete("Saving profile");
       this.setState({ loading: true, hasChanged: false });
       const changedKeys = Object.keys(this.state.userData).filter(key => this.state.cachedData[key] !== this.state.userData[key]);
       let diffDict= {};
       changedKeys.forEach(key => {
 	diffDict[key] = this.state.userData[key];
       });
-      this.props.upsertUser({ ...diffDict, _id: this.props.user._id });
 
-      // don't worry about this for now...
-      /*
-      const { lastName, firstName, role, email, birthday, ...other } = user
-      this.setState({ loading: false });
-      if (!user) {
-	this.setState({ cachedData: {}, userData: {} })
-	console.error("ProfileParticipant null user error")
-      } else {
-	this.setState({ cachedData: other, userData: other })
-      }
-      */
+      this.props.upsertUser({ ...diffDict, _id: this.props.user._id });
     } else {
       this.props.setError("The form is completed incorrectly.");
     }
@@ -158,13 +115,13 @@ class ProfileForm extends Component {
   render() {
     const { userData } = this.state;
     const { setError, setValid, setComplete, setMessage } = this.props;
+
     return (
       <div>
 	<Form>
 	  {
 	    Object.keys(this.targets).map( key => {
 	      const tar = this.targets[key];
-	      console.log(tar);
 	      return (
 		<Input
 		  key={`profile${key}`}

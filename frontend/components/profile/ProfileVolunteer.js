@@ -1,81 +1,38 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment';
-import { fetchUsers, upsertUser } from '../../actions'
 import { Button, Card, Container, Header, Loader, Segment } from 'semantic-ui-react'
-import MutableEntry from './MutableEntry'
+import { ProfileForm } from '../'
 
-const softFields = [
-  {name: 'phone',
-   isLegal: val => /^[1-9][0-9]*$/.test(val)},
-  {name: 'emergencyContactName',
-   isLegal: val => /^[a-zA-Z\s]$/.test(val)},
-  {name: 'emergencyContactPhone',
-   isLegal: val => /^[1-9][0-9]*$/.test(val)},
-  {name: 'emergencyContactRelation',
-   isLegal: val => /^[a-zA-Z\s]$/.test(val)}]
-
-const legalTest = (() => {
-  let legalDict = {};
-  softFields.forEach(entry =>
-    legalDict[entry.name] = entry.isLegal
-  );
-  return legalDict;
-})();
-
+const targets = {
+  'phone': {
+    constraintMsg: "Only numbers, please",
+    isLegal: val => /^$|^[1-9][0-9]*$/.test(val)
+  },
+  'emergencyContactName': {
+    isLegal: val => /^[a-zA-Z\s]*$/.test(val)
+  },
+  'emergencyContactPhone': {
+    isLegal: val => /^$|^[1-9][0-9]*$/.test(val)
+  },
+  'emergencyContactRelation': {
+    isLegal: val => /^[a-zA-Z\s]*$/.test(val)
+  }
+};
 
 class ProfileVolunteer extends Component {
   
   constructor( props ) {
-    super(props)
-    const { lastName, firstName, role, email, birthday, ...userData } = props.user
-    const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
-    this.state = {
-      loading: false,
-      userData, // Dictionary of field (for softFields) names: values
-      userLastData: userData, // Cache
-    }
+    super(props);
   }
 
-  onChangeFactory = field => {
-    return event => {
-      const newVal = event.target.value
-      this.setState({ userData: { ...this.state.userData, [field]: newVal } })
-    }
-  }
-
-  onSave = () => {
-    // diff the two things
-    this.setState({ loading: true, hasChanged: false });    
-    const changedKeys = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]);
-    let diffDict= {};
-    changedKeys.forEach(key => {
-      diffDict[key] = this.state.userData[key];
-    });
-    const { upsertUser } = this.props;
-    upsertUser({ ...diffDict, _id: this.props.user._id });  
-  }
-  
-  componentWillReceiveProps( { user } ) {
-    const { lastName, firstName, role, email, ...other } = user
-    this.setState(
-      { loading: false }
-    )
-    if (!user) {
-      this.setState({ userLastData: {}, userData: {} })
-      console.error("ProfileVolunteer null user error")
-    } else {
-      this.setState({ userLastData: other, userData: other })
-    }
-  }
-  // each component that corresponds to a profile piece should take the following: - setChanged() callback, value prop, and onChange() prop
-  // each component should correspond to a field
   render() {
-    const { lastName, firstName, role, email, birthday } = this.props.user
-    const { userData, userLastData } = this.state
-    const name = firstName + " " + lastName
+    const { lastName, firstName, role, email, birthday } = this.props.user;
+    // console.log(birthday);
+    // console.log(moment(birthday));
+    // console.log(new Date(birthday));
+    const name = firstName + " " + lastName;
     const hardBlock = (
       <div>
 	<div> { name } </div>
@@ -83,40 +40,14 @@ class ProfileVolunteer extends Component {
 	<div> { role } </div>
 	<div> { moment(birthday).format("MM/DD/YYYY") } </div>
       </div>
-    )
-    
-    const hasNotChanged = Object.keys(this.state.userData).filter(key => this.state.userLastData[key] !== this.state.userData[key]).length === 0;
+    );
 
-    const softBlock = softFields.map(entry => {
-      const field = entry.name;
-      const value = this.state.userData[field];
-      return (
-	<MutableEntry
-	isLegal={this.state.legalData[field]}
-	key={`soft${field}`}
-	label={field}
-	value={value} 
-	initialValue={this.state.userLastData[field]}
-	onChange={this.onChangeFactory(field)}
-	/>
-      )
-    });
-
-    const allLegal = Object.values(this.state.legalData).reduce((a,b) => a && b);
-
-    // const allSame = Object.keys();
     return (
       <Container style={styles.wrap}>
 	<div style={styles.header}>
 	  <Header as='h3'>
 	    Volunteer Profile
-	  </Header>
-	  <Button
-	    disabled={!(!hasNotChanged && allLegal)}
-	    onClick={this.onSave}
-	  >
-	    Save Profile
-	  </Button>
+	  </Header>	  
 	</div>
 	<div style={styles.cardWrap}>
 	  <Card style={styles.hardCard}>
@@ -124,7 +55,9 @@ class ProfileVolunteer extends Component {
 	  </Card>
 	  <Card style={styles.softCard}>
 	    Additional Details:
-	    {softBlock}
+	    <ProfileForm
+	      targets={targets}
+	    />
 	  </Card>
 	</div>
       </Container>
@@ -162,10 +95,4 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    upsertUser: upsertUser
-  }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileVolunteer);
+export default connect(mapStateToProps)(ProfileVolunteer)

@@ -68,7 +68,7 @@ const formWrapper = WrappedForm => class extends Component {
     return (
       <div>
 	{ messageBlock }
-	{ <WrappedForm {...controlProps} /> }
+	{ <WrappedForm {...{...controlProps, ...this.props}} /> }
       </div>
     )
   }

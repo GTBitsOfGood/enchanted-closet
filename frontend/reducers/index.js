@@ -116,7 +116,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
 	       user: newUser,
 	       errorMessage: null };
     }
-    case types.EVENT_USER_UPDATE: {// TODO: make users ref event store array
+    case types.EVENT_USER_UPDATE: { // TODO: make users ref event store array
       const { eventID, participants, volunteers } = action.payload;
       // find old event
       const { events } = state;
@@ -167,6 +167,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       });
 
     case types.RECEIVE_USERS:
+      console.log(users);
       return Object.assign({}, state, {
         isFetchingUsers: false,
         users: action.users

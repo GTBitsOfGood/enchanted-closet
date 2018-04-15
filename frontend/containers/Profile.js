@@ -4,23 +4,19 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 
-import { clearErrors, fetchUserById, upsertUser } from '../actions';
+import { clearErrors, fetchUserById } from '../actions';
 
 import { Button, Container, Card, Form, Header, Message } from 'semantic-ui-react';
 import { CustomForm, PageTitle, LoadingIcon, ProfileImage } from '../components';
-import ProfileForm from '../static/surveys/ProfileFormJSON.js';
 import { ProfileAdmin, ProfileParticipant, ProfileVolunteer } from '../components';
 
 
 class Profile extends Component {
   constructor(props){
-    super(props);
-    
+    super(props);    
     const { clearErrors, fetchUserById, user } = this.props;
     clearErrors();
-    if (user) { // oh there better be a user
-      fetchUserById(user._id);
-    }
+    fetchUserById(user._id);
   }
   
   render() {
@@ -40,21 +36,17 @@ class Profile extends Component {
       }
     })();
     
-    if (user) {
-      return (
-        <Container>
-          <PageTitle title="Profile" />
-	  <Card>
-	    <ProfileImage />
-	  </Card>
-          <Card fluid>
-	    {profileBody}
-          </Card>
-        </Container>
-      );
-    } else {
-      return <Redirect to={`/login`}/>;
-    }
+    return (
+      <Container>
+        <PageTitle title="Profile" />
+	<Card>
+	  <ProfileImage />
+	</Card>
+        <Card fluid>
+	  {profileBody}
+        </Card>
+      </Container>
+    );
   }
 }
 
@@ -68,8 +60,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     clearErrors,
-    fetchUserById,
-    upsertUser
+    fetchUserById
   }, dispatch);
 }
 

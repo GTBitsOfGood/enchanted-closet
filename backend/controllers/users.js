@@ -174,7 +174,7 @@ module.exports.update = (req, res, next) => {
   if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation;
   }
-
+  // TODO: Sam update error object or at least addd message if any of these fail
   User.findById(req.params.id, (err, doc) => {
     if (err) {
       res.locals.error = {

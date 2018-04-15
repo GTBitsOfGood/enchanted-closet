@@ -1,7 +1,6 @@
 import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
 import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 import { receiveEvents, receiveMoreEvents } from './';
-import moment from 'moment';
 import * as types from './types';
 
 export function upsertUser(data) {
@@ -17,16 +16,14 @@ export function upsertUser(data) {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(processUserUpsert(json, isUpdate)))).then(() => stopLoading());
+      .then(json => safeWrap(json, () => dispatch(processUserUpsert(json, isUpdate))))
+      .then(() => stopLoading());
   }
 }
 
 function processUserUpsert(json, isUpdate) { // updates users array as well (only relevant for admin)
   return (dispatch, getState) => {
     if (json.status === 'ok') {
-      const { birthday } = json.user;
-      const formatBDay = birthday ? moment(new Date(birthday)).format('MMMM Do YYYY') : null;
-      json.user = { ...json.user, birthday: formatBDay };
       dispatch(updateUserWithEvents(json.user)); // whatever, not gonna strip users array
       dispatch({
 	type: types.USERS_UPSERT,
@@ -61,7 +58,7 @@ export function fetchUserById(id){
       header: DEFAULT_HEADERS
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(updateUser(json))))
+      .then(json => safeWrap(json, () => dispatch(updateUser(json.user))))
       .then(() => dispatch(stopLoading()));
   }
 }
