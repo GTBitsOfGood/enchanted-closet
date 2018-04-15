@@ -18,6 +18,7 @@ const DEFAULT_MAP_LOCATION = {
   longitude: -0.1276250
 };
 
+// TODO: Insert image
 class EventsDetail extends Component {
   constructor(props) {
     super(props);
@@ -157,7 +158,7 @@ class EventsDetail extends Component {
 		<h3>Admin Controls</h3>
 		<Clearfix>
 		  <Button.Group>
-		    <EditButton history={history} route={`admin/events/${event._id}/edit`}/>
+		    <EditButton id={event._id} />
 		    <Modal
 		      trigger={
 			<DeleteButton />
@@ -170,9 +171,9 @@ class EventsDetail extends Component {
 		      ]}
 		      onActionClick={() => deleteEvent(event._id)}
 		    />
-		    <EventImageButton />
-		    <MarkAttendanceButton />
-		    <DownloadAttendanceButton />
+		    <EventImageButton id={event._id} />
+		    <MarkAttendanceButton id={event._id} />
+		    <DownloadAttendanceButton id={event._id} />
 		  </Button.Group>
 		</Clearfix>
 	      </Segment>

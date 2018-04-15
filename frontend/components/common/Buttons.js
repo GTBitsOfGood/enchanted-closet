@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import { Button, Icon } from 'semantic-ui-react';
 
 // Cosmetic Button File
@@ -22,8 +22,14 @@ const downloadAttendanceButton = ({id}) => (
   </Button>
 );
 
+// TODO - remove history
 const editButton = ({history, route}) => (
-  <Button secondary animated="vertical" onClick={() => history.push(`/${route}`)}>
+  <Button
+    secondary
+    animated="vertical"
+    as={Link}
+    to={`/${route}`}
+  >
     <Button.Content visible>Edit</Button.Content>
     <Button.Content hidden>
       <Icon name='pencil' />
@@ -31,14 +37,20 @@ const editButton = ({history, route}) => (
   </Button>
 );
 
-const markAttendanceButton = ({history}) => (
-  <Button onClick={() => history.push(`/events/${event._id}/attendance`)}>
+const markAttendanceButton = ({id}) => (
+  <Button
+    as={Link}
+    to={`/events/${id}/attendance`}
+  >
     Mark Attendance
   </Button>
 );
 
-const eventImageButton = ({history}) => (
-  <Button onClick={() => history.push(`/events/${event._id}/upload`)}>
+const eventImageButton = ({id}) => (
+  <Button
+    as={Link}
+    to={`/events/${id}/upload`}
+  >
     Change Event Image
   </Button>
 );

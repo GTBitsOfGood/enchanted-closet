@@ -8,45 +8,38 @@ import Radium from 'radium';
 import { Container, Card, Grid, Reveal, Segment, Message, Image, Button } from 'semantic-ui-react'
 import { LoginForm } from '../components/';
 
-class Login extends Component { // TODO refactor
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (      
-      <Grid style={styles.margin} columns='three' relaxed centered>
-	<Grid.Row>
-	  <Grid.Column width={4}>
-	    <Image src={images.imgL} size='medium' centered />
-	  </Grid.Column>
-	  <Grid.Column width={8}>
-	    <Container fluid text>
-	      <Card fluid color='purple' >
-		<Card.Content header='Login' />
-		<Card.Content>
-		  <LoginForm />
-		</Card.Content>
-	      </Card>
-	      <Card fluid color='purple' >
-		<Card.Content style={{textAlign: 'center'}}>
-		  <Container>
-		    <Button as={Link} to='/register' >
-		      Register a New Account
-		    </Button>
-		  </Container>
-		</Card.Content>
-	      </Card>
-	    </Container>
-	  </Grid.Column>
-	  <Grid.Column width={4}>
-	    <Image src={images.imgR} size='medium' centered />
-	  </Grid.Column>
-	</Grid.Row>
-      </Grid>
-    );
-  }
-};
+// TODO: Style
+const Login = () => (
+  <Grid style={styles.margin} columns='three' relaxed centered>
+    <Grid.Row>
+      <Grid.Column width={4}>
+	<Image src={images.imgL} size='medium' centered />
+      </Grid.Column>
+      <Grid.Column width={8}>
+	<Container fluid text>
+	  <Card fluid color='purple' >
+	    <Card.Content header='Login' />
+	    <Card.Content>
+	      <LoginForm />
+	    </Card.Content>
+	  </Card>
+	  <Card fluid color='purple' >
+	    <Card.Content style={{textAlign: 'center'}}>
+	      <Container>
+		<Button as={Link} to='/register' >
+		  Register a New Account
+		</Button>
+	      </Container>
+	    </Card.Content>
+	  </Card>
+	</Container>
+      </Grid.Column>
+      <Grid.Column width={4}>
+	<Image src={images.imgR} size='medium' centered />
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+);
 
 const styles = {
   margin: {

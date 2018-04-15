@@ -29,11 +29,11 @@ const AdminVolunteerControl = ({ confirmVolunteer, events, users }) => (
 		 <Segment>{user.firstName}</Segment>
 		 <Segment>
 		   <Button onClick={confirmVolunteer}>Approve</Button>
-		   <Button onClick={denyVolunteer}>Deny</Button>		   
+		   <Button onClick={denyVolunteer}>Deny</Button>   
 		 </Segment>
 	       </Segment.Group>
 	     ))}
-	   </Segment>
+	   </Segment.Group>
 	 )
 	 (
 	   <Segment.Group>
