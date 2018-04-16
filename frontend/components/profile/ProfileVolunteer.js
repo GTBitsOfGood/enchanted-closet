@@ -21,72 +21,26 @@ const targets = {
   }
 };
 
-class ProfileVolunteer extends Component {
-  
-  constructor( props ) {
-    super(props);
-  }
-
-  render() {
-    const { lastName, firstName, role, email, birthday } = this.props.user;
-    // console.log(birthday);
-    // console.log(moment(birthday));
-    // console.log(new Date(birthday));
-    const name = firstName + " " + lastName;
-    const hardBlock = (
-      <div>
-	<div> { name } </div>
-	<div> { email } </div>
-	<div> { role } </div>
-	<div> { moment(birthday).format("MM/DD/YYYY") } </div>
-      </div>
-    );
-
-    return (
-      <Container style={styles.wrap}>
-	<div style={styles.header}>
-	  <Header as='h3'>
-	    Volunteer Profile
-	  </Header>	  
-	</div>
-	<div style={styles.cardWrap}>
-	  <Card style={styles.hardCard}>
-	    {hardBlock}
-	  </Card>
-	  <Card style={styles.softCard}>
-	    Additional Details:
-	    <ProfileForm
-	      targets={targets}
-	    />
-	  </Card>
-	</div>
-      </Container>
-    )
-  }
+const ProfileVolunteer = props => {
+  return (
+    <Card style={styles.softCard}>
+      <Card.Content>
+	<Card.Header> Additional Details: </Card.Header>
+	<Card.Description>
+	  <ProfileForm targets={targets} />
+	</Card.Description>
+      </Card.Content>
+    </Card>
+  )
 }
 
 const styles = {
-  cardWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-  hardCard: {
-    padding: '1em'
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
   softCard: {
-    padding: '1em'
+    padding: '1em',
+    width: '50%'
   },
-  wrap: {
-    padding: '1em'
-  }
 }
+
 
 const mapStateToProps = state => {
   return {

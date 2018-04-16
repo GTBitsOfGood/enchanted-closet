@@ -60,7 +60,7 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.3",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.74.2",
+    "semantic-ui-react": "^0.78.0",
     "serve-favicon": "^2.4.5",
     "should": "^13.1.0",
     "style-loader": "^0.16.1",

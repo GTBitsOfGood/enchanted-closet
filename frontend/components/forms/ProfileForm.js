@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { capitalize } from 'lodash';
-import { Button, Input, Form } from 'semantic-ui-react';
+import { Button, Divider, Form } from 'semantic-ui-react';
 import { fetchUsers, upsertUser } from '../../actions';
 import { formWrapper } from './';
 import { startCase } from 'lodash';
+
 // ProfileForm that takes soft field props (targets)
 class ProfileForm extends Component {
   
@@ -99,14 +100,18 @@ class ProfileForm extends Component {
     const { userData } = this.state;
     if (this.verifyAll()) {
       // diff the objects
-      this.setState({ loading: true, hasChanged: false });
       const changedKeys = Object.keys(this.state.userData).filter(key => this.state.cachedData[key] !== this.state.userData[key]);
       let diffDict= {};
       changedKeys.forEach(key => {
 	diffDict[key] = this.state.userData[key];
       });
-
-      this.props.upsertUser({ ...diffDict, _id: this.props.user._id });
+      if (Object.keys(diffDict).length === 0)
+	this.props.setError("No fields have changed!");
+      else {
+	this.props.upsertUser({ ...diffDict, _id: this.props.user._id });
+	// optimistic update
+	this.setState({cachedData: this.state.userData});
+      }
     } else {
       this.props.setError("The form is completed incorrectly.");
     }
@@ -123,11 +128,10 @@ class ProfileForm extends Component {
 	    Object.keys(this.targets).map( key => {
 	      const tar = this.targets[key];
 	      return (
-		<Input
+		<Form.Input
 		  key={`profile${key}`}
-		  label={tar.label ? tar.label : startCase(key)}
-		  required
-		  transparent
+		  inline transparent
+		  label={tar.label ? tar.label : startCase(key)}		
 		  error={this.errorFactory(key)}
 		  name={key}
 	          type={tar.type ? tar.type : "text"}
@@ -137,7 +141,7 @@ class ProfileForm extends Component {
 		/>
 	      )})
 	  }
-	  <Button
+	  <Form.Button
 	    color="violet"
 	    onClick={this.onSubmit}
 	    content='Save Profile'

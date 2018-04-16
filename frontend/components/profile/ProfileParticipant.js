@@ -33,67 +33,25 @@ const targets = {
   }
 };
 
-class ProfileParticipant extends Component {
-  
-  constructor( props ) {
-    super(props);
-  }
-
-  render() {
-    const { lastName, firstName, role, email, birthday } = this.props.user;
-
-    const name = firstName + " " + lastName;
-    const hardBlock = (
-      <div>
-	<div> { name } </div>
-	<div> { email } </div>
-	<div> { role } </div>
-	<div> { moment(birthday).format("MM/DD/YYYY") } </div>
-      </div>
-    );
-    
-    return (
-      <Container style={styles.wrap}>
-	<div style={styles.header}>
-	  <Header as='h3'>
-	    Participant Profile
-	  </Header>	  
-	</div>
-	<div style={styles.cardWrap}>
-	  <Card style={styles.hardCard}>
-	    {hardBlock}
-	  </Card>
-	  <Card style={styles.softCard}>
-	    Additional Details:
-	    <ProfileForm targets={targets} />
-	  </Card>
-	</div>
-      </Container>
-    )
-  }
+// Only for mutable fields
+const ProfileParticipant = props => {
+  return (
+    <Card style={styles.softCard}>
+      <Card.Content>
+	<Card.Header> Additional Details: </Card.Header>
+	<Card.Description>
+	  <ProfileForm targets={targets} />
+	</Card.Description>
+      </Card.Content>
+    </Card>
+  )
 }
 
 const styles = {
-  cardWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-  hardCard: {
-    padding: '1em'
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
   softCard: {
-    padding: '1em'
+    padding: '1em',
+    width: '50%' // Pretty whimsical
   },
-  wrap: {
-    padding: '1em'
-  }
 }
 
 const mapStateToProps = state => {
@@ -103,4 +61,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(ProfileParticipant)
+export default connect(mapStateToProps)(ProfileParticipant);

@@ -7,6 +7,7 @@ import { withRouter, Route, Redirect, Switch } from 'react-router-dom';
 // accepts : ['Admin', 'Volunteer', 'Participant', 'loggedIn', 'loggedOut']
 // redirect: redirect url
 // component: on success render
+// todo: tbh why am I not rerouting a crap ton?
 const SmartRoute = ( props ) => {
   const { accepts = [], redirect='/error', user, ...other } = props;
   if (( accepts.length === 0 ) ||

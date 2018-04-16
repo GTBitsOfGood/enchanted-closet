@@ -6,9 +6,9 @@ import { bindActionCreators } from 'redux';
 
 import { clearErrors, fetchUserById } from '../actions';
 
-import { Button, Container, Card, Form, Header, Message } from 'semantic-ui-react';
-import { CustomForm, PageTitle, LoadingIcon, ProfileImage } from '../components';
-import { ProfileAdmin, ProfileParticipant, ProfileVolunteer } from '../components';
+import { Button, Card, Container, Form, Header, Message, Segment } from 'semantic-ui-react';
+import { PageTitle, LoadingIcon, ProfileImage } from '../components';
+import { ProfileAdmin, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components';
 
 
 class Profile extends Component {
@@ -25,13 +25,13 @@ class Profile extends Component {
     const profileBody = (() => {
       switch (user.role) {
 	case "Admin":
-	  return <ProfileAdmin />;
+	  return null; // Admin has no profile
 	  break;
 	case "Volunteer":
-	  return <ProfileVolunteer />;
+	  return <ProfileVolunteer user={user} />;
 	  break;
 	case "Participant":
-	  return <ProfileParticipant />;
+	  return <ProfileParticipant user={user} />;
 	  break;
       }
     })();
@@ -39,12 +39,12 @@ class Profile extends Component {
     return (
       <Container>
         <PageTitle title="Profile" />
-	<Card>
-	  <ProfileImage />
-	</Card>
-        <Card fluid>
-	  {profileBody}
-        </Card>
+	<Segment>
+	  <Card.Group centered stackable>
+	    <ProfileBase user={user}/>	   
+	    {profileBody}
+	  </Card.Group>
+	</Segment>
       </Container>
     );
   }
