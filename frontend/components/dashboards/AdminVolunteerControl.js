@@ -15,27 +15,33 @@ const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], u
 	<Header> Volunteer Requests </Header>
       </Segment>
       {events.map(e => {
-	 let needsApprovalList = [];
-	 e.volunteers.forEach( vId => {
-	   const user = users.find(u => u._id === vId);
-	   if (user && user.pendingEvents.includes(e._id)) {
-	     needsApprovalList.push(user);
-	   }
-	 }); // return list of needs approval users
-	 if (needsApprovalList.length === 0) return null;
-
+	 if (!e.pendingVolunteers || e.pendingVolunteers.length === 0) return null;
+	 
 	 return (
 	   <Segment.Group key={`volApproalEvent${e._id}`}>
-	     {needsApprovalList.map( user => (
-	       <Segment.Group horizontal key={`volApprovalEvent${e._id}Volunteer${user._id}`}>
-		 <Segment>{user.lastName}</Segment>
-		 <Segment>{user.firstName}</Segment>
-		 <Segment>
-		   <Button onClick={() => confirmVolunteer(e._id, user._id)}>Approve</Button>
-		   <Button onClick={() => denyVolunteer(e._id, user._id)}>Deny</Button>   
-		 </Segment>
-	       </Segment.Group>
-	     ))}
+	     <Segment>
+	       {e.name}
+	     </Segment>
+	     {e.pendingVolunteers.map( id => {
+		const user = users.find(u => u._id === id);
+		if (user)
+		  return (
+		    <Segment.Group horizontal key={`volApprovalEvent${e._id}Volunteer${id}`}>
+		      <Segment>{user.lastName}</Segment>
+		      <Segment>{user.firstName}</Segment>
+		      <Segment>
+			<Button onClick={() => confirmVolunteer(e._id, id)}>Approve</Button>
+			<Button onClick={() => denyVolunteer(e._id, id)}>Deny</Button>   
+		      </Segment>
+		    </Segment.Group>
+		  );
+		else
+		  return (
+		    <Segment key={`volApprovalEvent${e._id}Volunteer${id}`}>
+		      Something went wrong retrieving id {id}
+		    </Segment>
+		  );
+	     })}
 	   </Segment.Group>
 	 );
       })}

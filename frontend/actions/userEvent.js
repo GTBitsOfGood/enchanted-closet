@@ -36,11 +36,16 @@ function receiveRegistrationInfo(initFetch, dispatch) {
 	...(json.newPending ?
 	    {pendingEvents: json.newPending} : {})
       };
+      console.log(json);
       const eventPayload = {
 	...(json.newParticipants ?
 	    {participants: json.newParticipants} : {}),
 	...(json.newVolunteers ?
-	    {volunteers: json.newVolunteers} : {})
+	    {volunteers: json.newVolunteers} : {}),
+	...(json.newPendingVolunteers ?
+	    {pendingVolunteers: json.newPendingVolunteers} : {}),
+	...(json.newDeniedVolunteers ?
+	    {pendingVolunteers: json.newDeniedVolunteers} : {})
       }
       dispatch(updateUserEvents(userPayload));
       dispatch(updateEventUsers(eventPayload));

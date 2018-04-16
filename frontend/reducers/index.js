@@ -116,12 +116,12 @@ function rootReducer(state = require('../static/defaultState'), action) {
 	       errorMessage: null };
     }
     case types.EVENT_USER_UPDATE: { // TODO: make users ref event store array
-      const { eventID, participants, volunteers } = action.payload;
+      const { eventID, participants, volunteers, pendingVolunteers, deniedVolunteers } = action.payload;
       // find old event
       const { events } = state;
-      const eventsFiltered = events ? events.filter( e => e._uid === eventID ) : [];
-      const event = eventsFiltered.length != 0 ? eventsFiltered[0] : null;
-      const newEvent = event ? { ...event, participants, volunteers } : null;
+      // const eventsFiltered = events ? events.filter( e => e._uid === eventID ) : [];
+      const event = events.find(e => e._id === eventID);
+      const newEvent = event ? { ...event, participants, volunteers, pendingVolunteers, deniedVolunteers } : null;
       if ( newEvent ) {
 	events[events.indexOf(event)] = newEvent;
       }

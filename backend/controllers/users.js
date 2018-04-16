@@ -525,6 +525,7 @@ module.exports.denyRegistration = (req, res, next) => {
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
+	    newDeniedVolunteers: eDoc.deniedVolunteers,
             newVolunteers: eDoc.volunteers
           } 
           return next();
@@ -571,10 +572,10 @@ module.exports.confirmRegistration = (req, res, next) => {
 
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
-      if (!eDoc.volunteers.map(String).includes(userID)) {
+      if (!eDoc.pendingVolunteers.map(String).includes(userID)) {
         res.locals.error = {
           status: 400,
-          msg: 'That user has not registered for that event.'
+          msg: 'That user is not pending registration for that event.'
         };
         return next();
       }
@@ -622,6 +623,7 @@ module.exports.confirmRegistration = (req, res, next) => {
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
+	    newPendingVolunteers: eDoc.pendingVolunteers,
             newVolunteers: eDoc.volunteers
           } 
           return next();
