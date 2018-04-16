@@ -1,4 +1,5 @@
 export * from './Buttons'
+export { default as ButtonGallery } from './ButtonGallery'
 export { default as Clearfix } from './Clearfix'
 export { default as ErrorComponent } from './ErrorComponent'
 export { default as GenericBanner } from './GenericBanner'

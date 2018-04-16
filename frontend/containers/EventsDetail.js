@@ -10,8 +10,8 @@ import { geocode } from '../helpers/geocodeEngine';
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react';
-import { DeleteButton, DownloadAttendanceButton, EventImageButton,
-	 Clearfix, MarkAttendanceButton, Map, EditButton,
+import { ButtonGallery, DeleteButton, DownloadAttendanceButton, EventImageButton,
+	 MarkAttendanceButton, Map, EditButton,
 	 ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
@@ -23,7 +23,7 @@ const DEFAULT_MAP_LOCATION = {
 class EventsDetail extends Component {
   constructor(props) {
     super(props);
-    const { match, user } = this.props;
+    const { match, user } = props;
     const eventId = match.params.id;
     this.state = {
       eventId,
@@ -37,8 +37,8 @@ class EventsDetail extends Component {
 	    events, location } = this.props;
     const eventId = match.params.id;
     const event = events.find(event => event._id === eventId);
-    if (!event) { //in case local store is old
-      upfetchEventById(eventId); // fetching
+    if (!event) { // Fetch if store doesn't have event
+      upfetchEventById(eventId);
     } else {
       this.setState( {
 	event,
@@ -58,10 +58,9 @@ class EventsDetail extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { events } = nextProps;
-    const eventId = this.state.eventId;
-    //process it again
-    if (!events) return;
+    const { events = [] } = nextProps;
+    const { eventId } = this.state;
+    // Process again
     const event = events.find(e => e._id === eventId);
     if (!event) {
       this.setState({
@@ -88,59 +87,51 @@ class EventsDetail extends Component {
   }
 
   render() {
-    const { user, events, deleteEvent, registerEvent, cancelEvent } = this.props;
+    const { user, deleteEvent, registerEvent, cancelEvent } = this.props;
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state;
     if (!event && isFetchingEvents) // Still processing
       return <div />;
     const date = new Date(event.datetime);
     const registerBlock = (() => {
-      if (date.getTime() > Date.now()) {
+      if (date.getTime() > Date.now()) { // flag: event still open condition
 	if (user) {
 	  if (!isProfileComplete(user)) {
 	    return (
-	      <Container>
 		<Button>		  
 		  <Link to='/profile'>
 		    Complete Profile to Register
 		  </Link>
 		</Button>
-	      </Container>
 	    );
 	  }
 	  // check block
 	  if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
 	    return (
-	      <Container>
+	      <Button disabled>
 		Registration denied
-	      </Container>
+	      </Button>
 	    );
 	  }
 	  if ((user.events && user.events.includes(event._id)) ||
 	      (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
 	    return (
-	      <Container>
-		<Button onClick={() => cancelEvent(event._id, user._id)}>
-		  Cancel
-		</Button>
-	      </Container>
+	      <Button onClick={() => cancelEvent(event._id, user._id)}>
+		Cancel Registration
+	      </Button>
 	    );
 	  }
 	  return (
-	    <Container>
-	      <Button onClick={() => registerEvent(event._id, user._id)}>
-		Register
-	      </Button>
-	    </Container>
+	    <Button onClick={() => registerEvent(event._id, user._id)}>
+	      Register
+	    </Button>
 	  );
 	} else {
 	  return (
-	    <Container>
-	      <Button attached= 'top'>
-		<Link to='/login'>
-		  Login to Register
-		</Link>
-	      </Button>
-	    </Container>
+	    <Button attached= 'top'>
+	      <Link to='/login'>
+		Login to Register
+	      </Link>
+	    </Button>
 	  );
 	}
       } else return null;
@@ -148,7 +139,6 @@ class EventsDetail extends Component {
 
     return (
       <Container>
-	{ registerBlock }
 	{ !isFetchingEvents && event &&
 	  <div>
 	    <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
@@ -173,30 +163,33 @@ class EventsDetail extends Component {
 	      <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
 	    </Segment>
 	    <RoleCheck role="Admin">
-	      <Segment>
-		<h3>Admin Controls</h3>
-		<Clearfix>
-		  <Button.Group>
-		    <EditButton id={event._id} />
-		    <Modal
-		      trigger={<DeleteButton />}
-		      header='Confirm Delete'
-		      content='Are you sure you want to delete this event?'
-		      actions={[
-			'Cancel',
-			{ key: 'done', content: 'Delete', negative: true },
-		      ]}
-		      onActionClick={() => deleteEvent(event._id)}
-		    />
-		    <EventImageButton id={event._id} />
-		    <MarkAttendanceButton id={event._id} />
-		    <DownloadAttendanceButton id={event._id} />
-		  </Button.Group>
-		</Clearfix>
-	      </Segment>
+	      <ButtonGallery>
+		<EditButton id={event._id} />
+		<Modal
+		  trigger={<DeleteButton />}
+		  header='Confirm Delete'
+		  content='Are you sure you want to delete this event?'
+		  actions={[
+		    'Cancel',
+		    { key: 'done', content: 'Delete', negative: true },
+		  ]}
+		  onActionClick={() => deleteEvent(event._id)}
+		/>
+		<EventImageButton id={event._id} />
+		<MarkAttendanceButton id={event._id} />
+		<DownloadAttendanceButton id={event._id} />
+	      </ButtonGallery>
 	    </RoleCheck>
 	    <RoleCheck role="Volunteer">
-	      <MarkAttendanceButton />
+	      <ButtonGallery>
+		<MarkAttendanceButton />
+		{ registerBlock }
+	      </ButtonGallery>
+	    </RoleCheck>
+	    <RoleCheck role="Participant">
+	      <ButtonGallery>
+		{ registerBlock }
+	      </ButtonGallery>
 	    </RoleCheck>
 	  </div>
 	}
