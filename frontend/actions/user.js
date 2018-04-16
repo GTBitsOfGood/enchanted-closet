@@ -76,6 +76,13 @@ export function receieveUsers(json) {
   }
 }
 
+export function receiveMoreUsers(users) {
+  return {
+    type: types.RECEIVE_MORE_USERS,
+    users
+  }
+}
+
 export function updateUserWithEvents(user) {
   return (dispatch, getState) => {
     const events = user.events ? user.events.map(e => e._id) : [];
@@ -92,5 +99,15 @@ function updateUser(user) {
   return {
     type: types.USER_UPDATE,
     user
+  }
+}
+
+export function promoteUser(id) {
+  return (dispatch, getState) => {
+    dispatch(loading());
+    return fetchHelper(`/api/users/admin/${id}`, getAPIToken(getState))
+      .then(response => response.json())
+      .then(json => safeWrap(json, () => dispatch(receieveMoreUsers([json.user])), dispatch))
+      .then(() => dispatch(stopLoading()));
   }
 }

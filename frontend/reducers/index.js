@@ -78,10 +78,10 @@ function rootReducer(state = require('../static/defaultState'), action) {
       });    
     case types.RECEIVE_MORE_EVENTS: // Merge
       const newEvents = action.events;
-      const alreadyIn = newEvents.map(e => e._id);
-      const persist = state.events ? state.events.filter(e => !alreadyIn.includes(e._id)) : [];
+      const alreadyInEvents = newEvents.map(e => e._id);
+      const persistEvents = state.events ? state.events.filter(e => !alreadyInEvents.includes(e._id)) : [];
       return Object.assign({}, state, {
-        events: [ ...newEvents, ...persist],
+        events: [ ...newEvents, ...persistEvents],
         lastUpdatedEvents: action.receivedAt
       });
     case types.REQUEST_PAST_EVENTS:
@@ -172,6 +172,16 @@ function rootReducer(state = require('../static/defaultState'), action) {
         users: action.users
       });
 
+    case types.RECEIVE_MORE_USERS:
+      const newUsers = action.users;
+      const alreadyInUsers = newUsers.map(e => e._id);
+      const persistUsers = state.users ? state.users.filter(e => !alreadyInUsers.includes(e._id)) : [];
+      return Object.assign({}, state, {
+        users: [ ...newUsers, ...persistUsers],
+        lastUpdatedUsers: action.receivedAt
+      });
+
+      
     case types.UPDATE_DASHBOARD_CARDS:
       return Object.assign({}, state, {
         dashboardCards: action.cards

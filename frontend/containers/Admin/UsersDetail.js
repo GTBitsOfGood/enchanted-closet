@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchUsers } from '../../actions/';
+import { fetchUsers, promoteUser } from '../../actions/';
 
 import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react';
 import { withRouter, Link } from 'react-router-dom';
@@ -55,7 +55,8 @@ class AdminUsersDetail extends Component {
   }
 
   render() {
-    const { loading, hasPerformedUpdate, user } = this.state;
+    const { loading, hasPerformedUpdate, user_id, user } = this.state;
+    const { promoteUser } = this.props;
     const name = user ? `${user.firstName} ${user.lastName}` :
 		 'Name not found';
     return (
@@ -83,6 +84,11 @@ class AdminUsersDetail extends Component {
 	>
 	  Back to all users
 	</Button>
+	<Button
+	  onClick={() => promoteUser(user_id)}
+	>
+	  Make Admin
+	</Button>
       </Container>
     )
   }
@@ -90,14 +96,14 @@ class AdminUsersDetail extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
     users: state.users
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    updateUserStore: fetchUsers
+    updateUserStore: fetchUsers,
+    promoteUser
   }, dispatch);
 }
 
