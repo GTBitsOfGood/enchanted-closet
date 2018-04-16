@@ -29,6 +29,7 @@ class Navigation extends Component {
 
     const userLinks = [
       ['Dashboard', '/dashboard'],
+      ['Profile', '/profile'],
       ['Browse Events', '/events'],
       ['Logout', '/logout']
     ]

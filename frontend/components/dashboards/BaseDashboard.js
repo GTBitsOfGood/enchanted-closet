@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container, Card, Message } from 'semantic-ui-react';
+import { Divider, Segment, Header, Icon, Container, Message } from 'semantic-ui-react';
 import { COLORS } from '../../constants'
-import moment from 'moment';
 import isProfileComplete from '../../helpers/util';
 import { DashboardCard } from './';
-import { Event } from '../events';
+import { Event, RoleCheck } from '../';
 
 
-class ParticipantDashboard extends Component {
+class BaseDashboard extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    var currentDateTime = new Date();
-
-    const { events = [], age, birthday, email } = this.props.user;
+    const { events = [], pendingEvents = [] } = this.props.user;
 
     // Get only the user's events from the store using the event ids
     const userEventsDict = this.props.events.filter(
@@ -25,21 +22,47 @@ class ParticipantDashboard extends Component {
 
     // Filter based on time
     const upcomingEvents = userEventsDict.filter(
-      event => (new Date(event.datetime) > currentDateTime));
+      event => (event.datetime > Date.now()));
     const pastEvents = userEventsDict.filter(
-      event => (new Date(event.datetime) <= currentDateTime));
+      event => (event.datetime <= Date.now())); // lol inefficient
+
+    // For volunteer, pending events
+    const pendingEventsDict = this.props.events.filter(e => ( (pendingEvents.includes(e._id))));
+
+    const pendingEventsRender =
+      pendingEventsDict.length === 0 ?
+      (<Header
+	as="h3"
+	style={styles.emptyMessage}
+       >
+	You have no pending events.
+      </Header>) :
+      (pendingEventsDict.map(event => (
+	<Event key={ `${event._id}pendingEvent` } data = { event } />
+      )));
+
     
     // Render events using Event component
     const upcomingEventsRender = 
       upcomingEvents.length === 0 ? 
-      (<h2> You are not registered for any upcoming events </h2>) : 
+      (<Header
+	 as="h3"
+	 style={styles.emptyMessage}
+       >
+	You are not registered for any upcoming events
+      </Header>) : 
       (upcomingEvents.map(event => (
 	<Event key={ `${event._id}upcomingEvent` } data = { event } /> 
       )));
 
     const pastEventsRender = 
       pastEvents.length === 0 ? 
-      (<h2> No past events found </h2>) : 
+      (<Header
+	 as="h3"
+	 style={styles.emptyMessage}
+       >
+	No past events found
+      </Header>) : 
       (pastEvents.map(event => (
 	<Event key={ `${event._id}pastEvent` } data = { event } /> 
       )));
@@ -50,36 +73,50 @@ class ParticipantDashboard extends Component {
 	  (<Message style={ styles.wrap } error
 		    header='Please fill in your profile.'
 		    content='We noticed that your profile is missing important information. Please enter all information into your profile'
-	  />) : (null)
+	  />) : null
 	}
-	<Container style={ styles.eventsContainer }>
-	  <h1 style={styles.header} > Upcoming Events </h1>
+	<Segment style={ styles.eventsContainer }>
+	  <Header as="h1" style={styles.header} > Upcoming Events </Header>
+	  <Divider />
 	  <div style={ styles.overflowDiv }>
 	    { upcomingEventsRender }
 	  </div>
-	</Container>
+	</Segment>
 	
-	<Container style={ styles.eventsContainer }>
-	  <h1 style={styles.header} > Past Events </h1>
+	<Segment style={ styles.eventsContainer }>
+	  <Header as="h1" style={styles.header} > Past Events </Header>
+	  <Divider />
 	  <div style={ styles.overflowDiv }>
 	    { pastEventsRender }
 	  </div>
-	</Container>
+	</Segment>
+
+	<RoleCheck role="Volunteer">
+	  <Segment style={ styles.eventsContainer }>
+	    <Header as="h1" style={styles.header} > Pending Events </Header>
+	    <Divider />
+	    <div style={ styles.overflowDiv }>
+	      { pendingEventsRender }
+	    </div>
+	  </Segment>
+	</RoleCheck>
       </div>
     );
   }
 }
 
 const styles = {
+  emptyMessage: {
+    fontWeight: "400",
+    marginLeft: '1em'
+  },
   eventsContainer: {
-    backgroundColor: COLORS.WHITE,
     marginTop: '1em',
     paddingBottom: '1em'
-
   },
   overflowDiv: {
     overflow: 'auto',
-    height: '20em'
+    maxHeight: '20em'
   },
   SegmentLeft: {
     backgroundColor: COLORS.BRAND,
@@ -104,13 +141,6 @@ const styles = {
   }
 }
 
-const pruneDescription = (description) => {
-  const cutoff = 20; // 20 words;
-  const split = description.split(' ');
-  if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`;
-  return description;
-}
-
 const mapStateToProps = (state) => {
   return {
     user: state.user,
@@ -125,4 +155,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ParticipantDashboard);
+)(BaseDashboard);

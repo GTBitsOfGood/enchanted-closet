@@ -9,8 +9,7 @@ import { loadAuthState } from '../store/localStorage.js';
 
 import { PageTitle,
 	 AdminDashboard,
-	 ParticipantDashboard,
-	 VolunteerDashboard
+	 BaseDashboard
 } from '../components/'
 import { Container, Card } from 'semantic-ui-react'
 
@@ -32,10 +31,8 @@ class Dashboard extends Component {
 	  return <AdminDashboard />
 	  break
 	case 'Participant':
-	  return <ParticipantDashboard />
-	  break
 	case 'Volunteer':
-	  return <VolunteerDashboard />
+	  return <BaseDashboard />
 	  break
       }
       return null
@@ -43,7 +40,7 @@ class Dashboard extends Component {
 
     return (
       <Container>
-	<PageTitle title={`${role} Dashboard`} link = { "/profile" } linkTitle = { "My Profile" } />
+	<PageTitle title={`${role} Dashboard`} />
 	{ dashBlock }
       </Container>
     );

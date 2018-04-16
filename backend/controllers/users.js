@@ -69,16 +69,12 @@ let validateAdmin = (data, callback) => {
 }
 
 module.exports.get = (req, res, next) => {
-  console.log("Getting user\n\n");
   User
     .findById(req.params.id)
     .populate('events')
     .populate('pendingEvents')
     .exec((err, user) => {
       if (user) {
-	console.log(user.pendingEvents);
-	console.log(user);
-	console.log("\n\n");
         res.locals.data = {
           user: user
         };
