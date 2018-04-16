@@ -188,12 +188,14 @@ function rootReducer(state = require('../static/defaultState'), action) {
       });
 
     case types.MARK_ATTENDING:
+      /* // There is no user map
       const userMap = state.users.map(u => {
         if (u._id === action.user._id) {
-          u.pastEvents.push(action.event);
+          u.events.push(action.event); // No past future distinction
         }
         return u;
       });
+      */ 
       const eventRemap = state.events.map(e => {
         if (action.user.role === 'participant') {
           if (e._id === action.event._id && e.participantsAttended.findIndex( u => {return u === action.user._id}) === -1) 
@@ -206,11 +208,12 @@ function rootReducer(state = require('../static/defaultState'), action) {
         return e;
       });
       return Object.assign({}, state, {
-        users: userMap,
+        // users: userMap,
         events: eventRemap
       });
 
     case types.MARK_UNATTENDING:
+      /* // It ain't real
       const userRebuild = state.users.map(u => {
         if (u._id === action.user._id) {
           const i = u.pastEvents.findIndex( e => {return e === action.event._id});
@@ -218,6 +221,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
         }
         return u;
       });
+      */
       const eventRebuild = state.events.map(e => {
         if (e._id === action.event._id) {
           if (action.user.role === 'participant')
@@ -233,7 +237,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
         return e;
       });
       return Object.assign({}, state, {
-        users: userRebuild,
+        // users: userRebuild,
         events: eventRebuild
       });
 
