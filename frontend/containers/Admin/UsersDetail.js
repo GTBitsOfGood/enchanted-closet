@@ -84,11 +84,13 @@ class AdminUsersDetail extends Component {
 	>
 	  Back to all users
 	</Button>
-	<Button
-	  onClick={() => promoteUser(user_id)}
-	>
-	  Make Admin
-	</Button>
+	{user && user.role == 'Volunteer' &&
+	 <Button
+	   onClick={() => promoteUser(user_id)}
+	   >
+	   Make Admin
+	 </Button>
+	}
       </Container>
     )
   }

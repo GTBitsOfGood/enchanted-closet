@@ -181,7 +181,7 @@ module.exports.makeAdmin = (req, res, next) => {
     return next(new Error(res.locals.error));
   }
   var query = {'_id' : req.params.id};
-  User.findOneAndUpdate(query, {"role" : "Admin", "token" : null}, {upsert:false}, function(err, doc) {
+  User.findOneAndUpdate(query, {"role" : "Admin"}, {upsert:false}, function(err, doc) {
     if (err) {
       res.locals.error = err;
       return next(new Error(res.locals.error));
@@ -194,7 +194,7 @@ module.exports.makeAdmin = (req, res, next) => {
         res.locals.data = {
           user: user
         };
-        localStorage.setItem("user", user);
+        // localStorage.setItem("user", user);
         return next();
       } else {
         res.locals.error = {

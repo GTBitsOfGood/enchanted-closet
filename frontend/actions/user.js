@@ -3,6 +3,27 @@ import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } 
 import { receiveEvents, receiveMoreEvents } from './';
 import * as types from './types';
 
+export function requestUsers() {
+  return {
+    type: types.REQUEST_USERS
+  }
+}
+
+export function receiveUsers(json) {
+  return {
+    type: types.RECEIVE_USERS,
+    users: json.users
+  }
+}
+
+export function receiveMoreUsers(users) {
+  return {
+    type: types.RECEIVE_MORE_USERS,
+    users
+  }
+}
+
+
 export function upsertUser(data) {
   return (dispatch, getState) => {
     dispatch(loading());
@@ -46,7 +67,7 @@ export function fetchUsers() {
     dispatch(requestUsers());
     return fetchHelper(`/api/users`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(receieveUsers(json)), dispatch))
+      .then(json => safeWrap(json, () => dispatch(receiveUsers(json)), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }
@@ -63,25 +84,6 @@ export function fetchUserById(id){
   }
 }
 
-export function requestUsers() {
-  return {
-    type: types.REQUEST_USERS
-  }
-}
-
-export function receieveUsers(json) {
-  return {
-    type: types.RECEIVE_USERS,
-    users: json.users
-  }
-}
-
-export function receiveMoreUsers(users) {
-  return {
-    type: types.RECEIVE_MORE_USERS,
-    users
-  }
-}
 
 export function updateUserWithEvents(user) {
   return (dispatch, getState) => {
@@ -107,7 +109,7 @@ export function promoteUser(id) {
     dispatch(loading());
     return fetchHelper(`/api/users/admin/${id}`, getAPIToken(getState))
       .then(response => response.json())
-      .then(json => safeWrap(json, () => dispatch(receieveMoreUsers([json.user])), dispatch))
+      .then(json => safeWrap(json, () => dispatch(receiveMoreUsers([json.user])), dispatch))
       .then(() => dispatch(stopLoading()));
   }
 }
