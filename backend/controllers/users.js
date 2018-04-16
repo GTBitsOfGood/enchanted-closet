@@ -342,7 +342,7 @@ module.exports.registerevent = (req, res, next) => {
       }
       // update event.users
       if (!eDoc.participants) eDoc.participants = [];
-      if (!eDoc.volunteers) eDoc.volunteers = [];
+      if (!eDoc.pendingVolunteers) eDoc.pendingVolunteers = [];
       if (uDoc.role == "Participant") {
           if (!eDoc.participants.map(String).includes(userID)) {
               eDoc.participants.push(userID);
@@ -355,8 +355,8 @@ module.exports.registerevent = (req, res, next) => {
           }
       } else if (uDoc.role == "Volunteer" || uDoc.role == "Admin") {
         if (uDoc.deniedEvents != null && !uDoc.deniedEvents.map(String).includes(eventID)) {
-          if (!eDoc.volunteers.map(String).includes(userID)) {
-              eDoc.volunteers.push(userID);
+          if (!eDoc.pendingVolunteers.map(String).includes(userID)) {
+              eDoc.pendingVolunteers.push(userID);
           } else {
             res.locals.error = {
               status: 400,
@@ -477,6 +477,7 @@ module.exports.denyRegistration = (req, res, next) => {
       if (!uDoc.events) uDoc.events = [];
       if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
       if (!uDoc.deniedEvents) uDoc.deniedEvents = [];
+      if (!eDoc.deniedVolunteers) eDoc.deniedVolunteers = [];
       if (uDoc.deniedEvents.map(String).includes(eventID)) {
         res.locals.error = {
           status: 400,
@@ -489,9 +490,10 @@ module.exports.denyRegistration = (req, res, next) => {
         temp.splice(temp.indexOf(eventID), 1);
         uDoc.pendingEvents = temp;
         uDoc.deniedEvents.push(eventID);
-        var tempE = eDoc.volunteers.map(String);
+        var tempE = eDoc.pendingVolunteers.map(String);
         tempE.splice(tempE.indexOf(userID), 1);
-        eDoc.volunteers = temp;
+        eDoc.pendingVolunteers = temp;
+        eDoc.deniedVolunteers.push(userID);
       } else {
         res.locals.error = {
           status: 400,
@@ -579,11 +581,16 @@ module.exports.confirmRegistration = (req, res, next) => {
 
       if (!uDoc.events) uDoc.events = [];
       if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
+      if (!eDoc.pendingVolunteers) eDoc.pendingVolunteers = [];
       if (uDoc.pendingEvents.map(String).includes(eventID)) {
         var temp = uDoc.pendingEvents.map(String);
         temp.splice(temp.indexOf(eventID), 1);
         uDoc.pendingEvents = temp;
         uDoc.events.push(eventID);
+        var tempE = eDoc.pendingVolunteers.map(String);
+        tempE.splice(tempE.indexOf(userID), 1);
+        eDoc.pendingVolunteers = tempE;
+        eDoc.volunteers.push(userID);
       } else {
         res.locals.error = {
           status: 400,
