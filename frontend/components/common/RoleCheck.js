@@ -8,11 +8,11 @@ const RoleCheck = ({
   roles=[],
   userRole
 }) => (
-  <div>
+  <span>
     {((role && userRole === role.toLowerCase()) ||
       (roles && roles.map(r => r.toLowerCase()).includes(userRole))) &&
      children}
-  </div>
+  </span>
 );
 
 const mapStateToProps = state => {

@@ -29,7 +29,8 @@ class EventFilter extends Component {
       disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
       onChange={
 	(e, data) => this.changeQuery(e)
-      }/> 
+      }
+      /> 
 
       <Segment textAlign='left' vertical>
       <Header as="l1">Search By:</Header>

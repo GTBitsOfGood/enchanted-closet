@@ -1,18 +1,23 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Container, Header, Loader, Segment, Button, Input } from 'semantic-ui-react'
-import { Event } from './'
+import { Container, Header, Loader, Segment, Button, Input } from 'semantic-ui-react';
+import { Event } from './';
+import { GenericBanner } from '../';
 
-//display for an event entry - extend generic entry?
-
+// Display for an event entry - extend generic entry?
 const EventBody = ( props ) => {
   const { events, filter, isFetchingEvents, page } = props
   const culled = filter ? events.map(filter) : events
   
-  const noEvent = !isFetchingEvents && events.length === 0 ? 
-		    <h1> No events </h1> : null 
-
+  const noEvent = !isFetchingEvents && events.length === 0 ?
+		  (<GenericBanner
+		     header="No events found."	      
+		     message="There are no events matching the search criteria"
+		     linkMsg="Home"
+		     link="/"
+		  />) : null;
+  
   return (
     <Container>
       <Loader active={isFetchingEvents}>

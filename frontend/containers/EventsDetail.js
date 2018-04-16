@@ -162,8 +162,8 @@ class EventsDetail extends Component {
 	      <p><Icon name='map'/> {event.location} </p>
 	      <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
 	    </Segment>
-	    <RoleCheck role="Admin">
-	      <ButtonGallery>
+	    <ButtonGallery>
+	      <RoleCheck role="Admin">
 		<EditButton id={event._id} />
 		<Modal
 		  trigger={<DeleteButton />}
@@ -178,19 +178,14 @@ class EventsDetail extends Component {
 		<EventImageButton id={event._id} />
 		<MarkAttendanceButton id={event._id} />
 		<DownloadAttendanceButton id={event._id} />
-	      </ButtonGallery>
-	    </RoleCheck>
-	    <RoleCheck role="Volunteer">
-	      <ButtonGallery>
+	      </RoleCheck>
+	      <RoleCheck roles={["Volunteer", "Participant"]}>
+		{ registerBlock }
+	      </RoleCheck>
+	      <RoleCheck role="Volunteer">
 		<MarkAttendanceButton />
-		{ registerBlock }
-	      </ButtonGallery>
-	    </RoleCheck>
-	    <RoleCheck role="Participant">
-	      <ButtonGallery>
-		{ registerBlock }
-	      </ButtonGallery>
-	    </RoleCheck>
+	      </RoleCheck>
+	    </ButtonGallery>
 	  </div>
 	}
 	{ !isFetchingEvents && !event &&
