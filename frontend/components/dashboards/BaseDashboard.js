@@ -22,22 +22,21 @@ class BaseDashboard extends Component {
 
     // Filter based on time
     const upcomingEvents = userEventsDict.filter(
-      event => (event.datetime > Date.now()));
+      event => (new Date(event.datetime) > new Date(Date.now())));
     const pastEvents = userEventsDict.filter(
-      event => (event.datetime <= Date.now())); // lol inefficient
+      event => (new Date(event.datetime) <= new Date(Date.now()))); // lol inefficient
 
     // For volunteer, pending events
-    const pendingEventsDict = this.props.events.filter(e => ( (pendingEvents.includes(e._id))));
-
+    const pendingEventsArr = this.props.events.filter(e => ( (pendingEvents.includes(e._id))));
     const pendingEventsRender =
-      pendingEventsDict.length === 0 ?
+      pendingEventsArr.length === 0 ?
       (<Header
 	as="h3"
 	style={styles.emptyMessage}
        >
 	You have no pending events.
       </Header>) :
-      (pendingEventsDict.map(event => (
+      (pendingEventsArr.map(event => (
 	<Event key={ `${event._id}pendingEvent` } data = { event } />
       )));
 
