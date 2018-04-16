@@ -96,11 +96,11 @@ class EventsDetail extends Component {
 	if (user) {
 	  if (!isProfileComplete(user)) {
 	    return (
-		<Button>		  
-		  <Link to='/profile'>
-		    Complete Profile to Register
-		  </Link>
-		</Button>
+	      <Button>		  
+		<Link to='/profile'>
+		  Complete Profile to Register
+		</Link>
+	      </Button>
 	    );
 	  }
 	  // check block
@@ -164,30 +164,32 @@ class EventsDetail extends Component {
 	      <p><Icon name='map'/> {event.location} </p>
 	      <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
 	    </Segment>
-	    <ButtonGallery>
-	      <RoleCheck role="Admin">
-		<EditButton id={event._id} />
-		<Modal
-		  trigger={<DeleteButton />}
-		  header='Confirm Delete'
-		  content='Are you sure you want to delete this event?'
-		  actions={[
-		    'Cancel',
-		    { key: 'done', content: 'Delete', negative: true },
-		  ]}
-		  onActionClick={() => deleteEvent(event._id)}
-		/>
-		<EventImageButton id={event._id} />
-		<MarkAttendanceButton id={event._id} />
-		<DownloadAttendanceButton id={event._id} />
-	      </RoleCheck>
-	      <RoleCheck roles={["Volunteer", "Participant"]}>
-		{ registerBlock }
-	      </RoleCheck>
-	      <RoleCheck role="Volunteer">
-		<MarkAttendanceButton />
-	      </RoleCheck>
-	    </ButtonGallery>
+	    <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
+	      <ButtonGallery>
+		<RoleCheck role="Admin">
+		  <EditButton id={event._id} />
+		  <Modal
+		    trigger={<DeleteButton />}
+		    header='Confirm Delete'
+		    content='Are you sure you want to delete this event?'
+		    actions={[
+		      'Cancel',
+		      { key: 'done', content: 'Delete', negative: true },
+		    ]}
+		    onActionClick={() => deleteEvent(event._id)}
+		  />
+		  <EventImageButton id={event._id} />
+		  <MarkAttendanceButton id={event._id} />
+		  <DownloadAttendanceButton id={event._id} />
+		</RoleCheck>
+		<RoleCheck roles={["Volunteer", "Participant"]}>
+		  { registerBlock }
+		</RoleCheck>
+		<RoleCheck role="Volunteer">
+		  <MarkAttendanceButton />
+		</RoleCheck>
+	      </ButtonGallery>
+	    </RoleCheck>
 	  </div>
 	}
 	{ !isFetchingEvents && !event &&

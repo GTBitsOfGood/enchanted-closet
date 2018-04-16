@@ -62,7 +62,8 @@ class AdminDashboard extends Component {
 
 const styles = {
   cardWrap: {
-    marginTop: '50px'
+    marginTop: '50px',
+    marginBottom: '50px'
   }
 }
 

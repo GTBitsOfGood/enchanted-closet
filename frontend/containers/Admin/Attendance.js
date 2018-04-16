@@ -79,7 +79,7 @@ class AdminAttendance extends Component {
 	// Verify users
 	if (user) {	 
 	  if (user.role === 'Volunteer') { // Redirect unregistered volunteers
-	    const isRegistered = event && event.volunteers.includes(user._id);
+	    const isRegistered = event.volunteers.includes(user._id);
 	    if (!isRegistered) { 
 	      return <Redirect to="/events" />;
 	    }
@@ -89,7 +89,7 @@ class AdminAttendance extends Component {
 	    <Segment>
 	      <Header as="h3">Volunteers </Header>
 	      <Divider />
-	      <UserList event={event} users={users.filter(user => user.role === "Volunteer")} filter={filter} />
+	      <UserList event={event} users={users.filter(user => event.volunteers.includes(user._id) && user.role === "Volunteer")} filter={filter} />
 	    </Segment>
 	  );
 
@@ -97,7 +97,7 @@ class AdminAttendance extends Component {
 	    <Segment>
 	      <Header as="h3">Participants </Header>
 	      <Divider />
-	      <UserList event={event} users={users.filter(user => user.role === "Participant")} filter={filter} />
+	      <UserList event={event} users={users.filter(user => event.participants.includes(user._id) && user.role === "Participant")} filter={filter} />
 	    </Segment>
 	  );
 

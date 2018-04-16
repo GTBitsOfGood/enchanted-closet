@@ -8,7 +8,9 @@ import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
 // TODO: filters and install deny volunteer
 // TODO: Style
 // Fairly convoluted 
-const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], users = [] }) => (
+const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], users = [] }) => {
+  // add in empty state
+  return (
   <Container>
     <Segment.Group>
       <Segment>
@@ -47,7 +49,7 @@ const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], u
       })}
     </Segment.Group>
   </Container>
-);
+);}
 
 const mapStateToProps = state => ({
     events: state.events,
