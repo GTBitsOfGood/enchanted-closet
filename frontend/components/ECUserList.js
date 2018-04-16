@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { LoadingIcon } from './';
 
-import { Segment, List } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 
 import ECUserListItem from './ECUserListItem';
 
@@ -11,7 +11,7 @@ const ECUserList = ( props ) => {
   const {users, event, filter} = props;
 
   return (
-    <Segment>
+    <div>
       {users ?
        <List selection verticalAlign='middle'>
 	 {users.map(user => {
@@ -29,7 +29,7 @@ const ECUserList = ( props ) => {
 	 })}
        </List>
        : <LoadingIcon active />}
-    </Segment>
+    </div>
   );
 }
 

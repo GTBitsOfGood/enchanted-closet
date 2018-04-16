@@ -173,7 +173,7 @@ module.exports.absent = (req, res, next) => {
         if (eDoc.participantsAttended.indexOf(req.params.userID) !== -1) {
           var temp = eDoc.participantsAttended.map(String);
           temp.splice(temp.indexOf(req.params.userID), 1);
-          eDoc.pendingEvents = temp;
+          eDoc.participantsAttended = temp;
         } else {
           res.locals.error = {
             status: 400,
@@ -186,7 +186,7 @@ module.exports.absent = (req, res, next) => {
         if (eDoc.volunteersAttended.indexOf(req.params.userID) !== -1) {
           var temp = eDoc.volunteersAttended.map(String);
           temp.splice(temp.indexOf(req.params.userID), 1);
-          eDoc.pendingEvents = temp;
+          eDoc.volunteersAttended = temp;
         } else {
           res.locals.error = {
             status: 400,

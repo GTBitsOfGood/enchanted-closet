@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-// TODO: Disallow editing of past/future events
 import { upfetchEventById, fetchUsers } from '../../actions/';
 
-import { Container, Segment, Header } from 'semantic-ui-react';
-import { ErrorComponent, GenericBanner, LoadingIcon, PageTitle, RoleCheck, SearchBarCard, UserList } from '../../components' 
+import { Button, Container, Divider, Segment, Header } from 'semantic-ui-react';
+import { ButtonGallery, ErrorComponent, GenericBanner, LoadingIcon, PageTitle, RoleCheck, SearchBarCard, UserList } from '../../components' 
 
 
 /* Attendance Page
- * Only Admins can mark volunteer attendance
- * TODO: Styling (Urgent) More efficient fetching (Icebox)
+ * Note: Only Admins can mark volunteer attendance
  */
 class AdminAttendance extends Component {
   constructor(props) {
@@ -54,7 +52,7 @@ class AdminAttendance extends Component {
   }
 
   componentWillReceiveProps(nextProps) { // Receipt of full fetch
-    const { events = [], users = [] } = nextProps;    
+    const { events = [], users = [] } = nextProps; // On the bright side, this will update every time you send an action
     this.setState({
       events,
       loading: false,
@@ -88,17 +86,19 @@ class AdminAttendance extends Component {
 	  }
 
 	  const volunteerBlock = users && (
-	    <div>
-	      <Header as="h4">Volunteers </Header>
+	    <Segment>
+	      <Header as="h3">Volunteers </Header>
+	      <Divider />
 	      <UserList event={event} users={users.filter(user => user.role === "Volunteer")} filter={filter} />
-	    </div>
+	    </Segment>
 	  );
 
 	  const participantBlock = users && (
-	    <div>
-	      <Header as="h4">Participants </Header>
+	    <Segment>
+	      <Header as="h3">Participants </Header>
+	      <Divider />
 	      <UserList event={event} users={users.filter(user => user.role === "Participant")} filter={filter} />
-	    </div>
+	    </Segment>
 	  );
 
 	  const isAttending = event.volunteersAttended.filter(v => v._id === user._id).length === 1;
@@ -116,9 +116,21 @@ class AdminAttendance extends Component {
 	      <PageTitle
 		title={event.name}
 		showLoadingIcon
-		link="/admin/users/create"
-		linkTitle="Register"
 	      />
+	      <ButtonGallery>
+		<Button
+		  as={Link}
+		  to="/admin/users/create"
+		>
+		  Register New User
+		</Button>
+		<Button
+		  as={Link}
+		  to={`/events/${event_id}`}
+		>
+		  Back to Event View
+		</Button>
+	      </ButtonGallery>
 	      <SearchBarCard filterFunction={this.searchFilterUsers}/>
 	      <RoleCheck role="Admin">
 		{volunteerBlock}
