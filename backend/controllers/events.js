@@ -243,8 +243,6 @@ module.exports.get = (req, res, next) => {
 }
 
 module.exports.upload = (req, res, next) => {
-  console.log("uploading");
-  console.log(req);
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -253,9 +251,8 @@ module.exports.upload = (req, res, next) => {
     return next();
   }
   let newProps = {};
-  console.log(req.file);
   if (req.file) {
-    newProps.image = req.file.path;
+    newProps.image = req.file.filename;
   }
 
   Event.findById(req.params.id, (err, doc) => {

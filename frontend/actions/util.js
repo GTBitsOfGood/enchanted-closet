@@ -47,7 +47,7 @@ export function uploadUserImage(data) {
       dispatch(showModalLoader());
       let packagedData = new FormData();
       packagedData.append("image", data["file"]);
-      fetchHelper(`api/users/uploadImage/${user._id}`, getAPIToken(getState), {
+      fetchHelper(`/api/users/uploadImage/${user._id}`, getAPIToken(getState), {
         method: 'POST',
         body: packagedData
       })
@@ -66,25 +66,17 @@ export function uploadUserImage(data) {
 }
 
 
-export function uploadEventImage(data) {
+export function uploadEventImage(data, id) {
   return (dispatch, getState) => {
-    const { event } = getState();
-    if (event) {
-      let packagedData = new FormData();
-      packagedData.append("image", data["file"]);
-      fetchHelper(`api/events/uploadImage/${event._id}`, getAPIToken(getState), {
-        method: 'POST',
-        body: packagedData
-      })
-        .then(response => response.json())
-	.then(json => {
-	  console.log(json); // TODO: something with confirm
-	});      
-    } else {
-      dispatch({
-	type: types.API_ERROR,
-	error: "User not found in state (unexpected error)"
-      });
-    }
+    let packagedData = new FormData();
+    packagedData.append("image", data["file"]);
+    fetchHelper(`/api/events/uploadImage/${id}`, getAPIToken(getState), {
+      method: 'POST',
+      body: packagedData
+    })
+      .then(response => response.json())
+      .then(json => {
+	console.log(json); // TODO: something with confirm
+      });      
   }
 }

@@ -12,14 +12,13 @@ import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, r
 import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react';
 import { ButtonGallery, DeleteButton, DownloadAttendanceButton, EventImageButton,
 	 MarkAttendanceButton, Map, EditButton,
-	 ErrorComponent, Event, PageTitle, RoleCheck, Speakers } from '../components/';
+	 ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
   longitude: -0.1276250
 };
 
-// TODO: Insert image
 class EventsDetail extends Component {
   constructor(props) {
     super(props);
@@ -142,6 +141,9 @@ class EventsDetail extends Component {
 	{ !isFetchingEvents && event &&
 	  <div>
 	    <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
+	    <Segment>
+	      <EventImage imageUrl={event.image} id={event._id} />
+	    </Segment>
 	    <Segment key="information">
 	      <h3>Description</h3>
 	      <p style={{whiteSpace: 'pre-line'}}>{event.description}</p>

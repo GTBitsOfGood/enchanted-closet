@@ -19,8 +19,9 @@ class UploadModal extends Component {
     e.preventDefault();
     if (this.props.type.toLowerCase() === "user")
       this.props.uploadUserImage(this.state);
-    else
-      this.props.uploadEventImage(this.state);
+    else {
+      this.props.uploadEventImage(this.state, this.props.id);
+    }
   }
 
   onChange(e) {
@@ -28,7 +29,7 @@ class UploadModal extends Component {
   }
 
   render() {
-    const { children, type } = this.props;
+    const { children, id, type } = this.props;
     const { file } = this.state;
     // process filename real fast
     const label = file ?

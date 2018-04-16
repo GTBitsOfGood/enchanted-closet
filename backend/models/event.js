@@ -44,12 +44,18 @@ var EventSchema = new mongoose.Schema({
   volunteersAttended: {
     type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
   },
+  image: {
+    type: String,
+    required: false
+  }
+  /*
   images: {
     type: [String]
   },
   imagedescriptions: {
     type: [String]
   }
+  */
 }, { usePushEach: true });
 
 var Event = mongoose.model('Event', EventSchema);

@@ -1,30 +1,40 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Image } from 'semantic-ui-react'
+import { UploadModal } from '../';
 
-// User Pfp display/linker / lock if not admin
-const EventImage = ({ imageUrl, lock }) => (
-  <div>
-    { imageUrl ?
+// User Pfp display/linker / lock if not admin - id of event
+const EventImage = ({ imageUrl = "defaultEventPicture.png", role, id }) => {
+  if (role !== 'Admin') 
+    return (
       <Image
+	centered     
 	src={`/uploaded/events/${imageUrl}`}
-	as='a'
 	size='medium'
-	href='/events/upload'
-      /> :
-      <Image
-        src='/uploaded/events/defaultEventPicture.png'
-        as='a'
-        size='medium'
-        href='/events/upload'
       />
-    }
-  </div>
-);
+    );
+  else
+    return (
+      <UploadModal type="event" id={id}>
+	<Image
+	  style={styles.imageStyle}
+	  centered	
+	  src={`/uploaded/events/${imageUrl}`}
+	  size='medium'
+	/>
+      </UploadModal>
+    );
+}
+
+const styles = {
+  imageStyle: {
+    cursor: 'pointer'
+  }
+}
 
 const mapStateToProps = state => {
   return {
-    imageUrl: state.event ? state.event.image : ""
+    role: state.user ? state.user.role : "loggedOut"
   }
 }
 
