@@ -39,14 +39,22 @@ class Profile extends Component {
     return (
       <Container>
         <PageTitle title="Profile" />
-	<Segment>
-	  <Card.Group centered stackable>
-	    <ProfileBase user={user}/>	   
-	    {profileBody}
-	  </Card.Group>
+	<Segment style={styles.wrap}>
+	  <Container>
+	    <Card.Group centered stackable>
+	      <ProfileBase user={user}/>	   
+	      {profileBody}
+	    </Card.Group>
+	  </Container>
 	</Segment>
       </Container>
     );
+  }
+}
+
+const styles = {
+  wrap: { // this doesn't work :(
+    paddingTop: "1em"
   }
 }
 

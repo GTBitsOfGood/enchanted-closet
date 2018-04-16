@@ -10,8 +10,6 @@ import Dashboard from './Dashboard.js';
 import Events from './Events.js';
 import EventsDetail from './EventsDetail.js';
 import MissingPage from './MissingPage.js';
-import UserUpload from './UserUpload.js';
-import EventUpload from './EventUpload.js';
 
 import Navigation from './Navigation';
 
@@ -62,12 +60,6 @@ export default function Root({ store }) {
 	      />
 	      <SmartRoute
 		accepts={['loggedIn']}
-		path="/uploadProfile"
-		component={UserUpload}
-		redirect="/login"
-	      />
-	      <SmartRoute
-		accepts={['loggedIn']}
 		path="/dashboard"
 		component={Dashboard}
 		redirect="/login"
@@ -84,11 +76,6 @@ export default function Root({ store }) {
 		exact path="/events/create"
 		component={Admin.EventsNew}
 	      />
-	      <SmartRoute
-		accepts={['Admin']}
-		exact path="/events/:id/upload"
-		component={EventUpload}
-	      />	      
 	      <SmartRoute
 		accepts={['Admin']}
 		path="/events/:id/edit"
