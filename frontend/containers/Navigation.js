@@ -77,11 +77,11 @@ class Navigation extends Component {
 
 const styles = {
   base: {
-    background: COLORS.BACKGROUND,
+    background: COLORS.BRAND,
     borderRadius: 0
   },
   button: {
-    background: COLORS.BUTTON,
+    background: COLORS.BRAND,
     ':hover': {
       background: COLORS.HOVER,
     },
