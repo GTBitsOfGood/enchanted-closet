@@ -330,7 +330,8 @@ module.exports.create = (req, res, next) => {
       return next();
     } else {
       res.locals.data = {
-        event: result
+        event: result,
+        msg: 'Event successfully created'
       }
       return next();
     }
@@ -350,7 +351,9 @@ module.exports.delete = (req, res, next) => {
     _id: req.params.id
   }).remove((err, event) => {
     if (event) {
-      res.locals.data = {}
+      res.locals.data = {
+        msg: 'Event successfully deleted'
+      }
       return next();
     } else {
       res.locals.error = {

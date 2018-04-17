@@ -23,8 +23,8 @@ module.exports.login = (req, res, next) => {
   }, (error, user) => {
     if (error) {
       res.locals.error = {
-	status: 403,
-	msg: error
+      status: 403,
+      msg: error
       };
       return next(new Error(res.locals.error));
     }
@@ -35,8 +35,8 @@ module.exports.login = (req, res, next) => {
       return next();
     } else {
       res.locals.error = {
-	status: 403,
-	msg: 'Your email or password is incorrect.'
+      status: 403,
+      msg: 'Your email or password is incorrect.'
       };
       return next();
     }
@@ -70,10 +70,17 @@ module.exports.register = (req, res, next) => {
 
   auth.register(req.body, (err, user) => {
     if (err) {
-      res.locals.error = {
-        status: 500,
-        msg: err
-      };
+      if (err.code == 11000) { // 11000 is duplicate key
+        res.locals.error = {
+          status: 500,
+          msg: 'A user with that email already exists'
+        }
+      } else {
+        res.locals.error = {
+          status: 500,
+          msg: err
+        };
+      }
       return next();
     }
     res.locals.data = {
