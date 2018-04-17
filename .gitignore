@@ -60,6 +60,7 @@ typings/
 
 # Public index file
 public/*
+!public/bundle.js
 !public/index.html
 !public/images/*
 
