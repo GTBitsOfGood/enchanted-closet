@@ -108,25 +108,44 @@ function rootReducer(state = require('../static/defaultState'), action) {
       }); // TODO FINISH!
       break;
     case types.USER_EVENT_UPDATE: {
+      const { pendingEvents, events, userId } = action.payload;
+      const { users = [] } = state;
+      const user = users.find(u => u._id === userId);
+      const newUser = user ? { ...user, pendingEvents, events } : null;
+      let newUsers;
+      if ( newUser ) {
+	newUsers = Array.from(users);
+	newUsers[users.indexOf(user)] = newUser;
+	// users[users.indexOf(user)] = newUser;
+      }
+      return { ...state,  
+	       users: newUsers,
+	       errorMessage: null };
+    }
+    case types.UPDATE_PERSONAL_EVENTS: {
       const { pendingEvents, events } = action.payload;
-
-      const newUser = { ...state.user, pendingEvents, events }
+      const { user } = state;
+      const newUser = user ? { ...user, pendingEvents, events } : null;
       return { ...state,  
 	       user: newUser,
 	       errorMessage: null };
     }
+
     case types.EVENT_USER_UPDATE: { // TODO: make users ref event store array
-      const { eventID, participants, volunteers, pendingVolunteers, deniedVolunteers } = action.payload;
+      const { eventId, participants, volunteers, pendingVolunteers, deniedVolunteers } = action.payload;
       // find old event
-      const { events } = state;
+      const { events = [] } = state;
       // const eventsFiltered = events ? events.filter( e => e._uid === eventID ) : [];
-      const event = events.find(e => e._id === eventID);
+      const event = events.find(e => e._id === eventId);
       const newEvent = event ? { ...event, participants, volunteers, pendingVolunteers, deniedVolunteers } : null;
+      let newEvents;
       if ( newEvent ) {
-	events[events.indexOf(event)] = newEvent;
+	newEvents = Array.from(events);
+	newEvents[events.indexOf(event)] = newEvent; // be very careful...
+	// events[events.indexOf(event)] = newEvent; // freaking AHHH
       }
       return { ...state,
-	       events,
+	       events: newEvents,
 	       errorMessage: null };
     }
     case types.USER_UPDATE:

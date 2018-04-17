@@ -6,38 +6,39 @@ import * as types from './types';
 /* Registration */
 export function registerEvent(eventID, userID) {
   return (dispatch, getState) =>
-    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/register/${userID}`, getAPIToken(getState)), dispatch)
+    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/register/${userID}`, getAPIToken(getState)), dispatch, getState)
 }
 
 export function cancelEvent(eventID, userID) {
   return (dispatch, getState) =>
-    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/cancel/${userID}`, getAPIToken(getState)), dispatch)
+    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/cancel/${userID}`, getAPIToken(getState)), dispatch, getState)
 }
 
 export function confirmVolunteer(eventID, userID) {
   return (dispatch, getState) => 
-    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/confirm/${userID}`, getAPIToken(getState)), dispatch)
+    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/confirm/${userID}`, getAPIToken(getState)), dispatch, getState)
 }
 
 export function denyVolunteer(eventID, userID) {
   return (dispatch, getState) => 
-    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/deny/${userID}`, getAPIToken(getState)), dispatch)
+    receiveRegistrationInfo(() => fetchHelper(`/api/events/${eventID}/deny/${userID}`, getAPIToken(getState)), dispatch, getState)
 }
 
-// Success callback on fetch for register, cancel, and confirm
-function receiveRegistrationInfo(initFetch, dispatch) {
+// Success callback on fetch for register, cancel, and confirm, deny
+function receiveRegistrationInfo(initFetch, dispatch, getState) {
   return initFetch()
     .then(response => response.json())
     .then(json => safeWrap(json, () => {
       // Conditionally pack new info
       const userPayload = {
+	userId: json.userId,
 	...(json.newEvents ?
 	    {events: json.newEvents} : {}),
 	...(json.newPending ?
 	    {pendingEvents: json.newPending} : {})
       };
-      console.log(json);
       const eventPayload = {
+	eventId: json.eventId,
 	...(json.newParticipants ?
 	    {participants: json.newParticipants} : {}),
 	...(json.newVolunteers ?
@@ -45,7 +46,10 @@ function receiveRegistrationInfo(initFetch, dispatch) {
 	...(json.newPendingVolunteers ?
 	    {pendingVolunteers: json.newPendingVolunteers} : {}),
 	...(json.newDeniedVolunteers ?
-	    {pendingVolunteers: json.newDeniedVolunteers} : {})
+	    {deniedVolunteers: json.newDeniedVolunteers} : {})
+      }
+      if (getState().user && json.userId === getState().user._id) {
+	dispatch(updatePersonalEvents(userPayload));
       }
       dispatch(updateUserEvents(userPayload));
       dispatch(updateEventUsers(eventPayload));
@@ -56,6 +60,13 @@ function receiveRegistrationInfo(initFetch, dispatch) {
 function updateUserEvents(payload) {
   return {
     type: types.USER_EVENT_UPDATE,
+    payload
+  }
+}
+
+function updatePersonalEvents(payload) {
+  return {
+    type: types.UPDATE_PERSONAL_EVENTS,
     payload
   }
 }

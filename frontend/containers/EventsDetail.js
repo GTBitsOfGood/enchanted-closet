@@ -133,7 +133,11 @@ class EventsDetail extends Component {
 	    </Button>
 	  );
 	}
-      } else return null;
+      } else return (
+	<Button disabled>
+	  Registration Closed
+	</Button>
+      );
     })();
 
     return (

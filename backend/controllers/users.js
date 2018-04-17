@@ -412,7 +412,8 @@ module.exports.registerevent = (req, res, next) => {
           }
 	  
           res.locals.data = {
-	    eventID,
+	    userId: userID,
+	    eventId: eventID,
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
@@ -517,7 +518,8 @@ module.exports.denyRegistration = (req, res, next) => {
           }
 
 	  res.locals.data = {
-	    eventID,
+	    userId: userID,
+	    eventId: eventID,
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
@@ -615,7 +617,8 @@ module.exports.confirmRegistration = (req, res, next) => {
           }
 
 	  res.locals.data = {
-	    eventID,
+	    userId: userID,
+	    eventId: eventID,
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
@@ -673,7 +676,11 @@ module.exports.cancelevent = (req, res, next) => {
         var temp = eDoc.volunteers.map(String);
         temp.splice(temp.indexOf(userID), 1);
         eDoc.volunteers = temp;
-      } else {
+      } else if (eDoc.pendingVolunteers.map(String).includes(userID)) {
+	var temp = eDoc.pendingVolunteers.map(String);
+	temp.splice(temp.indexOf(userID), 1);
+	eDoc.pendingVolunteers = temp;
+      }	else {
         res.locals.error = {
           status: 400,
           msg: 'That user has not registered for that event.'
@@ -718,7 +725,8 @@ module.exports.cancelevent = (req, res, next) => {
           }
          
 	  res.locals.data = {
-	    eventID,
+	    userId: userID,
+	    eventId: eventID,
             newEvents: uDoc.events,
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
