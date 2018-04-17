@@ -16,7 +16,7 @@ const ECPastEventsCards = ( props ) => {
 	       <List.Item key={event._id}>
 		 <List.Content>
 		   <List.Header>{event.name}</List.Header>
-		   <List.Description>{console.log(event.datetime)}{moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</List.Description>
+		   <List.Description>{moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</List.Description>
 		 </List.Content>
 	       </List.Item>
 	     )
