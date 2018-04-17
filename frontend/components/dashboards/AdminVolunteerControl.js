@@ -10,8 +10,6 @@ import { COLORS } from '../../constants';
 // Fairly convoluted 
 const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], users = [] }) => {
   // add in empty state
-  console.log("Rendering volunteer control");
-  console.log(events);
   return (
     <Container>
       <Segment.Group style={styles.overall}>
