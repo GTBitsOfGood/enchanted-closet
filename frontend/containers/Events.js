@@ -9,7 +9,8 @@ import Radium from 'radium';
 import { fetchEventsIfNeeded, invalidateEvents, fetchFutureEvents, fetchPastEvents } from '../actions/index';
 
 import { Button, Container, Card, Icon, Segment, Header, Input } from 'semantic-ui-react';
-import { ButtonGallery, EventTab, PageTitle, RoleCheck } from '../components/';
+import { CreateNewEventButton, ViewPastEventsButton, ViewFutureEventsButton,
+	 ButtonGallery, EventTab, PageTitle, RoleCheck } from '../components/';
 
 class Events extends Component {
   constructor(props) {
@@ -62,34 +63,21 @@ class Events extends Component {
 	<PageTitle title="Events" />
 	<ButtonGallery>
 	  <RoleCheck role="Admin">
-	    <Button
-	      as={Link}
-	      to="/events/create"
-	    >
-	      Create New Event
-	    </Button>
+	    <CreateNewEventButton />
 	  </RoleCheck>
-	  <Button
-	  content="View Future Events"
-	  onClick={() => fetchFutureEvents()}	      
-	  />
-	  <Button
-	  content="View Past Events"
-	  onClick={() => fetchPastEvents()}
-	  />
-	  <span style={styles.searchSection}>
+	  <ViewPastEventsButton onClick={fetchPastEvents} />
+	  <ViewFutureEventsButton onClick={fetchFutureEvents} />
+	  <div style={styles.searchSection}>
 	    <Input
-	      placeholder = 'Search'
-	      label="Search"
-	      labelPosition="left"
+	      placeholder = 'Event Name'
+	      icon={<Icon name='search' circular link/>}
+	      iconPosition="left"
 	      type = 'text'
 	      size = 'medium'
 	      disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
 	      onChange={
 		(e, data) => this.changeQuery(e)
 	      }/>
-	  </span>
-	  <span style={styles.filterSection}>
 	    <span style={styles.searchBy}>
 	      Search By:
 	    </span>
@@ -109,7 +97,7 @@ class Events extends Component {
 	      toggle
 	      onClick={(e, data) => this.changeFilter(data)}
 	    />
-	  </span>
+	  </div>
 	</ButtonGallery>
 	
 	<EventTab {...bodyProps} />
@@ -123,12 +111,11 @@ const styles = {
   control: {
   },
   searchBy: {
+    marginLeft: "10px",
     marginRight: "5px"
   },
-  filterSection: {
-    marginLeft: "5px",
-  },
   searchSection: {
+    marginTop: "5px"
   }
 }
 

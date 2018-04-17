@@ -10,7 +10,7 @@ import { geocode } from '../helpers/geocodeEngine';
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index';
 import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react';
-import { ButtonGallery, DeleteButton, DownloadAttendanceButton, EventImageButton,
+import { ButtonGallery, DeleteButton, DownloadAttendanceButton,
 	 MarkAttendanceButton, Map, EditButton,
 	 ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/';
 
@@ -182,7 +182,6 @@ class EventsDetail extends Component {
 		    ]}
 		    onActionClick={() => deleteEvent(event._id)}
 		  />
-		  <EventImageButton id={event._id} />
 		  <MarkAttendanceButton id={event._id} />
 		  <DownloadAttendanceButton id={event._id} />
 		</RoleCheck>
