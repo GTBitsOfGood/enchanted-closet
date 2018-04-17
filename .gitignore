@@ -63,7 +63,8 @@ public/*
 !public/bundle.js
 !public/index.html
 !public/images/*
-!public/uploaded/*
+!public/uploaded/
+!public/**/*.jpg
 # macOS Index File
 .DS_Store
 
