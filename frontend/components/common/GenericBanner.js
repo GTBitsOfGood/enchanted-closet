@@ -30,4 +30,3 @@ const styles = {
 }
 
 export default GenericBanner;
-// TODO: Style

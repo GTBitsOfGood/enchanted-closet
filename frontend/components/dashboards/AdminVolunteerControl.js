@@ -5,10 +5,9 @@ import { confirmVolunteer, denyVolunteer } from '../../actions/';
 import { Button, Container, Divider, Header, Icon, Segment } from 'semantic-ui-react';
 import { COLORS } from '../../constants';
 // Approval panel
-// TODO: filters and install deny volunteer
-// TODO: Style
 // Fairly convoluted 
 const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], users = [] }) => {
+  const eventsToMap = events.filter(e => e.pendingVolunteers && e.pendingVolunteers.length !== 0);
   // add in empty state
   return (
     <Container>
@@ -17,10 +16,13 @@ const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], u
 	  <Header as="h2"> Volunteer Requests </Header>
 	  <Divider />
 	</Segment>
-	{events.map(e => {
-	   if (!e.pendingVolunteers || e.pendingVolunteers.length === 0) return null;
-	   
-	   return (
+	{eventsToMap.length === 0 ?
+	 (<Container textAlign="center" style={styles.emptyPanel}>
+	   <Header as="h2">
+	     All Clear <Icon  name="checked calendar" />
+	   </Header>
+	 </Container>)
+	 : eventsToMap.map(e => (
 	     <Segment.Group style={styles.entryGroup} key={`volApproalEvent${e._id}`}>
 	       <Segment>
 		 <Header as="h3"> Event: {e.name} </Header>
@@ -46,13 +48,16 @@ const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], u
 		    );
 	       })}
 	     </Segment.Group>
-	   );
-	})}
+	   )
+	)}
       </Segment.Group>
     </Container>
   );}
 
 const styles = {
+  emptyPanel: {
+    marginBottom: "2em"
+  },
   entry: {
     backgroundColor: COLORS.WHITE
   },
