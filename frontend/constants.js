@@ -13,4 +13,6 @@ const REBRAND = {
   PRIMARY: '#8558A8',  
 }
 
+export const HOMEPAGE_EVENT_LIMIT = 3;
+
 export { COLORS };

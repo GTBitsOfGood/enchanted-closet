@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 
 import { fetchEventsIfNeeded } from '../actions';
 
-import { Divider, Segment, Container, Grid, Reveal, Menu, Header, Button, Icon, Image } from 'semantic-ui-react';
+import { Button, Divider, Segment, Container, Grid, Reveal, Menu, Header, Icon, Image } from 'semantic-ui-react';
 import { Event, EventEntry, FileForm, LoadingIcon, Title} from '../components'
-import { Redirect } from 'react-router-dom';
+
+import { HOMEPAGE_EVENT_LIMIT } from '../constants';
+
+
 
 class Homepage extends Component {
   constructor(props){
@@ -21,10 +24,9 @@ class Homepage extends Component {
   render() {
     const { loading, events, history } = this.props;
 
-    const LIMIT = 3;
     const processedEvents =
       events && events.length > 0 ?
-      events.slice(0, LIMIT).map(event => {
+      events.sort((e1, e2) => (new Date(e2.datetime) - new Date(e1.datetime))).slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
 	event.showAdminControls = false;
 	return <Event
 		 data={event}
@@ -51,12 +53,24 @@ class Homepage extends Component {
 	  </Segment>
 	  <Segment style={styles.body}>
 	    <Header
-	      as="h2"
+	      floated="left"
+	      as="h3"
 	      content='Upcoming Events'
 	    />
-	    <Divider />
-	    { eventsBlock }            
+	    <Button
+	      floated="right"
+	      color="violet"
+	      compact
+	      as={Link}
+	      to={'/events'}
+	    >
+	      See All Events
+	    </Button>
+	    <Divider style={styles.mainDivider} />
+	    { eventsBlock }
 	  </Segment>
+	  <Divider />
+
         </Container>
       </Segment>
     )
@@ -68,12 +82,15 @@ Homepage.propTypes = {
 
 
 const styles = {
+  body: {
+    textAlign: 'left'
+  },
   headline: {
     fontSize: '4em',
     fontWeight: '600'
   },
-  body: {
-    textAlign: 'left'
+  mainDivider: {
+    clear: "both"
   }
 }
 

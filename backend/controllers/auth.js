@@ -79,7 +79,6 @@ module.exports.register = (req, res, next) => {
     res.locals.data = {
       user: user
     }
-    console.log(user);
     return next();
   });
 }

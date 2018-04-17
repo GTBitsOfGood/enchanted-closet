@@ -22,4 +22,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(RoleCheck);
-// TODO: Style

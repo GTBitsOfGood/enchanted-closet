@@ -8,7 +8,6 @@ import Radium from 'radium';
 import { Container, Card, Divider, Grid, Icon, Reveal, Segment, Message, Image, Button } from 'semantic-ui-react'
 import { LoginForm } from '../components/';
 
-// TODO: Style
 const Login = () => (
   <Grid verticalAlign="middle" columns='three' centered>
     <Grid.Row>

@@ -27,4 +27,3 @@ const mapStateToProps = (state, ownProps) => { // OwnProps todo for default
 }
 
 export default connect(mapStateToProps)(ProfileImage);
-// TODO: Style

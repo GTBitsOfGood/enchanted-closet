@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
-import { Container, Card } from 'semantic-ui-react';
-import { ErrorComponent } from '../components/';
+import React from 'react';
+import { GenericBanner } from '../components/';
 
 const MissingPage = () => {
   return (
-    <ErrorComponent
+    <GenericBanner
+      header="404 - Page Not Found"
       message={errorMessage}
       redir='/'
       redirMsg='Home'
-      errMsg='404 - Page Not Found'
     />
   );
 }
