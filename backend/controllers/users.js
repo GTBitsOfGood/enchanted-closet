@@ -219,7 +219,7 @@ module.exports.upload = (req, res, next) => {
       return next(new Error(res.locals.error));
     } else {
       doc.set(newProps);
-      doc.save((err, updated) => {
+      doc.save((err, updated) => {	
         if (err) {
           res.locals.error = {
             status: 500,

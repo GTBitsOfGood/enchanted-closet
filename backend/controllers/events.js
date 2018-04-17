@@ -273,7 +273,8 @@ module.exports.upload = (req, res, next) => {
           }
         }
         res.locals.data = {
-          event: updated
+          event: updated,
+	  msg: "Event picture updated!"
         };
         return next();
       });

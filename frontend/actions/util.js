@@ -52,11 +52,23 @@ export function uploadUserImage(data) {
         body: packagedData
       })
         .then(response => response.json())
-	.then(json => safeWrap(json, () => {}, dispatch))
+	.then(json => safeWrap(json, () => {
+	  dispatch(updateUserImage(json.user));
+	}, dispatch))
 	.then(() => dispatch(hideModalLoader()));
     } else { // unexpected error
       errorWrap(dispatch, "User not found in state (unexpected error)");
     }
+  }
+}
+
+// timehack - tbh we don't need user param
+export function updateUserImage(user) {
+  const curTime = new Date().getTime();
+  const newUser = { ...user, image: `${user.image}?${curTime}` }; // but deep copy
+  return {
+    type: types.USER_UPDATE,
+    user: newUser
   }
 }
 
@@ -71,7 +83,19 @@ export function uploadEventImage(data, id) {
       body: packagedData
     })
       .then(response => response.json())
-      .then(json => safeWrap(json, () => {}, dispatch))
+      .then(json => safeWrap(json, () => {
+	dispatch(updateEventImage(json.event));
+      }, dispatch))
       .then(() => dispatch(hideModalLoader()));
+  }
+}
+
+// assume ID is in array of events
+export function updateEventImage(event) {
+  const curTime = new Date().getTime();
+  const newEvent = { ...event, image: `${event.image}?${curTime}` }; // but deep copy
+  return {
+    type: types.RECEIVE_MORE_EVENTS,
+    events: [newEvent]
   }
 }
