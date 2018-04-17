@@ -42,9 +42,9 @@ module.exports = {
     },
     devtool: 'cheap-eval-source-map',
     devServer: {
-        contentBase: './public',
-        hot: true,
-        historyApiFallback: true
+      contentBase: './public',
+      hot: true,
+      historyApiFallback: true
     },
     plugins: [
         new Dotenv({path: './.env.frontend'}),
