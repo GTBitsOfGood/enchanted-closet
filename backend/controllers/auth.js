@@ -73,7 +73,7 @@ module.exports.register = (req, res, next) => {
       if (err.code == 11000) { // 11000 is duplicate key
         res.locals.error = {
           status: 500,
-          msg: 'A user with that email already existss'
+          msg: 'A user with that email already exists'
         }
       } else {
         res.locals.error = {
