@@ -5,17 +5,17 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import Radium from 'radium';
 
-import { Container, Card, Grid, Reveal, Segment, Message, Image, Button } from 'semantic-ui-react'
+import { Container, Card, Divider, Grid, Icon, Reveal, Segment, Message, Image, Button } from 'semantic-ui-react'
 import { LoginForm } from '../components/';
 
 // TODO: Style
 const Login = () => (
-  <Grid style={styles.margin} columns='three' relaxed centered>
+  <Grid verticalAlign="middle" columns='three' centered>
     <Grid.Row>
-      <Grid.Column width={4}>
+      <Grid.Column width={4} only="computer">
 	<Image src={images.imgL} size='medium' centered />
       </Grid.Column>
-      <Grid.Column width={8}>
+      <Grid.Column computer={8} mobile={16}>
 	<Container fluid text>
 	  <Card fluid color='purple' >
 	    <Card.Content header='Login' />
@@ -23,18 +23,21 @@ const Login = () => (
 	      <LoginForm />
 	    </Card.Content>
 	  </Card>
-	  <Card fluid color='purple' >
-	    <Card.Content style={{textAlign: 'center'}}>
-	      <Container>
-		<Button as={Link} to='/register' >
-		  Register a New Account
-		</Button>
-	      </Container>
-	    </Card.Content>
-	  </Card>
+	  <Divider horizontal> New User? </Divider>
+	  <Container textAlign="center">		
+	    <Button
+	      color="violet"
+	      as={Link}
+	      to='/register'
+	      icon labelPosition="right"
+	    >
+	      Register a New Account
+	      <Icon name="right arrow" />
+	    </Button>
+	  </Container>
 	</Container>
       </Grid.Column>
-      <Grid.Column width={4}>
+      <Grid.Column width={4} only="computer">
 	<Image src={images.imgR} size='medium' centered />
       </Grid.Column>
     </Grid.Row>
@@ -42,9 +45,6 @@ const Login = () => (
 );
 
 const styles = {
-  margin: {
-    margin: '2em',
-  }
 };
 
 const images = {

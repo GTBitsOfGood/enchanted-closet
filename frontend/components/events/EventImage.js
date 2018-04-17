@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Image } from 'semantic-ui-react'
+import { Container, Image, Reveal } from 'semantic-ui-react'
 import { UploadModal } from '../';
 
 // User Pfp display/linker / lock if not admin - id of event

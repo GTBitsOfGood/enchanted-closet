@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 
 import { fetchEventsIfNeeded } from '../actions';
 
-import { Segment, Container, Grid, Reveal, Menu, Header, Button, Icon, Image } from 'semantic-ui-react';
+import { Divider, Segment, Container, Grid, Reveal, Menu, Header, Button, Icon, Image } from 'semantic-ui-react';
 import { Event, EventEntry, FileForm, LoadingIcon, Title} from '../components'
 import { Redirect } from 'react-router-dom';
 
@@ -41,19 +41,22 @@ class Homepage extends Component {
     return (
       <Segment textAlign='center' style={{ minHeight: 700, padding: '1em 0em' }} vertical>
 	<Container>
-	  <Image src={images.logo} size='large' centered />
-	  <Header
-	  size='large'
-	  content='Event Platform'
-	  style={styles.headline}
-	  />
-	  <div style={styles.body}>
+	  <Segment>
+	    <Image src={images.logo} size='large' centered />
 	    <Header
-	      size='medium'
+	      size='large'
+	      content='Event Platform'
+	      style={styles.headline}
+	    />
+	  </Segment>
+	  <Segment style={styles.body}>
+	    <Header
+	      as="h2"
 	      content='Upcoming Events'
 	    />
+	    <Divider />
 	    { eventsBlock }            
-          </div>
+	  </Segment>
         </Container>
       </Segment>
     )
@@ -66,8 +69,8 @@ Homepage.propTypes = {
 
 const styles = {
   headline: {
-    fontSize: '1.7em',
-    fontWeight: 'normal'
+    fontSize: '4em',
+    fontWeight: '600'
   },
   body: {
     textAlign: 'left'

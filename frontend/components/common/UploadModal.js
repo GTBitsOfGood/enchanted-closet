@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { uploadUserImage, uploadEventImage } from '../../actions/index';
 
-import { Button, Container, Form, Header, Modal } from 'semantic-ui-react'
+import { Button, Container, Form, Header, Modal, Reveal } from 'semantic-ui-react'
 
 // Upload Modal - Wrapper - todo: validate filesize
 class UploadModal extends Component {
@@ -35,6 +35,20 @@ class UploadModal extends Component {
     const label = file ?
 		  (file.name.length > 14 ?
 		   file.name.substr(0, 4) + "..." + file.name.substr(-7) : file.name) : "Select a File";
+    /* // Bugged
+    const trigger = (
+      <Reveal animated="fade">
+	<Reveal.Content visible>
+	  {children}
+	</Reveal.Content>
+	<Reveal.Content hidden>
+	  <Container>
+	    Tests
+	  </Container>
+	</Reveal.Content>
+      </Reveal>
+    );
+    */
     return (
       <Modal trigger={children}>
 	<Modal.Header>
@@ -52,7 +66,10 @@ class UploadModal extends Component {
 	      <label htmlFor="file" style={styles.labelStyle}>
 		{ label }
 	      </label>
-              <Form.Button type="submit">Upload</Form.Button>
+              <Form.Button
+		color="purple" type="submit"
+	      > Upload
+	      </Form.Button>
             </Form>
 	  </Container>
 	</Modal.Description>
