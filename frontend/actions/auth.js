@@ -1,4 +1,4 @@
-import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents } from './';
+import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents, setMessage, messageWrap, errorWrap } from './';
 import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
 import * as types from './types';
 
@@ -19,10 +19,7 @@ function processAuthenticationAttempt(json) {
     if (json.status === 'ok') {
       dispatch(updateUserWithEvents(json.user));
     } else {
-      dispatch({
-	  type: types.USER_NOT_AUTHENTICATED,
-	  errorMessage: json.msg
-	});
+      errorWrap(dispatch, json.msg, 3000);
     }
   }
 }

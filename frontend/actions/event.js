@@ -1,5 +1,5 @@
 // Pure event related actions
-import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
+import { errorWrap, showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
 import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 
 import * as types from './types';
@@ -36,7 +36,13 @@ export function upsertEvent(data) {
     })
       .then(response => response.json())
       .then(json => {
-	dispatch(processEventUpsert(json, isUpdate)); // Has error handlign  inside
+	return safeWrap(json, () => {
+	  dispatch({
+	    type: types.EVENT_UPSERT,
+	    event: json.event,
+	    isUpdate: isUpdate
+	  });
+	}, dispatch);
       })
       .then(() => dispatch(hideModalLoader()));
   }
@@ -46,23 +52,6 @@ export function invalidateEvents() {
   return {
     type: types.INVALIDATE_EVENTS
   };
-}
-
-function processEventUpsert(json, isUpdate) {
-  if (json.status === 'ok') {
-    console.log("returned");
-    console.log(json.event);
-    return {
-      type: types.EVENT_UPSERT,
-      event: json.event,
-      isUpdate: isUpdate
-    }
-  } else {
-    return {
-      type: types.API_ERROR,
-      error: json.msg
-    }
-  }
 }
 
 function shouldFetchEvents(state) {

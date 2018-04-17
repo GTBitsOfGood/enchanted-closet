@@ -19,7 +19,7 @@ import Helmet from 'react-helmet';
 import * as Admin from './Admin'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { SmartRoute, GlobalDimmer, GlobalError } from '../components';
+import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components';
 
 import { COLORS } from '../constants'
 
@@ -33,6 +33,7 @@ export default function Root({ store }) {
 	    <Navigation />
 	    <GlobalDimmer />
 	    <GlobalError />
+	    <GlobalMessage />
 	    <Switch>
 	      <SmartRoute
 		accepts={['loggedOut']}

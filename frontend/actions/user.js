@@ -1,4 +1,4 @@
-import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
+import { errorWrap, showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
 import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS, deleteLocalData } from './util';
 import { receiveEvents, receiveMoreEvents } from './';
 import * as types from './types';
@@ -52,11 +52,7 @@ function processUserUpsert(json, isUpdate) { // updates users array as well (onl
 	isUpdate: isUpdate
       });
     } else {
-      // Todo: toast here
-      dispatch({
-	type: types.API_ERROR,
-	error: json.msg
-      });
+      errorWrap(dispatch, json.msg);
     }
   }
 }

@@ -227,7 +227,8 @@ module.exports.upload = (req, res, next) => {
           }
         }
         res.locals.data = {
-          user: updated
+          user: updated,
+	  msg: "Profile picture updated!"
         };	
         return next();
       });

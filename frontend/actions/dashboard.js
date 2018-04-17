@@ -1,4 +1,4 @@
-import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
+import { errorWrap, showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
 import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
 
 import * as types from './types';
@@ -40,10 +40,7 @@ function formatCards(cards) {
       ];
       dispatch(updateDashboardCards(formatted));
     } else {
-      dispatch({
-        type: types.API_ERROR,
-        error: 'An error occurred pulling that information'
-      });
+      errorWrap(dispatch, "An error occurred pulling dashboard information", 3000);
     }
   }
 }

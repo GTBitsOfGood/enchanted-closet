@@ -18,6 +18,29 @@ function rootReducer(state = require('../static/defaultState'), action) {
         errorMessage: null
       });
 
+    case types.CLEAR_ALL_MESSAGES:
+      return Object.assign({}, state, {
+        error: null,
+        errorMessage: null,
+	message: null
+      });
+
+    case types.SET_MESSAGE: {
+      return Object.assign({}, state, {
+	error: null,
+	errorMessage: null,
+	message: action.message
+      });
+    }
+
+    case types.SET_ERROR_MESSAGE: {
+      return Object.assign({}, state, {
+	error: null, // hmmm
+	errorMessage: action.message,
+	message: null
+      });
+    }
+      
     case types.EVENT_UPSERT:
       let { events = [] } = state;
       let eventStateUpdate = {
@@ -63,7 +86,8 @@ function rootReducer(state = require('../static/defaultState'), action) {
     case types.API_ERROR:
       return Object.assign({}, state, {
         loading: false,
-        errorMessage: action.error
+        errorMessage: action.error,
+	message: null
       });
     case types.NOT_LOADING:
       return Object.assign({}, state, {
@@ -162,7 +186,8 @@ function rootReducer(state = require('../static/defaultState'), action) {
 
     case types.USER_NOT_AUTHENTICATED:
       return Object.assign({}, state, {
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+	message: null
       });
 
     case types.LOGOUT_USER:

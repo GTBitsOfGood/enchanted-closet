@@ -1,16 +1,16 @@
 // Helper functions
-import { showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
+import { messageWrap, errorWrap, showModalLoader, hideModalLoader, loading, stopLoading } from './loading';
 import * as types from './types';
 import fetch from 'isomorphic-fetch';
 
 export function safeWrap(json, okCallback, dispatch) {
   if (json.status === 'ok') {
+    if (json.msg) {
+      messageWrap(dispatch, json.msg);
+    }
     return okCallback();
   } else {
-    dispatch({
-      type: types.API_ERROR,
-      error: json.msg
-    });
+    errorWrap(dispatch, json.msg);
   }
 }
 
@@ -52,15 +52,10 @@ export function uploadUserImage(data) {
         body: packagedData
       })
         .then(response => response.json())
-	.then(json => {
-	  console.log(json); // TODO: something with confirm
-	})
+	.then(json => safeWrap(json, () => {}, dispatch))
 	.then(() => dispatch(hideModalLoader()));
     } else { // unexpected error
-      dispatch({
-	type: types.API_ERROR,
-	error: "User not found in state (unexpected error)"
-      });
+      errorWrap(dispatch, "User not found in state (unexpected error)");
     }
   }
 }
@@ -68,6 +63,7 @@ export function uploadUserImage(data) {
 
 export function uploadEventImage(data, id) {
   return (dispatch, getState) => {
+    dispatch(showModalLoader());
     let packagedData = new FormData();
     packagedData.append("image", data["file"]);
     fetchHelper(`/api/events/uploadImage/${id}`, getAPIToken(getState), {
@@ -75,8 +71,7 @@ export function uploadEventImage(data, id) {
       body: packagedData
     })
       .then(response => response.json())
-      .then(json => {
-	console.log(json); // TODO: something with confirm
-      });      
+      .then(json => safeWrap(json, () => {}, dispatch))
+      .then(() => dispatch(hideModalLoader()));
   }
 }
