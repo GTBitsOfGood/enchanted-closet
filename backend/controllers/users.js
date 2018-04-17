@@ -92,7 +92,9 @@ module.exports.get = (req, res, next) => {
 module.exports.delete = (req, res, next) => {
   User.findById(req.params.id).remove((err, user) => {
     if (user) {
-      res.locals.data = {}
+      res.locals.data = {
+        msg: 'User succesfully dleeted'
+      }
       return next();
     } else {
       res.locals.error = {
@@ -190,7 +192,7 @@ module.exports.update = (req, res, next) => {
           res.locals.data = {
             user: updated
           };
-	}
+	      }
         return next();
       });
     }
@@ -228,7 +230,7 @@ module.exports.upload = (req, res, next) => {
         }
         res.locals.data = {
           user: updated,
-	  msg: "Profile picture updated!"
+	        msg: "Profile picture updated!"
         };	
         return next();
       });

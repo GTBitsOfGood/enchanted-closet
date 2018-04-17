@@ -192,7 +192,8 @@ module.exports.makeAdmin = (req, res, next) => {
     .exec((err, user) => {
       if (user) {
         res.locals.data = {
-          user: user
+          user: user,
+          msg: 'User successfully made an admin'
         };
         // localStorage.setItem("user", user);
         return next();
@@ -267,9 +268,13 @@ module.exports.register = (data, callback) => {
   /* Redo validation scheme... */
 
   validateUser(data, (err, validatedUserData) => {
-    if (err) return callback(err.reason, null);
+    if (err) {
+      return callback(err.reason, null);
+    }
     User.create(validatedUserData, (err, user) => {
-      if (err) return callback(err, null);
+      if (err) {
+        return callback(err, null);
+      }
       let tok = randomBytes(64).toString("hex");
       user.set("token", tok);
       redisClient.set(tok, user._id.toString());//, 'EX', 1800); // expire after 30 mins
