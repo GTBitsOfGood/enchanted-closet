@@ -318,7 +318,8 @@ module.exports.create = (req, res, next) => {
     name: req.body.name,
     description: req.body.description,
     location: req.body.location,
-    datetime: req.body.datetime
+    datetime: req.body.datetime,
+    speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
   }, (err, result) => {
     if (err) {
       res.locals.error = {

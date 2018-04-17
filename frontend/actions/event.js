@@ -50,6 +50,8 @@ export function invalidateEvents() {
 
 function processEventUpsert(json, isUpdate) {
   if (json.status === 'ok') {
+    console.log("returned");
+    console.log(json.event);
     return {
       type: types.EVENT_UPSERT,
       event: json.event,

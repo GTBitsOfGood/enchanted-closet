@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter,Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
@@ -53,10 +52,10 @@ class AdminEventsNew extends Component {
   }
 
   upsertEvent() {
-    const { processEvent } = this.props;
+    const { upsertEvent: upsert } = this.props;
     const {_id, name, description, location, speakers, datetime} = this.state;
     this.setState({loading: true});
-    processEvent({_id, name, description, location, speakers, datetime});
+    upsert({_id, name, description, location, speakers, datetime});
   }
 
   handleInputChange(e, {name, value}) {
@@ -114,10 +113,6 @@ class AdminEventsNew extends Component {
   }
 }
 
-AdminEventsNew.PropTypes = {
-  dispatch: PropTypes.func.isRequired
-}
-
 const mapStateToProps = (state) => {
   return {
     user: state.user,
@@ -127,11 +122,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  processEvent(eventData) {
-    dispatch(upsertEvent(eventData));
-  }
-})
+const mapDispatchToProps = dispatch => bindActionCreators({
+  upsertEvent
+}, dispatch)
 
 export default withRouter(connect(
   mapStateToProps,
