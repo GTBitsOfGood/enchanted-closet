@@ -92,7 +92,9 @@ class EventsDetail extends Component {
       return <div />;
     const date = new Date(event.datetime);
     const registerBlock = (() => {
-      if (date.getTime() > Date.now()) { // flag: event still open condition
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      if (date.getTime() > yesterday ) { // flag: event still open condition
 	if (user) {
 	  if (!isProfileComplete(user)) {
 	    return (
