@@ -9,7 +9,9 @@
     "frontend": "webpack -d --watch",
     "backend": "nodemon server.js",
     "start": "npm run build && NODE_ENV=production node server.js",
-    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
+    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "GT Bits of Good",
   "license": "ISC",
@@ -32,7 +34,7 @@
     "form-data": "^2.3.1",
     "helmet": "^3.12.0",
     "isomorphic-fetch": "^2.2.1",
-    "less": "^2.7.2",
+    "less": "^3.0.2",
     "less-loader": "^4.0.5",
     "lodash": "^4.17.4",
     "mocha": "^5.0.3",
@@ -67,7 +69,8 @@
     "should": "^13.1.0",
     "style-loader": "^0.16.1",
     "url-loader": "^0.6.2",
-    "webpack": "^2.3.3"
+    "webpack": "^2.3.3",
+    "snyk": "^1.83.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.2",
@@ -87,5 +90,6 @@
     "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.2",
     "webpack-hot-middleware": "^2.18.0"
-  }
+  },
+  "snyk": true
 }
