@@ -221,7 +221,7 @@ module.exports.upload = (req, res, next) => {
       return next(new Error(res.locals.error));
     } else {
       doc.set(newProps);
-      doc.save((err, updated) => {	
+      doc.save((err, updated) => {
         if (err) {
           res.locals.error = {
             status: 500,
@@ -231,7 +231,7 @@ module.exports.upload = (req, res, next) => {
         res.locals.data = {
           user: updated,
 	        msg: "Profile picture updated!"
-        };	
+        };
         return next();
       });
     }
@@ -322,7 +322,7 @@ module.exports.registerevent = (req, res, next) => {
   }
   const userID = req.params.userID;
   const eventID = req.params.eventID;
-  
+
   Event.findById(eventID, function(err, eDoc){
     if (err || !eDoc) {
       res.locals.error = {
@@ -370,7 +370,7 @@ module.exports.registerevent = (req, res, next) => {
           };
           return next(new Error(res.locals.error));
         }
-      } 
+      }
       // update users.events
       if (!uDoc.events) uDoc.events = [];
       if (uDoc.role == "Volunteer") {
@@ -413,7 +413,7 @@ module.exports.registerevent = (req, res, next) => {
               msg: err
             };
           }
-	  
+
           res.locals.data = {
 	    userId: userID,
 	    eventId: eventID,
@@ -446,7 +446,6 @@ module.exports.denyRegistration = (req, res, next) => {
   }
   const userID = req.params.userID;
   const eventID = req.params.eventID;
-
   Event.findById(eventID, function(err, eDoc){
     if (err || !eDoc) {
       res.locals.error = {
@@ -466,7 +465,7 @@ module.exports.denyRegistration = (req, res, next) => {
 
       if (!eDoc.participants) eDoc.participants = [];
       if (!eDoc.volunteers) eDoc.volunteers = [];
-      if (!eDoc.volunteers.map(String).includes(userID)) {
+      if (!eDoc.pendingVolunteers.map(String).includes(userID)) {
         res.locals.error = {
           status: 400,
           msg: 'That user has not registered for that event.'
@@ -492,7 +491,7 @@ module.exports.denyRegistration = (req, res, next) => {
         uDoc.deniedEvents.push(eventID);
         var tempE = eDoc.pendingVolunteers.map(String);
         tempE.splice(tempE.indexOf(userID), 1);
-        eDoc.pendingVolunteers = temp;
+        eDoc.pendingVolunteers = tempE;
         eDoc.deniedVolunteers.push(userID);
       } else {
         res.locals.error = {
@@ -528,7 +527,7 @@ module.exports.denyRegistration = (req, res, next) => {
 	    newParticipants: eDoc.participants,
 	    newDeniedVolunteers: eDoc.deniedVolunteers,
             newVolunteers: eDoc.volunteers
-          } 
+          }
           return next();
         });
       });
@@ -627,7 +626,7 @@ module.exports.confirmRegistration = (req, res, next) => {
 	    newParticipants: eDoc.participants,
 	    newPendingVolunteers: eDoc.pendingVolunteers,
             newVolunteers: eDoc.volunteers
-          } 
+          }
           return next();
         });
       });
@@ -726,7 +725,7 @@ module.exports.cancelevent = (req, res, next) => {
               msg: err
             };
           }
-         
+
 	  res.locals.data = {
 	    userId: userID,
 	    eventId: eventID,
@@ -734,7 +733,7 @@ module.exports.cancelevent = (req, res, next) => {
 	    newPending: uDoc.pendingEvents,
 	    newParticipants: eDoc.participants,
             newVolunteers: eDoc.volunteers
-          }          
+          }
           return next();
         });
       });
