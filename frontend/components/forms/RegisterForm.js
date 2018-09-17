@@ -13,11 +13,11 @@ class RegisterForm extends Component {
     super(props);
     this.state = {
       status: {
-	firstName: -1, // -1 for untouched, 0 is no error, 1 is error
-	lastName: -1,
-	email: -1,
-	password: -1,
-	confirmPass: -1
+				firstName: -1, // -1 for untouched, 0 is no error, 1 is error
+				lastName: -1,
+				email: -1,
+				password: -1,
+				confirmPass: -1
       },
       firstName: '',
       lastName: '',
@@ -26,7 +26,9 @@ class RegisterForm extends Component {
       confirmPass: '',
       role: 'participant',
       birthday: moment()
-    }
+		}
+		
+		this.handleBirthdayChange = this.handleBirthdayChange.bind(this);
   }
 
   regLegalTest = (field, val) => {
@@ -69,12 +71,12 @@ class RegisterForm extends Component {
     
     return e => {
       if (this.regLegalTest(field, e.target.value)) {
-	this.props.setValid();
-	this.setState({
+				this.props.setValid();
+				this.setState({
 	  [field]: filter ? filter(e.target.value) : e.target.value
 	});
       } else {
-	this.props.setError(warningMessage);
+				this.props.setError(warningMessage);
       }
     }
   }
@@ -173,6 +175,7 @@ class RegisterForm extends Component {
   }
 
   handleBirthdayChange(updated) {
+		console.log('updated bday: ', updated);
     this.setState({'birthday': updated});
   };
   
@@ -215,11 +218,13 @@ class RegisterForm extends Component {
 	    onBlur={this.blurFunctionFactory('email')}
 	  />
 	  <Form.Field
-	    label="Birthday"
+			label="Birthday"
+			maxDate={moment()}
 	    control={DatePicker}
 	    selected={this.state.birthday}
 	    onChange={this.handleBirthdayChange}
-	    name="birthday"
+			name="birthday"
+			showDisabledMonthNavigation
 	  />
 	  <Form.Input
 	    label="Password"
