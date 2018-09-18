@@ -108,7 +108,7 @@ export default function Root({ store }) {
 	    </Switch>
 	  </div>
 	</Router>
-	<DevTools/>
+	{/* <DevTools/> */}
       </div>
     </Provider>
   );

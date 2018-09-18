@@ -84,6 +84,7 @@
     "nodemon": "^1.11.0",
     "react-addons-test-utils": "^15.5.1",
     "react-test-renderer": "^15.5.4",
+    "redux-devtools-extension": "^2.13.5",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.2",
     "webpack-hot-middleware": "^2.18.0"
