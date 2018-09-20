@@ -32,11 +32,11 @@ class EventTab extends Component {
     events.map(e => {
       if (filterBy['Name'] && e.name.toLowerCase().includes(cleanQuery)) {
         filteredEvents.push(e)
-	return
+  return
       }
-      else if (filterBy['Location'] && e.location.toLowerCase().includes(cleanQuery)) {	
+      else if (filterBy['Location'] && e.location.toLowerCase().includes(cleanQuery)) {  
         filteredEvents.push(e)
-	return
+  return
       }
       else if (!filterBy['Name'] && !filterBy['Location'])
         filteredEvents.push(e)    
@@ -49,9 +49,9 @@ class EventTab extends Component {
     filteredEvents.map(e => {
       counter++;
       if (counter >= range[0] && counter <= range[1])
-	{
+  {
           limitedEvents.push(e);
-	}
+  }
     })
 
     const bodyProps = { events: limitedEvents, isFetchingEvents: isLoading, page: page };
@@ -60,32 +60,32 @@ class EventTab extends Component {
 
     return ( 
       <Container>
-	<EventBody {...bodyProps}/>
-	<Segment textAlign='center' vertical>
-	  <Button
-	    disabled = { page <=1 }
-	    size = 'small'
-	    icon = 'angle double left'
-	    onClick={
+  <EventBody {...bodyProps}/>
+  <Segment textAlign='center' vertical>
+    <Button
+      disabled = { page <=1 }
+      size = 'small'
+      icon = 'angle double left'
+      onClick={
               () => this.tabinate(-1)
-	    }/>
-	  <Button
-	    disabled = { range[1] > length }
-	    size = 'small'
-	    icon = 'angle double right'
-	    onClick={
+      }/>
+    <Button
+      disabled = { range[1] > length }
+      size = 'small'
+      icon = 'angle double right'
+      onClick={
               () => this.tabinate(1)
-	    }/>
-	</Segment>
-	<Segment textAlign='center' vertical>
-	  <Header as="l1"> Current Page: {page}</Header>
-	  {page * 10 <= length &&
-	   <p>Showing: {(page - 1) * 10 + 1} - {page * 10} of {length}</p>
-	  }
-	  {page * 10 > length &&
-	   <p>Showing: {(page - 1) * 10 + 1} - {length} of {length}</p>
-	  }
-	</Segment>
+      }/>
+  </Segment>
+  <Segment textAlign='center' vertical>
+    <Header as="l1"> Current Page: {page}</Header>
+    {page * 10 <= length &&
+     <p>Showing: {(page - 1) * 10 + 1} - {page * 10} of {length}</p>
+    }
+    {page * 10 > length &&
+     <p>Showing: {(page - 1) * 10 + 1} - {length} of {length}</p>
+    }
+  </Segment>
       </Container>
     )
     

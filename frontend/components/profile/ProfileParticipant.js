@@ -38,10 +38,10 @@ const ProfileParticipant = props => {
   return (
     <Card style={styles.softCard}>
       <Card.Content>
-	<Card.Header> Additional Details: </Card.Header>
-	<Card.Description>
-	  <ProfileForm targets={targets} />
-	</Card.Description>
+  <Card.Header> Additional Details: </Card.Header>
+  <Card.Description>
+    <ProfileForm targets={targets} />
+  </Card.Description>
       </Card.Content>
     </Card>
   )

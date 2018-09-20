@@ -22,22 +22,22 @@ function rootReducer(state = require('../static/defaultState'), action) {
       return Object.assign({}, state, {
         error: null,
         errorMessage: null,
-	message: null
+  message: null
       });
 
     case types.SET_MESSAGE: {
       return Object.assign({}, state, {
-	error: null,
-	errorMessage: null,
-	message: action.message
+  error: null,
+  errorMessage: null,
+  message: action.message
       });
     }
 
     case types.SET_ERROR_MESSAGE: {
       return Object.assign({}, state, {
-	error: null, // hmmm
-	errorMessage: action.message,
-	message: null
+  error: null, // hmmm
+  errorMessage: action.message,
+  message: null
       });
     }
       
@@ -87,7 +87,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
       return Object.assign({}, state, {
         loading: false,
         errorMessage: action.error,
-	message: null
+  message: null
       });
     case types.NOT_LOADING:
       return Object.assign({}, state, {
@@ -138,21 +138,21 @@ function rootReducer(state = require('../static/defaultState'), action) {
       const newUser = user ? { ...user, pendingEvents, events } : null;
       let newUsers;
       if ( newUser ) {
-	newUsers = Array.from(users);
-	newUsers[users.indexOf(user)] = newUser;
-	// users[users.indexOf(user)] = newUser;
+  newUsers = Array.from(users);
+  newUsers[users.indexOf(user)] = newUser;
+  // users[users.indexOf(user)] = newUser;
       }
       return { ...state,  
-	       users: newUsers,
-	       errorMessage: null };
+         users: newUsers,
+         errorMessage: null };
     }
     case types.UPDATE_PERSONAL_EVENTS: {
       const { pendingEvents, events } = action.payload;
       const { user } = state;
       const newUser = user ? { ...user, pendingEvents, events } : null;
       return { ...state,  
-	       user: newUser,
-	       errorMessage: null };
+         user: newUser,
+         errorMessage: null };
     }
 
     case types.EVENT_USER_UPDATE: { // TODO: make users ref event store array
@@ -164,18 +164,18 @@ function rootReducer(state = require('../static/defaultState'), action) {
       const newEvent = event ? { ...event, participants, volunteers, pendingVolunteers, deniedVolunteers } : null;
       let newEvents;
       if ( newEvent ) {
-	newEvents = Array.from(events);
-	newEvents[events.indexOf(event)] = newEvent; // be very careful...
-	// events[events.indexOf(event)] = newEvent; // freaking AHHH
+  newEvents = Array.from(events);
+  newEvents[events.indexOf(event)] = newEvent; // be very careful...
+  // events[events.indexOf(event)] = newEvent; // freaking AHHH
       }
       return { ...state,
-	       events: newEvents,
-	       errorMessage: null };
+         events: newEvents,
+         errorMessage: null };
     }
     case types.USER_UPDATE:
       return Object.assign({}, state, {
-	user: { ...(state.user ? state.user: null), ...action.user },
-	errorMessage: null
+  user: { ...(state.user ? state.user: null), ...action.user },
+  errorMessage: null
       });
       
     case types.USER_AUTHENTICATED:
@@ -187,7 +187,7 @@ function rootReducer(state = require('../static/defaultState'), action) {
     case types.USER_NOT_AUTHENTICATED:
       return Object.assign({}, state, {
         errorMessage: action.errorMessage,
-	message: null
+  message: null
       });
 
     case types.LOGOUT_USER:

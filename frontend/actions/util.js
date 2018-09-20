@@ -52,10 +52,10 @@ export function uploadUserImage(data) {
         body: packagedData
       })
         .then(response => response.json())
-	.then(json => safeWrap(json, () => {
-	  dispatch(updateUserImage(json.user));
-	}, dispatch))
-	.then(() => dispatch(hideModalLoader()));
+  .then(json => safeWrap(json, () => {
+    dispatch(updateUserImage(json.user));
+  }, dispatch))
+  .then(() => dispatch(hideModalLoader()));
     } else { // unexpected error
       errorWrap(dispatch, "User not found in state (unexpected error)");
     }
@@ -84,7 +84,7 @@ export function uploadEventImage(data, id) {
     })
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
-	dispatch(updateEventImage(json.event));
+  dispatch(updateEventImage(json.event));
       }, dispatch))
       .then(() => dispatch(hideModalLoader()));
   }

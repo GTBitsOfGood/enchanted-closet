@@ -42,14 +42,14 @@ class EventsEdit extends Component {
       return <Redirect to={`/events/${newEvent._id}`}/>
     } else {
       return (
-	<Container>
-	  {loading &&
-	   <LoadingIcon active/>
-	  }
-	  {!loading &&
-	   <AdminEventsNew event={event} />
-	  }
-	</Container>
+  <Container>
+    {loading &&
+     <LoadingIcon active/>
+    }
+    {!loading &&
+     <AdminEventsNew event={event} />
+    }
+  </Container>
       );
     }
   }

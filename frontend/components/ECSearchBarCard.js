@@ -22,7 +22,7 @@ export default class ECSearchBarCard extends Component {
   render() {
     return (
       <Segment>
-	<Input fluid onChange={this.inputChange} iconPosition='left' icon={<Icon name='search' inverted circular link/>} placeholder=' Search Attendees...'/>
+  <Input fluid onChange={this.inputChange} iconPosition='left' icon={<Icon name='search' inverted circular link/>} placeholder=' Search Attendees...'/>
       </Segment>
     );
   }

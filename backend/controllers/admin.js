@@ -12,22 +12,22 @@ module.exports.cards = (req, res, next) => {
   async.parallel({
     users: cb => {
       User
-	.find({})
-	.then(users => users.map(u => userCounts[u.role.toLowerCase()]++))
-	.then(() => cb(null, userCounts))
-	.catch(err => cb(err, null));
+  .find({})
+  .then(users => users.map(u => userCounts[u.role.toLowerCase()]++))
+  .then(() => cb(null, userCounts))
+  .catch(err => cb(err, null));
     },
     events: cb => {
       Event
-	.find({})
-	.then(events => cb(null, events.length))
-	.catch(err => cb(err, null));
+  .find({})
+  .then(events => cb(null, events.length))
+  .catch(err => cb(err, null));
     }
   }, (err, results) => {
     if (err) {
       res.locals.errors = {
-	code: 500,
-	msg: err
+  code: 500,
+  msg: err
       };
       return next();
     }

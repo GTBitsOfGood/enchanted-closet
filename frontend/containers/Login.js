@@ -12,32 +12,32 @@ const Login = () => (
   <Grid verticalAlign="middle" columns='three' centered>
     <Grid.Row>
       <Grid.Column width={4} only="computer">
-	<Image src={images.imgL} size='medium' centered />
+  <Image src={images.imgL} size='medium' centered />
       </Grid.Column>
       <Grid.Column computer={8} mobile={16}>
-	<Container fluid text>
-	  <Card fluid color='purple' >
-	    <Card.Content header='Login' />
-	    <Card.Content>
-	      <LoginForm />
-	    </Card.Content>
-	  </Card>
-	  <Divider horizontal> New User? </Divider>
-	  <Container textAlign="center">		
-	    <Button
-	      color="violet"
-	      as={Link}
-	      to='/register'
-	      icon labelPosition="right"
-	    >
-	      Register a New Account
-	      <Icon name="right arrow" />
-	    </Button>
-	  </Container>
-	</Container>
+  <Container fluid text>
+    <Card fluid color='purple' >
+      <Card.Content header='Login' />
+      <Card.Content>
+        <LoginForm />
+      </Card.Content>
+    </Card>
+    <Divider horizontal> New User? </Divider>
+    <Container textAlign="center">    
+      <Button
+        color="violet"
+        as={Link}
+        to='/register'
+        icon labelPosition="right"
+      >
+        Register a New Account
+        <Icon name="right arrow" />
+      </Button>
+    </Container>
+  </Container>
       </Grid.Column>
       <Grid.Column width={4} only="computer">
-	<Image src={images.imgR} size='medium' centered />
+  <Image src={images.imgR} size='medium' centered />
       </Grid.Column>
     </Grid.Row>
   </Grid>

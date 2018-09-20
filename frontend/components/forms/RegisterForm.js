@@ -13,11 +13,11 @@ class RegisterForm extends Component {
     super(props);
     this.state = {
       status: {
-	firstName: -1, // -1 for untouched, 0 is no error, 1 is error
-	lastName: -1,
-	email: -1,
-	password: -1,
-	confirmPass: -1
+  firstName: -1, // -1 for untouched, 0 is no error, 1 is error
+  lastName: -1,
+  email: -1,
+  password: -1,
+  confirmPass: -1
       },
       firstName: '',
       lastName: '',
@@ -33,15 +33,15 @@ class RegisterForm extends Component {
     switch (field) {
       case "firstName":
       case "lastName":
-	return /^[a-zA-Z]*$/.test(val)
-	break
+  return /^[a-zA-Z]*$/.test(val)
+  break
       case "password":
       case "confirmPass":
-	return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
-	break
+  return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
+  break
       case "email":
-	return /^[\w@.]*$/.test(val)
-	break
+  return /^[\w@.]*$/.test(val)
+  break
     }
   }
 
@@ -49,18 +49,18 @@ class RegisterForm extends Component {
     switch (field) {
       case "firstName":
       case "lastName":
-	return /^[a-zA-Z]+$/.test(val)
-	break
+  return /^[a-zA-Z]+$/.test(val)
+  break
       case "password":
       case "confirmPass":
-	return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/.test(val);
-	break
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/.test(val);
+  break
       case "email":
-	return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
-	break
+  return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
+  break
       default:
-	return this.regLegalTest(field, val)
-	break
+  return this.regLegalTest(field, val)
+  break
     }
   }
   
@@ -69,12 +69,12 @@ class RegisterForm extends Component {
     
     return e => {
       if (this.regLegalTest(field, e.target.value)) {
-	this.props.setValid();
-	this.setState({
-	  [field]: filter ? filter(e.target.value) : e.target.value
-	});
+  this.props.setValid();
+  this.setState({
+    [field]: filter ? filter(e.target.value) : e.target.value
+  });
       } else {
-	this.props.setError(warningMessage);
+  this.props.setError(warningMessage);
       }
     }
   }
@@ -89,9 +89,9 @@ class RegisterForm extends Component {
   changeFunctions = {
     "role": tar => {
       return () => {
-	this.setState({
-	  role: tar
-	});
+  this.setState({
+    role: tar
+  });
       }
     }
   }
@@ -99,47 +99,47 @@ class RegisterForm extends Component {
   blurFunctions = {
     'firstName': e => {
       if (this.regFinalTest('firstName', e.target.value)) {
-	this.props.setValid();
-	this.updateStatus('firstName', 0, true);
+  this.props.setValid();
+  this.updateStatus('firstName', 0, true);
       } else {
-	this.props.setError("Field is required.");
-	this.updateStatus('firstName', 1, true);
+  this.props.setError("Field is required.");
+  this.updateStatus('firstName', 1, true);
       }
     },
     'lastName': e => {
       if (this.regFinalTest('lastName', e.target.value)) {
-	this.props.setValid();
-	this.updateStatus('lastName', 0, true);
+  this.props.setValid();
+  this.updateStatus('lastName', 0, true);
       } else {
-	this.props.setError("Field is required.");
-	this.updateStatus('lastName', 1, true);
+  this.props.setError("Field is required.");
+  this.updateStatus('lastName', 1, true);
       }
     },
     'password': e => {
       if (this.regFinalTest('password', e.target.value)) {
-	this.props.setValid();
-	this.updateStatus('password', 0, true);
+  this.props.setValid();
+  this.updateStatus('password', 0, true);
       } else {
-	this.props.setError("Minimum length of 7 characters, one number required.");
-	this.updateStatus('password', 1, true);
+  this.props.setError("Minimum length of 7 characters, one number required.");
+  this.updateStatus('password', 1, true);
       }
     },
     'confirmPass': e => {
       if (this.state.password === e.target.value) {
-	this.props.setValid();
-	this.updateStatus('confirmPass', 0, true);
+  this.props.setValid();
+  this.updateStatus('confirmPass', 0, true);
       } else {
-	this.props.setError("Passwords do not match.");
-	this.updateStatus('confirmPass', 1, true);
+  this.props.setError("Passwords do not match.");
+  this.updateStatus('confirmPass', 1, true);
       }
     },
     'email': e => {
       if (this.regFinalTest('email', e.target.value)) {
-	this.props.setValid();
-	this.updateStatus('email', 0, true);
+  this.props.setValid();
+  this.updateStatus('email', 0, true);
       } else {
-	this.props.setError();
-	this.updateStatus('email', 1, true);
+  this.props.setError();
+  this.updateStatus('email', 1, true);
       }
     },
     'birthday': e => true    
@@ -178,89 +178,89 @@ class RegisterForm extends Component {
   
   render() {
     const { firstName, lastName, email,
-	    password, confirmPass, role } = this.state;
+      password, confirmPass, role } = this.state;
     const { setError, setValid, setComplete, setMessage } = this.props;
     return (
       <div>
-	<Form>
-	  <Form.Input
-	    label="First Name"
-	    required
-	    error={this.errorFactory("firstName")}
-	    name="firstName"
-	    value={firstName}
-	    onChange={this.changeFunctionFactory("firstName", "Alphabetic characters only.", capitalize)}
-	    placeholder="George"
-	    onBlur={this.blurFunctionFactory('firstName')}
-	  />
-	  <Form.Input
-	    label="Last Name"
-	    required
-	    error={this.errorFactory("lastName")}
-	    name="lastName"
-	    value={lastName}
-	    onChange={this.changeFunctionFactory("lastName", "Alphabetic characters only.", capitalize)}
-	    placeholder="Burdell"
-	    onBlur={this.blurFunctionFactory('lastName')}
-	  />
-	  <Form.Input
-	    label="Email"
-	    required
-	    error={this.errorFactory("email")}
-	    name="email"
-	    type="email"
-	    value={email}
-	    onChange={this.changeFunctionFactory("email", "Email characters only.")}
-	    placeholder='gburdell@gatech.edu'
-	    onBlur={this.blurFunctionFactory('email')}
-	  />
-	  <Form.Field
-	    label="Birthday"
-	    control={DatePicker}
-	    selected={this.state.birthday}
-	    onChange={this.handleBirthdayChange}
-	    name="birthday"
-	  />
-	  <Form.Input
-	    label="Password"
-	    required
-	    error={this.errorFactory("password")}
-	    name="password"
-	    type="password"
-	    onChange={this.changeFunctionFactory("password", "That character is illegal.")}
-	    value={password}
-	    onBlur={this.blurFunctionFactory('password')}
-	  />
-	  <Form.Input
-	    label="Confirm Password"
-	    required
-	    error={this.errorFactory("confirmPass")}
-	    name="confirmPass"
-	    type="password"
-	    onChange={this.changeFunctionFactory("confirmPass", "That character is illegal.")}
-	    value={confirmPass}
-	    onBlur={this.blurFunctionFactory('confirmPass')}
-	  />
-	  <Form.Group inline>
-	    <label>I am a: </label>
-	    <Form.Radio label='Participant'
-			value='participant'
-			checked={role === 'participant'}
-			onChange={this.changeFunctions['role']('participant')}
-	    />
-	    <Form.Radio label='Volunteer'
-			value='volunteer'
-			checked={role === 'volunteer'}
-			onChange={this.changeFunctions['role']('volunteer')}
-	    />
+  <Form>
+    <Form.Input
+      label="First Name"
+      required
+      error={this.errorFactory("firstName")}
+      name="firstName"
+      value={firstName}
+      onChange={this.changeFunctionFactory("firstName", "Alphabetic characters only.", capitalize)}
+      placeholder="George"
+      onBlur={this.blurFunctionFactory('firstName')}
+    />
+    <Form.Input
+      label="Last Name"
+      required
+      error={this.errorFactory("lastName")}
+      name="lastName"
+      value={lastName}
+      onChange={this.changeFunctionFactory("lastName", "Alphabetic characters only.", capitalize)}
+      placeholder="Burdell"
+      onBlur={this.blurFunctionFactory('lastName')}
+    />
+    <Form.Input
+      label="Email"
+      required
+      error={this.errorFactory("email")}
+      name="email"
+      type="email"
+      value={email}
+      onChange={this.changeFunctionFactory("email", "Email characters only.")}
+      placeholder='gburdell@gatech.edu'
+      onBlur={this.blurFunctionFactory('email')}
+    />
+    <Form.Field
+      label="Birthday"
+      control={DatePicker}
+      selected={this.state.birthday}
+      onChange={this.handleBirthdayChange}
+      name="birthday"
+    />
+    <Form.Input
+      label="Password"
+      required
+      error={this.errorFactory("password")}
+      name="password"
+      type="password"
+      onChange={this.changeFunctionFactory("password", "That character is illegal.")}
+      value={password}
+      onBlur={this.blurFunctionFactory('password')}
+    />
+    <Form.Input
+      label="Confirm Password"
+      required
+      error={this.errorFactory("confirmPass")}
+      name="confirmPass"
+      type="password"
+      onChange={this.changeFunctionFactory("confirmPass", "That character is illegal.")}
+      value={confirmPass}
+      onBlur={this.blurFunctionFactory('confirmPass')}
+    />
+    <Form.Group inline>
+      <label>I am a: </label>
+      <Form.Radio label='Participant'
+      value='participant'
+      checked={role === 'participant'}
+      onChange={this.changeFunctions['role']('participant')}
+      />
+      <Form.Radio label='Volunteer'
+      value='volunteer'
+      checked={role === 'volunteer'}
+      onChange={this.changeFunctions['role']('volunteer')}
+      />
           </Form.Group>
-	  <Button
-	    color="violet"
-	    onClick={this.onSubmit}
-	    content='Register'
-	    type='submit'
-	  />
-	</Form>
+    <Button
+      color="violet"
+      onClick={this.onSubmit}
+      content='Register'
+      type='submit'
+    />
+  </Form>
       </div>
     );
   }

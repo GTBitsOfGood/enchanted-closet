@@ -17,13 +17,13 @@ class ECUserListItem extends Component {
   attendanceUpdate(updateEvent, data) {
     const { markAttending, markUnattending, event, user } = this.props;
     const isAttending = user.role === 'Volunteer' ?
-			event.volunteersAttended.filter(v => v._id === user._id).length === 1 :
-			event.participantsAttended.filter(p => p._id === user._id).length === 1; // only optimistic updates :)
+      event.volunteersAttended.filter(v => v._id === user._id).length === 1 :
+      event.participantsAttended.filter(p => p._id === user._id).length === 1; // only optimistic updates :)
     this.setState({attending: !this.state.attending}, () => {
       if (this.state.attending) {
-	markAttending(event, user);
+  markAttending(event, user);
       } else {
-	markUnattending(event, user);
+  markUnattending(event, user);
       }
       
     });
@@ -36,14 +36,14 @@ class ECUserListItem extends Component {
     const hidden = 'none';
     const filteredVisibility = name.toLowerCase().indexOf(filter.toLowerCase()) > -1 ? visible : hidden;
     const isAttending = user.role === 'Volunteer' ?
-			event.volunteersAttended.filter(v => v._id === user._id).length === 1 :
-			event.participantsAttended.filter(p => p._id === user._id).length === 1;
+      event.volunteersAttended.filter(v => v._id === user._id).length === 1 :
+      event.participantsAttended.filter(p => p._id === user._id).length === 1;
     return (
       <List.Item style={{display:filteredVisibility}} onClick={this.attendanceUpdate}>
-	<List.Content>
-	  <List.Header><Checkbox checked={this.state.attending} label={name}/></List.Header>
-	</List.Content>
-	
+  <List.Content>
+    <List.Header><Checkbox checked={this.state.attending} label={name}/></List.Header>
+  </List.Content>
+  
       </List.Item>
     )
   }

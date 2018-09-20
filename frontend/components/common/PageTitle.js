@@ -23,17 +23,17 @@ class PageTitle extends Component {
               <Grid.Row columns={link && linkTitle ? 2 : 1}>
                 <Grid.Column>
                   <h2>{title}</h2>
-		  {showLoadingIcon &&
-		   <Loader active={loading} inline size='small' style={styles.loader}/>
-		  }
+      {showLoadingIcon &&
+       <Loader active={loading} inline size='small' style={styles.loader}/>
+      }
                 </Grid.Column>
                 {link && linkTitle &&
                  <Grid.Column textAlign="right">
                   <Button style={styles.button} onClick={() => {
-		    history.push({pathname: link})
-		  }}>
-		     {linkTitle}
-		   </Button>
+        history.push({pathname: link})
+      }}>
+         {linkTitle}
+       </Button>
                  </Grid.Column>
                 }
               </Grid.Row>

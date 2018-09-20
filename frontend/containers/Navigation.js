@@ -36,40 +36,40 @@ class Navigation extends Component {
     
     const userBlock = (
       <Menu.Menu position='right'>
-	<Dropdown item icon='home' style={styles.button}>
-	  <Dropdown.Menu>
-	    {userLinks.map(pair => (
-	      <Dropdown.Item
-		style={styles.button}
-		onClick={navFactory(`${pair[1]}`)}
-		key={`${pair[1]}NavLink`}
-		>
-		{pair[0]}
-	      </Dropdown.Item>
-	    ))}
-	  </Dropdown.Menu>
-	</Dropdown>
+  <Dropdown item icon='home' style={styles.button}>
+    <Dropdown.Menu>
+      {userLinks.map(pair => (
+        <Dropdown.Item
+    style={styles.button}
+    onClick={navFactory(`${pair[1]}`)}
+    key={`${pair[1]}NavLink`}
+    >
+    {pair[0]}
+        </Dropdown.Item>
+      ))}
+    </Dropdown.Menu>
+  </Dropdown>
       </Menu.Menu>
     )
     
     return (      
       <Menu
-	style={styles.base}
-	inverted
-	size='huge'
+  style={styles.base}
+  inverted
+  size='huge'
       >
         <Menu.Item header onClick={navFactory('/')}>
           {applicationName}
         </Menu.Item>
         {user ? userBlock : (
-	  <Menu.Item
-	    position='right'
-	    style={styles.button}
-	    onClick={navFactory('/login')}
-	  >
-	    Log In
-	  </Menu.Item>
-	)}
+    <Menu.Item
+      position='right'
+      style={styles.button}
+      onClick={navFactory('/login')}
+    >
+      Log In
+    </Menu.Item>
+  )}
       </Menu>
     );
   };

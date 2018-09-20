@@ -26,87 +26,87 @@ export default function Root({ store }) {
   return (
     <Provider store={store}>
       <div>
-	<Helmet bodyAttributes={styles.helmetStyle} />
-	<Router>
-	  <div>
-	    <Navigation />
-	    <GlobalDimmer />
-	    <GlobalError />
-	    <GlobalMessage />
-	    <Switch>
-	      <SmartRoute
-	      accepts={['loggedOut']}
-	      exact path="/"
-	      component={Homepage}
-	      redirect="/dashboard"
-	      />
-	      <SmartRoute
-	      accepts={['loggedOut']}
-	      path="/login"
-	      component={Login}
-	      redirect="/"
-	      />
-	      <SmartRoute
-	      accepts={['loggedOut']}
-	      path="/register"
-	      component={Register}
-	      redirect="/"
-	      />
-	      <SmartRoute
-	      accepts={['loggedIn']}
-	      path="/profile"
-	      component={Profile}
-	      redirect="/login"
-	      />
-	      <SmartRoute
-	      accepts={['loggedIn']}
-	      path="/dashboard"
-	      component={Dashboard}
-	      redirect="/login"
-	      />
-	      <SmartRoute
-	      accepts={['loggedIn']}
-	      path="/logout"
-	      component={Logout}
-	      redirect="/"
-	      />
-	      <Route exact path="/events" component={Events} />
-	      <SmartRoute
-	      accepts={['Admin']}
-	      exact path="/events/create"
-	      component={Admin.EventsNew}
-	      />
-	      <SmartRoute
-	      accepts={['Admin']}
-	      path="/events/:id/edit"
-	      component={Admin.EventsEdit}
-	      />
-	      <SmartRoute
-	      accepts={['Admin', 'Volunteer']}
-	      path="/events/:id/attendance"
-	      component={Admin.Attendance}
-	      />
-	      <Route path="/events/:id" component={EventsDetail} />
-	      <SmartRoute
-	      accepts={['Admin']}
-	      exact path="/users"
-	      component={Admin.Users}
-	      />	      
-	      <SmartRoute
-	      accepts={['Admin']}
-	      exact path="/users/create"
-	      component={Admin.UsersNew}
-	      />
-	      <SmartRoute
-	      accepts={['Admin']}
-	      path="/users/:id"
-	      component={Admin.UsersDetail}
-	      />
-	      <Route path="/error" component={MissingPage} />
-	      <Route component={MissingPage} />
-	    </Switch>
-	  </div>
-	</Router>
+  <Helmet bodyAttributes={styles.helmetStyle} />
+  <Router>
+    <div>
+      <Navigation />
+      <GlobalDimmer />
+      <GlobalError />
+      <GlobalMessage />
+      <Switch>
+        <SmartRoute
+        accepts={['loggedOut']}
+        exact path="/"
+        component={Homepage}
+        redirect="/dashboard"
+        />
+        <SmartRoute
+        accepts={['loggedOut']}
+        path="/login"
+        component={Login}
+        redirect="/"
+        />
+        <SmartRoute
+        accepts={['loggedOut']}
+        path="/register"
+        component={Register}
+        redirect="/"
+        />
+        <SmartRoute
+        accepts={['loggedIn']}
+        path="/profile"
+        component={Profile}
+        redirect="/login"
+        />
+        <SmartRoute
+        accepts={['loggedIn']}
+        path="/dashboard"
+        component={Dashboard}
+        redirect="/login"
+        />
+        <SmartRoute
+        accepts={['loggedIn']}
+        path="/logout"
+        component={Logout}
+        redirect="/"
+        />
+        <Route exact path="/events" component={Events} />
+        <SmartRoute
+        accepts={['Admin']}
+        exact path="/events/create"
+        component={Admin.EventsNew}
+        />
+        <SmartRoute
+        accepts={['Admin']}
+        path="/events/:id/edit"
+        component={Admin.EventsEdit}
+        />
+        <SmartRoute
+        accepts={['Admin', 'Volunteer']}
+        path="/events/:id/attendance"
+        component={Admin.Attendance}
+        />
+        <Route path="/events/:id" component={EventsDetail} />
+        <SmartRoute
+        accepts={['Admin']}
+        exact path="/users"
+        component={Admin.Users}
+        />        
+        <SmartRoute
+        accepts={['Admin']}
+        exact path="/users/create"
+        component={Admin.UsersNew}
+        />
+        <SmartRoute
+        accepts={['Admin']}
+        path="/users/:id"
+        component={Admin.UsersDetail}
+        />
+        <Route path="/error" component={MissingPage} />
+        <Route component={MissingPage} />
+      </Switch>
+    </div>
+  </Router>
       </div>
     </Provider>
   );

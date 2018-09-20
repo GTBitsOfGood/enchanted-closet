@@ -10,7 +10,7 @@ import { fetchEventsIfNeeded, invalidateEvents, fetchFutureEvents, fetchPastEven
 
 import { Button, Container, Card, Icon, Segment, Header, Input } from 'semantic-ui-react';
 import { CreateNewEventButton, ViewPastEventsButton, ViewFutureEventsButton,
-	 ButtonGallery, EventTab, PageTitle, RoleCheck } from '../components/';
+   ButtonGallery, EventTab, PageTitle, RoleCheck } from '../components/';
 
 class Events extends Component {
   constructor(props) {
@@ -60,47 +60,47 @@ class Events extends Component {
     
     return (
       <Container>
-	<PageTitle title="Events" />
-	<ButtonGallery>
-	  <RoleCheck role="Admin">
-	    <CreateNewEventButton />
-	  </RoleCheck>
-	  <ViewPastEventsButton onClick={fetchPastEvents} />
-	  <ViewFutureEventsButton onClick={fetchFutureEvents} />
-	  <div style={styles.searchSection}>
-	    <Input
-	      placeholder = 'Event Name'
-	      icon={<Icon name='search' circular link/>}
-	      iconPosition="left"
-	      type = 'text'
-	      size = 'medium'
-	      disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
-	      onChange={
-		(e, data) => this.changeQuery(e)
-	      }/>
-	    <span style={styles.searchBy}>
-	      Search By:
-	    </span>
-	    <Button
-	      active = {this.state.filters['Name']}
-	      label = 'Name'
-	      labelPosition = 'left'
-	      size = 'small'
-	      toggle
-	      onClick={(e, data) => this.changeFilter(data)}
-	    />
-	    <Button
-	      active = {this.state.filters['Location']}
-	      label = 'Location'
-	      labelPosition = 'left'
-	      size = 'small'
-	      toggle
-	      onClick={(e, data) => this.changeFilter(data)}
-	    />
-	  </div>
-	</ButtonGallery>
-	
-	<EventTab {...bodyProps} />
+  <PageTitle title="Events" />
+  <ButtonGallery>
+    <RoleCheck role="Admin">
+      <CreateNewEventButton />
+    </RoleCheck>
+    <ViewPastEventsButton onClick={fetchPastEvents} />
+    <ViewFutureEventsButton onClick={fetchFutureEvents} />
+    <div style={styles.searchSection}>
+      <Input
+        placeholder = 'Event Name'
+        icon={<Icon name='search' circular link/>}
+        iconPosition="left"
+        type = 'text'
+        size = 'medium'
+        disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
+        onChange={
+    (e, data) => this.changeQuery(e)
+        }/>
+      <span style={styles.searchBy}>
+        Search By:
+      </span>
+      <Button
+        active = {this.state.filters['Name']}
+        label = 'Name'
+        labelPosition = 'left'
+        size = 'small'
+        toggle
+        onClick={(e, data) => this.changeFilter(data)}
+      />
+      <Button
+        active = {this.state.filters['Location']}
+        label = 'Location'
+        labelPosition = 'left'
+        size = 'small'
+        toggle
+        onClick={(e, data) => this.changeFilter(data)}
+      />
+    </div>
+  </ButtonGallery>
+  
+  <EventTab {...bodyProps} />
       </Container>
     );
   }

@@ -7,7 +7,7 @@ import { Clearfix } from '../'
 const DashboardCard = withRouter( props => (
   <Card
     onClick={() => {
-	props.history.push({pathname: props.url})
+  props.history.push({pathname: props.url})
     }}
     target="_blank"
     centered

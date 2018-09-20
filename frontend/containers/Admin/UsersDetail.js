@@ -24,11 +24,11 @@ class AdminUsersDetail extends Component {
     } else {
       const usr = users.filter(u => u._id === this.state.user_id);
       if (usr.length === 1) {
-	this.state = Object.assign({}, this.state, {
-	  user: usr[0]
-	});
+  this.state = Object.assign({}, this.state, {
+    user: usr[0]
+  });
       } else {
-	this.loadUsers();
+  this.loadUsers();
       }
     }
     this.loadUsers = this.loadUsers.bind(this);
@@ -58,39 +58,39 @@ class AdminUsersDetail extends Component {
     const { loading, hasPerformedUpdate, user_id, user } = this.state;
     const { promoteUser } = this.props;
     const name = user ? `${user.firstName} ${user.lastName}` :
-		 'Name not found';
+     'Name not found';
     return (
       <Container>
-	{loading &&
-	 <div style={{paddingTop:50}}>
-	   <LoadingIcon active/>
-	 </div>
-	}
-	{!loading && hasPerformedUpdate && !user &&
-	 <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
-	}
-	{!loading && user &&
-	 <div>
-	   <PageTitle title={user.role + ": " + name}/>
-	   <ContactCard user={user}/>
-	   { user.role === 'Participant' && <DemographicsCard user={user}/>}
-	   <EmergencyContactCard user={user}/>
-	   <PastEventsCard user={user}/>
-	 </div>
-	}
-	<Button
-	  as={Link}
-	  to="/users"
-	>
-	  Back to all users
-	</Button>
-	{user && user.role == 'Volunteer' &&
-	 <Button
-	   onClick={() => promoteUser(user_id)}
-	   >
-	   Make Admin
-	 </Button>
-	}
+  {loading &&
+   <div style={{paddingTop:50}}>
+     <LoadingIcon active/>
+   </div>
+  }
+  {!loading && hasPerformedUpdate && !user &&
+   <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
+  }
+  {!loading && user &&
+   <div>
+     <PageTitle title={user.role + ": " + name}/>
+     <ContactCard user={user}/>
+     { user.role === 'Participant' && <DemographicsCard user={user}/>}
+     <EmergencyContactCard user={user}/>
+     <PastEventsCard user={user}/>
+   </div>
+  }
+  <Button
+    as={Link}
+    to="/users"
+  >
+    Back to all users
+  </Button>
+  {user && user.role == 'Volunteer' &&
+   <Button
+     onClick={() => promoteUser(user_id)}
+     >
+     Make Admin
+   </Button>
+  }
       </Container>
     )
   }

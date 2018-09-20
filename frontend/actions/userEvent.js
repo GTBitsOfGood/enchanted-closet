@@ -31,25 +31,25 @@ function receiveRegistrationInfo(initFetch, dispatch, getState) {
     .then(json => safeWrap(json, () => {
       // Conditionally pack new info
       const userPayload = {
-	userId: json.userId,
-	...(json.newEvents ?
-	    {events: json.newEvents} : {}),
-	...(json.newPending ?
-	    {pendingEvents: json.newPending} : {})
+  userId: json.userId,
+  ...(json.newEvents ?
+      {events: json.newEvents} : {}),
+  ...(json.newPending ?
+      {pendingEvents: json.newPending} : {})
       };
       const eventPayload = {
-	eventId: json.eventId,
-	...(json.newParticipants ?
-	    {participants: json.newParticipants} : {}),
-	...(json.newVolunteers ?
-	    {volunteers: json.newVolunteers} : {}),
-	...(json.newPendingVolunteers ?
-	    {pendingVolunteers: json.newPendingVolunteers} : {}),
-	...(json.newDeniedVolunteers ?
-	    {deniedVolunteers: json.newDeniedVolunteers} : {})
+  eventId: json.eventId,
+  ...(json.newParticipants ?
+      {participants: json.newParticipants} : {}),
+  ...(json.newVolunteers ?
+      {volunteers: json.newVolunteers} : {}),
+  ...(json.newPendingVolunteers ?
+      {pendingVolunteers: json.newPendingVolunteers} : {}),
+  ...(json.newDeniedVolunteers ?
+      {deniedVolunteers: json.newDeniedVolunteers} : {})
       }
       if (getState().user && json.userId === getState().user._id) {
-	dispatch(updatePersonalEvents(userPayload));
+  dispatch(updatePersonalEvents(userPayload));
       }
       dispatch(updateUserEvents(userPayload));
       dispatch(updateEventUsers(eventPayload));

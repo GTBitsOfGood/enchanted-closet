@@ -31,13 +31,13 @@ class BaseDashboard extends Component {
     const pendingEventsRender =
       pendingEventsArr.length === 0 ?
       (<Header
-	as="h3"
-	style={styles.emptyMessage}
+  as="h3"
+  style={styles.emptyMessage}
        >
-	You have no pending events.
+  You have no pending events.
       </Header>) :
       (pendingEventsArr.map(event => (
-	<Event key={ `${event._id}pendingEvent` } data = { event } />
+  <Event key={ `${event._id}pendingEvent` } data = { event } />
       )));
 
     
@@ -45,60 +45,60 @@ class BaseDashboard extends Component {
     const upcomingEventsRender = 
       upcomingEvents.length === 0 ? 
       (<Header
-	 as="h3"
-	 style={styles.emptyMessage}
+   as="h3"
+   style={styles.emptyMessage}
        >
-	You are not registered for any upcoming events
+  You are not registered for any upcoming events
       </Header>) : 
       (upcomingEvents.map(event => (
-	<Event key={ `${event._id}upcomingEvent` } data = { event } /> 
+  <Event key={ `${event._id}upcomingEvent` } data = { event } /> 
       )));
 
     const pastEventsRender = 
       pastEvents.length === 0 ? 
       (<Header
-	 as="h3"
-	 style={styles.emptyMessage}
+   as="h3"
+   style={styles.emptyMessage}
        >
-	No past events found
+  No past events found
       </Header>) : 
       (pastEvents.map(event => (
-	<Event key={ `${event._id}pastEvent` } data = { event } /> 
+  <Event key={ `${event._id}pastEvent` } data = { event } /> 
       )));
 
     return (
       <div>
-	{ !isProfileComplete(this.props.user) ?
-	  (<Message style={ styles.wrap } error
-		    header='Please fill in your profile.'
-		    content='We noticed that your profile is missing important information. Please enter all information into your profile'
-	  />) : null
-	}
-	<Segment style={ styles.eventsContainer }>
-	  <Header as="h1" style={styles.header} > Upcoming Events </Header>
-	  <Divider />
-	  <div style={ styles.overflowDiv }>
-	    { upcomingEventsRender }
-	  </div>
-	</Segment>
-	
-	<Segment style={ styles.eventsContainer }>
-	  <Header as="h1" style={styles.header} > Past Events </Header>
-	  <Divider />
-	  <div style={ styles.overflowDiv }>
-	    { pastEventsRender }
-	  </div>
-	</Segment>
+  { !isProfileComplete(this.props.user) ?
+    (<Message style={ styles.wrap } error
+        header='Please fill in your profile.'
+        content='We noticed that your profile is missing important information. Please enter all information into your profile'
+    />) : null
+  }
+  <Segment style={ styles.eventsContainer }>
+    <Header as="h1" style={styles.header} > Upcoming Events </Header>
+    <Divider />
+    <div style={ styles.overflowDiv }>
+      { upcomingEventsRender }
+    </div>
+  </Segment>
+  
+  <Segment style={ styles.eventsContainer }>
+    <Header as="h1" style={styles.header} > Past Events </Header>
+    <Divider />
+    <div style={ styles.overflowDiv }>
+      { pastEventsRender }
+    </div>
+  </Segment>
 
-	<RoleCheck role="Volunteer">
-	  <Segment style={ styles.eventsContainer }>
-	    <Header as="h1" style={styles.header} > Pending Events </Header>
-	    <Divider />
-	    <div style={ styles.overflowDiv }>
-	      { pendingEventsRender }
-	    </div>
-	  </Segment>
-	</RoleCheck>
+  <RoleCheck role="Volunteer">
+    <Segment style={ styles.eventsContainer }>
+      <Header as="h1" style={styles.header} > Pending Events </Header>
+      <Divider />
+      <div style={ styles.overflowDiv }>
+        { pendingEventsRender }
+      </div>
+    </Segment>
+  </RoleCheck>
       </div>
     );
   }

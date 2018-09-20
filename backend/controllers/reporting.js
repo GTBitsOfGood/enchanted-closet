@@ -24,20 +24,20 @@ module.exports.eventReport = (req, res, next) => {
           status: 404,
           msg: 'Could not find event id'
         };
-	csvStream.end();
+  csvStream.end();
         return next();
       }
       res.setHeader('Content-disposition', "attachment; filename=" + eventInfo.name + ".csv");
       eventInfo.volunteers.forEach(v => {
-	const userInfo = v;
-	if (eventInfo.volunteersAttended.find(id => v._id.toString() === id.toString()))
+  const userInfo = v;
+  if (eventInfo.volunteersAttended.find(id => v._id.toString() === id.toString()))
           csvStream.write({Event: eventInfo.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
         else
           csvStream.write({Event: eventInfo.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
       });
       eventInfo.participants.forEach((u, ind2, users) => {
-	const userInfo = u;
-	if (eventInfo.participantsAttended.find(id => u._id.toString() === id.toString()))
+  const userInfo = u;
+  if (eventInfo.participantsAttended.find(id => u._id.toString() === id.toString()))
           csvStream.write({Event: eventInfo.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
         else
           csvStream.write({Event: eventInfo.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
@@ -70,7 +70,7 @@ module.exports.yearReport = (req, res, next) => {
           status: 404,
           msg: 'No users could be found'
         };
-	csvStream.end();
+  csvStream.end();
         return next();
       }
     });
@@ -97,15 +97,15 @@ module.exports.yearReport = (req, res, next) => {
       let count = 0;
       events.forEach(e => {
         e.volunteers.forEach(v => {
-	  const userInfo = v; //
-	  if (e.volunteersAttended.find(id => v._id.toString() === id.toString()))
+    const userInfo = v; //
+    if (e.volunteersAttended.find(id => v._id.toString() === id.toString()))
             csvStream.write({Event: e.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
           else
             csvStream.write({Event: e.name, Role: 'Volunteer', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});
         });
         e.participants.forEach(u => {
-	  const userInfo = u;
-	  if (e.participantsAttended.find(id => u._id.toString() === id.toString()))
+    const userInfo = u;
+    if (e.participantsAttended.find(id => u._id.toString() === id.toString()))
             csvStream.write({Event: e.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'Yes'});
           else
             csvStream.write({Event: e.name, Role: 'Participant', Name: (userInfo.firstName + ' ' + userInfo.lastName), Email: userInfo.email, Attended: 'No'});

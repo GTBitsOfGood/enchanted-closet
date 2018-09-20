@@ -47,9 +47,9 @@ function processUserUpsert(json, isUpdate) { // updates users array as well (onl
     if (json.status === 'ok') {
       dispatch(updateUserWithEvents(json.user)); // whatever, not gonna strip users array
       dispatch({
-	type: types.USERS_UPSERT,
-	user: json.user,
-	isUpdate: isUpdate
+  type: types.USERS_UPSERT,
+  user: json.user,
+  isUpdate: isUpdate
       });
     } else {
       errorWrap(dispatch, json.msg);

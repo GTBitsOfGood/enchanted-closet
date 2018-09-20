@@ -10,15 +10,15 @@ const ECContactCard = ( props ) => {
     <Segment>
       <h3>Contact Information</h3>
       <List >
-	{contactFields.map(d => {
-	   return (
-	     <List.Item key={d}>
-	       <List.Content>
-		 <b>{`${d.charAt(0).toUpperCase()}${d.substr(1)}`}: </b>{nullCheck(user[d.toLowerCase()])}
-	       </List.Content>
-	     </List.Item>
-	   )
-	})}
+  {contactFields.map(d => {
+     return (
+       <List.Item key={d}>
+         <List.Content>
+     <b>{`${d.charAt(0).toUpperCase()}${d.substr(1)}`}: </b>{nullCheck(user[d.toLowerCase()])}
+         </List.Content>
+       </List.Item>
+     )
+  })}
       </List>
     </Segment>
   )

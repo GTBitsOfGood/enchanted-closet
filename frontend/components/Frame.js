@@ -8,7 +8,7 @@ const Frame = ( props ) => {
     <Grid.Row>
       <Grid.Column width={1}/>
       <Grid.Column width={10}>
-	{props.data}
+  {props.data}
       </Grid.Column>
       <Grid.Column width={1}/>
     </Grid.Row>

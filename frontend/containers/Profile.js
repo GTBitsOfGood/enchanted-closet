@@ -24,29 +24,29 @@ class Profile extends Component {
     
     const profileBody = (() => {
       switch (user.role) {
-	case "Admin":
-	  return null; // Admin has no profile
-	  break;
-	case "Volunteer":
-	  return <ProfileVolunteer user={user} />;
-	  break;
-	case "Participant":
-	  return <ProfileParticipant user={user} />;
-	  break;
+  case "Admin":
+    return null; // Admin has no profile
+    break;
+  case "Volunteer":
+    return <ProfileVolunteer user={user} />;
+    break;
+  case "Participant":
+    return <ProfileParticipant user={user} />;
+    break;
       }
     })();
     
     return (
       <Container>
         <PageTitle title="Profile" />
-	<Segment style={styles.wrap}>
-	  <Container>
-	    <Card.Group centered stackable>
-	      <ProfileBase user={user}/>	   
-	      {profileBody}
-	    </Card.Group>
-	  </Container>
-	</Segment>
+  <Segment style={styles.wrap}>
+    <Container>
+      <Card.Group centered stackable>
+        <ProfileBase user={user}/>     
+        {profileBody}
+      </Card.Group>
+    </Container>
+  </Segment>
       </Container>
     );
   }

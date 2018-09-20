@@ -7,14 +7,14 @@ const ErrorComponent = ( props ) => {
   return (
     <Container style={{position: 'relative', top: 100}}>
       <Card fluid color='red'>
-	<Card.Content>	    
-	  <Card.Header>{errMsg ? errMsg : '500 - Error'}</Card.Header>
+  <Card.Content>      
+    <Card.Header>{errMsg ? errMsg : '500 - Error'}</Card.Header>
           { errorMessage &&
             <Card.Content> {errorMessage} </Card.Content> }
-	  <Link to={redir}>
-	    {redirMsg}
-	  </Link>
-	</Card.Content>
+    <Link to={redir}>
+      {redirMsg}
+    </Link>
+  </Card.Content>
       </Card>
     </Container>
   );

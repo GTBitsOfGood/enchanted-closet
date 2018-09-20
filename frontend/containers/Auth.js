@@ -9,7 +9,7 @@ const Auth = ( props ) => {
   if (loggedIn) 
     return (
       <Switch>
-	{props.children}
+  {props.children}
       </Switch>
     )
   else return <Redirect to="/login" />

@@ -23,7 +23,7 @@ class ProfileForm extends Component {
     });
     
     this.state = {
-      status: initStatus,	
+      status: initStatus,  
       userData: initData,
       cachedData: initData
     }
@@ -41,7 +41,7 @@ class ProfileForm extends Component {
     if (!val) return false; // no falsey!
     if (this.targets[field]) {
       if ("isFinal" in this.targets[field])
-	return this.targets[field]["isFinal"](val);
+  return this.targets[field]["isFinal"](val);
       return this.targets[field]["isLegal"](val) && val.length !== 0; // Fallback
     }
     return true; // Field not found in targets, no restrictions
@@ -51,14 +51,14 @@ class ProfileForm extends Component {
   changeFunctionFactory = (field, warningMessage, filter) => {
     return e => {
       if (this.regLegalTest(field, e.target.value)) {
-	this.props.setValid();
-	this.setState({
-	  userData: { ...this.state.userData,
-		      [field]: (filter ? filter(e.target.value) : e.target.value)}
-	});
-	this.updateStatus(field, 0);
+  this.props.setValid();
+  this.setState({
+    userData: { ...this.state.userData,
+          [field]: (filter ? filter(e.target.value) : e.target.value)}
+  });
+  this.updateStatus(field, 0);
       } else {
-	this.props.setError(warningMessage);
+  this.props.setError(warningMessage);
       }
     }
   }
@@ -103,14 +103,14 @@ class ProfileForm extends Component {
       const changedKeys = Object.keys(this.state.userData).filter(key => this.state.cachedData[key] !== this.state.userData[key]);
       let diffDict= {};
       changedKeys.forEach(key => {
-	diffDict[key] = this.state.userData[key];
+  diffDict[key] = this.state.userData[key];
       });
       if (Object.keys(diffDict).length === 0)
-	this.props.setError("No fields have changed!");
+  this.props.setError("No fields have changed!");
       else {
-	this.props.upsertUser({ ...diffDict, _id: this.props.user._id });
-	// optimistic update
-	this.setState({cachedData: this.state.userData});
+  this.props.upsertUser({ ...diffDict, _id: this.props.user._id });
+  // optimistic update
+  this.setState({cachedData: this.state.userData});
       }
     } else {
       this.props.setError("The form is completed incorrectly.");
@@ -123,31 +123,31 @@ class ProfileForm extends Component {
 
     return (
       <div>
-	<Form>
-	  {
-	    Object.keys(this.targets).map( key => {
-	      const tar = this.targets[key];
-	      return (
-		<Form.Input
-		  key={`profile${key}`}
-		  inline transparent
-		  label={tar.label ? tar.label : startCase(key)}		
-		  error={this.errorFactory(key)}
-		  name={key}
-	          type={tar.type ? tar.type : "text"}
-	          value={userData[key]}
-	          onChange={this.changeFunctionFactory(key, tar.constraintMsg ? tar.constraintMsg : "Invalid character")}
-	          onBlur={this.blurFunctionFactory(key)}
-		/>
-	      )})
-	  }
-	  <Form.Button
-	    color="violet"
-	    onClick={this.onSubmit}
-	    content='Save Profile'
-	    type='submit'
-	  />
-	</Form>
+  <Form>
+    {
+      Object.keys(this.targets).map( key => {
+        const tar = this.targets[key];
+        return (
+    <Form.Input
+      key={`profile${key}`}
+      inline transparent
+      label={tar.label ? tar.label : startCase(key)}    
+      error={this.errorFactory(key)}
+      name={key}
+            type={tar.type ? tar.type : "text"}
+            value={userData[key]}
+            onChange={this.changeFunctionFactory(key, tar.constraintMsg ? tar.constraintMsg : "Invalid character")}
+            onBlur={this.blurFunctionFactory(key)}
+    />
+        )})
+    }
+    <Form.Button
+      color="violet"
+      onClick={this.onSubmit}
+      content='Save Profile'
+      type='submit'
+    />
+  </Form>
       </div>
     );
   }

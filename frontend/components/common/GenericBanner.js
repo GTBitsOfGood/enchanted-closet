@@ -12,11 +12,11 @@ const GenericBanner = ({
   <div>
     <Segment> 
       <Container style={styles.wrap} text>
-	<Header as="h2">{ header }</Header>
-	<p>{ message }</p>
-	{ link &&  <Link to={ link }>
-	  { linkMsg }
-	</Link> }
+  <Header as="h2">{ header }</Header>
+  <p>{ message }</p>
+  { link &&  <Link to={ link }>
+    { linkMsg }
+  </Link> }
       </Container>
     </Segment>
     <Divider />

@@ -13,10 +13,10 @@ const ProfileBase = props => {
     <Card>
       <ProfileImage />
       <Card.Content>
-	<Card.Header>{name}</Card.Header>
-	<Card.Meta>{role}</Card.Meta>
-	<Card.Description>Email: {email}</Card.Description>
-	<Card.Description>Birthday: {moment(birthday).format("MM/DD/YYYY")}</Card.Description>
+  <Card.Header>{name}</Card.Header>
+  <Card.Meta>{role}</Card.Meta>
+  <Card.Description>Email: {email}</Card.Description>
+  <Card.Description>Birthday: {moment(birthday).format("MM/DD/YYYY")}</Card.Description>
       </Card.Content>
     </Card>
   );

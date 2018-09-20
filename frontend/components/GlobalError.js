@@ -15,14 +15,14 @@ const GlobalError = ({ clearErrors, errorMessage }) => {
       onDismiss={clearErrors}
     >
       <Message.Content>
-	<Message.Header>Oops!</Message.Header>
-	{errorMessage}
+  <Message.Header>Oops!</Message.Header>
+  {errorMessage}
       </Message.Content>
     </Message>
   ) : <div />;
   return (
     <div style={styles.globalError}>
-	{messageBlock}
+  {messageBlock}
     </div>
   );
 }

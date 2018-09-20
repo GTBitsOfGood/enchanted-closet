@@ -59,12 +59,12 @@ UserSchema.methods.validatePassword = function(password) {
     bcrypt.compare(password, user.password, (err, authenticated) => {
       if (err) return reject(err);
       if (authenticated) {
-	// This is a hack to make sure we don't create a reference, but instead literally copy the object
-	let temporaryUser = JSON.parse(JSON.stringify(user));
-	delete temporaryUser.password;
-	return resolve(temporaryUser);
+  // This is a hack to make sure we don't create a reference, but instead literally copy the object
+  let temporaryUser = JSON.parse(JSON.stringify(user));
+  delete temporaryUser.password;
+  return resolve(temporaryUser);
       } else {
-	return reject('Incorrect email/password combination');
+  return reject('Incorrect email/password combination');
       }
     });
   });

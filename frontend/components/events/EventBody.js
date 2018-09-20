@@ -11,20 +11,20 @@ const EventBody = ( props ) => {
   const culled = filter ? events.map(filter) : events
   
   const noEvent = !isFetchingEvents && events.length === 0 ?
-		  (<GenericBanner
-		     header="No events found."	      
-		     message="There are no events matching the search criteria"
-		     linkMsg="Home"
-		     link="/"
-		  />) : null;
+      (<GenericBanner
+         header="No events found."        
+         message="There are no events matching the search criteria"
+         linkMsg="Home"
+         link="/"
+      />) : null;
   
   return (
     <Container>
       <Loader active={isFetchingEvents}>
-	Loading
+  Loading
       </Loader>
       { events.length > 0 && 
-	events.map(e => (<Event key={e._id} data={e} history={history}/>))}
+  events.map(e => (<Event key={e._id} data={e} history={history}/>))}
       { noEvent }
     </Container>
   )

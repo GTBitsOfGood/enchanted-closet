@@ -120,7 +120,7 @@ module.exports.present = (req, res, next) => {
       }
 
       eDoc.save(err => {
-	    if (err) {
+      if (err) {
           console.log(err);
           res.locals.error = {
             code: 500,
@@ -197,7 +197,7 @@ module.exports.absent = (req, res, next) => {
       }
 
       eDoc.save(err => {
-	    if (err) {
+      if (err) {
           console.log(err);
           res.locals.error = {
             code: 500,
@@ -274,7 +274,7 @@ module.exports.upload = (req, res, next) => {
         }
         res.locals.data = {
           event: updated,
-	  msg: "Event picture updated!"
+    msg: "Event picture updated!"
         };
         return next();
       });

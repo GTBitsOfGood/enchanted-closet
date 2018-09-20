@@ -7,7 +7,7 @@ export function configureStore(initialState) {
         rootReducer,
         initialState,
         applyMiddleware(
-        	thunkMiddleware
+          thunkMiddleware
         ),
     );
 }

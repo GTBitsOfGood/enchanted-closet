@@ -33,46 +33,46 @@ class UploadModal extends Component {
     const { file } = this.state;
     // process filename real fast
     const label = file ?
-		  (file.name.length > 14 ?
-		   file.name.substr(0, 4) + "..." + file.name.substr(-7) : file.name) : "Select a File";
+      (file.name.length > 14 ?
+       file.name.substr(0, 4) + "..." + file.name.substr(-7) : file.name) : "Select a File";
     /* // Bugged
     const trigger = (
       <Reveal animated="fade">
-	<Reveal.Content visible>
-	  {children}
-	</Reveal.Content>
-	<Reveal.Content hidden>
-	  <Container>
-	    Tests
-	  </Container>
-	</Reveal.Content>
+  <Reveal.Content visible>
+    {children}
+  </Reveal.Content>
+  <Reveal.Content hidden>
+    <Container>
+      Tests
+    </Container>
+  </Reveal.Content>
       </Reveal>
     );
     */
     return (
       <Modal trigger={children}>
-	<Modal.Header>
-	  {type.toLowerCase() === "user" ?
-	   "Profile Picture Upload" : "Event Image Upload"}
-	</Modal.Header>
-	<Modal.Description>
-	  <Container style={styles.modalContentWrap}>
+  <Modal.Header>
+    {type.toLowerCase() === "user" ?
+     "Profile Picture Upload" : "Event Image Upload"}
+  </Modal.Header>
+  <Modal.Description>
+    <Container style={styles.modalContentWrap}>
             <Form onSubmit={e => this.onFormSubmit(e)}>
-	      <input style={styles.fileStyle}
-		     name="file" id="file"
-		     type="file" onChange={this.onChange}
-		     accept="image/*"
-	      />
-	      <label htmlFor="file" style={styles.labelStyle}>
-		{ label }
-	      </label>
+        <input style={styles.fileStyle}
+         name="file" id="file"
+         type="file" onChange={this.onChange}
+         accept="image/*"
+        />
+        <label htmlFor="file" style={styles.labelStyle}>
+    { label }
+        </label>
               <Form.Button
-		color="purple" type="submit"
-	      > Upload
-	      </Form.Button>
+    color="purple" type="submit"
+        > Upload
+        </Form.Button>
             </Form>
-	  </Container>
-	</Modal.Description>
+    </Container>
+  </Modal.Description>
       </Modal>
     )
   }

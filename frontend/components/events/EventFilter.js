@@ -28,7 +28,7 @@ class EventFilter extends Component {
       size = 'big'
       disabled = {!this.state.filters['Name'] && !this.state.filters['Location']}
       onChange={
-	(e, data) => this.changeQuery(e)
+  (e, data) => this.changeQuery(e)
       }
       /> 
 
@@ -43,7 +43,7 @@ class EventFilter extends Component {
       size = 'small'
       toggle
       onClick={
-	(e, data) => this.changeFilter(data)
+  (e, data) => this.changeFilter(data)
       }/>
       <Button
       active = {this.state.filters['Location']}
@@ -52,12 +52,12 @@ class EventFilter extends Component {
       size = 'small'
       toggle
       onClick={
-	(e, data) => this.changeFilter(data)
+  (e, data) => this.changeFilter(data)
       }/>
       </Segment>
       
       { processedEvents.length > 0 && 
-	<EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
+  <EventTab query = {this.state.query} filterBy = {this.state.filters} events = {processedEvents} isLoading = {isFetchingEvents} />
       }
     );
   }

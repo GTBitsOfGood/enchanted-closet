@@ -27,49 +27,49 @@ class Homepage extends Component {
     const processedEvents =
       events && events.length > 0 ?
       events.sort((e1, e2) => (new Date(e2.datetime) - new Date(e1.datetime))).slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
-	event.showAdminControls = false;
-	return <Event
-		 data={event}
-		 history={history}
-		 key={`home_event_${event._id}`}
-	/>;
+  event.showAdminControls = false;
+  return <Event
+     data={event}
+     history={history}
+     key={`home_event_${event._id}`}
+  />;
       }) :
       <p>No upcoming events</p>;
-			    
+          
     const eventsBlock = loading ?
-			<LoadingIcon active={loading}/> :
-			processedEvents
+      <LoadingIcon active={loading}/> :
+      processedEvents
     
     return (
       <Segment textAlign='center' style={{ minHeight: 700, padding: '1em 0em' }} vertical>
-	<Container>
-	  <Segment>
-	    <Image src={images.logo} size='large' centered />
-	    <Header
-	      size='large'
-	      content='Event Platform'
-	      style={styles.headline}
-	    />
-	  </Segment>
-	  <Segment style={styles.body}>
-	    <Header
-	      floated="left"
-	      as="h3"
-	      content='Upcoming Events'
-	    />
-	    <Button
-	      floated="right"
-	      color="violet"
-	      compact
-	      as={Link}
-	      to={'/events'}
-	    >
-	      See All Events
-	    </Button>
-	    <Divider style={styles.mainDivider} />
-	    { eventsBlock }
-	  </Segment>
-	  <Divider />
+  <Container>
+    <Segment>
+      <Image src={images.logo} size='large' centered />
+      <Header
+        size='large'
+        content='Event Platform'
+        style={styles.headline}
+      />
+    </Segment>
+    <Segment style={styles.body}>
+      <Header
+        floated="left"
+        as="h3"
+        content='Upcoming Events'
+      />
+      <Button
+        floated="right"
+        color="violet"
+        compact
+        as={Link}
+        to={'/events'}
+      >
+        See All Events
+      </Button>
+      <Divider style={styles.mainDivider} />
+      { eventsBlock }
+    </Segment>
+    <Divider />
 
         </Container>
       </Segment>

@@ -8,10 +8,10 @@ const ButtonGallery = ({role, children}) => (
   <Segment color="purple">
     <Container style={styles.wrap}>
       <Header as="h3">
-	{ role === "loggedOut" ? "Action Panel" : `${role} Action Panel` }
+  { role === "loggedOut" ? "Action Panel" : `${role} Action Panel` }
       </Header>
       <div style={styles.buttonWrap}>
-	{children}
+  {children}
       </div>
     </Container>
   </Segment>

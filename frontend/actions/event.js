@@ -13,9 +13,9 @@ export function deleteEvent(id) {
     }, getState().apiToken)
       .then(response => response.json())
       .then(json => {
-	return safeWrap(json, () => {
-	  dispatch(deleteLocalData('events', id));
-	}, dispatch);
+  return safeWrap(json, () => {
+    dispatch(deleteLocalData('events', id));
+  }, dispatch);
       })
       .then(() => dispatch(hideModalLoader()));
   }
@@ -36,13 +36,13 @@ export function upsertEvent(data) {
     })
       .then(response => response.json())
       .then(json => {
-	return safeWrap(json, () => {
-	  dispatch({
-	    type: types.EVENT_UPSERT,
-	    event: json.event,
-	    isUpdate: isUpdate
-	  });
-	}, dispatch);
+  return safeWrap(json, () => {
+    dispatch({
+      type: types.EVENT_UPSERT,
+      event: json.event,
+      isUpdate: isUpdate
+    });
+  }, dispatch);
       })
       .then(() => dispatch(hideModalLoader()));
   }
@@ -108,9 +108,9 @@ export function fetchFutureEvents() {
     return fetchHelper(`/api/events`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => {
-	return safeWrap(json, () => {
-	  dispatch(receiveEvents(json.events));
-	}, dispatch);
+  return safeWrap(json, () => {
+    dispatch(receiveEvents(json.events));
+  }, dispatch);
       })
       .then(() => dispatch(stopLoading()));
   }
@@ -123,7 +123,7 @@ export function fetchPastEvents() {
     return fetchHelper(`/api/eventsPast`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
-	dispatch(receiveEvents(json.events));
+  dispatch(receiveEvents(json.events));
       }, dispatch))
       .then(() => dispatch(stopLoading()));
   }
@@ -136,7 +136,7 @@ export function upfetchEventById(id){
     return fetchHelper(`/api/events/${id}`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => safeWrap(json, () => {
-	dispatch(receiveMoreEvents([json.event]));
+  dispatch(receiveMoreEvents([json.event]));
       }, dispatch))
       .then(() => dispatch(hideModalLoader()));
   }

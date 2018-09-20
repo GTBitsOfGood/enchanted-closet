@@ -15,14 +15,14 @@ const GlobalMessage = ({ clearAllMessages, message }) => {
       onDismiss={clearAllMessages}
     >
       <Message.Content>
-	<Message.Header>Success</Message.Header>
-	{message}
+  <Message.Header>Success</Message.Header>
+  {message}
       </Message.Content>
     </Message>
   ) : <div />;
   return (
     <div style={styles.globalMessage}>
-	{messageBlock}
+  {messageBlock}
     </div>
   );
 }

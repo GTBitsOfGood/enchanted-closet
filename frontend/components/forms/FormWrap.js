@@ -42,32 +42,32 @@ const formWrapper = WrappedForm => class extends Component {
     const setMessage = this.setStatusMessage
     const [ msgColor, headerText ] = (() => {
       switch(this.state.status) {
-	case 'error':
-	  return ['red', 'Error']
-	  break;
-	case 'complete':
-	  return ['green', 'Ready']
-	  break;
-	case 'hidden':
-	  return []
-	  break;
-	case 'valid':
-	default:
-	  return ['blue', 'In Progress']
-	  break;
+  case 'error':
+    return ['red', 'Error']
+    break;
+  case 'complete':
+    return ['green', 'Ready']
+    break;
+  case 'hidden':
+    return []
+    break;
+  case 'valid':
+  default:
+    return ['blue', 'In Progress']
+    break;
       }
     })()
     const messageBlock = this.state.status === 'hidden' ? null : (
       <Message
-	style={styles.messageBlock}
-	color={msgColor}
+  style={styles.messageBlock}
+  color={msgColor}
       >
-	<Message.Header>
-	  {headerText}
-	</Message.Header>
-	<p>
-	  {statusMessage}
-	</p>
+  <Message.Header>
+    {headerText}
+  </Message.Header>
+  <p>
+    {statusMessage}
+  </p>
       </Message>
     )
     const controlProps = {
@@ -75,10 +75,10 @@ const formWrapper = WrappedForm => class extends Component {
     }
     return (
       <div>
-	<Transition.Group animation="slide down" duration={400}>
+  <Transition.Group animation="slide down" duration={400}>
           {this.state.status !== 'hidden' && messageBlock}
         </Transition.Group>
-	{ <WrappedForm {...{...controlProps, ...this.props}} /> }
+  { <WrappedForm {...{...controlProps, ...this.props}} /> }
       </div>
     )
   }

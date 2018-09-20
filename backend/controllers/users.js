@@ -192,7 +192,7 @@ module.exports.update = (req, res, next) => {
           res.locals.data = {
             user: updated
           };
-	      }
+        }
         return next();
       });
     }
@@ -230,7 +230,7 @@ module.exports.upload = (req, res, next) => {
         }
         res.locals.data = {
           user: updated,
-	        msg: "Profile picture updated!"
+          msg: "Profile picture updated!"
         };
         return next();
       });
@@ -375,25 +375,25 @@ module.exports.registerevent = (req, res, next) => {
       if (!uDoc.events) uDoc.events = [];
       if (uDoc.role == "Volunteer") {
         if (!uDoc.pendingEvents) uDoc.pendingEvents = [];
-	if (uDoc.pendingEvents.map(String).includes(eventID) || uDoc.events.map(String).includes(eventID)) {
-	  res.locals.error = {
-	    status: 400,
-	    msg: "This volunteer already has this event register data."
-	  }
-	  return next(new Error(res.locals.error));
-	} else {
+  if (uDoc.pendingEvents.map(String).includes(eventID) || uDoc.events.map(String).includes(eventID)) {
+    res.locals.error = {
+      status: 400,
+      msg: "This volunteer already has this event register data."
+    }
+    return next(new Error(res.locals.error));
+  } else {
           uDoc.pendingEvents.push(eventID);
-	}
+  }
       } else {
-	if (uDoc.events.map(String).includes(eventID)) {
-	  res.locals.error = {
-	    status: 400,
-	    msg: "This volunteer already has this event register data."
-	  }
-	  return next(new Error(res.locals.error));
-	} else {
+  if (uDoc.events.map(String).includes(eventID)) {
+    res.locals.error = {
+      status: 400,
+      msg: "This volunteer already has this event register data."
+    }
+    return next(new Error(res.locals.error));
+  } else {
           uDoc.events.push(eventID);
-	}
+  }
       }
 
       uDoc.save(err => {
@@ -415,11 +415,11 @@ module.exports.registerevent = (req, res, next) => {
           }
 
           res.locals.data = {
-	    userId: userID,
-	    eventId: eventID,
+      userId: userID,
+      eventId: eventID,
             newEvents: uDoc.events,
-	    newPending: uDoc.pendingEvents,
-	    newParticipants: eDoc.participants,
+      newPending: uDoc.pendingEvents,
+      newParticipants: eDoc.participants,
             newVolunteers: eDoc.volunteers
           }
           return next();
@@ -519,13 +519,13 @@ module.exports.denyRegistration = (req, res, next) => {
             };
           }
 
-	  res.locals.data = {
-	    userId: userID,
-	    eventId: eventID,
+    res.locals.data = {
+      userId: userID,
+      eventId: eventID,
             newEvents: uDoc.events,
-	    newPending: uDoc.pendingEvents,
-	    newParticipants: eDoc.participants,
-	    newDeniedVolunteers: eDoc.deniedVolunteers,
+      newPending: uDoc.pendingEvents,
+      newParticipants: eDoc.participants,
+      newDeniedVolunteers: eDoc.deniedVolunteers,
             newVolunteers: eDoc.volunteers
           }
           return next();
@@ -618,13 +618,13 @@ module.exports.confirmRegistration = (req, res, next) => {
             };
           }
 
-	  res.locals.data = {
-	    userId: userID,
-	    eventId: eventID,
+    res.locals.data = {
+      userId: userID,
+      eventId: eventID,
             newEvents: uDoc.events,
-	    newPending: uDoc.pendingEvents,
-	    newParticipants: eDoc.participants,
-	    newPendingVolunteers: eDoc.pendingVolunteers,
+      newPending: uDoc.pendingEvents,
+      newParticipants: eDoc.participants,
+      newPendingVolunteers: eDoc.pendingVolunteers,
             newVolunteers: eDoc.volunteers
           }
           return next();
@@ -679,10 +679,10 @@ module.exports.cancelevent = (req, res, next) => {
         temp.splice(temp.indexOf(userID), 1);
         eDoc.volunteers = temp;
       } else if (eDoc.pendingVolunteers.map(String).includes(userID)) {
-	var temp = eDoc.pendingVolunteers.map(String);
-	temp.splice(temp.indexOf(userID), 1);
-	eDoc.pendingVolunteers = temp;
-      }	else {
+  var temp = eDoc.pendingVolunteers.map(String);
+  temp.splice(temp.indexOf(userID), 1);
+  eDoc.pendingVolunteers = temp;
+      }  else {
         res.locals.error = {
           status: 400,
           msg: 'That user has not registered for that event.'
@@ -726,12 +726,12 @@ module.exports.cancelevent = (req, res, next) => {
             };
           }
 
-	  res.locals.data = {
-	    userId: userID,
-	    eventId: eventID,
+    res.locals.data = {
+      userId: userID,
+      eventId: eventID,
             newEvents: uDoc.events,
-	    newPending: uDoc.pendingEvents,
-	    newParticipants: eDoc.participants,
+      newPending: uDoc.pendingEvents,
+      newParticipants: eDoc.participants,
             newVolunteers: eDoc.volunteers
           }
           return next();

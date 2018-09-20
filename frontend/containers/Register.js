@@ -8,19 +8,19 @@ const Register = () => (
     <Card fluid color="purple">
       <Card.Content header="Register" />
       <Card.Content>
-	<RegisterForm />
+  <RegisterForm />
       </Card.Content>
     </Card>
     <Divider horizontal> Already Registered? </Divider>
-    <Container textAlign="center">		
+    <Container textAlign="center">    
       <Button
-	color="violet"
-	as={Link}
-	to='/login'
-	icon labelPosition="left"
+  color="violet"
+  as={Link}
+  to='/login'
+  icon labelPosition="left"
       >
-	Login
-	<Icon name="left arrow" />
+  Login
+  <Icon name="left arrow" />
       </Button>
     </Container>
 

@@ -8,20 +8,20 @@ const EventImage = ({ imageUrl = "defaultEventPicture.png", role, id }) => {
   if (role !== 'Admin') 
     return (
       <Image
-	centered     
-	src={`/uploaded/events/${imageUrl}`}
-	size='medium'
+  centered     
+  src={`/uploaded/events/${imageUrl}`}
+  size='medium'
       />
     );
   else
     return (
       <UploadModal type="event" id={id}>
-	<Image
-	  style={styles.imageStyle}
-	  centered	
-	  src={`/uploaded/events/${imageUrl}`}
-	  size='medium'
-	/>
+  <Image
+    style={styles.imageStyle}
+    centered  
+    src={`/uploaded/events/${imageUrl}`}
+    size='medium'
+  />
       </UploadModal>
     );
 }

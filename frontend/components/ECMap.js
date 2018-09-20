@@ -8,10 +8,10 @@ const ECMap = props => {
   if (displayMapLocationError) {
     return (
       <Segment>
-	<div style={{textAlign: 'center'}}>
-	  <Icon name='exclamation triangle'/>
-	  <h3>An error occurred loading that location</h3>
-	</div>
+  <div style={{textAlign: 'center'}}>
+    <Icon name='exclamation triangle'/>
+    <h3>An error occurred loading that location</h3>
+  </div>
       </Segment>
     )
   } else {

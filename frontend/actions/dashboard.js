@@ -27,16 +27,16 @@ function formatCards(cards) {
   return dispatch => {
     if (cards) {
       const formatted = [
-	{
-	  content: Object.values(cards.users).reduce((a, b) => a + b),
-	  title: 'Users',
-	  url: '/users'
-	},
-	{
-	  content: cards.events,
-	  title: 'Events',
-	  url: '/events'
-	}	
+  {
+    content: Object.values(cards.users).reduce((a, b) => a + b),
+    title: 'Users',
+    url: '/users'
+  },
+  {
+    content: cards.events,
+    title: 'Events',
+    url: '/events'
+  }  
       ];
       dispatch(updateDashboardCards(formatted));
     } else {
