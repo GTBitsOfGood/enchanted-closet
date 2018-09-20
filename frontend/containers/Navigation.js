@@ -72,8 +72,8 @@ class Navigation extends Component {
         )}
       </Menu>
     )
-  };
-};
+  }
+}
 
 const styles = {
   base: {
@@ -102,6 +102,15 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     logoutUser: logoutUser
   }, dispatch)
+}
+
+Navigation.propTypes = {
+  applicationName: PropTypes.string,
+  history: PropTypes.object,
+  location: PropTypes.object,
+  logoutUser: PropTypes.func,
+  match: PropTypes.object,
+  user: PropTypes.object
 }
 
 export default withRouter(connect(
