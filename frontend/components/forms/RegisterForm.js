@@ -34,14 +34,11 @@ class RegisterForm extends Component {
       case 'firstName':
       case 'lastName':
         return /^[a-zA-Z]*$/.test(val)
-        break
       case 'password':
       case 'confirmPass':
         return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val)
-        break
       case 'email':
         return /^[\w@.]*$/.test(val)
-        break
     }
   }
 
@@ -50,17 +47,13 @@ class RegisterForm extends Component {
       case 'firstName':
       case 'lastName':
         return /^[a-zA-Z]+$/.test(val)
-        break
       case 'password':
       case 'confirmPass':
         return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/.test(val)
-        break
       case 'email':
         return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
-        break
       default:
         return this.regLegalTest(field, val)
-        break
     }
   }
 
@@ -177,7 +170,7 @@ class RegisterForm extends Component {
 
   render () {
     const { firstName, lastName, email,
-      password, confirmPass, role } = this.state
+            password, confirmPass, role } = this.state
     const { setError, setValid, setComplete, setMessage } = this.props
     return (
       <div>

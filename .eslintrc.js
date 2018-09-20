@@ -17,6 +17,7 @@ module.exports = {
     },
   },
   rules: {
+    'no-useless-escape': 'off',
     'import/no-unresolved': 'off',
     'react/no-unescaped-entities': 'off',
     'no-console': 'off',

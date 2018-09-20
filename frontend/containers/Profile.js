@@ -7,8 +7,7 @@ import { bindActionCreators } from 'redux'
 import { clearErrors, fetchUserById } from '../actions'
 
 import { Button, Card, Container, Form, Header, Message, Segment } from 'semantic-ui-react'
-import { PageTitle, LoadingIcon, ProfileImage } from '../components'
-import { ProfileAdmin, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
+import { LoadingIcon, ProfileImage, rofileAdmin, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
 
 class Profile extends Component {
   constructor (props) {
