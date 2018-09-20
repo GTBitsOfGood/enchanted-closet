@@ -1,7 +1,7 @@
-import { errorWrap, showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
-import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
+import { errorWrap, showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './'
+import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util'
 
-import * as types from './types';
+import * as types from './types'
 
 const DEFAULT_CARDS = [
   {
@@ -14,45 +14,45 @@ const DEFAULT_CARDS = [
     title: 'Events',
     url: '/events'
   }
-];
+]
 
-export function updateDashboardCards(cards) {
+export function updateDashboardCards (cards) {
   return {
     type: types.UPDATE_DASHBOARD_CARDS,
     cards: cards
   }
 }
 
-function formatCards(cards) {
+function formatCards (cards) {
   return dispatch => {
     if (cards) {
       const formatted = [
-  {
-    content: Object.values(cards.users).reduce((a, b) => a + b),
-    title: 'Users',
-    url: '/users'
-  },
-  {
-    content: cards.events,
-    title: 'Events',
-    url: '/events'
-  }  
-      ];
-      dispatch(updateDashboardCards(formatted));
+        {
+          content: Object.values(cards.users).reduce((a, b) => a + b),
+          title: 'Users',
+          url: '/users'
+        },
+        {
+          content: cards.events,
+          title: 'Events',
+          url: '/events'
+        }
+      ]
+      dispatch(updateDashboardCards(formatted))
     } else {
-      errorWrap(dispatch, "An error occurred pulling dashboard information", 3000);
+      errorWrap(dispatch, 'An error occurred pulling dashboard information', 3000)
     }
   }
 }
 
-export function loadDashboardCards() {
+export function loadDashboardCards () {
   return (dispatch, getState) => {
-    dispatch(loading());
-    dispatch(updateDashboardCards(DEFAULT_CARDS));
+    dispatch(loading())
+    dispatch(updateDashboardCards(DEFAULT_CARDS))
     return fetchHelper(`/api/dashboard`, getAPIToken(getState))
       .then(response => response.json())
       .then(json => json.cards)
       .then(cards => dispatch(formatCards(cards)))
-      .then(() => dispatch(stopLoading()));
+      .then(() => dispatch(stopLoading()))
   }
 }

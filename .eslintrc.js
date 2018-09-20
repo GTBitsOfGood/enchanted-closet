@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    'eslint:recommended',
+    'standard',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/recommended',
@@ -12,13 +12,14 @@ module.exports = {
   ],
   settings: {
     react: {
-      pragma: 'React'
+      pragma: 'React',
+      version: '15.5.4'
     },
   },
   rules: {
     'import/no-unresolved': 'off',
     'react/no-unescaped-entities': 'off',
-    'no-console': 'warn',
+    'no-console': 'off',
     'no-unused-vars': 'warn',
     'react/require-render-return': 'off'
   },

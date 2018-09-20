@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 var EventSchema = new mongoose.Schema({
   name: {
@@ -27,22 +27,22 @@ var EventSchema = new mongoose.Schema({
     required: false
   },
   participants: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   volunteers: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   pendingVolunteers: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   deniedVolunteers: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   participantsAttended: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   volunteersAttended: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   image: {
     type: String,
@@ -56,8 +56,8 @@ var EventSchema = new mongoose.Schema({
     type: [String]
   }
   */
-}, { usePushEach: true });
+}, { usePushEach: true })
 
-var Event = mongoose.model('Event', EventSchema);
+var Event = mongoose.model('Event', EventSchema)
 
-module.exports = Event;
+module.exports = Event

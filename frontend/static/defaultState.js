@@ -3,4 +3,4 @@ module.exports = {
   isFetchingEvents: false,
   didInvalidateEvents: false,
   events: []
-};
+}

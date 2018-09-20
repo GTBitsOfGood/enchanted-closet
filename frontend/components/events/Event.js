@@ -1,59 +1,58 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import { uniqueId } from 'lodash';
-import moment from 'moment';
+import { uniqueId } from 'lodash'
+import moment from 'moment'
 import { withRouter } from 'react-router-dom'
-import { deleteEvent } from '../../actions';
+import { deleteEvent } from '../../actions'
 
-import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react';
+import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react'
 import { Clearfix, EditButton } from '../'
 import { COLORS } from '../../constants'
 
-
 class Event extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
   }
 
-  render() {
-    const { data, deleteEvent, history, user } = this.props;
-    const link = `/events/${data._id}`;
+  render () {
+    const { data, deleteEvent, history, user } = this.props
+    const link = `/events/${data._id}`
 
     return (
-      <div key={uniqueId('event_')} style={{paddingTop: 10, paddingBottom: 10}}>
-        <div onClick={() => history.push(link)} style={{cursor:'pointer'}}>
+      <div key={uniqueId('event_')} style={{ paddingTop: 10, paddingBottom: 10 }}>
+        <div onClick={() => history.push(link)} style={{ cursor: 'pointer' }}>
           <Segment.Group key={uniqueId('event_')}>
             <Segment.Group horizontal>
               <Segment style={style.cardLeft}>
                 <Header as='h3' inverted>{data.name}</Header>
                 <Popup inverted
-                       trigger={(
-                           <Container style={style.whiteText}>
-                             <Icon name='calendar'/>
-                             {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
-                           </Container>
-                       )}
-                       content="Date"
+                  trigger={(
+                    <Container style={style.whiteText}>
+                      <Icon name='calendar'/>
+                      {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
+                    </Container>
+                  )}
+                  content="Date"
                 />
                 <Popup inverted
-                       trigger={(
-                           <Container style={style.whiteText}>
-                             <Icon name='road' inverted/>
-                             {data.location}
-                           </Container>
-                       )}
-                       content="Address"
+                  trigger={(
+                    <Container style={style.whiteText}>
+                      <Icon name='road' inverted/>
+                      {data.location}
+                    </Container>
+                  )}
+                  content="Address"
                 />
               </Segment>
               <Segment style={style.cardRight}>
-                <Container textAlign="right" style={{paddingRight: 10, paddingTop: 10}}>
+                <Container textAlign="right" style={{ paddingRight: 10, paddingTop: 10 }}>
                   <p>{pruneDescription(data.description)}</p>
                 </Container>
               </Segment>
             </Segment.Group>
-            {data.showAdminControls && 
+            {data.showAdminControls &&
              <Segment>
                <Clearfix>
                  <Button.Group floated='right'>
@@ -71,7 +70,7 @@ class Event extends Component {
                      content='Are you sure you want to delete this event?'
                      actions={[
                        'Cancel',
-                       { key: 'done', content: 'Delete', negative: true },
+                       { key: 'done', content: 'Delete', negative: true }
                      ]}
                      onActionClick={() => deleteEvent(data._id)}
                    />
@@ -87,10 +86,10 @@ class Event extends Component {
 }
 
 const pruneDescription = (description) => {
-  const cutoff = 20; // 20 words;
-  const split = description.split(' ');
-  if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`;
-  return description;
+  const cutoff = 20 // 20 words;
+  const split = description.split(' ')
+  if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`
+  return description
 }
 
 const style = {
@@ -110,16 +109,16 @@ const style = {
 const mapStateToProps = (state) => {
   return {
     user: state.user
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     deleteEvent: deleteEvent
-  }, dispatch);
+  }, dispatch)
 }
 
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Event));
+)(Event))
