@@ -3,20 +3,22 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { uploadUserImage, uploadEventImage } from '../../actions/index';
 
-import { Button, Container, Form, Header, Modal, Reveal } from 'semantic-ui-react'
+import { Button, Container, Form, Header, Modal, Reveal, Image } from 'semantic-ui-react'
 
 // Upload Modal - Wrapper - todo: validate filesize
 class UploadModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null
+      file: null,
+      modalOpen: false
     }
     this.onChange = this.onChange.bind(this)
   }
 
   onFormSubmit(e) {
     e.preventDefault();
+    this.handleClose();
     if (this.props.type.toLowerCase() === "user")
       this.props.uploadUserImage(this.state);
     else {
@@ -27,9 +29,16 @@ class UploadModal extends Component {
   onChange(e) {
     this.setState({file:e.target.files[0]});
   }
+  handleOpen(){
+    this.setState({modalOpen:true});
+  }
+  handleClose(){
+    this.setState({modalOpen:false});
+  }
 
   render() {
-    const { children, id, type } = this.props;
+    console.log(this.props.url);
+    const { url, id, type, style } = this.props;
     const { file } = this.state;
     // process filename real fast
     const label = file ?
@@ -50,7 +59,13 @@ class UploadModal extends Component {
     );
     */
     return (
-      <Modal trigger={children}>
+      <Modal trigger={<Image
+        style={style}
+        src={url}
+        size='medium'
+        centered
+        onClick={this.handleOpen.bind(this)}
+      />} open={this.state.modalOpen} onClose={this.handleClose.bind(this)} closeIcon>
 	<Modal.Header>
 	  {type.toLowerCase() === "user" ?
 	   "Profile Picture Upload" : "Event Image Upload"}
