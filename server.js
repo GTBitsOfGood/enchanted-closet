@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use strict";
 
 require('dotenv').config()

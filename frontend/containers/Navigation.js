@@ -36,7 +36,7 @@ class Navigation extends Component {
 
     const userBlock = (
       <Menu.Menu position='right'>
-        <Dropdown item icon='home' style={styles.button}>
+        <Dropdown item icon='bars' style={styles.button}>
           <Dropdown.Menu>
             {userLinks.map(pair => (
               <Dropdown.Item
