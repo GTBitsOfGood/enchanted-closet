@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var mongoDB = 'mongodb://127.0.0.1/enchannted_closet_database';
+var mongoDB = process.env.MONGO_CONNECTION;
 mongoose.connect(mongoDB, {
   useMongoClient: true
 });

@@ -47,7 +47,7 @@ module.exports = {
       historyApiFallback: true
     },
     plugins: [
-        new Dotenv({path: './.env.frontend'}),
+        new Dotenv(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
