@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.prod.config.js",
     "dev": "concurrently -k \"npm run frontend\" \"npm run backend\"",
-    "frontend": "webpack -d --watch",
+    "frontend": "webpack-dev-server --hot",
     "backend": "nodemon start.js",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
@@ -63,8 +63,7 @@
     "serve-favicon": "^2.4.5",
     "should": "^13.1.0",
     "style-loader": "^0.16.1",
-    "url-loader": "^0.6.2",
-    "webpack": "^2.3.3"
+    "url-loader": "^0.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
@@ -92,10 +91,12 @@
     "json-loader": "^0.5.7",
     "nodemon": "^1.11.0",
     "react-addons-test-utils": "^15.5.1",
+    "react-hot-loader": "^4.3.11",
     "react-test-renderer": "^15.5.4",
     "redux-devtools-extension": "^2.13.5",
-    "webpack-dev-middleware": "^1.10.1",
+    "webpack": "^2.7.0",
+    "webpack-dev-middleware": "^1.12.2",
     "webpack-dev-server": "^2.4.2",
-    "webpack-hot-middleware": "^2.18.0"
+    "webpack-hot-middleware": "^2.24.2"
   }
 }

@@ -26,7 +26,7 @@ module.exports = {
        exclude: /node_modules/,
        options: {
          presets: ['@babel/preset-env','@babel/preset-react'],
-         plugins: ['babel-plugin-transform-class-properties']
+         plugins: ['babel-plugin-transform-class-properties', 'react-hot-loader/babel']
        }
       },
       {test: /\.less/, loader: 'style-loader!css-loader!less-loader' },
@@ -44,9 +44,9 @@ module.exports = {
     extensions: ['.js', '.less', '.css']
   },
   output: {
-    path: path.join(__dirname, '/public'),
+    path: path.resolve(__dirname, '/public'),
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: '[name].bundle.js'
   },
   devtool: 'cheap-eval-source-map',
   devServer: {

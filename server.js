@@ -11,7 +11,16 @@ const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const webpack = require('webpack')
+const webpackConfig = require('./webpack.config');
+const compiler = webpack(webpackConfig);
 
+
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: webpackConfig.output.publicPath
+}))
+app.use(require('webpack-hot-middleware')(compiler))
 app.use(bodyParser.urlencoded({
   extended: true
 }));
