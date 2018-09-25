@@ -5,24 +5,18 @@ import { UploadModal } from '../';
 
 // User Pfp display/linker / lock if not admin - id of event
 const EventImage = ({ imageUrl = "defaultEventPicture.png", role, id }) => {
-  if (role !== 'Admin') 
+  if (role !== 'Admin')
     return (
       <Image
-	centered     
+	centered
 	src={`/uploaded/events/${imageUrl}`}
 	size='medium'
       />
     );
   else
     return (
-      <UploadModal type="event" id={id}>
-	<Image
-	  style={styles.imageStyle}
-	  centered	
-	  src={`/uploaded/events/${imageUrl}`}
-	  size='medium'
-	/>
-      </UploadModal>
+      <UploadModal type="event" id={id} style={styles.imageStyle} url={`/uploaded/events/${imageUrl}`}/>
+
     );
 }
 
