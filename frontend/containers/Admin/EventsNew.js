@@ -68,7 +68,10 @@ class AdminEventsNew extends Component {
   render () {
     const { loading, error, newEvent } = this.state
     if (newEvent) {
-      return <Redirect to={`/events/${newEvent._id}`}/>
+      return <Redirect to = {
+        `/events/${newEvent._id}`
+      }
+      />
     } else {
       return (
         <Container>

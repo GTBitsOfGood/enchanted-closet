@@ -13,11 +13,11 @@ class RegisterForm extends Component {
     super(props)
     this.state = {
       status: {
-        firstName: -1, // -1 for untouched, 0 is no error, 1 is error
-        lastName: -1,
-        email: -1,
-        password: -1,
-        confirmPass: -1
+				firstName: -1, // -1 for untouched, 0 is no error, 1 is error
+				lastName: -1,
+				email: -1,
+				password: -1,
+				confirmPass: -1
       },
       firstName: '',
       lastName: '',
@@ -26,7 +26,9 @@ class RegisterForm extends Component {
       confirmPass: '',
       role: 'participant',
       birthday: moment()
-    }
+		}
+		
+		this.handleBirthdayChange = this.handleBirthdayChange.bind(this);
   }
 
   regLegalTest = (field, val) => {
