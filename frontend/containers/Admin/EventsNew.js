@@ -133,24 +133,20 @@ class AdminEventsNew extends Component {
       }
       />
     } else {
-      return ( <
-        Container >
-        <
-        PageTitle title = {
+      return ( 
+      <Container>
+        <PageTitle title = {
           this.state._id ? `Update Event` : `New Event`
         }
         link = "/events"
-        linkTitle = "Back to All" / >
-        <
-        div style = {
+        linkTitle = "Back to All" />
+        <div style = {
           {
             paddingTop: 50
           }
         } >
-        <
-        Segment >
-        <
-        Form error = {
+        <Segment >
+        <Form error = {
           error !== undefined || error !== null
         }
         loading = {
@@ -158,8 +154,7 @@ class AdminEventsNew extends Component {
         }
         onSubmit = {
           this.upsertEvent
-        } >
-        {
+        } > {
           error &&
           <
           Message
@@ -169,8 +164,7 @@ class AdminEventsNew extends Component {
             error
           }
           />
-        } <
-        Form.Input required label = 'Event Name'
+        } <Form.Input required label = 'Event Name'
         value = {
           this.state.name
         }
@@ -179,8 +173,7 @@ class AdminEventsNew extends Component {
         onChange = {
           this.handleInputChange
         }
-        /> <
-        Form.TextArea required label = 'Description'
+        /> <Form.TextArea required label = 'Description'
         rows = {
           12
         }
@@ -192,8 +185,7 @@ class AdminEventsNew extends Component {
         onChange = {
           this.handleInputChange
         }
-        /> <
-        Form.Input required label = 'Event Address'
+        /> <Form.Input required label = 'Event Address'
         value = {
           this.state.location
         }
@@ -202,8 +194,7 @@ class AdminEventsNew extends Component {
         onChange = {
           this.handleInputChange
         }
-        /> <
-        Form.Input required label = 'Speakers'
+        /> <Form.Input required label = 'Speakers'
         value = {
           this.state.speakers
         }
@@ -212,10 +203,10 @@ class AdminEventsNew extends Component {
         onChange = {
           this.handleInputChange
         }
-        /> <
-        p > * Enter a comma - separated list of names
-        for the speakers of this event < /p> <
-        Form.Field label = 'Starting date & time'
+        /> <p> * Enter a comma - separated list of names
+        for the speakers of this event 
+        </p> 
+        <Form.Field label = 'Starting date & time'
         minDate = {
           moment()
         }
@@ -233,16 +224,14 @@ class AdminEventsNew extends Component {
         timeIntervals = {
           15
         }
-        showDisabledMonthNavigation / >
-        <
-        Form.Button > {
+        showDisabledMonthNavigation />
+        <Form.Button > {
           this.state._id ? 'Update Event' : 'Create Event'
-        } <
-        /Form.Button> <
-        /Form> <
-        /Segment> <
-        /div> <
-        /Container>
+        } </Form.Button> 
+        </Form > 
+        </Segment> 
+        </div > 
+        </Container>
       );
     }
   }

@@ -63,7 +63,8 @@ router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.even
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent);
 router.put('/events/:id', auth.checkAdmin, controllers.events.update);
 router.get('/events/:id/report', controllers.reporting.eventReport);
-router.get('/report/year', controllers.reporting.yearReport);
+router.get('/report/:year', controllers.reporting.yearReport);
+router.get('/report/:year/:month', controllers.reporting.monthReport);
 
 // Package and finish
 router.use((req, res, next) => {
@@ -89,25 +90,25 @@ router.use((req, res, next) => {
 });
 
 // quick error handle
-router.use((err, req, res, next) => {
-  if (res.locals.error) {
-    // Map msg to message because honestly what even
-    res.locals.error.message = res.locals.error.msg
-    let statusCode = res.locals.error.code || 500;
-    let response = Object.assign({}, res.locals.error, {
-      'status': 'error'
-    });
-    console.log(response);
-    return res.status(statusCode).json(response);
-  } else {
-    console.log('generic server error');
-    return res.status(500).json({
-      'status': 'error',
-      'code': 500,
-      'msg': 'Internal Server Error'
-    });
-  }
-});
+// router.use((err, req, res, next) => {
+//   if (res.locals.error) {
+//     // Map msg to message because honestly what even
+//     res.locals.error.message = res.locals.error.msg
+//     let statusCode = res.locals.error.code || 500;
+//     let response = Object.assign({}, res.locals.error, {
+//       'status': 'error'
+//     });
+//     console.log(response);
+//     return res.status(statusCode).json(response);
+//   } else {
+//     console.log('generic server error');
+//     return res.status(500).json({
+//       'status': 'error',
+//       'code': 500,
+//       'msg': 'Internal Server Error'
+//     });
+//   }
+// });
 
 
 module.exports = router;

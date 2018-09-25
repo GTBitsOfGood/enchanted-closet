@@ -1,5 +1,7 @@
 import { errorWrap, showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers } from './';
 import { fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
+import { Icon } from 'semantic-ui-react';
+import React from 'react';
 
 import * as types from './types';
 
@@ -36,7 +38,12 @@ function formatCards(cards) {
 	  content: cards.events,
 	  title: 'Events',
 	  url: '/events'
-	}	
+  },
+  {
+    content: <Icon name='cloud download'/>,
+    title: 'Attendance Reports',
+    url: '/attendance-reports'
+  }
       ];
       dispatch(updateDashboardCards(formatted));
     } else {

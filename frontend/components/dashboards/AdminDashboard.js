@@ -34,18 +34,16 @@ class AdminDashboard extends Component {
 	{ cards.map( card => (
 	  <DashboardCard {...card}
 			 key={`admin_card_${card.title}`} />)) }
-	<Card
-	  onClick={() =>
-	    window.open(`/api/report/year`, 'year.csv')}
-          centered	
-	>
+    {/* <Card
+      onClick={() => <Link to='/attendance-reports'></Link>}	
+    >
 	  <Card.Content style={{textAlign: 'center'}}>
 	    <h1><Icon name='cloud download'/></h1>
 	  </Card.Content>
 	  <Card.Content style={{textAlign: 'center'}}>
-	    <h3>'Download Year Attendance'</h3>
+	    <h3>Attendance Reports</h3>
 	  </Card.Content>
-	</Card>	
+	</Card>	 */}
       </Card.Group>
     )
 

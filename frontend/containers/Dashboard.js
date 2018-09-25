@@ -27,21 +27,21 @@ class Dashboard extends Component {
     const { role } = this.props.user;
     const dashBlock = (role => {
       switch (role) {
-	case 'Admin':
-	  return <AdminDashboard />
-	  break
-	case 'Participant':
-	case 'Volunteer':
-	  return <BaseDashboard />
-	  break
+	      case 'Admin':
+	        return <AdminDashboard />
+	        break
+        case 'Participant':
+        case 'Volunteer':
+	        return <BaseDashboard />
+	        break
       }
       return null
     })(role)
 
     return (
       <Container>
-	<PageTitle title={`${role} Dashboard`} />
-	{ dashBlock }
+        <PageTitle title={`${role} Dashboard`} />
+        { dashBlock }
       </Container>
     );
   }

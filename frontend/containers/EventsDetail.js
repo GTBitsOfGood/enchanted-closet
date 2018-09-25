@@ -191,7 +191,7 @@ class EventsDetail extends Component {
 		  { registerBlock }
 		</RoleCheck>
 		<RoleCheck role="Volunteer">
-		  <MarkAttendanceButton />
+		  <MarkAttendanceButton id={event._id}/>
 		</RoleCheck>
 	      </ButtonGallery>
 	    </RoleCheck>
