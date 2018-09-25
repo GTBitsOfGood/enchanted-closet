@@ -9,10 +9,6 @@ import { Container, Card, Grid, Button, Loader } from 'semantic-ui-react'
 import { COLORS } from '../../constants'
 
 class PageTitle extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
     const { title, link, linkTitle, showLoadingIcon, loading, history } = this.props
     return (

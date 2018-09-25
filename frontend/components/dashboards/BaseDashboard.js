@@ -8,10 +8,6 @@ import { DashboardCard } from './'
 import { Event, RoleCheck } from '../'
 
 class BaseDashboard extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
     const { events = [], pendingEvents = [] } = this.props.user
 

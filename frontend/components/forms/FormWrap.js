@@ -44,17 +44,13 @@ const formWrapper = WrappedForm => class extends Component {
       switch (this.state.status) {
         case 'error':
           return ['red', 'Error']
-          break
         case 'complete':
           return ['green', 'Ready']
-          break
         case 'hidden':
           return []
-          break
         case 'valid':
         default:
           return ['blue', 'In Progress']
-          break
       }
     })()
     const messageBlock = this.state.status === 'hidden' ? null : (

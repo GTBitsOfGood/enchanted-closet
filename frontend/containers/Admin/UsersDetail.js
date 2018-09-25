@@ -14,7 +14,7 @@ class AdminUsersDetail extends Component {
     super(props)
     const { updateUserStore, users, match } = this.props
     this.state = {
-      user_id: match.params.id,
+      userId: match.params.id,
       loading: false,
       hasPerformedUpdate: false
     }
@@ -22,7 +22,7 @@ class AdminUsersDetail extends Component {
     if (!users) {
       this.loadUsers()
     } else {
-      const usr = users.filter(u => u._id === this.state.user_id)
+      const usr = users.filter(u => u._id === this.state.userId)
       if (usr.length === 1) {
         this.state = Object.assign({}, this.state, {
           user: usr[0]
@@ -36,7 +36,7 @@ class AdminUsersDetail extends Component {
 
   loadUsers () {
     const { updateUserStore } = this.props
-    this.state = Object.assign({}, this.state, {
+    this.setState({
       loading: true,
       hasPerformedUpdate: true
     })
@@ -45,8 +45,8 @@ class AdminUsersDetail extends Component {
 
   componentWillReceiveProps (nextProps) {
     const { users } = nextProps
-    const { user_id } = this.state
-    const usr = users.filter(u => u._id === user_id)
+    const { userId } = this.state
+    const usr = users.filter(u => u._id === userId)
     if (usr.length === 1) {
       this.setState({ user: usr[0], loading: false })
     } else {
@@ -55,7 +55,7 @@ class AdminUsersDetail extends Component {
   }
 
   render () {
-    const { loading, hasPerformedUpdate, user_id, user } = this.state
+    const { loading, hasPerformedUpdate, userId, user } = this.state
     const { promoteUser } = this.props
     const name = user ? `${user.firstName} ${user.lastName}`
       : 'Name not found'
@@ -84,9 +84,9 @@ class AdminUsersDetail extends Component {
         >
     Back to all users
         </Button>
-        {user && user.role == 'Volunteer' &&
+        {user && user.role === 'Volunteer' &&
    <Button
-     onClick={() => promoteUser(user_id)}
+     onClick={() => promoteUser(userId)}
    >
      Make Admin
    </Button>

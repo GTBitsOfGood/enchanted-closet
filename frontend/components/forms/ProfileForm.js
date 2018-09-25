@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { capitalize } from 'lodash'
+import { startCase, capitalize } from 'lodash'
 import { Button, Divider, Form } from 'semantic-ui-react'
 import { fetchUsers, upsertUser } from '../../actions'
 import { formWrapper } from './'
-import { startCase } from 'lodash'
 
 // ProfileForm that takes soft field props (targets)
 class ProfileForm extends Component {

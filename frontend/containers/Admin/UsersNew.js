@@ -5,7 +5,7 @@ import { withRouter, Redirect } from 'react-router-dom'
 import { upsertUser } from '../../actions/'
 
 import { Container, Segment, Header, Form, Button, Dropdown, Icon, Message } from 'semantic-ui-react'
-import { CustomForm, Role } from '../../components/'
+import { Role } from '../../components/'
 
 class UsersNew extends Component {
   constructor (props) {

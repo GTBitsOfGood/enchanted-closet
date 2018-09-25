@@ -23,10 +23,8 @@ class LoginForm extends Component {
     switch (field) {
       case 'password': // TODO: Outlawed quotes bc it annoys highlight
         return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val)
-        break
       case 'email':
         return /^[\w@.]*$/.test(val)
-        break
     }
   }
 
@@ -34,12 +32,10 @@ class LoginForm extends Component {
     switch (field) {
       case 'email':
         return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
-        break
       case 'password':
         return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]{7,}$/.test(val)
       default:
         return this.regLegalTest(field, val) && val.length !== 0
-        break
     }
   }
 
@@ -138,7 +134,6 @@ class LoginForm extends Component {
             type="password"
             onChange={this.changeFunctionFactory('password', 'That character is illegal.')}
             value={password}
-            required
             onBlur={this.blurFunctionFactory('password')}
           />
           <Button

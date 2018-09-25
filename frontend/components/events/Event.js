@@ -12,9 +12,6 @@ import { Clearfix, EditButton } from '../'
 import { COLORS } from '../../constants'
 
 class Event extends Component {
-  constructor (props) {
-    super(props)
-  }
 
   render () {
     const { data, deleteEvent, history, user } = this.props

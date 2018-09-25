@@ -21,8 +21,9 @@ module.exports = {
     'import/no-unresolved': 'off',
     'react/no-unescaped-entities': 'off',
     'no-console': 'off',
-    'no-unused-vars': 'warn',
-    'react/require-render-return': 'off'
+    'no-unused-vars': 'off',
+    'react/require-render-return': 'off',
+    'react/prop-types': 'off'
   },
   parser: 'babel-eslint',
   parserOptions: {

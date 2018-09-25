@@ -14,10 +14,6 @@ import { PageTitle,
 import { Container, Card } from 'semantic-ui-react'
 
 class Dashboard extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentWillMount () {
     this.props.refreshUser(this.props.user)
   }
@@ -28,11 +24,9 @@ class Dashboard extends Component {
       switch (role) {
         case 'Admin':
           return <AdminDashboard />
-          break
         case 'Participant':
         case 'Volunteer':
           return <BaseDashboard />
-          break
       }
       return null
     })(role)
