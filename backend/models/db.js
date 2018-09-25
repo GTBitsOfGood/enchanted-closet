@@ -4,7 +4,9 @@ import './systemconfig'
 
 const mongoose = require('mongoose')
 
-var mongoDB = 'mongodb://test:12345@localhost/enchanted_closet'
+const mongoURL = process.env.MONGO_URL
+
+var mongoDB = mongoURL
 mongoose.connect(mongoDB, {
   useMongoClient: true
 })
