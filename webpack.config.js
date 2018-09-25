@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use strict";
 
 const webpack = require('webpack');
@@ -6,7 +7,10 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: [
-    './frontend/index'
+    './frontend/webpack-public-path.js',
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client?reload=true',
+    path.resolve(__dirname, 'frontend/index.js')
   ],
   module: {
     rules: [
@@ -58,6 +62,14 @@ module.exports = {
     new Dotenv({path: './.env.frontend'}),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
+      template: 'frontend/index.ejs',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true
+      },
+      inject: true
+    })
   ]
 };

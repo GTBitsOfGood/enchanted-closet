@@ -1,28 +1,26 @@
+import { Provider } from 'react-redux'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Helmet from 'react-helmet'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Provider } from 'react-redux'
-import Homepage from './Homepage.js'
-import Login from './Login.js'
-import Logout from './Logout.js'
-import Register from './Register'
-import Profile from './Profile.js'
+import DevTools from './DevTools'
+import { COLORS } from '../constants'
+import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components'
+import * as Admin from './Admin'
 import Dashboard from './Dashboard.js'
 import Events from './Events.js'
 import EventsDetail from './EventsDetail.js'
+import Homepage from './Homepage.js'
+import Login from './Login.js'
+import Logout from './Logout.js'
 import MissingPage from './MissingPage.js'
-
 import Navigation from './Navigation'
-
-import Helmet from 'react-helmet'
-
-import * as Admin from './Admin'
-
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components'
-
-import { COLORS } from '../constants'
+import Profile from './Profile.js'
+import Register from './Register'
 
 export default function Root ({ store }) {
+  console.log(process.env)
+  console.log('test')
   return (
     <Provider store={store}>
       <div>
@@ -107,7 +105,8 @@ export default function Root ({ store }) {
             </Switch>
           </div>
         </Router>
-        {/* <DevTools/> */}
+        ((process.env.REDUX_DEV_TOOL !== 'BROWSER') &&
+        <DevTools/>)
       </div>
     </Provider>
   )
