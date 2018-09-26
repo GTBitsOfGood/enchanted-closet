@@ -8,15 +8,13 @@ import { AppContainer } from 'react-hot-loader'
 
 import { configureStore, history } from './store/configureStore'
 import { loadAuthState, saveAuthState } from './store/localStorage'
-import Root from './containers/Root'
+import Root from './containers/Root.js'
 
 const store = configureStore({ user: loadAuthState() })
 
 store.subscribe(() => {
   saveAuthState(store.getState())
 })
-
-console.log(Root)
 
 render(
   <Root store={store} history={history} />,

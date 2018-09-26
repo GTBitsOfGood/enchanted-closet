@@ -13,7 +13,9 @@ if (process.env.REDUX_DEV_TOOL !== 'BROWSER') {
     DevTools.instrument()
   )
 } else {
-  composeResult = composeWithDevTools(thunkMiddleware)
+  composeResult = composeWithDevTools(
+    applyMiddleware(thunkMiddleware)
+  )
 }
 
 export function configureStore (initialState) {

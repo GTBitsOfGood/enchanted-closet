@@ -1,11 +1,7 @@
-import { hot } from 'react-hot-loader'
+import RootDev from './Root.dev'
 
-let Root = (process.env.NODE_ENV === 'production'
-  ? require('./Root.dev') // Todo: sub in prod
-  : require('./Root.dev'))
-
-if (process.env.NODE_ENV !== 'production') {
-  Root = hot(module)(Root)
-}
+const Root = (process.env.NODE_ENV === 'production'
+  ? RootDev // Todo: sub in prod
+  : RootDev)
 
 export default Root

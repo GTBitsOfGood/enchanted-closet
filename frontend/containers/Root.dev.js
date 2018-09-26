@@ -21,8 +21,6 @@ import Register from './Register'
 
 class Root extends React.Component {
   render () {
-    console.log(process.env)
-    console.log('test')
     return (
       <Provider store={this.props.store}>
         <div>
@@ -107,8 +105,7 @@ class Root extends React.Component {
               </Switch>
             </div>
           </Router>
-          ((process.env.REDUX_DEV_TOOL !== 'BROWSER') &&
-          <DevTools/>)
+          {(process.env.REDUX_DEV_TOOL !== 'BROWSER') && <DevTools/>}
         </div>
       </Provider>
     )

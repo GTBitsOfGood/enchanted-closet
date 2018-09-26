@@ -66,6 +66,7 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
       template: 'frontend/index.ejs',
+      filename: 'public/index.html',
       minify: {
         removeComments: true,
         collapseWhitespace: true
