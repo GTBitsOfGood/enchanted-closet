@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const path = require('path')
 const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
   entry: [
@@ -49,24 +50,28 @@ module.exports = {
     extensions: ['.js', '.less', '.css']
   },
   output: {
-    path: path.resolve(__dirname, '/public'),
+    path: path.resolve(__dirname, 'public'),
     publicPath: '/',
     filename: '[name].bundle.js'
   },
   devtool: 'cheap-eval-source-map',
   devServer: {
     contentBase: './public',
+    port: 3000,
     hot: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: {
+      '/api': 'http://localhost:3001'
+    }
   },
   plugins: [
     new Dotenv({path: './.env.frontend'}),
+    new CleanWebpackPlugin(['public']),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
+    new HtmlWebpackPlugin({
       template: 'frontend/index.ejs',
-      filename: 'public/index.html',
       minify: {
         removeComments: true,
         collapseWhitespace: true
