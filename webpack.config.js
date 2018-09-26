@@ -5,13 +5,11 @@ const webpack = require('webpack')
 const path = require('path')
 const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
   entry: [
     './frontend/webpack-public-path.js',
     'react-hot-loader/patch',
-    'webpack-hot-middleware/client?reload=true',
     path.resolve(__dirname, 'frontend/index.js')
   ],
   module: {
@@ -66,7 +64,6 @@ module.exports = {
   },
   plugins: [
     new Dotenv({path: './.env.frontend'}),
-    new CleanWebpackPlugin(['public']),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
