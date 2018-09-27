@@ -5,13 +5,8 @@ import { UploadModal } from '../'
 
 // User Pfp display/linker
 const ProfileImage = ({ imageUrl = 'defaultUserPicture.jpg' }) => (
-  <UploadModal type="user">
-    <Image
-      style={styles.imageStyle}
-      src={`/uploaded/users/${imageUrl}`}
-      size='medium'
-    />
-  </UploadModal>
+  <UploadModal type="user" url={`/uploaded/users/${imageUrl}`} style={styles.imageStyle}/>
+
 )
 
 const styles = {
