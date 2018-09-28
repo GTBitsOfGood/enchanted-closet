@@ -27,6 +27,9 @@ class ProfileForm extends Component {
       userData: initData,
       cachedData: initData
     }
+
+    this.handleChange=this.handleChange.bind(this)
+    this.handleBlur=this.handleBlur.bind(this)
   }
 
   regLegalTest = (field, val) => {
@@ -63,7 +66,13 @@ class ProfileForm extends Component {
     }
   }
   handleChange(event) {
-    this.setState({dropdown: event.target.value});
+    //this.props.setValid();
+    console.log(event.target.innerHTML)
+    this.setState({
+  	  userData: { ...this.state.userData,
+  		      ['grade']: event.target}
+  	});
+    //this.updateStatus('grade', 0);
   }
 
   // verify cb
@@ -90,6 +99,10 @@ class ProfileForm extends Component {
       this.props.setError();
       this.updateStatus(field, 1, true);
     }
+  }
+  handleBlur(){
+    this.props.setValid();
+    this.updateStatus('grade', 0, true);
   }
 
   verifyAll = () => {
@@ -131,28 +144,29 @@ class ProfileForm extends Component {
 	    Object.keys(this.targets).map( key => {
 	      const tar = this.targets[key];
         const options=[
-          {value:6 , label:6},
-          {value:7 , label:7},
-          {value:8 , label:8},
-          {value:9 , label:9},
-          {value:10 , label:10},
-          {value:11 , label:11},
-          {value:12 , label:12}
+          { key: '6', text: '6', value: '6' },
+          { key: '7', text: '7', value: '7' },
+          { key: '8', text: '8', value: '8' },
+          { key: '9', text: '9', value: '9' },
+          { key: '10', text: '10', value: '10' },
+          { key: '11', text: '11', value: '11' },
+          { key: '12', text: '12', value: '12' },
         ];
+        console.log(userData)
           if(key=='grade'){
             return(
               <Form.Select
-          		  key={`profile${key}`}
-          		  //inline transparent
-          		  label={tar.label ? tar.label : startCase(key)}
-          		  error={this.errorFactory(key)}
-          		  name={key}
-          	          //type={tar.type ? tar.type : "text"}
-                      options={options}
-                      value={userData[key]}
-          	          onChange={this.changeFunctionFactory(key, tar.constraintMsg ? tar.constraintMsg : "Invalid character")}
-          	          onBlur={this.blurFunctionFactory(key)}
-          		/>
+              key={`profile${key}`}
+              label={tar.label ? tar.label : startCase(key)}
+              options={options}
+              //placeholder='Grade'
+              value={
+                userData[key].value
+              }
+              //onChange={this.handleChange}
+              onChange={this.handleChange}
+              onBlur={this.blurFunctionFactory(key)}
+              />
 
             )
           }else{
