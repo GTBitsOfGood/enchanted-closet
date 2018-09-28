@@ -50,7 +50,7 @@ class ProfileForm extends Component {
   // Filter is what filter to apply to value into state
   changeFunctionFactory = (field, warningMessage, filter) => {
     return e => {
-      if (this.regLegalTest(field, e.target.value)) {
+      if (this.regLegalTest(field, e.target.value) || field=='grade') {
 	this.props.setValid();
 	this.setState({
 	  userData: { ...this.state.userData,
@@ -61,6 +61,9 @@ class ProfileForm extends Component {
 	this.props.setError(warningMessage);
       }
     }
+  }
+  handleChange(event) {
+    this.setState({dropdown: event.target.value});
   }
 
   // verify cb
@@ -80,7 +83,7 @@ class ProfileForm extends Component {
   }
 
   blurFunctionFactory = field => (e) => {
-    if (this.regFinalTest(field, e.target.value)) {
+    if (this.regFinalTest(field, e.target.value)|| field=='grade') {
       this.props.setValid();
       this.updateStatus(field, 0, true);
     } else {
@@ -127,19 +130,48 @@ class ProfileForm extends Component {
 	  {
 	    Object.keys(this.targets).map( key => {
 	      const tar = this.targets[key];
-	      return (
-		<Form.Input
-		  key={`profile${key}`}
-		  //inline transparent
-		  label={tar.label ? tar.label : startCase(key)}
-		  error={this.errorFactory(key)}
-		  name={key}
-	          type={tar.type ? tar.type : "text"}
-	          value={userData[key]}
-	          onChange={this.changeFunctionFactory(key, tar.constraintMsg ? tar.constraintMsg : "Invalid character")}
-	          onBlur={this.blurFunctionFactory(key)}
-		/>
-	      )})
+        const options=[
+          {value:6 , label:6},
+          {value:7 , label:7},
+          {value:8 , label:8},
+          {value:9 , label:9},
+          {value:10 , label:10},
+          {value:11 , label:11},
+          {value:12 , label:12}
+        ];
+          if(key=='grade'){
+            return(
+              <Form.Select
+          		  key={`profile${key}`}
+          		  //inline transparent
+          		  label={tar.label ? tar.label : startCase(key)}
+          		  error={this.errorFactory(key)}
+          		  name={key}
+          	          //type={tar.type ? tar.type : "text"}
+                      options={options}
+                      value={userData[key]}
+          	          onChange={this.changeFunctionFactory(key, tar.constraintMsg ? tar.constraintMsg : "Invalid character")}
+          	          onBlur={this.blurFunctionFactory(key)}
+          		/>
+
+            )
+          }else{
+            return(
+              <Form.Input
+          		  key={`profile${key}`}
+          		  //inline transparent
+          		  label={tar.label ? tar.label : startCase(key)}
+          		  error={this.errorFactory(key)}
+          		  name={key}
+          	          type={tar.type ? tar.type : "text"}
+          	          value={userData[key]}
+          	          onChange={this.changeFunctionFactory(key, tar.constraintMsg ? tar.constraintMsg : "Invalid character")}
+          	          onBlur={this.blurFunctionFactory(key)}
+          		/>
+            );
+          }
+
+	      })
 	  }
 	  <Form.Button
 	    color="violet"
