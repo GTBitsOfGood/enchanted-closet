@@ -11,7 +11,16 @@ const targets = {
     isLegal: val => /^$|^[1-9][0-9]*$/.test(val)
   },
   'grade': {
-    isLegal: val => /^$|^[1-9]|1[0-2]|college]$/.test(val)
+    isLegal: val => /^$|^[1-9]|1[0-2]|college]$/.test(val),
+    options: [
+      { key: '6', text: '6', value: '6' },
+      { key: '7', text: '7', value: '7' },
+      { key: '8', text: '8', value: '8' },
+      { key: '9', text: '9', value: '9' },
+      { key: '10', text: '10', value: '10' },
+      { key: '11', text: '11', value: '11' },
+      { key: '12', text: '12', value: '12' },
+    ]
   },
   'race': {
     isLegal: val => /^[a-zA-Z\s]*$/.test(val)

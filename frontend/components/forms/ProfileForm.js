@@ -25,11 +25,11 @@ class ProfileForm extends Component {
     this.state = {
       status: initStatus,
       userData: initData,
-      cachedData: initData
+      cachedData: initData,
+      dropdown: null
     }
 
     this.handleChange=this.handleChange.bind(this)
-    this.handleBlur=this.handleBlur.bind(this)
   }
 
   regLegalTest = (field, val) => {
@@ -67,10 +67,10 @@ class ProfileForm extends Component {
   }
   handleChange(event) {
     //this.props.setValid();
-    console.log(event.target.innerHTML)
     this.setState({
   	  userData: { ...this.state.userData,
-  		      ['grade']: event.target}
+  		      ['grade']: event.target.innerHTML},
+      dropdown: event.target.value
   	});
     //this.updateStatus('grade', 0);
   }
@@ -99,10 +99,6 @@ class ProfileForm extends Component {
       this.props.setError();
       this.updateStatus(field, 1, true);
     }
-  }
-  handleBlur(){
-    this.props.setValid();
-    this.updateStatus('grade', 0, true);
   }
 
   verifyAll = () => {
@@ -143,25 +139,15 @@ class ProfileForm extends Component {
 	  {
 	    Object.keys(this.targets).map( key => {
 	      const tar = this.targets[key];
-        const options=[
-          { key: '6', text: '6', value: '6' },
-          { key: '7', text: '7', value: '7' },
-          { key: '8', text: '8', value: '8' },
-          { key: '9', text: '9', value: '9' },
-          { key: '10', text: '10', value: '10' },
-          { key: '11', text: '11', value: '11' },
-          { key: '12', text: '12', value: '12' },
-        ];
-        console.log(userData)
           if(key=='grade'){
             return(
               <Form.Select
               key={`profile${key}`}
               label={tar.label ? tar.label : startCase(key)}
-              options={options}
+              options={this.targets[key]["options"]}
               //placeholder='Grade'
               value={
-                userData[key].value
+                this.state.dropdown
               }
               //onChange={this.handleChange}
               onChange={this.handleChange}
