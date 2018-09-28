@@ -26,7 +26,7 @@ class ProfileForm extends Component {
       status: initStatus,
       userData: initData,
       cachedData: initData,
-      dropdown: null
+      //dropdown: "6"
     }
 
     this.handleChange=this.handleChange.bind(this)
@@ -66,11 +66,14 @@ class ProfileForm extends Component {
     }
   }
   handleChange(event) {
-    //this.props.setValid();
+    var text=event.target.innerHTML.substring(19,21)
+    if(text.substring(1,2)=="<"){
+      text=text.substring(0,1)
+    }
     this.setState({
   	  userData: { ...this.state.userData,
-  		      ['grade']: event.target.innerHTML},
-      dropdown: event.target.value
+  		      ['grade']: text}
+      //dropdown: text
   	});
     //this.updateStatus('grade', 0);
   }
@@ -132,6 +135,7 @@ class ProfileForm extends Component {
   render() {
     const { userData } = this.state;
     const { setError, setValid, setComplete, setMessage } = this.props;
+    console.log(userData)
 
     return (
       <div>
@@ -147,7 +151,7 @@ class ProfileForm extends Component {
               options={this.targets[key]["options"]}
               //placeholder='Grade'
               value={
-                this.state.dropdown
+                userData[key]
               }
               //onChange={this.handleChange}
               onChange={this.handleChange}
