@@ -9,7 +9,7 @@ import { startCase } from 'lodash';
 
 // ProfileForm that takes soft field props (targets)
 class ProfileForm extends Component {
-  
+
   constructor(props) {
     super(props);
     const { user, targets } = props;
@@ -21,9 +21,9 @@ class ProfileForm extends Component {
       initData[tar] = user[tar] ? user[tar] : "";
       initStatus[tar] = this.regFinalTest(tar, user[tar] ? user[tar] : "") ? 0: -1;
     });
-    
+
     this.state = {
-      status: initStatus,	
+      status: initStatus,
       userData: initData,
       cachedData: initData
     }
@@ -78,7 +78,7 @@ class ProfileForm extends Component {
 
   blurFunctions = { // Implement finer control here
   }
-  
+
   blurFunctionFactory = field => (e) => {
     if (this.regFinalTest(field, e.target.value)) {
       this.props.setValid();
@@ -88,12 +88,12 @@ class ProfileForm extends Component {
       this.updateStatus(field, 1, true);
     }
   }
-  
-  verifyAll = () => {    
+
+  verifyAll = () => {
     const { status } = this.state;
     return Object.keys(status).every(k => status[k] === 0)
   }
-  
+
   errorFactory = field => this.state.status[field] === 1
 
   onSubmit = () => {
@@ -116,7 +116,7 @@ class ProfileForm extends Component {
       this.props.setError("The form is completed incorrectly.");
     }
   }
-  
+
   render() {
     const { userData } = this.state;
     const { setError, setValid, setComplete, setMessage } = this.props;
@@ -130,8 +130,8 @@ class ProfileForm extends Component {
 	      return (
 		<Form.Input
 		  key={`profile${key}`}
-		  inline transparent
-		  label={tar.label ? tar.label : startCase(key)}		
+		  //inline transparent
+		  label={tar.label ? tar.label : startCase(key)}
 		  error={this.errorFactory(key)}
 		  name={key}
 	          type={tar.type ? tar.type : "text"}
