@@ -3,11 +3,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
+import PageTitle from '../components/common/PageTitle'
 
 import { clearErrors, fetchUserById } from '../actions'
 
 import { Button, Card, Container, Form, Header, Message, Segment } from 'semantic-ui-react'
-import { LoadingIcon, ProfileImage, rofileAdmin, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
+import { LoadingIcon, ProfileImage, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
 
 class Profile extends Component {
   constructor (props) {
@@ -25,7 +26,7 @@ class Profile extends Component {
         case 'Admin':
           return null // Admin has no profile
         case 'Volunteer':
-          return <ProfileVolunteer user={user} />
+          return (<ProfileVolunteer user={user} />)
         case 'Participant':
           return <ProfileParticipant user={user} />
       }
@@ -33,7 +34,7 @@ class Profile extends Component {
 
     return (
       <Container>
-        <PageTitle title="Profile" />
+        <PageTitle title="Profile"/>
         <Segment style={styles.wrap}>
           <Container>
             <Card.Group centered stackable>

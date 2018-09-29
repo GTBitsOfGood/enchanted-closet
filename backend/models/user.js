@@ -32,6 +32,12 @@ var UserSchema = new mongoose.Schema({
     default: 'Participant',
     required: true
   },
+  shirtSize: {
+    type: String,
+    enum: ['Unselected', 'XX Small', 'X Small', 'Small', 'Medium', 'Large', 'X Large', 'XX Large'],
+    default: 'Unselected',
+    required: true
+  },
   birthday: Date,
   grade: String,
   age: Number,

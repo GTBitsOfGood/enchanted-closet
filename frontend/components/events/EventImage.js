@@ -16,8 +16,8 @@ const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
   } else {
     return (
       <UploadModal type="event" id={id} style={styles.imageStyle} url={`/uploaded/events/${imageUrl}`}/>
-
-    );
+    )
+  }
 }
 
 const styles = {
@@ -33,4 +33,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(EventImage)
-// TODO: Style

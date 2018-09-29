@@ -27,7 +27,7 @@ module.exports.index = (req, res, next) => {
 }
 
 function lacksAny (obj, props) {
-  for (p in props) {
+  for (let p in props) {
     if (!(obj[p])) {
       return p
     }
