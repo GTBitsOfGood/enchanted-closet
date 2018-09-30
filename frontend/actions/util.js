@@ -99,3 +99,87 @@ export function updateEventImage(event) {
     events: [newEvent]
   }
 }
+
+export function requestAttendanceByMonth() {
+  return {
+    type: types.REQUEST_ATTENDANCE_REPORT_MONTH
+  }
+}
+
+export function requestAttendanceByYear() {
+  return {
+    type: types.REQUEST_ATTENDANCE_REPORT_YEAR
+  }
+}
+
+export function receiveReports(jsonReport) {
+  return {
+    type: types.RECEIVE_REPORT,
+    events: jsonReport
+  };
+}
+
+export function requestOldestDate() {
+  console.log('request oldest date');
+  return {
+    type: types.OLDEST_EVENT_DATE
+  }
+}
+
+export function receiveOldestDate(json) {
+  console.log(json);
+  return {
+    type: types.OLDEST_DATE,
+    oldestDate: json.datetime
+  }
+}
+
+export function oldestDate() {
+  console.log('oldest date')
+  return (dispatch, getState) => {
+    dispatch(loading());
+    dispatch(requestOldestDate());
+    return fetchHelper(`/api/report`, getAPIToken(getState))
+      .then(res => {
+        console.log(res);
+        res.json()
+      })
+      .then(json => {
+        console.log(json);
+        return safeWrap(json, () => {
+          dispatch(receiveOldestDate(json.datetime), dispatch);
+        })
+      })
+      .then(() => dispatch(stopLoading()));
+  }
+}
+
+export function getAttendanceReportByMonth(year, month) {
+  return (dispatch, getState) => {
+    dispatch(loading());
+    dispatch(requestAttendanceByMonth());
+    return fetchHelper(`/api/report/${year}/${month}`, getAPIToken(getState))
+      .then(res => res.json())
+      .then(json => {
+        return safeWrap(json, () => {
+          dispatch(receiveReports(json.report), dispatch);
+        })
+      })
+      .then(() => dispatch(stopLoading()));
+  }
+}
+
+export function getAttendanceReportByYear(year) {
+  return (dispatch, getState) => {
+    dispatch(loading());
+    dispatch(requestAttendanceByMonth());
+    return fetchHelper(`/api/report/${year}/${month}`, getAPIToken(getState))
+      .then(res => res.json())
+      .then(json => {
+        return safeWrap(json, () => {
+          dispatch(receiveReports(json.report), dispatch);
+        })
+      })
+      .then(() => dispatch(stopLoading()));
+  }
+}

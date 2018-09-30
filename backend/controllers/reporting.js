@@ -3,6 +3,23 @@ const Event = require('mongoose').model('Event');
 const User = require('mongoose').model('User');
 const async = require('async');
 
+module.exports.index = (req, res, next) => {
+  Event.find({}).sort({datetime: 1}).limit(1).exec((err, event) => {
+    if (event) {
+      res.locals.data = {
+        datetime: event[0].datetime
+      };
+      return next();
+    } else {
+      res.locals.error = {
+        msg: 'There are no events in the database',
+        status: 404
+      }
+      return next();
+    }
+  });
+}
+
 module.exports.eventReport = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {

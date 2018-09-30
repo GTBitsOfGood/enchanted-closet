@@ -103,6 +103,11 @@ export default function Root({ store }) {
 		path="/users/:id"
 		component={Admin.UsersDetail}
 	      />
+		<SmartRoute
+		accepts={['Admin']}
+		path="/reports"
+		component={Admin.Reports}
+		/>
 	      <Route path="/error" component={MissingPage} />
 	      <Route component={MissingPage} />
 	    </Switch>

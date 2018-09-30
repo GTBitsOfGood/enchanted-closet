@@ -42,7 +42,7 @@ function formatCards(cards) {
   {
     content: <Icon name='cloud download'/>,
     title: 'Attendance Reports',
-    url: '/attendance-reports'
+    url: '/reports'
   }
       ];
       dispatch(updateDashboardCards(formatted));
