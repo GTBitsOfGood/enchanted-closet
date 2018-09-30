@@ -127,7 +127,7 @@ export function requestOldestDate() {
 }
 
 export function receiveOldestDate(json) {
-  console.log(json);
+  console.log('receive json: ', json);
   return {
     type: types.OLDEST_DATE,
     oldestDate: json.datetime
@@ -139,15 +139,16 @@ export function oldestDate() {
   return (dispatch, getState) => {
     dispatch(loading());
     dispatch(requestOldestDate());
-    return fetchHelper(`/api/report`, getAPIToken(getState))
+    return fetchHelper(`/api/reports`, getAPIToken(getState))
       .then(res => {
-        console.log(res);
+        console.log('oldestDate: ', res);
+        console.log(res.body)
         res.json()
       })
       .then(json => {
         console.log(json);
         return safeWrap(json, () => {
-          dispatch(receiveOldestDate(json.datetime), dispatch);
+          dispatch(receiveOldestDate(json.body), dispatch);
         })
       })
       .then(() => dispatch(stopLoading()));

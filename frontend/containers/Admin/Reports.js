@@ -6,14 +6,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
 import { Button } from 'semantic-ui-react';
-import { fetchFutureEvents } from '../../actions/';
+import { fetchFutureEvents, oldestDate } from '../../actions/';
 
 
 class Report extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            something: null,
+            oldestDate: null,
             endDatetime: '',
             year: '',
             month: '',
@@ -32,8 +32,8 @@ class Report extends Component {
     // }
 
     componentWillMount() {
-        const { fetchFutureEvents } = this.props;
-        fetchFutureEvents();
+        const { oldestDate } = this.props;
+        oldestDate();
     }
 
     handleYearChange = (e, value) => {
@@ -67,12 +67,14 @@ class Report extends Component {
 }
 
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => {
+    oldestDate: oldestDate
+};
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    fetchFutureEvents,
-  }, dispatch);
+    return bindActionCreators({
+        oldestDate
+    }, dispatch);
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(Report);
