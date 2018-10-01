@@ -41,6 +41,18 @@ class RegisterForm extends Component {
       case "confirmPass":
 	return /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val);
 	break
+	  case "password length":
+	return val.length > 6
+	break
+	  case "password number":
+	return /\d/.test(val);
+	break
+	  case "password both":
+	return val.length > 6 && /\d/.test(val);
+	break
+	  case "confirmPass same":
+	return val === this.state.password;
+	break
       case "email":
 	return /^[\w@.]*$/.test(val)
 	break
@@ -77,6 +89,26 @@ class RegisterForm extends Component {
 	});
       } else {
 				this.props.setError(warningMessage);
+				
+
+      }
+    }
+  }
+  change2FunctionFactory = (field, caseOf, warningMessage, filter) => {
+    
+    return e => {
+      if (this.regLegalTest(caseOf, e.target.value)) {
+				this.props.setValid();
+				this.setState({
+	  [field]: filter ? filter(e.target.value) : e.target.value
+	});
+      } else {
+				this.props.setError(warningMessage);
+
+				console.log(e.target.value);
+				this.setState({
+	  [field]: filter ? filter(e.target.value) : e.target.value
+	});
       }
     }
   }
@@ -232,7 +264,10 @@ class RegisterForm extends Component {
 	    error={this.errorFactory("password")}
 	    name="password"
 	    type="password"
-	    onChange={this.changeFunctionFactory("password", "That character is illegal.")}
+	    onChange={this.changeFunctionFactory("password", "That character is illegal."), 
+	    		  this.change2FunctionFactory("password", "password length", "Password must at least 7 characters."),
+	    		  this.change2FunctionFactory("password", "password number", "Password must contain at least one number."),
+	    		  this.change2FunctionFactory("password", "password both", "Minimum length of 7 characters, at least one number required.")}
 	    value={password}
 	    onBlur={this.blurFunctionFactory('password')}
 	  />
@@ -242,7 +277,8 @@ class RegisterForm extends Component {
 	    error={this.errorFactory("confirmPass")}
 	    name="confirmPass"
 	    type="password"
-	    onChange={this.changeFunctionFactory("confirmPass", "That character is illegal.")}
+	    onChange={this.changeFunctionFactory("confirmPass", "That character is illegal."),
+	              this.change2FunctionFactory("confirmPass", "confirmPass same", "Passwords must match.")}
 	    value={confirmPass}
 	    onBlur={this.blurFunctionFactory('confirmPass')}
 	  />
