@@ -23,20 +23,16 @@ class Homepage extends Component {
     const { loading, events, history } = this.props
 
     const processedEvents =
-      events && events.length > 0
-        ? events.sort((e1, e2) => (new Date(e2.datetime) - new Date(e1.datetime))).slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
-          event.showAdminControls = false
-          return <Event
-            data={event}
-            history={history}
-            key={`home_event_${event._id}`}
-          />
-        })
-        : <p>No upcoming events</p>
+      events && events.length > 0 ? events.sort((e1, e2) => (new Date(e1.datetime) - new Date(e2.datetime))).slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
+        event.showAdminControls = false
+        return <Event
+          data={event}
+          history={history}
+          key={`home_event_${event._id}`}
+        />
+      }) : <p>No upcoming events</p>
 
-    const eventsBlock = loading
-      ? <LoadingIcon active={loading}/>
-      : processedEvents
+    const eventsBlock = loading ? <LoadingIcon active={loading}/> : processedEvents
 
     return (
       <Segment textAlign='center' style={{ minHeight: 700, padding: '1em 0em' }} vertical>

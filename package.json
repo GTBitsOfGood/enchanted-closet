@@ -10,7 +10,6 @@
     "backend": "nodemon start.js",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
-    "lint": "eslint --fix frontend/containers/**"
   },
   "author": "GT Bits of Good",
   "license": "ISC",
