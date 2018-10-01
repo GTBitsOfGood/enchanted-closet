@@ -169,6 +169,9 @@ module.exports.update = (req, res, next) => {
   if (req.body.emergencyContactPhone && req.body.emergencyContactPhone.length > 2) {
     newProps.emergencyContactPhone = req.body.emergencyContactPhone
   }
+  if (req.body.shirtSize && User.schema.path('shirtSize').enumValues.indexOf(req.body.shirtSize) !== '-1') {
+    newProps.shirtSize = req.body.shirtSize
+  }
   if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation
   }
