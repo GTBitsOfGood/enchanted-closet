@@ -12,7 +12,6 @@ import { Clearfix, EditButton } from '../'
 import { COLORS } from '../../constants'
 
 class Event extends Component {
-
   render () {
     const { data, deleteEvent, history, user } = this.props
     const link = `/events/${data._id}`

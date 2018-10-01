@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import { fetchEventsIfNeeded } from '../actions'
 
 import { Button, Divider, Segment, Container, Grid, Reveal, Menu, Header, Icon, Image } from 'semantic-ui-react'
-import { Event, EventEntry, FileForm, LoadingIcon, Title } from '../components'
+import { Event, EventEntry, LoadingIcon } from '../components'
 
 import { HOMEPAGE_EVENT_LIMIT } from '../constants'
 

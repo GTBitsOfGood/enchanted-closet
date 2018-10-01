@@ -51,6 +51,7 @@ class EventsDetail extends Component {
           })
         })
         .catch(err => {
+          console.log(err)
           this.setState({ displayMapLocationError: true })
         })
     }
@@ -81,6 +82,7 @@ class EventsDetail extends Component {
         })
         .catch(err => {
           this.setState({ displayMapLocationError: true })
+          console.log(err)
         })
     }
   }
@@ -88,8 +90,7 @@ class EventsDetail extends Component {
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
-    if (!event && isFetchingEvents) // Still processing
-    { return <div /> }
+    if (!event && isFetchingEvents) { return <div /> }
     const date = new Date(event.datetime)
     const registerBlock = (() => {
       const yesterday = new Date()
