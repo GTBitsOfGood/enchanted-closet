@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Icon } from 'semantic-ui-react';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Button, Icon } from 'semantic-ui-react'
 
 // Cosmetic Button File
 export const CreateNewEventButton = () => (
@@ -13,20 +13,20 @@ export const CreateNewEventButton = () => (
     <Button.Content visible>Create New Event</Button.Content>
     <Button.Content hidden>
       <Icon name='add to calendar' />
-    </Button.Content>   
+    </Button.Content>
   </Button>
-);
+)
 
-export const DeleteButton = ({onClick}) => (
+export const DeleteButton = ({ onClick }) => (
   <Button onClick={onClick} animated="vertical" color="red">
     <Button.Content visible>Delete</Button.Content>
     <Button.Content hidden>
       <Icon name='trash' />
     </Button.Content>
   </Button>
-);
+)
 
-export const DownloadAttendanceButton = ({id}) => (
+export const DownloadAttendanceButton = ({ id }) => (
   <Button
     primary
     onClick={() => window.open(`/api/events/${id}/report`, `_blank`)}
@@ -40,9 +40,9 @@ export const DownloadAttendanceButton = ({id}) => (
       <Icon name="download" />
     </Button.Content>
   </Button>
-);
+)
 
-export const EditButton = ({id}) => (
+export const EditButton = ({ id }) => (
   <Button
     secondary
     animated="vertical"
@@ -54,9 +54,9 @@ export const EditButton = ({id}) => (
       <Icon name='pencil' />
     </Button.Content>
   </Button>
-);
+)
 
-export const MarkAttendanceButton = ({id}) => (
+export const MarkAttendanceButton = ({ id }) => (
   <Button
     as={Link}
     animated="vertical"
@@ -70,9 +70,9 @@ export const MarkAttendanceButton = ({id}) => (
       <Icon name="browser" />
     </Button.Content>
   </Button>
-);
+)
 
-export const ViewPastEventsButton = ({onClick}) => (
+export const ViewPastEventsButton = ({ onClick }) => (
   <Button
     animated
     basic
@@ -82,11 +82,11 @@ export const ViewPastEventsButton = ({onClick}) => (
     <Button.Content visible>View Past Events</Button.Content>
     <Button.Content hidden>
       <Icon name='left arrow' />
-    </Button.Content>   
+    </Button.Content>
   </Button>
-);
+)
 
-export const ViewFutureEventsButton = ({onClick}) => (
+export const ViewFutureEventsButton = ({ onClick }) => (
   <Button
     animated
     basic
@@ -96,7 +96,7 @@ export const ViewFutureEventsButton = ({onClick}) => (
     <Button.Content visible>View Future Events</Button.Content>
     <Button.Content hidden>
       <Icon name='right arrow' />
-    </Button.Content>   
+    </Button.Content>
   </Button>
 
-);
+)

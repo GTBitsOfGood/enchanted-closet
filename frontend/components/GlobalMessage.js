@@ -1,51 +1,51 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Container, Message } from 'semantic-ui-react'; // No transitions, this is presentational
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Container, Message } from 'semantic-ui-react' // No transitions, this is presentational
 
-import { clearAllMessages } from '../actions/';
+import { clearAllMessages } from '../actions/'
 
 // GlobalMessage - do not conflate errorMessage and error
 const GlobalMessage = ({ clearAllMessages, message }) => {
   // Can't work icon into this : Open issue https://github.com/Semantic-Org/Semantic-UI/issues/4759
-  const messageBlock = message ? (    
+  const messageBlock = message ? (
     <Message
       style={styles.message}
       compact info
       onDismiss={clearAllMessages}
     >
       <Message.Content>
-	<Message.Header>Success</Message.Header>
-	{message}
+        <Message.Header>Success</Message.Header>
+        {message}
       </Message.Content>
     </Message>
-  ) : <div />;
+  ) : <div />
   return (
     <div style={styles.globalMessage}>
-	{messageBlock}
+      {messageBlock}
     </div>
-  );
+  )
 }
 
-const styles={
+const styles = {
   message: {
-    minWidth: "180px"
+    minWidth: '180px'
   },
   globalMessage: {
-    position: "fixed",
-    top: "2em",
-    right: "1em",
-    zIndex: "100"
-  },
+    position: 'fixed',
+    top: '2em',
+    right: '1em',
+    zIndex: '100'
+  }
 }
-  
+
 const mapStateToProps = state => {
   return {
     message: state.message
   }
 }
-  
+
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({ clearAllMessages }, dispatch);
-  
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalMessage);
+  bindActionCreators({ clearAllMessages }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalMessage)

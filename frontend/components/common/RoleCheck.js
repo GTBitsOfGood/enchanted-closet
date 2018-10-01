@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
 // HoC that renders based on user role: role/roles are accepted
 const RoleCheck = ({
   children,
-  role="",
-  roles=[],
+  role = '',
+  roles = [],
   userRole
 }) => (
   <span>
@@ -13,12 +13,12 @@ const RoleCheck = ({
       (roles && roles.map(r => r.toLowerCase()).includes(userRole))) &&
      children}
   </span>
-);
+)
 
 const mapStateToProps = state => {
   return {
-    userRole: state.user ? state.user.role.toLowerCase() : "loggedout"
+    userRole: state.user ? state.user.role.toLowerCase() : 'loggedout'
   }
 }
 
-export default connect(mapStateToProps)(RoleCheck);
+export default connect(mapStateToProps)(RoleCheck)

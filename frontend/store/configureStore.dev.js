@@ -1,17 +1,27 @@
-import { createStore, compose, applyMiddleware } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux'
 import thunkMiddleware from 'redux-thunk'
-import rootReducer from '../reducers';
-import DevTools from '../containers/DevTools';
+import { composeWithDevTools } from 'redux-devtools-extension'
+import DevTools from '../containers/DevTools'
+import defaultState from '../static/defaultState'
+import rootReducer from '../reducers'
 
-import defaultState from '../static/defaultState';
+var composeResult
 
-export function configureStore(initialState) {
-    return createStore(
-        rootReducer,
-        Object.assign({}, initialState, defaultState),
-        compose(
-            applyMiddleware(thunkMiddleware),
-            DevTools.instrument()
-        ),
-    );
+if (process.env.REDUX_DEV_TOOL !== 'BROWSER') {
+  composeResult = compose(
+    applyMiddleware(thunkMiddleware),
+    DevTools.instrument()
+  )
+} else {
+  composeResult = composeWithDevTools(
+    applyMiddleware(thunkMiddleware)
+  )
+}
+
+export function configureStore (initialState) {
+  return createStore(
+    rootReducer,
+    Object.assign({}, initialState, defaultState),
+    composeResult
+  )
 }

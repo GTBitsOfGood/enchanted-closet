@@ -1,24 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { withRouter, Redirect, Switch } from 'react-router-dom';
+import { withRouter, Redirect, Switch } from 'react-router-dom'
 
-const Auth = ( props ) => {
-  const { loggedIn } = props;
-  
-  if (loggedIn) 
+const Auth = (props) => {
+  const { loggedIn } = props
+
+  if (loggedIn) {
     return (
       <Switch>
-	{props.children}
+        {props.children}
       </Switch>
     )
-  else return <Redirect to="/login" />
+  } else return <Redirect to="/login" />
 }
 
 const mapStateToProps = (state) => {
   return {
     loggedIn: state.user
-  };
+  }
 }
 
-export default withRouter(connect(mapStateToProps)(Auth));
+export default withRouter(connect(mapStateToProps)(Auth))

@@ -1,36 +1,32 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { withRouter, Link, Switch } from 'react-router-dom';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter, Link, Switch } from 'react-router-dom'
 
-import { performLogout } from '../actions/index.js';
+import { performLogout } from '../actions/index.js'
 
 class Logout extends Component {
-  constructor( props ) {
-    super(props);
+  componentWillMount () {
+    this.props.performLogout()
   }
 
-  componentWillMount(){
-    this.props.performLogout();
-  }
-
-  render() {
+  render () {
     return (
       <div>
-	Click <Link to="/">here </Link> if you are not redirected.
+  Click <Link to="/">here </Link> if you are not redirected.
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => {
-  return {};
+  return {}
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     performLogout: performLogout
-  }, dispatch);
+  }, dispatch)
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Logout));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Logout))

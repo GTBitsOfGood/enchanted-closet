@@ -1,20 +1,16 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import Radium from 'radium';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import Radium from 'radium'
 
-import { Container, Card, Grid, Button, Loader } from 'semantic-ui-react';
+import { Container, Card, Grid, Button, Loader } from 'semantic-ui-react'
 
 import { COLORS } from '../../constants'
 
 class PageTitle extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { title, link, linkTitle, showLoadingIcon, loading, history } = this.props;
+  render () {
+    const { title, link, linkTitle, showLoadingIcon, loading, history } = this.props
     return (
       <Container>
         <Card fluid style={styles.background}>
@@ -23,17 +19,17 @@ class PageTitle extends Component {
               <Grid.Row columns={link && linkTitle ? 2 : 1}>
                 <Grid.Column>
                   <h2>{title}</h2>
-		  {showLoadingIcon &&
-		   <Loader active={loading} inline size='small' style={styles.loader}/>
-		  }
+                  {showLoadingIcon &&
+       <Loader active={loading} inline size='small' style={styles.loader}/>
+                  }
                 </Grid.Column>
                 {link && linkTitle &&
                  <Grid.Column textAlign="right">
-                  <Button style={styles.button} onClick={() => {
-		    history.push({pathname: link})
-		  }}>
-		     {linkTitle}
-		   </Button>
+                   <Button style={styles.button} onClick={() => {
+                     history.push({ pathname: link })
+                   }}>
+                     {linkTitle}
+                   </Button>
                  </Grid.Column>
                 }
               </Grid.Row>
@@ -41,7 +37,7 @@ class PageTitle extends Component {
           </Card.Content>
         </Card>
       </Container>
-    );
+    )
   }
 }
 
@@ -71,4 +67,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withRouter(Radium(connect(mapStateToProps)(PageTitle)));
+export default withRouter(Radium(connect(mapStateToProps)(PageTitle)))

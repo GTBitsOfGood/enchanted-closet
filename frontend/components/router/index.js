@@ -1,1 +1,1 @@
-export { default as SmartRoute } from './SmartRoute' 
+export { default as SmartRoute } from './SmartRoute'

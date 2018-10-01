@@ -1,96 +1,96 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchUsers, promoteUser } from '../../actions/';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetchUsers, promoteUser } from '../../actions/'
 
-import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react';
-import { withRouter, Link } from 'react-router-dom';
+import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react'
+import { withRouter, Link } from 'react-router-dom'
 
 import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, LoadingIcon, PageTitle, PastEventsCard } from '../../components'
 
 class AdminUsersDetail extends Component {
-  constructor(props) {
-    super(props);
-    const { updateUserStore, users, match } = this.props;
+  constructor (props) {
+    super(props)
+    const { updateUserStore, users, match } = this.props
     this.state = {
-      user_id: match.params.id,
+      userId: match.params.id,
       loading: false,
       hasPerformedUpdate: false
-    };
+    }
 
     if (!users) {
-      this.loadUsers();
+      this.loadUsers()
     } else {
-      const usr = users.filter(u => u._id === this.state.user_id);
+      const usr = users.filter(u => u._id === this.state.userId)
       if (usr.length === 1) {
-	this.state = Object.assign({}, this.state, {
-	  user: usr[0]
-	});
+        this.state = Object.assign({}, this.state, {
+          user: usr[0]
+        })
       } else {
-	this.loadUsers();
+        this.loadUsers()
       }
     }
-    this.loadUsers = this.loadUsers.bind(this);
+    this.loadUsers = this.loadUsers.bind(this)
   }
 
-  loadUsers() {
-    const {updateUserStore} = this.props;
-    this.state = Object.assign({}, this.state, {
+  loadUsers () {
+    const { updateUserStore } = this.props
+    this.setState({
       loading: true,
       hasPerformedUpdate: true
-    });
-    updateUserStore();
+    })
+    updateUserStore()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {users} = nextProps;
-    const {user_id} = this.state;
-    const usr = users.filter(u => u._id === user_id);
+  componentWillReceiveProps (nextProps) {
+    const { users } = nextProps
+    const { userId } = this.state
+    const usr = users.filter(u => u._id === userId)
     if (usr.length === 1) {
-      this.setState({user: usr[0], loading: false});
+      this.setState({ user: usr[0], loading: false })
     } else {
-      this.setState({loading: false, hasPerformedUpdate: true});
+      this.setState({ loading: false, hasPerformedUpdate: true })
     }
   }
 
-  render() {
-    const { loading, hasPerformedUpdate, user_id, user } = this.state;
-    const { promoteUser } = this.props;
-    const name = user ? `${user.firstName} ${user.lastName}` :
-		 'Name not found';
+  render () {
+    const { loading, hasPerformedUpdate, userId, user } = this.state
+    const { promoteUser } = this.props
+    const name = user ? `${user.firstName} ${user.lastName}`
+      : 'Name not found'
     return (
       <Container>
-	{loading &&
-	 <div style={{paddingTop:50}}>
-	   <LoadingIcon active/>
-	 </div>
-	}
-	{!loading && hasPerformedUpdate && !user &&
-	 <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
-	}
-	{!loading && user &&
-	 <div>
-	   <PageTitle title={user.role + ": " + name}/>
-	   <ContactCard user={user}/>
-	   { user.role === 'Participant' && <DemographicsCard user={user}/>}
-	   <EmergencyContactCard user={user}/>
-	   <PastEventsCard user={user}/>
-	 </div>
-	}
-	<Button
-	  as={Link}
-	  to="/users"
-	>
-	  Back to all users
-	</Button>
-	{user && user.role == 'Volunteer' &&
-	 <Button
-	   onClick={() => promoteUser(user_id)}
-	   >
-	   Make Admin
-	 </Button>
-	}
+        {loading &&
+   <div style={{ paddingTop: 50 }}>
+     <LoadingIcon active/>
+   </div>
+        }
+        {!loading && hasPerformedUpdate && !user &&
+   <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
+        }
+        {!loading && user &&
+   <div>
+     <PageTitle title={user.role + ': ' + name}/>
+     <ContactCard user={user}/>
+     { user.role === 'Participant' && <DemographicsCard user={user}/>}
+     <EmergencyContactCard user={user}/>
+     <PastEventsCard user={user}/>
+   </div>
+        }
+        <Button
+          as={Link}
+          to="/users"
+        >
+    Back to all users
+        </Button>
+        {user && user.role === 'Volunteer' &&
+   <Button
+     onClick={() => promoteUser(userId)}
+   >
+     Make Admin
+   </Button>
+        }
       </Container>
     )
   }
@@ -99,14 +99,14 @@ class AdminUsersDetail extends Component {
 const mapStateToProps = state => {
   return {
     users: state.users
-  };
+  }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     updateUserStore: fetchUsers,
     promoteUser
-  }, dispatch);
+  }, dispatch)
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminUsersDetail));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AdminUsersDetail))
