@@ -14,6 +14,19 @@ var EventSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  registrationStart: {
+    type: Date,
+    required: true
+  },
+  registrationEnd: {
+    type: Date,
+    required: true,
+    validate: {
+      validator: (time) => {
+        return time - this.registrationStart > 0
+      }
+    }
+  },
   location: {
     type: String,
     required: true
