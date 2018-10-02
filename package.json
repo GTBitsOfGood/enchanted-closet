@@ -9,7 +9,7 @@
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon start.js",
     "start": "npm run build && NODE_ENV=production node server.js",
-    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
+    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
   },
   "author": "GT Bits of Good",
   "license": "ISC",
