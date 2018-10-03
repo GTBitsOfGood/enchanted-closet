@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import { Container, Grid, Segment } from 'semantic-ui-react';
+import { Container, Grid, Segment } from 'semantic-ui-react'
 
-//display for an event entry - extend generic entry?
-const EventEntry = ( props ) => {
+// display for an event entry - extend generic entry?
+const EventEntry = (props) => {
   return (
     <Grid.Row className="EventEntry">
       <Grid.Column width={2}/>
@@ -25,6 +25,6 @@ const EventEntry = ( props ) => {
       <Grid.Column width={2}/>
     </Grid.Row>
   )
-};
+}
 
-export default EventEntry;
+export default EventEntry

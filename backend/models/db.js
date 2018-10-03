@@ -1,17 +1,20 @@
-const mongoose = require('mongoose');
+import './event'
+import './user'
+import './systemconfig'
 
-var mongoDB = 'mongodb://127.0.0.1/enchannted_closet_database';
+const mongoose = require('mongoose')
+
+const mongoURL = process.env.MONGO_URL
+
+var mongoDB = mongoURL
 mongoose.connect(mongoDB, {
   useMongoClient: true
-});
+})
 
-//Get the default connection
-var db = mongoose.connection;
+// Get the default connection
+var db = mongoose.connection
 
-require('./event');
-require('./user');
+// Bind connection to error event (to get notification of connection errors)
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-module.exports = db;
+module.exports = db

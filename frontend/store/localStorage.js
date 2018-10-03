@@ -1,22 +1,22 @@
 export const loadAuthState = () => {
   try {
-    const serializedAuth = localStorage.getItem('user');
+    const serializedAuth = localStorage.getItem('user')
     if (serializedAuth === null) {
-      return undefined;
+      return undefined
     }
 
-    return JSON.parse(serializedAuth);
+    return JSON.parse(serializedAuth)
   } catch (e) {
-    return undefined;
+    return undefined
   }
 }
 
 export const saveAuthState = state => {
   try {
-    const serializedAuth = JSON.stringify(state.user);
-    localStorage.setItem('user', serializedAuth);
+    const serializedAuth = JSON.stringify(state.user)
+    localStorage.setItem('user', serializedAuth)
   } catch (err) {
     // Ignore errors
-    console.log(err);
+    console.log(err)
   }
 }
