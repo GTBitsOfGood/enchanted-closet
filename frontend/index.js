@@ -1,5 +1,5 @@
 import '../node_modules/semantic-ui-css/semantic.min.css'
-//import './assets/stylesheets/base'
+import './assets/stylesheets/base'
 
 import { render } from 'react-dom'
 import React from 'react'

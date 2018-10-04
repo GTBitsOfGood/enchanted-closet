@@ -88,7 +88,7 @@ const styles = {
 }
 
 const images = {
-  logo: require('../../public/images/EC_logo_web.png')
+  logo: '/images/EC_logo_web.png'
 }
 
 const mapStateToProps = (state) => {
