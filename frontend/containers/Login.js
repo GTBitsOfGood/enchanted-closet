@@ -12,7 +12,7 @@ const Login = () => (
   <Grid verticalAlign="middle" columns='three' centered>
     <Grid.Row>
       <Grid.Column width={4} only="computer">
-        <Image src={images.imgL} size='medium' centered />
+        <Image src={require(images.imgL)} size='medium' centered />
       </Grid.Column>
       <Grid.Column computer={8} mobile={16}>
         <Container fluid text>
@@ -37,7 +37,7 @@ const Login = () => (
         </Container>
       </Grid.Column>
       <Grid.Column width={4} only="computer">
-        <Image src={images.imgR} size='medium' centered />
+        <Image src={require(images.imgR)} size='medium' centered />
       </Grid.Column>
     </Grid.Row>
   </Grid>

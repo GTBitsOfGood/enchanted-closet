@@ -9,7 +9,7 @@ const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
     return (
       <Image
         centered
-        src={`/uploaded/events/${imageUrl}`}
+        src={require(`../../../public/uploaded/events/${imageUrl}`)}
         size='medium'
       />
     )
@@ -19,7 +19,7 @@ const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
         <Image
           style={styles.imageStyle}
           centered
-          src={`/uploaded/events/${imageUrl}`}
+          src={`../../../public/uploaded/events/${imageUrl}`}
           size='medium'
         />
       </UploadModal>

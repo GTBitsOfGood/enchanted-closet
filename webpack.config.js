@@ -11,26 +11,47 @@ module.exports = {
   entry: './frontend/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.[hash].js'
+    filename: 'bundle.[hash].js',
+    publicPath: '/'
   },
   devtool: 'inline-source-map',
   module: {
     rules: [
       {
         test: /\.(js)$/,
-        exclude: /node-modules/,
+        exclude: /node_modules/,
         use: [
-          'babel-loader'
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+              plugins: [
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-proposal-class-properties'
+              ]
+            }
+          }
         ]
       },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          'style-loader',
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          {
+            loader: 'css-loader'
+            
+          },
+          {
+            loader: 'postcss-loader'
+          },
+          {
+            loader: 'sass-loader'
+          }
         ]
       },
       {
@@ -54,11 +75,15 @@ module.exports = {
       // both options are optional
       filename: '[name].css',
       chunkFilename: '[id].css'
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
     host: 'localhost',
     port: port,
-    open: true
+    proxy: {
+      '/api': 'http://localhost:3001'
+    },
+    hot: true
   }
 }

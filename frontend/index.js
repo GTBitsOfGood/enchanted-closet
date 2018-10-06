@@ -20,16 +20,3 @@ render(
   <Root store={store} history={history} />,
   document.getElementById('root')
 )
-
-if (module.hot) {
-  module.hot.accept('./containers/Root.js', () => {
-    const NewRoot = require('./containers/Root.js').default
-    console.log(NewRoot)
-    render(
-      <AppContainer>
-        <NewRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
-    )
-  })
-}
