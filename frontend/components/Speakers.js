@@ -8,11 +8,15 @@ const Speakers = (props) => {
       <h3>Speakers</h3>
       {props.speakers && props.speakers.length > 0
         ? props.speakers.map(speaker => (
-          <Popup
-            key={speaker}
-            trigger={speaker.avatar ? (<Image src={speaker.avatar} avatar />) : (<Icon size='big' name='user circle'/>)}
-            header={speaker}
-          />
+          // <Popup
+          //   key={speaker}
+          //   trigger=
+          //   header={speaker}
+          // />
+          <div key={speaker}>
+
+            {speaker.avatar ? (<Image src={speaker.avatar} avatar />) : (<Icon size='big' name='user circle'/>)} {speaker}
+          </div>
         ))
         : <p><Icon name='circle exclamation'/> No speakers have been listed yet</p>
       }

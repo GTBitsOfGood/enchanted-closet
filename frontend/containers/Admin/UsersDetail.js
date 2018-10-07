@@ -62,34 +62,34 @@ class AdminUsersDetail extends Component {
     return (
       <Container>
         {loading &&
-   <div style={{ paddingTop: 50 }}>
-     <LoadingIcon active/>
-   </div>
+          <div style={{ paddingTop: 50 }}>
+            <LoadingIcon active/>
+          </div>
         }
         {!loading && hasPerformedUpdate && !user &&
-   <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
+          <ErrorComponent redir='/users/' redirMsg='Return to all users' errMsg='404 - User not Found'/>
         }
         {!loading && user &&
-   <div>
-     <PageTitle title={user.role + ': ' + name}/>
-     <ContactCard user={user}/>
-     { user.role === 'Participant' && <DemographicsCard user={user}/>}
-     <EmergencyContactCard user={user}/>
-     <PastEventsCard user={user}/>
-   </div>
+          <div>
+            <PageTitle title={user.role + ': ' + name}/>
+            <ContactCard user={user}/>
+            { user.role === 'Participant' && <DemographicsCard user={user}/>}
+            <EmergencyContactCard user={user}/>
+            <PastEventsCard user={user}/>
+          </div>
         }
         <Button
           as={Link}
           to="/users"
         >
-    Back to all users
+        Back to all users
         </Button>
         {user && user.role === 'Volunteer' &&
-   <Button
-     onClick={() => promoteUser(userId)}
-   >
-     Make Admin
-   </Button>
+        <Button
+          onClick={() => promoteUser(userId)}
+        >
+        Make Admin
+        </Button>
         }
       </Container>
     )

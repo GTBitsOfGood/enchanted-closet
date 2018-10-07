@@ -49,6 +49,7 @@ class EventTab extends Component {
     })
 
     const bodyProps = { events: limitedEvents, isFetchingEvents: isLoading, page: page }
+    console.log(bodyProps)
 
     const filter = (event) => true
 
@@ -74,10 +75,10 @@ class EventTab extends Component {
         <Segment textAlign='center' vertical>
           <Header as="l1"> Current Page: {page}</Header>
           {page * 10 <= length &&
-     <p>Showing: {(page - 1) * 10 + 1} - {page * 10} of {length}</p>
+            <p>Showing: {(page - 1) * 10 + 1} - {page * 10} of {length}</p>
           }
           {page * 10 > length &&
-     <p>Showing: {(page - 1) * 10 + 1} - {length} of {length}</p>
+            <p>Showing: {(page - 1) * 10 + 1} - {length} of {length}</p>
           }
         </Segment>
       </Container>

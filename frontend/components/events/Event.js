@@ -23,24 +23,14 @@ class Event extends Component {
             <Segment.Group horizontal>
               <Segment style={style.cardLeft}>
                 <Header as='h3' inverted>{data.name}</Header>
-                <Popup inverted
-                  trigger={(
-                    <Container style={style.whiteText}>
-                      <Icon name='calendar'/>
-                      {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
-                    </Container>
-                  )}
-                  content="Date"
-                />
-                <Popup inverted
-                  trigger={(
-                    <Container style={style.whiteText}>
-                      <Icon name='road' inverted/>
-                      {data.location}
-                    </Container>
-                  )}
-                  content="Address"
-                />
+                <Container style={style.whiteText}>
+                  <Icon name='calendar'/>
+                  {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
+                </Container>
+                <Container style={style.whiteText}>
+                  <Icon name='road' inverted/>
+                  {data.location}
+                </Container>
               </Segment>
               <Segment style={style.cardRight}>
                 <Container textAlign="right" style={{ paddingRight: 10, paddingTop: 10 }}>

@@ -79,7 +79,7 @@ class Events extends Component {
                 (e, data) => this.changeQuery(e)
               }/>
             <span style={styles.searchBy}>
-        Search By:
+              Search By:
             </span>
             <Button
               active = {this.state.filters['Name']}

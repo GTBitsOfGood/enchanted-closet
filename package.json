@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "webpack --config webpack.prod.config.js",
-    "dev": "concurrently -k \"webpack-dev-server\" \"npm run backend\"",
+    "dev": "concurrently -k \"webpack-dev-server --hot\" \"npm run backend\"",
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
     "start": "npm run build && NODE_ENV=production node server.js",

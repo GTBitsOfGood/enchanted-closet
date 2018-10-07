@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Divider, Segment, Header, Icon, Container, Message } from 'semantic-ui-react'
 import { COLORS } from '../../constants'
+import { withRouter, Link } from 'react-router-dom'
 import isProfileComplete from '../../helpers/util'
 import { DashboardCard } from './'
 import { Event, RoleCheck } from '../'
@@ -145,7 +146,7 @@ const mapDispatchToProps = dispatch => {
   return {}
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(BaseDashboard)
+)(BaseDashboard))
