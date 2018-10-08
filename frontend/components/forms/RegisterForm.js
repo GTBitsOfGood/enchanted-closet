@@ -13,11 +13,11 @@ class RegisterForm extends Component {
     super(props)
     this.state = {
       status: {
-				firstName: -1, // -1 for untouched, 0 is no error, 1 is error
-				lastName: -1,
-				email: -1,
-				password: -1,
-				confirmPass: -1
+        firstName: -1, // -1 for untouched, 0 is no error, 1 is error
+        lastName: -1,
+        email: -1,
+        password: -1,
+        confirmPass: -1
       },
       firstName: '',
       lastName: '',
@@ -26,9 +26,9 @@ class RegisterForm extends Component {
       confirmPass: '',
       role: 'participant',
       birthday: moment()
-		}
-		
-		this.handleBirthdayChange = this.handleBirthdayChange.bind(this);
+    }
+
+    this.handleBirthdayChange = this.handleBirthdayChange.bind(this)
   }
 
   regLegalTest = (field, val) => {
@@ -51,7 +51,7 @@ class RegisterForm extends Component {
         return /^[a-zA-Z]+$/.test(val)
       case 'password':
       case 'confirmPass':
-        return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/.test(val)
+        return /^(?=.*[A-Za-z.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ])(?=.*\d)[A-Za-z\d.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~`]{7,}$/.test(val)
       case 'email':
         return /^(([^<>()\[\]\\.,;:\s@]+(\.[^<>()\[\]\\.,;:\s@]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
       default:
@@ -172,7 +172,7 @@ class RegisterForm extends Component {
 
   render () {
     const { firstName, lastName, email,
-            password, confirmPass, role } = this.state
+      password, confirmPass, role } = this.state
     const { setError, setValid, setComplete, setMessage } = this.props
     return (
       <div>

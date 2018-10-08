@@ -7,7 +7,7 @@ import { upfetchEventById, fetchUsers } from '../../actions/'
 
 import { Button, Container, Divider, Segment, Header } from 'semantic-ui-react'
 import { ButtonGallery, ErrorComponent, GenericBanner, LoadingIcon, PageTitle, RoleCheck, SearchBarCard, UserList } from '../../components'
-
+import { DownloadAttendanceButton } from '../../components/common/Buttons'
 /* Attendance Page
  * Note: Only Admins can mark volunteer attendance
  */
@@ -17,7 +17,7 @@ class AdminAttendance extends Component {
     const { match, users, events, user } = this.props
 
     this.state = {
-      event_id: match.params.id,
+      eventId: match.params.id,
       users: users || [],
       hasAttemptedRefresh: false,
       loading: true,
@@ -28,16 +28,16 @@ class AdminAttendance extends Component {
   }
 
   componentWillMount () { // Identify the proper event for full fetch. Fetch if full fetch needed.
-    const { event_id } = this.state
+    const { eventId } = this.state
     const { upfetchEventById, fetchUsers, events = [], users = [] } = this.props
 
     // Search for event
-    let event = events.find(e => e._id === event_id)
+    let event = events.find(e => e._id === eventId)
     if (!event) {
       this.setState({
         hasAttemptedRefresh: true
       })
-      upfetchEventById(event_id)
+      upfetchEventById(eventId)
     }
 
     // Populate users : TODO - excessive fetching - fetch with event user registry
@@ -64,9 +64,9 @@ class AdminAttendance extends Component {
   }
 
   render () {
-    const { loading, hasAttemptedRefresh, filter, event_id } = this.state // event in state is pretty suboptimal
+    const { loading, hasAttemptedRefresh, filter, eventId } = this.state // event in state is pretty suboptimal
     const { events = [], users = [], user } = this.props
-    const event = events.find(e => e._id === event_id)
+    const event = events.find(e => e._id === eventId)
     if (event) {
       // Timecheck on event: TODO CONSTANT ASSUMPTION Presume same day
       // Future TODO: Split single time into start and end
@@ -125,7 +125,7 @@ class AdminAttendance extends Component {
                 </Button>
                 <Button
                   as={Link}
-                  to={`/events/${event_id}`}
+                  to={`/events/${eventId}`}
                 >
       Back to Event View
                 </Button>
@@ -148,10 +148,10 @@ class AdminAttendance extends Component {
                 header="Archived Event"
                 message="This event has already happened!"
                 linkMsg="Back to event view"
-                link={`/events/${this.state.event_id}`}
+                link={`/events/${this.state.eventId}`}
               />
               <RoleCheck role="Admin">
-                <DownloadAttendanceButton id={this.state.event_id} />
+                <DownloadAttendanceButton id={this.state.eventId} />
               </RoleCheck>
             </div>
           )
@@ -162,7 +162,7 @@ class AdminAttendance extends Component {
                 header="Event locked"
                 message="This event isn't happening yet!"
                 linkMsg="Back to event view"
-                link={`/events/${this.state.event_id}`}
+                link={`/events/${this.state.eventId}`}
               />
             </div>
           )

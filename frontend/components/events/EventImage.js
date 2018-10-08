@@ -15,7 +15,14 @@ const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
     )
   } else {
     return (
-      <UploadModal type="event" id={id} style={styles.imageStyle} url={`/uploaded/events/${imageUrl}`}/>
+      <UploadModal type="event" id={id}>
+        <Image
+          style={styles.imageStyle}
+          centered
+          src={`/uploaded/events/${imageUrl}`}
+          size='medium'
+        />
+      </UploadModal>
     )
   }
 }

@@ -6,10 +6,6 @@ import { withRouter, Link, Switch } from 'react-router-dom'
 import { performLogout } from '../actions/index.js'
 
 class Logout extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentWillMount () {
     this.props.performLogout()
   }
