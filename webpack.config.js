@@ -10,7 +10,7 @@ module.exports = {
   mode: 'development',
   entry: './frontend/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve('dist'),
     filename: 'bundle.[hash].js',
     publicPath: '/'
   },
@@ -24,10 +24,19 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env', '@babel/preset-react'],
+              cacheDirectory: true,
+              babelrc: false,
+              presets: [
+                [
+                  '@babel/preset-env',
+                  { targets: { browsers: 'last 2 versions' } } // or whatever your project requires
+                ],
+                '@babel/preset-react'
+              ],
               plugins: [
-                '@babel/plugin-syntax-dynamic-import',
-                '@babel/plugin-proposal-class-properties'
+                // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
+                ['@babel/plugin-proposal-class-properties', { loose: true }],
+                'react-hot-loader/babel'
               ]
             }
           }
@@ -35,6 +44,7 @@ module.exports = {
       },
       {
         test: /\.(sa|sc|c)ss$/,
+        exclude: [/node_modules/],
         use: [
           {
             loader: 'style-loader'
@@ -43,8 +53,14 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader
           },
           {
-            loader: 'css-loader'
-            
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]_[local]_[hash:base64]',
+              sourceMap: true,
+              minimize: true
+            }
           },
           {
             loader: 'postcss-loader'
@@ -55,7 +71,23 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/i,
+        test: /\.(sa|sc|c)ss$/,
+        exclude: [/frontend|backend/],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              localIdentName: '[name]_[local]_[hash:base64]',
+              sourceMap: true,
+              minimize: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
         use: {
           loader: 'url-loader',
           options: {
@@ -80,6 +112,7 @@ module.exports = {
   ],
   devServer: {
     host: 'localhost',
+    historyApiFallback: true,
     port: port,
     proxy: {
       '/api': 'http://localhost:3001'

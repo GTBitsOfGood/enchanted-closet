@@ -28,8 +28,8 @@ const api = require('./backend/routes');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api); // Server Routing
-app.get('/*', (request, response) => { // Else, give to React
-  response.sendFile(__dirname + '/public/index.html');
+app.get('/*', (req, res) => { // Else, give to React
+  res.sendFile(__dirname + 'public/index.html');
 });
 
 app.listen(PORT, error => {

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { uniqueId } from 'lodash'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import Radium from 'radium'
 
 import { fetchEventsIfNeeded, invalidateEvents, fetchFutureEvents, fetchPastEvents } from '../actions/index'
@@ -79,7 +79,7 @@ class Events extends Component {
                 (e, data) => this.changeQuery(e)
               }/>
             <span style={styles.searchBy}>
-        Search By:
+              Search By:
             </span>
             <Button
               active = {this.state.filters['Name']}
@@ -147,4 +147,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchPastEvents
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Events)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events))

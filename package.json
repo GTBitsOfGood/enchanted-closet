@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "webpack --config webpack.prod.config.js",
-    "dev": "concurrently -k \"webpack-dev-server\" \"npm run backend\"",
+    "dev": "concurrently -k \"webpack-dev-server --hot\" \"npm run backend\"",
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
     "start": "npm run build && NODE_ENV=production node server.js",
@@ -54,8 +54,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "sass-loader": "^7.1.0",
-    "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.81.0",
+    "semantic-ui-css": "2.3.1",
+    "semantic-ui-react": "0.81.0",
     "serve-favicon": "^2.4.5",
     "should": "^13.1.0",
     "webpack-dev-server": "^3.1.9"
@@ -100,7 +100,7 @@
     "react-test-renderer": "^15.5.4",
     "redux-devtools-extension": "^2.13.5",
     "style-loader": "^0.16.1",
-    "url-loader": "^0.6.2",
+    "url-loader": "^1.1.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   }
