@@ -57,13 +57,12 @@ class ProfileForm extends Component {
       }
     }
   }
-  handleChange (event) {
-    var text = event.target.innerHTML.substring(19, 21)
-    if (text.substring(1, 2) === '<') {
-      text = text.substring(0, 1)
-    }
-    this.setState({ userData: { ...this.state.userData, 'grade': text } })
-    // this.updateStatus('grade', 0);
+  handleChange = field => (event) => {
+    const text = event.target.firstChild.innerHTML
+    let userDataPatch = { userData: { ...this.state.userData } }
+    userDataPatch.userData[field] = text
+    console.log(userDataPatch)
+    this.setState(userDataPatch)
   }
 
   // verify cb
@@ -129,18 +128,17 @@ class ProfileForm extends Component {
           {
             Object.keys(this.targets).map(key => {
               const tar = this.targets[key]
-              if (key === 'grade') {
+              if (key === 'grade' || key === 'shirtSize') {
                 return (
                   <Form.Select
                     key={`profile${key}`}
                     label={tar.label ? tar.label : startCase(key)}
                     options={this.targets[key]['options']}
-                    // placeholder='Grade'
                     value={
                       userData[key]
                     }
-                    // onChange={this.handleChange}
-                    onChange={this.handleChange}
+                  // onChange={this.handleChange}
+                    onChange={this.handleChange(key)}
                     onBlur={this.blurFunctionFactory(key)}
                   />
 
@@ -149,7 +147,7 @@ class ProfileForm extends Component {
                 return (
                   <Form.Input
                     key={`profile${key}`}
-                    // inline transparent
+                  // inline transparent
                     label={tar.label ? tar.label : startCase(key)}
                     error={this.errorFactory(key)}
                     name={key}

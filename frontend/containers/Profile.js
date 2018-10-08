@@ -8,7 +8,7 @@ import PageTitle from '../components/common/PageTitle'
 import { clearErrors, fetchUserById } from '../actions'
 
 import { Button, Card, Container, Form, Header, Message, Segment } from 'semantic-ui-react'
-import { PageTitle, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
+import { ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
 
 class Profile extends Component {
   constructor (props) {

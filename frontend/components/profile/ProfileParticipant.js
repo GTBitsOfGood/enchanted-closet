@@ -19,7 +19,20 @@ const targets = {
       { key: '9', text: '9', value: '9' },
       { key: '10', text: '10', value: '10' },
       { key: '11', text: '11', value: '11' },
-      { key: '12', text: '12', value: '12' },
+      { key: '12', text: '12', value: '12' }
+    ]
+  },
+  'shirtSize': {
+    isLegal() { return true },
+    options: [
+      { key: 'Unselected', text: 'Unselected', value: 'Unselected' },
+      { key: 'XX Small', text: 'XX Small', value: 'XX Small' },
+      { key: 'X Small', text: 'X Small', value: 'X Small' },
+      { key: 'Small', text: 'Small', value: 'Small' },
+      { key: 'Medium', text: 'Medium', value: 'Medium' },
+      { key: 'Large', text: 'Large', value: 'Large' },
+      { key: 'X Large', text: 'X Large', value: 'X Large' },
+      { key: 'XX Large', text: 'XX Large', value: 'XX Large' }
     ]
   },
   'race': {
