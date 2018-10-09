@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use strict";
 
-// require('dotenv').config()
+require('dotenv').config()
 
 const path = require('path');
 const express = require('express');
@@ -29,7 +29,7 @@ const api = require('./backend/routes');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api); // Server Routing
 app.get('/*', (req, res) => { // Else, give to React
-  res.sendFile(__dirname + 'public/index.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(PORT, error => {
