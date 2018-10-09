@@ -4,7 +4,7 @@ import './systemconfig'
 
 const mongoose = require('mongoose')
 
-const mongoURL = 'mongodb://test:passw0rd@ds259802.mlab.com:59802/enchannted_closet_database'
+const mongoURL = process.env.MONGO_URL != null ? process.env.MONGO_URL : 'mongodb://test:passw0rd@ds259802.mlab.com:59802/enchannted_closet_database'
 
 var mongoDB = mongoURL
 mongoose.connect(mongoDB, {

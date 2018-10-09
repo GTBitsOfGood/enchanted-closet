@@ -1,7 +1,8 @@
-"use strict";
+/* eslint-disable */
+"use strict"
 
-const webpack = require('webpack');
-const path = require('path');
+const webpack = require('webpack')
+const path = require('path')
 
 module.exports = {
   entry: [
@@ -34,6 +35,16 @@ module.exports = {
     contentBase: './public',
     hot: true
   },
+  optimization: {
+    minimize: true,
+    runtimeChunk: true,
+    splitChunks: {
+      chunks: "async",
+      minSize: 1000,
+      minChunks: 2,
+      name: true
+    }
+  },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
@@ -41,11 +52,6 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env": {
         "NODE_ENV": JSON.stringify("production")
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
       }
     })
   ]

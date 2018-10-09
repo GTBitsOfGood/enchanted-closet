@@ -8,7 +8,10 @@ const port = 3000
 
 module.exports = {
   mode: 'development',
-  entry: './frontend/index.js',
+  entry: [
+    'react-hot-loader/patch',
+    './frontend/index.js'
+  ],
   output: {
     path: path.resolve('dist'),
     filename: 'bundle.[hash].js',
@@ -99,7 +102,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'public/index.html',
+      template: 'frontend/index.ejs',
       favicon: 'public/images/favicon/favicon.ico'
     }),
     new MiniCssExtractPlugin({

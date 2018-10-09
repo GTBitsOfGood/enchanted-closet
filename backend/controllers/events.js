@@ -161,14 +161,14 @@ module.exports.absent = (req, res, next) => {
       return next()
     }
     User.findById(req.params.userID, function (err, uDoc) {
-      if (err || !uDoc) {
+      if (err || uDoc == null) {
         res.locals.error = {
           status: 404,
           msg: 'That user was not found in the database'
         }
         return next()
       }
-      if (uDoc.role == 'Participant') {
+      if (uDoc.role === 'Participant') {
         if (!eDoc.participantsAttended) eDoc.participantsAttended = []
         if (eDoc.participantsAttended.indexOf(req.params.userID) !== -1) {
           var temp = eDoc.participantsAttended.map(String)
@@ -181,10 +181,10 @@ module.exports.absent = (req, res, next) => {
           }
           return next()
         }
-      } else if (uDoc.role == 'Volunteer') {
+      } else if (uDoc.role === 'Volunteer') {
         if (!eDoc.volunteersAttended) eDoc.volunteersAttended = []
         if (eDoc.volunteersAttended.indexOf(req.params.userID) !== -1) {
-          var temp = eDoc.volunteersAttended.map(String)
+          /* var temp = eDoc.volunteersAttended.map(String) */
           temp.splice(temp.indexOf(req.params.userID), 1)
           eDoc.volunteersAttended = temp
         } else {

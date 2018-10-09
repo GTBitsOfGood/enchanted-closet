@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use strict";
 
-// require('dotenv').config()
+require('dotenv').config()
 
 const path = require('path');
 const express = require('express');
@@ -9,8 +9,9 @@ const compression = require('compression');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 // const favicon = require('serve-favicon');
+
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 // const webpack = require('webpack')
 // const webpackConfig = require('./webpack.config');
 // const compiler = webpack(webpackConfig);
