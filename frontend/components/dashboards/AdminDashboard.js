@@ -10,7 +10,7 @@ import DashboardCard from './DashboardCard'
 import AdminVolunteerControl from './AdminVolunteerControl'
 
 class AdminDashboard extends Component {
-  componentDidMount () {
+  componentWillMount () {
     const { loadDashboardCards, fetchUsers, fetchFutureEvents } = this.props
     loadDashboardCards()
     fetchUsers()
