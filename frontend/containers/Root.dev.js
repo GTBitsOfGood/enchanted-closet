@@ -4,23 +4,57 @@ import Helmet from 'react-helmet'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { hot } from 'react-hot-loader'
+import DevTools from './DevTools'
 import { COLORS } from '../constants'
 import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components'
 import * as Admin from './Admin'
+import Loadable from 'react-loadable'
+const Events = Loadable({
+  loader: () => import('./Events.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const EventsDetail = Loadable({
+  loader: () => import('./EventsDetail.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Homepage = Loadable({
+  loader: () => import('./Homepage.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Login = Loadable({
+  loader: () => import('./Login.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Logout = Loadable({
+  loader: () => import('./Logout.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const MissingPage = Loadable({
+  loader: () => import('./MissingPage.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Navigation = Loadable({
+  loader: () => import('./Navigation'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Profile = Loadable({
+  loader: () => import('./Profile.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Register = Loadable({
+  loader: () => import('./Register'),
+  loading () { return (<div> Loading... </div>) }
+})
 
-const DevTools = () => import('./DevTools')
-const Dashboard = () => import('./Dashboard.js')
-const Events = () => import('./Events.js')
-const EventsDetail = () => import('./EventsDetail.js')
-const Homepage = () => import('./Homepage.js')
-const Login = () => import('./Login.js')
-const Logout = () => import('./Logout.js')
-const MissingPage = () => import('./MissingPage.js')
-const Navigation = () => import('./Navigation')
-const Profile = () => import('./Profile.js')
-const Register = () => import('./Register')
+const Dashboard = Loadable({
+  loader: () => import('./Dashboard.js'),
+  loading () { return (<div>Loading...</div>) }
+})
 
-const FormDemo = () => import('./FormDemo')
+const FormDemo = Loadable({
+  loader: () => import('./FormDemo'),
+  loading () { return (<div>Loading...</div>) }
+})
 
 class Root extends React.Component {
   render () {
