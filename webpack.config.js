@@ -1,5 +1,9 @@
+/* eslint-disable */
+"use strict";
+
 const webpack = require('webpack')
 const path = require('path')
+const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const autoprefixer = require('autoprefixer')
@@ -98,6 +102,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new Dotenv({path: './.env.frontend'}),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       favicon: 'public/images/favicon/favicon.ico'

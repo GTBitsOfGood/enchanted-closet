@@ -10,6 +10,7 @@ import { Button, Divider, Segment, Container, Grid, Reveal, Menu, Header, Icon, 
 import { Event, EventEntry, LoadingIcon } from '../components'
 
 import { HOMEPAGE_EVENT_LIMIT } from '../constants'
+import logo from '../../public/images/EC_logo_web.png'
 
 class Homepage extends Component {
   constructor (props) {
@@ -90,7 +91,7 @@ const styles = {
 }
 
 const images = {
-  logo: require('../../public/images/EC_logo_web.png')
+  logo: logo
 }
 
 const mapStateToProps = (state) => {

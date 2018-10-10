@@ -4,10 +4,23 @@ import { Image } from 'semantic-ui-react'
 import { UploadModal } from '../'
 
 // User Pfp display/linker
-const ProfileImage = ({ imageUrl = 'defaultUserPicture.jpg' }) => (
-  <UploadModal type="user" url={require(`../../../public/uploaded/users/${imageUrl}`)} style={styles.imageStyle}/>
-
-)
+const ProfileImage = ({ imageUrl = 'defaultUserPicture.jpg' }) => {
+  let image = ''
+  try {
+    image = require(`../../../public/uploaded/users/${imageUrl}`)
+  } catch (err) {
+    image = require(`../../../public/uploaded/users/defaultUserPicture.jpg`)
+  }
+  return (
+    <UploadModal type="user">
+      <Image
+        style={styles.imageStyle}
+        src={image}
+        size='medium'
+      />
+    </UploadModal>
+  )
+}
 
 const styles = {
   imageStyle: {
