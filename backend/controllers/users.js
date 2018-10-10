@@ -17,6 +17,7 @@ module.exports.index = (req, res, next) => {
         }
         return next()
       } else {
+        console.log(err)
         res.locals.error = {
           msg: 'There are no users in the database',
           status: 404
@@ -27,7 +28,7 @@ module.exports.index = (req, res, next) => {
 }
 
 function lacksAny (obj, props) {
-  for (p in props) {
+  for (let p in props) {
     if (!(obj[p])) {
       return p
     }
@@ -80,6 +81,7 @@ module.exports.get = (req, res, next) => {
         }
         return next()
       } else {
+        console.error(err)
         res.locals.error = {
           status: 404,
           msg: 'That user was not found in the database'
@@ -97,6 +99,7 @@ module.exports.delete = (req, res, next) => {
       }
       return next()
     } else {
+      console.error(err)
       res.locals.error = {
         status: 404,
         msg: 'That user was not found in the database'
@@ -128,14 +131,14 @@ module.exports.update = (req, res, next) => {
     }
     token = token.substring(7)
     auth.currentUser(token, (_, curr) => {
-      if (req.params.id != curr) {
+      if (req.params.id !== curr) {
         res.locals.error = {
           status: 403,
           msg: 'Not authorized (must be admin)'
         }
         return next(new Error(res.locals.error))
       }
-      if (matchesComplexityRequirements(req.body.data[password])) {
+      if (matchesComplexityRequirements(req.body.data['password'])) {
         newProps['password'] = hash.genNew(req.body.data.password)
       }
     })
@@ -145,7 +148,7 @@ module.exports.update = (req, res, next) => {
   if (req.body.birthday) {
     newProps.birthday = new Date(req.body.birthday)
   }
-  if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
+  if (req.body.grade && grades.indexOf(req.body.grade !== -1)) {
     newProps.grade = req.body.grade
   }
   if (req.body.age) {
@@ -261,7 +264,7 @@ module.exports.create = (req, res, next) => {
     }
     return next(new Error(res.locals.error))
   }
-  if (req.body.grade && grades.indexOf(req.body.grade != -1)) {
+  if (req.body.grade && grades.indexOf(req.body.grade !== -1)) {
     newProps.grade = req.body.grade
   }
   if (req.body.age) {
@@ -342,7 +345,7 @@ module.exports.registerevent = (req, res, next) => {
       // update event.users
       if (!eDoc.participants) eDoc.participants = []
       if (!eDoc.pendingVolunteers) eDoc.pendingVolunteers = []
-      if (uDoc.role == 'Participant') {
+      if (uDoc.role === 'Participant') {
         if (!eDoc.participants.map(String).includes(userID)) {
           eDoc.participants.push(userID)
         } else {
@@ -352,7 +355,7 @@ module.exports.registerevent = (req, res, next) => {
           }
           return next(new Error(res.locals.error))
         }
-      } else if (uDoc.role == 'Volunteer' || uDoc.role == 'Admin') {
+      } else if (uDoc.role === 'Volunteer' || uDoc.role === 'Admin') {
         if (uDoc.deniedEvents != null && !uDoc.deniedEvents.map(String).includes(eventID)) {
           if (!eDoc.pendingVolunteers.map(String).includes(userID)) {
             eDoc.pendingVolunteers.push(userID)
@@ -373,7 +376,7 @@ module.exports.registerevent = (req, res, next) => {
       }
       // update users.events
       if (!uDoc.events) uDoc.events = []
-      if (uDoc.role == 'Volunteer') {
+      if (uDoc.role === 'Volunteer') {
         if (!uDoc.pendingEvents) uDoc.pendingEvents = []
         if (uDoc.pendingEvents.map(String).includes(eventID) || uDoc.events.map(String).includes(eventID)) {
           res.locals.error = {
@@ -671,15 +674,15 @@ module.exports.cancelevent = (req, res, next) => {
       if (!eDoc.participants) eDoc.participants = []
       if (!eDoc.volunteers) eDoc.volunteers = []
       if (eDoc.participants.map(String).includes(userID)) { // TODO: Add in role checks (this works for now though)
-        var temp = eDoc.participants.map(String)
+        let temp = eDoc.participants.map(String)
         temp.splice(temp.indexOf(userID), 1)
         eDoc.participants = temp
       } else if (eDoc.volunteers.map(String).includes(userID)) {
-        var temp = eDoc.volunteers.map(String)
+        let temp = eDoc.volunteers.map(String)
         temp.splice(temp.indexOf(userID), 1)
         eDoc.volunteers = temp
       } else if (eDoc.pendingVolunteers.map(String).includes(userID)) {
-        var temp = eDoc.pendingVolunteers.map(String)
+        let temp = eDoc.pendingVolunteers.map(String)
         temp.splice(temp.indexOf(userID), 1)
         eDoc.pendingVolunteers = temp
       } else {
@@ -691,13 +694,13 @@ module.exports.cancelevent = (req, res, next) => {
       }
       // TODO: Some kind of warning if things don't add up
       if (!uDoc.events) uDoc.events = []
-      if (uDoc.role == 'Volunteer' && uDoc.pendingEvents.map(String).includes(eventID)) { // TODO: Some way for admins to remove volunteers from confirmed events
+      if (uDoc.role === 'Volunteer' && uDoc.pendingEvents.map(String).includes(eventID)) { // TODO: Some way for admins to remove volunteers from confirmed events
         if (!uDoc.pendingEvents) uDoc.events = []
-        var temp = uDoc.pendingEvents.map(String)
+        let temp = uDoc.pendingEvents.map(String)
         temp.splice(temp.indexOf(eventID), 1)
         uDoc.pendingEvents = temp
       } else if (uDoc.events.map(String).includes(eventID)) {
-        var temp = uDoc.events.map(String)
+        let temp = uDoc.events.map(String)
         temp.splice(temp.indexOf(eventID), 1)
         uDoc.events = temp
       } else {

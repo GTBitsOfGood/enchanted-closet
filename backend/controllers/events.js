@@ -15,6 +15,7 @@ module.exports.index = (req, res, next) => {
         }
         return next()
       } else {
+        console.error(err)
         res.locals.error = {
           msg: 'There are no events in the database',
           status: 404
@@ -35,6 +36,7 @@ module.exports.fetchFutureEvents = (req, res, next) => {
         }
         return next()
       } else {
+        console.error(err)
         res.locals.error = {
           msg: 'There are no events in the database',
           status: 404
@@ -55,6 +57,7 @@ module.exports.fetchPastEvents = (req, res, next) => {
         }
         return next()
       } else {
+        console.error(err)
         res.locals.error = {
           msg: 'There are no events in the database',
           status: 404
@@ -95,7 +98,7 @@ module.exports.present = (req, res, next) => {
         }
         return next()
       }
-      if (uDoc.role == 'Participant') {
+      if (uDoc.role === 'Participant') {
         if (!eDoc.participantsAttended) eDoc.participantsAttended = []
         if (eDoc.participantsAttended.indexOf(req.params.userID) === -1) {
           eDoc.participantsAttended.push(req.params.userID)
@@ -106,7 +109,7 @@ module.exports.present = (req, res, next) => {
           }
           return next()
         }
-      } else if (uDoc.role == 'Volunteer') {
+      } else if (uDoc.role === 'Volunteer') {
         if (!eDoc.volunteersAttended) eDoc.volunteersAttended = []
         if (eDoc.volunteersAttended.indexOf(req.params.userID) === -1) {
           eDoc.volunteersAttended.push(req.params.userID)
@@ -168,10 +171,10 @@ module.exports.absent = (req, res, next) => {
         }
         return next()
       }
-      if (uDoc.role == 'Participant') {
+      if (uDoc.role === 'Participant') {
         if (!eDoc.participantsAttended) eDoc.participantsAttended = []
         if (eDoc.participantsAttended.indexOf(req.params.userID) !== -1) {
-          var temp = eDoc.participantsAttended.map(String)
+          let temp = eDoc.participantsAttended.map(String)
           temp.splice(temp.indexOf(req.params.userID), 1)
           eDoc.participantsAttended = temp
         } else {
@@ -181,10 +184,10 @@ module.exports.absent = (req, res, next) => {
           }
           return next()
         }
-      } else if (uDoc.role == 'Volunteer') {
+      } else if (uDoc.role === 'Volunteer') {
         if (!eDoc.volunteersAttended) eDoc.volunteersAttended = []
         if (eDoc.volunteersAttended.indexOf(req.params.userID) !== -1) {
-          var temp = eDoc.volunteersAttended.map(String)
+          let temp = eDoc.volunteersAttended.map(String)
           temp.splice(temp.indexOf(req.params.userID), 1)
           eDoc.volunteersAttended = temp
         } else {
@@ -233,6 +236,7 @@ module.exports.get = (req, res, next) => {
         }
         return next()
       } else {
+        console.error(err)
         res.locals.error = {
           status: 404,
           msg: 'That Event was not found in the database'
@@ -356,6 +360,7 @@ module.exports.delete = (req, res, next) => {
       }
       return next()
     } else {
+      console.error(err)
       res.locals.error = {
         status: 404,
         msg: 'That Event was not found in the database'
