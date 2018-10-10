@@ -4,20 +4,23 @@ import Helmet from 'react-helmet'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import DevTools from './DevTools'
 import { COLORS } from '../constants'
 import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components'
 import * as Admin from './Admin'
-import Dashboard from './Dashboard.js'
-import Events from './Events.js'
-import EventsDetail from './EventsDetail.js'
-import Homepage from './Homepage.js'
-import Login from './Login.js'
-import Logout from './Logout.js'
-import MissingPage from './MissingPage.js'
-import Navigation from './Navigation'
-import Profile from './Profile.js'
-import Register from './Register'
+
+const DevTools = () => import('./DevTools')
+const Dashboard = () => import('./Dashboard.js')
+const Events = () => import('./Events.js')
+const EventsDetail = () => import('./EventsDetail.js')
+const Homepage = () => import('./Homepage.js')
+const Login = () => import('./Login.js')
+const Logout = () => import('./Logout.js')
+const MissingPage = () => import('./MissingPage.js')
+const Navigation = () => import('./Navigation')
+const Profile = () => import('./Profile.js')
+const Register = () => import('./Register')
+
+const FormDemo = () => import('./FormDemo')
 
 class Root extends React.Component {
   render () {
@@ -32,6 +35,12 @@ class Root extends React.Component {
               <GlobalError />
               <GlobalMessage />
               <Switch>
+                <SmartRoute
+                  accepts={['loggedOut', 'loggedIn']}
+                  path="/formDemo"
+                  component={FormDemo}
+                  redirect="/"
+                />
                 <SmartRoute
                   accepts={['loggedOut']}
                   exact path="/"

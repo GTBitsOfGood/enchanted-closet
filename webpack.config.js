@@ -30,7 +30,7 @@ module.exports = {
        exclude: /node_modules/,
        options: {
          presets: ['@babel/preset-env','@babel/preset-react'],
-         plugins: ['babel-plugin-transform-class-properties', 'react-hot-loader/babel']
+         plugins: ['babel-plugin-transform-class-properties', 'react-hot-loader/babel', '@babel/plugin-syntax-dynamic-import']
        }
       },
       {test: /\.less/, loader: 'style-loader!css-loader!less-loader' },
