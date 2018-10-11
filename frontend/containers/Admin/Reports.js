@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { PageTitle } from '../../components'
-import { Container, Segment, Dropdown, Button } from 'semantic-ui-react'
+import { Container, Segment, Dropdown, Button, Message, Transition } from 'semantic-ui-react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { fetchFutureEvents, oldestDate, getAttendanceReportByMonth, getAttendanceReportByYear } from '../../actions/'
@@ -36,22 +36,35 @@ class Report extends Component {
     this.setState({ month: value.value })
   }
 
+  openMessage = () => {
+    
+  }
+
   downLoadReport = () => {
-    let response = ''
     if (this.state.month || this.state.month === 0) {
-      let error = false
-      fetch(`api/report/${this.state.year}/${this.state.month}`).then().then().catch(err => {
-        error = true
-        console.log('error: ', error)
+      fetch(`api/report/${this.state.year}/${this.state.month}`).then(res => {
+        if (res.status === 500) {
+          console.log(res.status)
+          // toast
+        } else {
+          window.open(`api/report/${this.state.year}/${this.state.month}`, '_self')
+        }
+      }).catch(err => {
         console.error(err)
         // toast
       })
-      if (!error) {
-        // window.open(`api/report/${this.state.year}/${this.state.month}`, '_self')
-      }
     } else {
-      console.log('called without month')
-      getAttendanceReportByYear(this.state.year)
+      fetch(`api/report/${this.state.year}`).then(res => {
+        if (res.status === 500) {
+          console.log(res.status)
+          // toast
+        } else {
+          window.open(`api/report/${this.state.year}`, '_self')
+        }
+      }).catch(err => {
+        console.error(err)
+        // toast
+      })
     }
   }
 
