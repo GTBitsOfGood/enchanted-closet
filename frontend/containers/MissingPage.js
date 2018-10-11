@@ -1,5 +1,5 @@
-import React from 'react';
-import { GenericBanner } from '../components/';
+import React from 'react'
+import { GenericBanner } from '../components/'
 
 const MissingPage = () => {
   return (
@@ -9,9 +9,9 @@ const MissingPage = () => {
       redir='/'
       redirMsg='Home'
     />
-  );
+  )
 }
 
-const errorMessage = 'Oops, it looks like you stumbled onto a broken link or a missing page! Please try reloading the page, or return to the homepage.';
+const errorMessage = 'Oops, it looks like you stumbled onto a broken link or a missing page! Please try reloading the page, or return to the homepage.'
 
-export default MissingPage;
+export default MissingPage

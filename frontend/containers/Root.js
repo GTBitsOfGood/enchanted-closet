@@ -1,3 +1,7 @@
-module.exports = (process.env.NODE_ENV === 'production'
-	? require('./Root.dev') // Todo: sub in prod
-	: require('./Root.dev'));
+import RootDev from './Root.dev'
+
+const Root = (process.env.NODE_ENV === 'production'
+  ? RootDev // Todo: sub in prod
+  : RootDev)
+
+export default Root

@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router-dom'
-import Radium from 'radium';
+import Radium from 'radium'
 
 import { logoutUser } from '../actions/index'
 
@@ -11,16 +11,16 @@ import { Menu, Dropdown } from 'semantic-ui-react'
 import { COLORS } from '../constants'
 
 class Navigation extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.navigate = this.navigate.bind(this)
   }
 
-  navigate(route) {
-    this.props.history.push(route);
+  navigate (route) {
+    this.props.history.push(route)
   }
-  
-  render() {
+
+  render () {
     const navFactory = route => () => {
       this.navigate(route)
     }
@@ -33,47 +33,47 @@ class Navigation extends Component {
       ['Browse Events', '/events'],
       ['Logout', '/logout']
     ]
-    
+
     const userBlock = (
       <Menu.Menu position='right'>
-	<Dropdown item icon='home' style={styles.button}>
-	  <Dropdown.Menu>
-	    {userLinks.map(pair => (
-	      <Dropdown.Item
-		style={styles.button}
-		onClick={navFactory(`${pair[1]}`)}
-		key={`${pair[1]}NavLink`}
-		>
-		{pair[0]}
-	      </Dropdown.Item>
-	    ))}
-	  </Dropdown.Menu>
-	</Dropdown>
+        <Dropdown item icon='bars' style={styles.button}>
+          <Dropdown.Menu>
+            {userLinks.map(pair => (
+              <Dropdown.Item
+                style={styles.button}
+                onClick={navFactory(`${pair[1]}`)}
+                key={`${pair[1]}NavLink`}
+              >
+                {pair[0]}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
       </Menu.Menu>
     )
-    
-    return (      
+
+    return (
       <Menu
-	style={styles.base}
-	inverted
-	size='huge'
+        style={styles.base}
+        inverted
+        size='huge'
       >
         <Menu.Item header onClick={navFactory('/')}>
           {applicationName}
         </Menu.Item>
         {user ? userBlock : (
-	  <Menu.Item
-	    position='right'
-	    style={styles.button}
-	    onClick={navFactory('/login')}
-	  >
-	    Log In
-	  </Menu.Item>
-	)}
+          <Menu.Item
+            position='right'
+            style={styles.button}
+            onClick={navFactory('/login')}
+          >
+          Log In
+          </Menu.Item>
+        )}
       </Menu>
-    );
-  };
-};
+    )
+  }
+}
 
 const styles = {
   base: {
@@ -83,10 +83,10 @@ const styles = {
   button: {
     background: COLORS.BRAND,
     ':hover': {
-      background: COLORS.HOVER,
+      background: COLORS.HOVER
     },
     ':active': {
-      background: COLORS.HOVER,
+      background: COLORS.HOVER
     }
   }
 }
@@ -95,13 +95,22 @@ const mapStateToProps = state => {
   return {
     applicationName: state.applicationName,
     user: state.user
-  };
+  }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     logoutUser: logoutUser
-  }, dispatch);
+  }, dispatch)
+}
+
+Navigation.propTypes = {
+  applicationName: PropTypes.string,
+  history: PropTypes.object,
+  location: PropTypes.object,
+  logoutUser: PropTypes.func,
+  match: PropTypes.object,
+  user: PropTypes.object
 }
 
 export default withRouter(connect(

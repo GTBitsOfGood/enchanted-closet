@@ -59,9 +59,6 @@ typings/
 .env.frontend
 
 # Public index file
-public/*
-!public/bundle.js
-!public/index.html
 !public/images/*
 !public/uploaded/
 !public/**/*.jpg

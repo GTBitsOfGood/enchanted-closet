@@ -1,43 +1,43 @@
-import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents, setMessage, messageWrap, errorWrap } from './';
-import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util';
-import * as types from './types';
+import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents, setMessage, messageWrap, errorWrap } from './'
+import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util'
+import * as types from './types'
 
-export function logoutUser() {
+export function logoutUser () {
   return {
     type: types.LOGOUT_USER
   }
 }
 
-export function performLogout() {
+export function performLogout () {
   return (dispatch, getState) => {
-    dispatch(logoutUser());
-  }  
+    dispatch(logoutUser())
+  }
 }
 
-function processAuthenticationAttempt(json) {
+function processAuthenticationAttempt (json) {
   return (dispatch, getState) => {
     if (json.status === 'ok') {
-      dispatch(updateUserWithEvents(json.user));
+      dispatch(updateUserWithEvents(json.user))
     } else {
-      errorWrap(dispatch, json.msg, 3000);
+      errorWrap(dispatch, json.msg, 3000)
     }
   }
 }
 
-export function refreshUser(user) {
+export function refreshUser (user) {
   return (dispatch, getState) => {
-    dispatch(loading());
-    dispatch(requestUsers());
+    dispatch(loading())
+    dispatch(requestUsers())
     return fetchHelper(`/api/users/` + user._id, getAPIToken(getState))
       .then(response => response.json())
       .then(json => safeWrap(json, () => dispatch(updateUserWithEvents(json.user)), dispatch))
-      .then(() => dispatch(stopLoading()));
+      .then(() => dispatch(stopLoading()))
   }
 }
 
-export function performLogin(data) {
+export function performLogin (data) {
   return (dispatch, getState) => {
-    dispatch(showModalLoader());
+    dispatch(showModalLoader())
     return fetchHelper(`/api/login`, null, {
       method: 'POST',
       headers: DEFAULT_HEADERS,
@@ -45,15 +45,15 @@ export function performLogin(data) {
     })
       .then(response => response.json())
       .then(json => {
-        dispatch(hideModalLoader());
-        dispatch(processAuthenticationAttempt(json));
-      });
+        dispatch(hideModalLoader())
+        dispatch(processAuthenticationAttempt(json))
+      })
   }
 }
 
-export function performRegistration(data) {
+export function performRegistration (data) {
   return (dispatch, getState) => {
-    dispatch(showModalLoader());
+    dispatch(showModalLoader())
     return fetchHelper(`/api/register`, null, {
       method: 'POST',
       headers: DEFAULT_HEADERS,
@@ -61,8 +61,8 @@ export function performRegistration(data) {
     })
       .then(response => response.json())
       .then(json => {
-        dispatch(hideModalLoader());
-        dispatch(processAuthenticationAttempt(json));
-      });
+        dispatch(hideModalLoader())
+        dispatch(processAuthenticationAttempt(json))
+      })
   }
 }

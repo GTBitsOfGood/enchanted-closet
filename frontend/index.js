@@ -1,21 +1,23 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { configureStore, history } from './store/configureStore';
-import Root from './containers/Root';
+import 'semantic-ui-css/semantic.min.css'
 
-import { loadAuthState, saveAuthState } from './store/localStorage';
+import { render } from 'react-dom'
+import React from 'react'
 
-import '../node_modules/semantic-ui-css/semantic.min.css';
+import { AppContainer } from 'react-hot-loader'
 
-import './assets/stylesheets/base';
+import { configureStore, history } from './store/configureStore'
+import { loadAuthState, saveAuthState } from './store/localStorage'
+import Root from './containers/Root.js'
 
-const store = configureStore({user: loadAuthState()});
+const store = configureStore({ user: loadAuthState() })
 
 store.subscribe(() => {
-    saveAuthState(store.getState());
-});
+  saveAuthState(store.getState())
+})
 
 render(
-    <Root store={store} history={history} />,
-    document.getElementById('root')
-);
+  <Root store={store} history={history} />,
+  document.getElementById('root')
+)
+
+if (module.hot) module.hot.accept('./containers/Root', () => render(Root))

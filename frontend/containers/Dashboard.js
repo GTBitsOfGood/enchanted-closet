@@ -1,39 +1,32 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { withRouter, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import { refreshUser } from '../actions/index.js';
-import { loadAuthState } from '../store/localStorage.js';
+import { refreshUser } from '../actions/index.js'
+import { loadAuthState } from '../store/localStorage.js'
 
 import { PageTitle,
-	 AdminDashboard,
-	 BaseDashboard
+  AdminDashboard,
+  BaseDashboard
 } from '../components/'
 import { Container, Card } from 'semantic-ui-react'
 
-
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
+  componentWillMount () {
+    this.props.refreshUser(this.props.user)
   }
 
-  componentWillMount(){
-    this.props.refreshUser(this.props.user);
-  }
-  
-  render() {
-    const { role } = this.props.user;
+  render () {
+    const { role } = this.props.user
     const dashBlock = (role => {
       switch (role) {
-	      case 'Admin':
-	        return <AdminDashboard />
-	        break
+        case 'Admin':
+          return <AdminDashboard />
         case 'Participant':
         case 'Volunteer':
-	        return <BaseDashboard />
-	        break
+          return <BaseDashboard />
       }
       return null
     })(role)
@@ -43,7 +36,7 @@ class Dashboard extends Component {
         <PageTitle title={`${role} Dashboard`} />
         { dashBlock }
       </Container>
-    );
+    )
   }
 }
 
@@ -51,14 +44,14 @@ const mapStateToProps = (state) => {
   return {
     user: state.user
   }
-};
+}
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     refreshUser: refreshUser
-  }, dispatch);
-};
+  }, dispatch)
+}
 
 export default withRouter(connect(
   mapStateToProps, mapDispatchToProps
-)(Dashboard));
+)(Dashboard))

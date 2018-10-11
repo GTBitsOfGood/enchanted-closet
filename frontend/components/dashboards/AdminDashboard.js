@@ -1,61 +1,56 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import { Container, Card, Icon } from 'semantic-ui-react';
+import { Container, Card, Icon } from 'semantic-ui-react'
 
-import { loadDashboardCards, fetchUsers, fetchFutureEvents, oldestDate } from '../../actions/';
+import { loadDashboardCards, fetchUsers, fetchFutureEvents, oldestDate } from '../../actions/'
 
-import DashboardCard from './DashboardCard';
-import AdminVolunteerControl from './AdminVolunteerControl';
+import DashboardCard from './DashboardCard'
+import AdminVolunteerControl from './AdminVolunteerControl'
 
 class AdminDashboard extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
-    const { loadDashboardCards, fetchUsers, fetchFutureEvents, oldestDate } = this.props;
-    loadDashboardCards();
-    fetchUsers();
-    fetchFutureEvents();
-    console.log(oldestDate());
+    const { loadDashboardCards, fetchUsers, fetchFutureEvents, oldestDate } = this.props
+    loadDashboardCards()
+    fetchUsers()
+    fetchFutureEvents()
+    console.log(oldestDate())
   }
 
   render() {
-    const { cards = [] } = this.props;
+    const { cards = [] } = this.props
     const body = cards.length === 0 ? (
       <Card fluid>
-	<Card.Content>
-	  <h1>Loading...</h1>
-	</Card.Content>
+        <Card.Content>
+          <h1>Loading...</h1>
+        </Card.Content>
       </Card>
     ) : (
       <Card.Group>
-	{ cards.map( card => (
-	  <DashboardCard {...card}
-			 key={`admin_card_${card.title}`} />)) }
-    {/* <Card
-      onClick={() => <Link to='/attendance-reports'></Link>}	
-    >
-	  <Card.Content style={{textAlign: 'center'}}>
-	    <h1><Icon name='cloud download'/></h1>
-	  </Card.Content>
-	  <Card.Content style={{textAlign: 'center'}}>
-	    <h3>Attendance Reports</h3>
-	  </Card.Content>
-	</Card>	 */}
+        {cards.map(card => (
+          <DashboardCard {...card} key={`admin_card_${card.title}`} />)) }
+        {/* <Card
+        onClick={() => <Link to='/attendance-reports'></Link>}
+        >
+        <Card.Content style={{textAlign: 'center'}}>
+        <h1><Icon name='cloud download'/></h1>
+        </Card.Content>
+        <Card.Content style={{textAlign: 'center'}}>
+        <h3>Attendance Reports</h3>
+        </Card.Content>
+        </Card> */}
       </Card.Group>
     )
 
     return (
       <Container>
-	<div style={styles.cardWrap}>
-	  { body }
-	</div>
-	<AdminVolunteerControl />
+        <div style={styles.cardWrap}>
+          { body }
+        </div>
+        <AdminVolunteerControl />
       </Container>
-    );
+    )
   }
 }
 
@@ -67,8 +62,8 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
-    cards: state.dashboardCards
-});
+  cards: state.dashboardCards
+})
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
@@ -76,10 +71,10 @@ const mapDispatchToProps = dispatch => {
     fetchFutureEvents,
     fetchUsers,
     oldestDate
-  }, dispatch);
+  }, dispatch)
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AdminDashboard);
+)(AdminDashboard)
