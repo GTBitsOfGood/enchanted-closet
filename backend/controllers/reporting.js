@@ -113,7 +113,6 @@ module.exports.yearReport = (req, res, next) => {
   const currYear = new Date().getFullYear()
   const minimumDate = new Date()
   minimumDate.setFullYear(year, 0, 1)
-  console.log('minimum date: ', minimumDate)
 
   let maximumDate
   if (year === currYear) {
@@ -122,26 +121,6 @@ module.exports.yearReport = (req, res, next) => {
     maximumDate = new Date()
     maximumDate.setFullYear(year, 11, 31)
   }
-  console.log('max date: ', maximumDate)
-
-  // maximumDate.setFullYear(currentYear, new Date().getMonth(), new Date().getDate()); // Don't go into the future
-  // const plusOne = new Date();
-  // plusOne.setDate(maximumDate.getDate() + 1);
-  let reportMap = []
-  let userList = []
-  User
-    .find({
-      role: 'Participant'
-    }, (err, users) => {
-      if (err) {
-        res.locals.error = {
-          status: 404,
-          msg: 'No users could be found'
-        }
-        csvStream.end()
-        return next()
-      }
-    })
 
   Event
     .find({
@@ -155,10 +134,10 @@ module.exports.yearReport = (req, res, next) => {
     .populate('volunteers')
     //    .populate('volunteerAttended')
     .exec((err, events) => {
-      if (err) {
+      if (err || events.length === 0) {
         res.locals.error = {
           status: 404,
-          msg: 'No events could be found for this current year'
+          msg: 'No events could be found for ' + year
         }
         return next()
       }
@@ -213,7 +192,7 @@ module.exports.monthReport = (req, res, next) => {
   if (!req.params.year) {
     res.locals.error = {
       status: 404,
-      msg: 'Missing parameter: id'
+      msg: 'Missing parameter: year'
     }
     return next()
   }
@@ -226,11 +205,14 @@ module.exports.monthReport = (req, res, next) => {
   const csvStream = csv.createWriteStream({
     headers: true
   })
-  res.setHeader('Content-disposition', 'attachment; filename=year.csv')
-  res.setHeader('Content-Type', 'text/csv')
-  csvStream.pipe(res)
+  const months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ]
   const year = req.params.year
   const month = req.params.month
+  res.setHeader('Content-disposition', 'attachment; filename=' + months[month] + '-' + year + '-report.csv')
+  res.setHeader('Content-Type', 'text/csv')
+  csvStream.pipe(res)
   const currentYear = new Date().getFullYear()
   const minimumDate = new Date()
   minimumDate.setFullYear(year, month, 1)
@@ -239,32 +221,13 @@ module.exports.monthReport = (req, res, next) => {
   if (year === currentYear) {
     const currentMonth = new Date().getMonth()
     if (month === currentMonth) {
-      console.log('month: ', month)
       maximumDate = new Date(Date.now() + (24 * 60 * 60 * 1000))
     }
   } else {
     const numberOfDays = new Date(year, month + 1, 0).getDate() // month needs to be indexed starting at 1 since days are 0
-    console.log('days: ', numberOfDays)
     maximumDate = new Date()
     maximumDate.setFullYear(year, month, numberOfDays)
-    console.log(maximumDate)
   }
-
-  let reportMap = []
-  let userList = []
-  User
-    .find({
-      role: 'Participant'
-    }, (err, users) => {
-      if (err) {
-        res.locals.error = {
-          status: 404,
-          msg: 'No users could be found'
-        }
-        csvStream.end()
-        return next()
-      }
-    })
 
   Event
     .find({
@@ -278,14 +241,15 @@ module.exports.monthReport = (req, res, next) => {
     .populate('volunteers')
   //    .populate('volunteerAttended')
     .exec((err, events) => {
-      if (err) {
+      if (err || events.length === 0) {
         res.locals.error = {
           status: 404,
-          msg: 'No events could be found for this current year'
+          msg: 'No events could be found for ' + months[month] + ' ' + year
         }
         return next()
       }
       let count = 0
+      console.log('events lenght: ', events.length)
       events.forEach(e => {
         e.volunteers.forEach(v => {
           const userInfo = v //

@@ -4,18 +4,17 @@ import { connect } from 'react-redux'
 
 import { Container, Card, Icon } from 'semantic-ui-react'
 
-import { loadDashboardCards, fetchUsers, fetchFutureEvents, oldestDate } from '../../actions/'
+import { loadDashboardCards, fetchUsers, fetchFutureEvents } from '../../actions/'
 
 import DashboardCard from './DashboardCard'
 import AdminVolunteerControl from './AdminVolunteerControl'
 
 class AdminDashboard extends Component {
   componentWillMount() {
-    const { loadDashboardCards, fetchUsers, fetchFutureEvents, oldestDate } = this.props
+    const { loadDashboardCards, fetchUsers, fetchFutureEvents } = this.props
     loadDashboardCards()
     fetchUsers()
     fetchFutureEvents()
-    console.log(oldestDate())
   }
 
   render() {
@@ -69,8 +68,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     loadDashboardCards,
     fetchFutureEvents,
-    fetchUsers,
-    oldestDate
+    fetchUsers
   }, dispatch)
 }
 

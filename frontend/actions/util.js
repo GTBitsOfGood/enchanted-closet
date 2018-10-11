@@ -99,87 +99,74 @@ export function updateEventImage (event) {
   }
 }
 
-export function requestAttendanceByMonth() {
+export function fetchingAttendance() {
   return {
-    type: types.REQUEST_ATTENDANCE_REPORT_MONTH
-  }
-}
-
-export function requestAttendanceByYear() {
-  return {
-    type: types.REQUEST_ATTENDANCE_REPORT_YEAR
+    type: types.FETCHING_ATTENDANCE
   }
 }
 
 export function receiveReports(jsonReport) {
+  console.log(jsonReport)
   return {
     type: types.RECEIVE_REPORT,
-    events: jsonReport
-  };
-}
-
-export function requestOldestDate() {
-  console.log('request oldest date');
-  return {
-    type: types.OLDEST_EVENT_DATE
+    reports: jsonReport
   }
 }
 
 export function receiveOldestDate(json) {
-  console.log('receive json: ', json);
   return {
     type: types.OLDEST_DATE,
-    oldestDate: json.datetime
+    oldestDate: json
   }
 }
 
 export function oldestDate() {
-  console.log('oldest date')
   return (dispatch, getState) => {
-    dispatch(loading());
-    dispatch(requestOldestDate());
+    dispatch(loading())
     return fetchHelper(`/api/reports`, getAPIToken(getState))
-      .then(res => {
-        console.log('oldestDate: ', res);
-        console.log(res.body)
-        res.json()
-      })
+      .then(res => res.json())
       .then(json => {
-        console.log(json);
         return safeWrap(json, () => {
-          dispatch(receiveOldestDate(json.body), dispatch);
+          dispatch(receiveOldestDate(json), dispatch)
         })
       })
-      .then(() => dispatch(stopLoading()));
+      .then(() => dispatch(stopLoading()))
   }
 }
 
 export function getAttendanceReportByMonth(year, month) {
   return (dispatch, getState) => {
-    dispatch(loading());
-    dispatch(requestAttendanceByMonth());
+    dispatch(loading())
+    dispatch(fetchingAttendance())
     return fetchHelper(`/api/report/${year}/${month}`, getAPIToken(getState))
-      .then(res => res.json())
-      .then(json => {
-        return safeWrap(json, () => {
-          dispatch(receiveReports(json.report), dispatch);
-        })
+      .then(res => {
+        console.log(res)
+        return res
       })
-      .then(() => dispatch(stopLoading()));
+      .then(json => {
+        if (json.status) {
+          return safeWrap(json, () => {
+            dispatch(receiveReports(json.report), dispatch)
+          })
+        } else {
+          dispatch(receiveReports(json.report), dispatch)
+        }
+      })
+      .then(() => dispatch(stopLoading()))
   }
 }
 
 export function getAttendanceReportByYear(year) {
   return (dispatch, getState) => {
-    dispatch(loading());
-    dispatch(requestAttendanceByMonth());
-    return fetchHelper(`/api/report/${year}/${month}`, getAPIToken(getState))
+    dispatch(loading())
+    dispatch(fetchingAttendance())
+    return fetchHelper(`/api/report/${year}`, getAPIToken(getState))
       .then(res => res.json())
       .then(json => {
         return safeWrap(json, () => {
-          dispatch(receiveReports(json.report), dispatch);
+          dispatch(receiveReports(json.report), dispatch)
         })
       })
-      .then(() => dispatch(stopLoading()));
+      .then(() => dispatch(stopLoading()))
   }
 }
