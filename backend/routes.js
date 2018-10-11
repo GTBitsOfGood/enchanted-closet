@@ -91,24 +91,24 @@ router.use((req, res, next) => {
 })
 
 // quick error handle
-// router.use((err, req, res, next) => {
-//   if (res.locals.error) {
-//     // Map msg to message because honestly what even
-//     res.locals.error.message = res.locals.error.msg
-//     let statusCode = res.locals.error.code || 500
-//     let response = Object.assign({}, res.locals.error, {
-//       'status': 'error'
-//     })
-//     console.log(response)
-//     return res.status(statusCode).json(response)
-//   } else {
-//     console.log('generic server error')
-//     return res.status(500).json({
-//       'status': 'error',
-//       'code': 500,
-//       'msg': 'Internal Server Error'
-//     })
-//   }
-// })
+router.use((err, req, res, next) => {
+  if (res.locals.error) {
+    // Map msg to message because honestly what even
+    res.locals.error.message = res.locals.error.msg
+    let statusCode = res.locals.error.code || 500
+    let response = Object.assign({}, res.locals.error, {
+      'status': 'error'
+    })
+    console.log(response)
+    return res.status(statusCode).json(response)
+  } else {
+    console.log('generic server error')
+    return res.status(500).json({
+      'status': 'error',
+      'code': 500,
+      'msg': 'Internal Server Error'
+    })
+  }
+})
 
 module.exports = router
