@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 // const favicon = require('serve-favicon');
 const app = express();
-const PORT = 3001;
+const PORT = 5000;
 // const webpack = require('webpack')
 // const webpackConfig = require('./webpack.config');
 // const compiler = webpack(webpackConfig);
@@ -29,7 +29,7 @@ const api = require('./backend/routes');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api); // Server Routing
 app.get('/*', (req, res) => { // Else, give to React
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + '/dist/index.html');
 });
 
 app.listen(PORT, error => {

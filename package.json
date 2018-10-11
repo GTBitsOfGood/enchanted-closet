@@ -4,13 +4,13 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.config.js",
+    "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js",
     "dev": "concurrently -k \"webpack-dev-server --hot\" \"npm run backend\"",
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
-    "webpack": "webpack-dev-server"
+    "webpack": "webpack --config webpack.config.prod.js"
   },
   "author": "GT Bits of Good",
   "license": "ISC",
@@ -43,6 +43,7 @@
     "react-dom": "^15.5.4",
     "react-google-maps": "^9.2.2",
     "react-helmet": "^5.2.0",
+    "react-onclickoutside": "^5.11.1",
     "react-redux": "^5.0.5",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
@@ -57,15 +58,16 @@
     "semantic-ui-css": "2.3.1",
     "semantic-ui-react": "~0.81.0",
     "serve-favicon": "^2.4.5",
-    "should": "^13.1.0",
-    "webpack-dev-server": "^3.1.9"
+    "should": "^13.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-stage-1": "^7.0.0",
     "@babel/register": "^7.0.0",
@@ -94,14 +96,17 @@
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.4.3",
     "nodemon": "^1.11.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
     "react-addons-test-utils": "^15.5.1",
     "react-hot-loader": "^4.3.11",
     "react-test-renderer": "^15.5.4",
     "redux-devtools-extension": "^2.13.5",
     "style-loader": "^0.16.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.1",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
   }
 }

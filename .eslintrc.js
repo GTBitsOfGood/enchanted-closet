@@ -17,6 +17,8 @@ module.exports = {
     },
   },
   rules: {
+    'space-before-function-paren': 'off',
+    'no-callback-literal': 'off',
     'no-useless-escape': 'off',
     'import/no-unresolved': 'off',
     'react/no-unescaped-entities': 'off',
