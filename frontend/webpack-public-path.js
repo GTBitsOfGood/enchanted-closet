@@ -6,5 +6,4 @@
 // 2. https://github.com/coryhouse/react-slingshot/issues/181
 // 3. https://github.com/coryhouse/react-slingshot/pull/125
 // Documentation: https://webpack.js.org/configuration/output/#output-publicpath
-
 __webpack_public_path__ = window.location.protocol + "//" + window.location.host + "/";

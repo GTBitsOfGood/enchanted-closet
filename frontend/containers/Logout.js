@@ -13,7 +13,7 @@ class Logout extends Component {
   render () {
     return (
       <div>
-  Click <Link to="/">here </Link> if you are not redirected.
+        Click <Link to="/">here </Link> if you are not redirected.
       </div>
     )
   }

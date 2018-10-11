@@ -20,7 +20,7 @@ class PageTitle extends Component {
                 <Grid.Column>
                   <h2>{title}</h2>
                   {showLoadingIcon &&
-       <Loader active={loading} inline size='small' style={styles.loader}/>
+                    <Loader active={loading} inline size='small' style={styles.loader}/>
                   }
                 </Grid.Column>
                 {link && linkTitle &&

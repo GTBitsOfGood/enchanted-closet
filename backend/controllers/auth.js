@@ -70,7 +70,7 @@ module.exports.register = (req, res, next) => {
 
   auth.register(req.body, (err, user) => {
     if (err) {
-      if (err.code == 11000) { // 11000 is duplicate key
+      if (err.code === 11000) { // 11000 is duplicate key
         res.locals.error = {
           status: 500,
           msg: 'A user with that email already exists'

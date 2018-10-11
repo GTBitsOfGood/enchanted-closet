@@ -59,7 +59,6 @@ typings/
 .env.frontend
 
 # Public index file
-public/*
 !public/images/*
 !public/uploaded/
 !public/**/*.jpg
