@@ -10,6 +10,7 @@ import { Button, Divider, Segment, Container, Grid, Reveal, Menu, Header, Icon, 
 import { Event, EventEntry, LoadingIcon } from '../components'
 
 import { HOMEPAGE_EVENT_LIMIT } from '../constants'
+import logo from '../../public/images/EC_logo_web.png'
 
 class Homepage extends Component {
   constructor (props) {
@@ -25,11 +26,13 @@ class Homepage extends Component {
     const processedEvents =
       events && events.length > 0 ? events.sort((e1, e2) => (new Date(e1.datetime) - new Date(e2.datetime))).slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
         event.showAdminControls = false
-        return <Event
-          data={event}
-          history={history}
-          key={`home_event_${event._id}`}
-        />
+        return (
+          <Event
+            data={event}
+            history={history}
+            key={`home_event_${event._id}`}
+          />
+        )
       }) : <p>No upcoming events</p>
 
     const eventsBlock = loading ? <LoadingIcon active={loading}/> : processedEvents
@@ -88,7 +91,7 @@ const styles = {
 }
 
 const images = {
-  logo: '/images/EC_logo_web.png'
+  logo: logo
 }
 
 const mapStateToProps = (state) => {

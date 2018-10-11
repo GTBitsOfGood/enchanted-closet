@@ -20,7 +20,7 @@ class EventsEdit extends Component {
     if (this.state.event) this.state.loading = false
   }
 
-  componentDidMount () {
+  componentWillMount () {
     const { dispatch } = this.props
     if (this.props.event === undefined) dispatch(fetchEventsIfNeeded())
   }
