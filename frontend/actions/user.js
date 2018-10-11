@@ -61,10 +61,7 @@ export function fetchUsers () {
     dispatch(loading())
     dispatch(requestUsers())
     return fetchHelper(`/api/users`, getAPIToken(getState))
-      .then(response => {
-        console.log(response.json())
-        response.json()
-      })
+      .then(response => response.json())
       .then(json => safeWrap(json, () => dispatch(receiveUsers(json)), dispatch))
       .then(() => dispatch(stopLoading()))
   }

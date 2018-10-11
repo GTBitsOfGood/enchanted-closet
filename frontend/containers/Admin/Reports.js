@@ -4,7 +4,7 @@ import { PageTitle } from '../../components'
 import { Container, Segment, Dropdown, Button, Message, Transition } from 'semantic-ui-react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { fetchFutureEvents, oldestDate, getAttendanceReportByMonth, getAttendanceReportByYear } from '../../actions/'
+import { fetchFutureEvents, oldestDate } from '../../actions/'
 
 class Report extends Component {
   constructor (props) {
@@ -14,7 +14,8 @@ class Report extends Component {
       endDatetime: null,
       year: null,
       month: null,
-      report: null
+      error: false,
+      errorMessage: ''
     }
   }
 
@@ -24,7 +25,7 @@ class Report extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { dateTime, getAttendanceReportByMonth, getAttendanceReportByYear } = props
+    const { dateTime } = props
     this.setState({ oldestDate: dateTime })
   }
 
@@ -36,35 +37,37 @@ class Report extends Component {
     this.setState({ month: value.value })
   }
 
-  openMessage = () => {
-    
+  handleError = () => {
+    setTimeout(() => {
+      this.setState({
+        error: false
+      })
+    }, 3000)
   }
 
   downLoadReport = () => {
     if (this.state.month || this.state.month === 0) {
       fetch(`api/report/${this.state.year}/${this.state.month}`).then(res => {
         if (res.status === 500) {
-          console.log(res.status)
-          // toast
+          return res.json()
         } else {
           window.open(`api/report/${this.state.year}/${this.state.month}`, '_self')
         }
-      }).catch(err => {
-        console.error(err)
-        // toast
-      })
+      }).then(res => {
+        this.setState({ error: true, errorMessage: res.msg })
+        this.handleError()
+      }).catch(err => err)
     } else {
       fetch(`api/report/${this.state.year}`).then(res => {
         if (res.status === 500) {
-          console.log(res.status)
-          // toast
+          return res.json()
         } else {
           window.open(`api/report/${this.state.year}`, '_self')
         }
-      }).catch(err => {
-        console.error(err)
-        // toast
-      })
+      }).then(res => {
+        this.setState({ error: true, errorMessage: res.msg })
+        this.handleError()
+      }).catch(err => err)
     }
   }
 
@@ -79,10 +82,13 @@ class Report extends Component {
     return (
       <Container>
         <PageTitle title="Attendance Reports"></PageTitle>
+        <Transition visible={this.state.error} animation='slide down' duration={500}>
+          <Message style={styles.messageBlock} color="red">{this.state.errorMessage}</Message>
+        </Transition>
         <Segment>
-          <Dropdown placeholder='Year' selection options={years} onChange={this.handleYearChange} value={this.state.year}/>
-          <Dropdown disabled={!this.state.year} placeholder='Month' selection onChange={this.handleMonthChange} options={months} value={this.state.month}/>
-          <Button onClick={this.downLoadReport}>Download {months[this.state.month] ? months[this.state.month + 1].text : null } {this.state.year} Report</Button>
+          <Dropdown style={styles.dropDown} placeholder='Year' selection options={years} onChange={this.handleYearChange} value={this.state.year}/>
+          <Dropdown style={styles.dropDown} disabled={!this.state.year} placeholder='Month' selection onChange={this.handleMonthChange} options={months} value={this.state.month}/>
+          <Button style={styles.downloadButton} onClick={this.downLoadReport} disabled={!this.state.year}>Download {months[this.state.month] ? months[this.state.month + 1].text : null } {this.state.year} Report</Button>
         </Segment>
       </Container>
     )
@@ -91,17 +97,27 @@ class Report extends Component {
 
 const mapStateToProps = state => {
   return {
-    dateTime: state.oldestDate,
-    report: state.report
+    dateTime: state.oldestDate
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    oldestDate,
-    getAttendanceReportByMonth,
-    getAttendanceReportByYear
+    oldestDate
   }, dispatch)
+}
+
+const styles = {
+  messageBlock: {
+    marginBottom: '1em'
+  },
+  dropDown: {
+    margin: '0.5em'
+  },
+  downloadButton: {
+    margin: '0.5em',
+    float: 'right'
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report)

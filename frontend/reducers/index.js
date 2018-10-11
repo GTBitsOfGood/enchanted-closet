@@ -6,13 +6,6 @@ function rootReducer (state = require('../static/defaultState'), action) {
       return Object.assign({}, state, {
         oldestDate: action.oldestDate
       })
-    case types.FETCHING_ATTENDANCE:
-      return
-    case types.RECEIVE_REPORT:
-    console.log('action: ', action)
-      return Object.assign({}, state, {
-        report: action.body
-      })
     case types.INVALIDATE_EVENTS:
       return Object.assign({}, state, {
         didInvalidateEvents: true

@@ -4,16 +4,14 @@ const User = require('mongoose').model('User')
 const async = require('async')
 
 module.exports.index = (req, res, next) => {
-  console.log('index')
   Event.find({}).sort({ datetime: 1 }).limit(1).exec((err, event) => {
     if (event) {
-      console.log('event')
       res.locals.data = {
         datetime: event[0].datetime
       }
       return next()
     } else {
-      console.log(err)
+      console.error(err)
       res.locals.error = {
         msg: 'There are no events in the database',
         status: 404
@@ -143,47 +141,60 @@ module.exports.yearReport = (req, res, next) => {
       }
       let count = 0
       events.forEach(e => {
-        e.volunteers.forEach(v => {
-          const userInfo = v //
-          if (e.volunteersAttended.find(id => v._id.toString() === id.toString())) {
-            csvStream.write({
-              Event: e.name,
-              Role: 'Volunteer',
-              Name: (userInfo.firstName + ' ' + userInfo.lastName),
-              Email: userInfo.email,
-              Attended: 'Yes'
-            })
-          } else {
-            csvStream.write({
-              Event: e.name,
-              Role: 'Volunteer',
-              Name: (userInfo.firstName + ' ' + userInfo.lastName),
-              Email: userInfo.email,
-              Attended: 'No'
-            })
-          }
-        })
-        e.participants.forEach(u => {
-          const userInfo = u
-          if (e.participantsAttended.find(id => u._id.toString() === id.toString())) {
-            csvStream.write({
-              Event: e.name,
-              Role: 'Participant',
-              Name: (userInfo.firstName + ' ' + userInfo.lastName),
-              Email: userInfo.email,
-              Attended: 'Yes'
-            })
-          } else {
-            csvStream.write({
-              Event: e.name,
-              Role: 'Participant',
-              Name: (userInfo.firstName + ' ' + userInfo.lastName),
-              Email: userInfo.email,
-              Attended: 'No'
-            })
-          }
-        })
+        if (e.volunteersAttended.length !== 0) {
+          e.volunteers.forEach(v => {
+            const userInfo = v //
+            if (e.volunteersAttended.find(id => v._id.toString() === id.toString())) {
+              csvStream.write({
+                Event: e.name,
+                Role: 'Volunteer',
+                Name: (userInfo.firstName + ' ' + userInfo.lastName),
+                Email: userInfo.email,
+                Attended: 'Yes'
+              })
+            } else {
+              csvStream.write({
+                Event: e.name,
+                Role: 'Volunteer',
+                Name: (userInfo.firstName + ' ' + userInfo.lastName),
+                Email: userInfo.email,
+                Attended: 'No'
+              })
+            }
+          })
+        }
+        if (e.participantsAttended.length !== 0) {
+          e.participants.forEach(u => {
+            const userInfo = u
+            if (e.participantsAttended.find(id => u._id.toString() === id.toString())) {
+              csvStream.write({
+                Event: e.name,
+                Role: 'Participant',
+                Name: (userInfo.firstName + ' ' + userInfo.lastName),
+                Email: userInfo.email,
+                Attended: 'Yes'
+              })
+            } else {
+              csvStream.write({
+                Event: e.name,
+                Role: 'Participant',
+                Name: (userInfo.firstName + ' ' + userInfo.lastName),
+                Email: userInfo.email,
+                Attended: 'No'
+              })
+            }
+          })
+        }
       })
+      console.log(csvStream.readableLength)
+      // if (csvStream.readableLength === 0) {
+      //   res.locals.error = {
+      //     status: 404,
+      //     msg: 'No events could be found for ' + year
+      //   }
+      //   console.log('returned next')
+      //   return next()
+      // }
       csvStream.end()
     })
 }
@@ -249,7 +260,6 @@ module.exports.monthReport = (req, res, next) => {
         return next()
       }
       let count = 0
-      console.log('events lenght: ', events.length)
       events.forEach(e => {
         e.volunteers.forEach(v => {
           const userInfo = v //
@@ -292,6 +302,13 @@ module.exports.monthReport = (req, res, next) => {
           }
         })
       })
+      if (csvStream.readableLength === 0) {
+        res.locals.error = {
+          status: 404,
+          msg: 'No events could be found for ' + year
+        }
+        return next()
+      }
       csvStream.end()
     })
 }
