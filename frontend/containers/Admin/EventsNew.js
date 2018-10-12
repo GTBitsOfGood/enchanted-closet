@@ -7,6 +7,7 @@ import moment from 'moment'
 import DatePicker from 'react-datepicker'
 
 import 'react-datepicker/dist/react-datepicker.css'
+import '../../assets/stylesheets/datepicker.css'
 
 import { upsertEvent } from '../../actions'
 
@@ -21,6 +22,7 @@ class AdminEventsNew extends Component {
       description: '',
       location: '',
       datetime: moment(),
+      endtime: moment(),
       speakers: '',
       loading: this.props.loading,
       error: this.props.error
@@ -29,6 +31,7 @@ class AdminEventsNew extends Component {
     this.upsertEvent = this.upsertEvent.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleDatetimeChange = this.handleDatetimeChange.bind(this)
+    this.handleEndtimeChange = this.handleEndtimeChange.bind(this)
   }
 
   componentWillMount () {
@@ -40,7 +43,8 @@ class AdminEventsNew extends Component {
         description: event.description,
         location: event.location,
         speakers: event.speakers.join(', '),
-        datetime: moment(new Date(event.datetime))
+        datetime: moment(new Date(event.datetime)),
+        endtime: moment(new Date(event.endtime)),
       })
     }
   }
@@ -52,9 +56,9 @@ class AdminEventsNew extends Component {
 
   upsertEvent () {
     const { upsertEvent: upsert } = this.props
-    const { _id, name, description, location, speakers, datetime } = this.state
+    const { _id, name, description, location, speakers, datetime, endtime } = this.state
     this.setState({ loading: true })
-    upsert({ _id, name, description, location, speakers, datetime })
+    upsert({ _id, name, description, location, speakers, datetime, endtime })
   }
 
   handleInputChange (e, { name, value }) {
@@ -63,6 +67,10 @@ class AdminEventsNew extends Component {
 
   handleDatetimeChange (updated) {
     this.setState({ 'datetime': updated })
+  };
+
+  handleEndtimeChange(updated) {
+      this.setState({ 'endtime': updated })
   };
 
   render () {
@@ -96,15 +104,26 @@ class AdminEventsNew extends Component {
                 <Form.Input required label='Event Address' value={this.state.location} name='location' placeholder='123 Main Street, Atlanta GA 30318' onChange={this.handleInputChange} />
                 <Form.Input required label='Speakers' value={this.state.speakers} name='speakers' placeholder='John Smith, Jessica Hornbuckle' onChange={this.handleInputChange} />
                 <p>* Enter a comma-separated list of names for the speakers of this event</p>
-                <Form.Field
-                  label='Starting date & time'
-                  control={DatePicker}
-                  name='datetime'
-                  selected={this.state.datetime}
-                  onChange={this.handleDatetimeChange}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}/>
+                <Form.Group widths='equal'>
+                  <Form.Field
+                    label='Starting date & time'
+                    control={DatePicker}
+                    name='datetime'
+                    selected={this.state.datetime}
+                    onChange={this.handleDatetimeChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}/>
+                  <Form.Field
+                    label='Ending date & time'
+                    control={DatePicker}
+                    name='endtime'
+                    selected={this.state.endtime}
+                    onChange={this.handleEndtimeChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15} />
+                </Form.Group>
                 <Form.Button>
                   {this.state._id ? 'Update Event' : 'Create Event'}
                 </Form.Button>

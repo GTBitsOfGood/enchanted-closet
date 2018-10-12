@@ -14,6 +14,10 @@ var EventSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  endtime: {
+    type: Date,
+    required: true
+  },
   location: {
     type: String,
     required: true
