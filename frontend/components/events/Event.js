@@ -27,7 +27,7 @@ class Event extends Component {
                   trigger={(
                     <Container style={style.whiteText}>
                       <Icon name='calendar'/>
-                      {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
+                      {moment(new Date(data.startTime)).format('MMMM Do YYYY, h:mm a')}
                     </Container>
                   )}
                   content="Date"

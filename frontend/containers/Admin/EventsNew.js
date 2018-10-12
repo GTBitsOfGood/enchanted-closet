@@ -21,8 +21,8 @@ class AdminEventsNew extends Component {
       name: '',
       description: '',
       location: '',
-      datetime: moment(),
-      endtime: moment(),
+      startTime: moment(),
+      endTime: moment(),
       speakers: '',
       loading: this.props.loading,
       error: this.props.error
@@ -30,8 +30,8 @@ class AdminEventsNew extends Component {
 
     this.upsertEvent = this.upsertEvent.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleDatetimeChange = this.handleDatetimeChange.bind(this)
-    this.handleEndtimeChange = this.handleEndtimeChange.bind(this)
+    this.handleStartTimeChange = this.handleStartTimeChange.bind(this)
+    this.handleEndTimeChange = this.handleEndTimeChange.bind(this)
   }
 
   componentWillMount () {
@@ -43,8 +43,8 @@ class AdminEventsNew extends Component {
         description: event.description,
         location: event.location,
         speakers: event.speakers.join(', '),
-        datetime: moment(new Date(event.datetime)),
-        endtime: moment(new Date(event.endtime)),
+        startTime: moment(new Date(event.startTime)),
+        endTime: moment(new Date(event.endTime)),
       })
     }
   }
@@ -56,21 +56,21 @@ class AdminEventsNew extends Component {
 
   upsertEvent () {
     const { upsertEvent: upsert } = this.props
-    const { _id, name, description, location, speakers, datetime, endtime } = this.state
+    const { _id, name, description, location, speakers, startTime, endTime } = this.state
     this.setState({ loading: true })
-    upsert({ _id, name, description, location, speakers, datetime, endtime })
+    upsert({ _id, name, description, location, speakers, startTime, endTime })
   }
 
   handleInputChange (e, { name, value }) {
     this.setState({ [name]: value })
   };
 
-  handleDatetimeChange (updated) {
-    this.setState({ 'datetime': updated })
+  handleStartTimeChange (updated) {
+    this.setState({ 'startTime': updated })
   };
 
-  handleEndtimeChange(updated) {
-      this.setState({ 'endtime': updated })
+  handleEndTimeChange(updated) {
+      this.setState({ 'endTime': updated })
   };
 
   render () {
@@ -108,18 +108,18 @@ class AdminEventsNew extends Component {
                   <Form.Field
                     label='Starting date & time'
                     control={DatePicker}
-                    name='datetime'
-                    selected={this.state.datetime}
-                    onChange={this.handleDatetimeChange}
+                    name='startTime'
+                    selected={this.state.startTime}
+                    onChange={this.handleStartTimeChange}
                     showTimeSelect
                     timeFormat="HH:mm"
                     timeIntervals={15}/>
                   <Form.Field
                     label='Ending date & time'
                     control={DatePicker}
-                    name='endtime'
-                    selected={this.state.endtime}
-                    onChange={this.handleEndtimeChange}
+                    name='endTime'
+                    selected={this.state.endTime}
+                    onChange={this.handleEndTimeChange}
                     showTimeSelect
                     timeFormat="HH:mm"
                     timeIntervals={15} />

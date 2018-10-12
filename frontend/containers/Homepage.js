@@ -24,7 +24,7 @@ class Homepage extends Component {
     const { loading, events, history } = this.props
 
     const processedEvents =
-      events && events.length > 0 ? events.sort((e1, e2) => (new Date(e1.datetime) - new Date(e2.datetime))).slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
+      events && events.length > 0 ? events.slice(0, HOMEPAGE_EVENT_LIMIT).map(event => {
         event.showAdminControls = false
         return (
           <Event

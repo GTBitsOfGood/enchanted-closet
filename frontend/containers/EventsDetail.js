@@ -91,7 +91,7 @@ class EventsDetail extends Component {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
     if (!event && isFetchingEvents) { return <div /> }
-    const date = new Date(event.datetime)
+    const date = new Date(event.startTime)
     const registerBlock = (() => {
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
@@ -170,7 +170,7 @@ class EventsDetail extends Component {
       <Segment key="events">
         <h3>Events</h3>
         <p><Icon name='map'/> {event.location} </p>
-        <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
+        <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}</p>
       </Segment>
       <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
         <ButtonGallery>

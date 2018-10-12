@@ -18,9 +18,9 @@ class BaseDashboard extends Component {
 
     // Filter based on time
     const upcomingEvents = userEventsDict.filter(
-      event => (new Date(event.datetime) > new Date(Date.now())))
+      event => (new Date(event.startTime) > new Date(Date.now())))
     const pastEvents = userEventsDict.filter(
-      event => (new Date(event.datetime) <= new Date(Date.now()))) // lol inefficient
+      event => (new Date(event.startTime) <= new Date(Date.now()))) // lol inefficient
 
     // For volunteer, pending events
     const pendingEventsArr = this.props.events.filter(e => ((pendingEvents.includes(e._id))))
