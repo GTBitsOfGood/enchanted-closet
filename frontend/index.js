@@ -1,5 +1,4 @@
-import '../node_modules/semantic-ui-css/semantic.min.css'
-import './assets/stylesheets/base'
+import 'semantic-ui-css/semantic.min.css'
 
 import { render } from 'react-dom'
 import React from 'react'
@@ -21,15 +20,4 @@ render(
   document.getElementById('root')
 )
 
-if (module.hot) {
-  module.hot.accept('./containers/Root.js', () => {
-    const NewRoot = require('./containers/Root.js').default
-    console.log(NewRoot)
-    render(
-      <AppContainer>
-        <NewRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
-    )
-  })
-}
+if (module.hot) module.hot.accept('./containers/Root', () => render(Root))

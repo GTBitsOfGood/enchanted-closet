@@ -5,11 +5,17 @@ import { UploadModal } from '../'
 
 // User Pfp display/linker / lock if not admin - id of event
 const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
+  let image = ''
+  try {
+    image = require(`../../../public/uploaded/events/${imageUrl}`)
+  } catch (err) {
+    image = require(`../../../public/uploaded/events/defaultEventPicture.png`)
+  }
   if (role !== 'Admin') {
     return (
       <Image
         centered
-        src={`/uploaded/events/${imageUrl}`}
+        src={image}
         size='medium'
       />
     )
@@ -19,7 +25,7 @@ const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
         <Image
           style={styles.imageStyle}
           centered
-          src={`/uploaded/events/${imageUrl}`}
+          src={image}
           size='medium'
         />
       </UploadModal>

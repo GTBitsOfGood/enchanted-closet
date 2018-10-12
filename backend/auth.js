@@ -24,7 +24,7 @@ const isAdmin = (id, callback) => {
     return callback(null, false)
   }
   User.findById(id, (err, result) => {
-    if (!err && result.role == 'Admin') {
+    if (!err && result.role === 'Admin') {
       return callback(err, true)
     }
     callback(null, false)
@@ -32,7 +32,7 @@ const isAdmin = (id, callback) => {
 }
 
 function lacksAny (obj, props) {
-  for (p in props) {
+  for (let p in props) {
     let k = props[p]
     if (!(obj[k])) {
       return k
@@ -120,7 +120,7 @@ module.exports.idMatchesOrAdmin = (req, res, next) => {
         }
         return next(new Error(res.locals.error))
       }
-      if (curr == null || (curr != req.params.id && !state)) {
+      if (curr == null || (curr !== req.params.id && !state)) {
         res.locals.error = {
           status: 403,
           msg: 'Not authorized'
@@ -197,6 +197,7 @@ module.exports.makeAdmin = (req, res, next) => {
           // localStorage.setItem("user", user);
           return next()
         } else {
+          console.error(err)
           res.locals.error = {
             status: 404,
             msg: 'That user no longer exists'
@@ -219,7 +220,7 @@ module.exports.idMatches = (req, res, next) => {
   }
   token = token.substring(7)
   module.exports.currentUser(token, (err, curr) => {
-    if (err || curr == null || curr != req.params.id) {
+    if (err || curr == null || curr !== req.params.id) {
       res.locals.error = {
         status: 403,
         msg: 'Not authorized'

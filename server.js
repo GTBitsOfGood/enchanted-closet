@@ -10,16 +10,9 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const app = express();
-const PORT = process.env.PORT || 3001;
-const webpack = require('webpack')
-const webpackConfig = require('./webpack.config');
-const compiler = webpack(webpackConfig);
+const PORT = 3001;
 
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: webpackConfig.output.publicPath
-}))
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -32,8 +25,8 @@ const api = require('./backend/routes');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api); // Server Routing
-app.get('/*', (request, response) => { // Else, give to React
-  response.sendFile(__dirname + '/public/index.html');
+app.get('/*', (req, res) => { // Else, give to React
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(PORT, error => {

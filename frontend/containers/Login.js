@@ -12,7 +12,7 @@ const Login = () => (
   <Grid verticalAlign="middle" columns='three' centered>
     <Grid.Row>
       <Grid.Column width={4} only="computer">
-        <Image src={images.imgL} size='medium' centered />
+        <Image src={require('../../public/images/EC_dress2-01.png')} size='medium' centered />
       </Grid.Column>
       <Grid.Column computer={8} mobile={16}>
         <Container fluid text>
@@ -30,14 +30,14 @@ const Login = () => (
               to='/register'
               icon labelPosition="right"
             >
-        Register a New Account
+              Register a New Account
               <Icon name="right arrow" />
             </Button>
           </Container>
         </Container>
       </Grid.Column>
       <Grid.Column width={4} only="computer">
-        <Image src={images.imgR} size='medium' centered />
+        <Image src={require('../../public/images/EC_dress4-01.png')} size='medium' centered />
       </Grid.Column>
     </Grid.Row>
   </Grid>
@@ -47,8 +47,8 @@ const styles = {
 }
 
 const images = {
-  imgL: '/images/EC_dress2-01.png',
-  imgR: '/images/EC_dress4-01.png'
+  imgL: '../../public/images/EC_dress2-01.png',
+  imgR: '../../public/images/EC_dress4-01.png'
 }
 
 export default withRouter(Login)

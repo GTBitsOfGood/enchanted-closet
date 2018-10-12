@@ -1,0 +1,16 @@
+webpackHotUpdate(0,{
+
+/***/ 849:
+/* no static exports found */
+/* all exports used */
+/*!*****************************************************!*\
+  !*** ./frontend/components/profile/ProfileImage.js ***!
+  \*****************************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _react = __webpack_require__(/*! react */ 0);\n\nvar _react2 = _interopRequireDefault(_react);\n\nvar _reactRedux = __webpack_require__(/*! react-redux */ 16);\n\nvar _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 9);\n\nvar _ = __webpack_require__(/*! ../ */ 24);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n// User Pfp display/linker\nvar ProfileImage = function ProfileImage(_ref) {\n  var _ref$imageUrl = _ref.imageUrl,\n      imageUrl = _ref$imageUrl === undefined ? \"defaultUserPicture.jpg\" : _ref$imageUrl;\n  return _react2.default.createElement(\n    _.UploadModal,\n    { type: 'user', url: '/uploaded/users/' + imageUrl },\n    _react2.default.createElement(_semanticUiReact.Image, {\n      style: styles.imageStyle,\n      src: '/uploaded/users/' + imageUrl,\n      size: 'medium'\n    })\n  );\n};\n\nvar styles = {\n  imageStyle: {\n    cursor: 'pointer'\n  }\n};\n\nvar mapStateToProps = function mapStateToProps(state, ownProps) {\n  // OwnProps todo for default\n  return {\n    imageUrl: state.user ? state.user.image : \"defaultUserPicture.jpg\"\n  };\n};\n\nexports.default = (0, _reactRedux.connect)(mapStateToProps)(ProfileImage);//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiODQ5LmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vL2Zyb250ZW5kL2NvbXBvbmVudHMvcHJvZmlsZS9Qcm9maWxlSW1hZ2UuanM/OGRmNiJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgY29ubmVjdCB9IGZyb20gJ3JlYWN0LXJlZHV4JztcbmltcG9ydCB7IEltYWdlIH0gZnJvbSAnc2VtYW50aWMtdWktcmVhY3QnO1xuaW1wb3J0IHsgVXBsb2FkTW9kYWwgfSBmcm9tICcuLi8nO1xuXG4vLyBVc2VyIFBmcCBkaXNwbGF5L2xpbmtlclxuY29uc3QgUHJvZmlsZUltYWdlID0gKHsgaW1hZ2VVcmwgPSBcImRlZmF1bHRVc2VyUGljdHVyZS5qcGdcIiB9KSA9PiAoXG4gIDxVcGxvYWRNb2RhbCB0eXBlPVwidXNlclwiIHVybD17YC91cGxvYWRlZC91c2Vycy8ke2ltYWdlVXJsfWB9PlxuICAgIDxJbWFnZVxuICAgICAgc3R5bGU9e3N0eWxlcy5pbWFnZVN0eWxlfVxuICAgICAgc3JjPXtgL3VwbG9hZGVkL3VzZXJzLyR7aW1hZ2VVcmx9YH1cbiAgICAgIHNpemU9J21lZGl1bSdcbiAgICAvPlxuICA8L1VwbG9hZE1vZGFsPlxuKTtcblxuY29uc3Qgc3R5bGVzID0ge1xuICBpbWFnZVN0eWxlOiB7XG4gICAgY3Vyc29yOiAncG9pbnRlcidcbiAgfVxufVxuXG5jb25zdCBtYXBTdGF0ZVRvUHJvcHMgPSAoc3RhdGUsIG93blByb3BzKSA9PiB7IC8vIE93blByb3BzIHRvZG8gZm9yIGRlZmF1bHRcbiAgcmV0dXJuIHtcbiAgICBpbWFnZVVybDogc3RhdGUudXNlciA/IHN0YXRlLnVzZXIuaW1hZ2UgOiBcImRlZmF1bHRVc2VyUGljdHVyZS5qcGdcIlxuICB9XG59XG5cbmV4cG9ydCBkZWZhdWx0IGNvbm5lY3QobWFwU3RhdGVUb1Byb3BzKShQcm9maWxlSW1hZ2UpO1xuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIGZyb250ZW5kL2NvbXBvbmVudHMvcHJvZmlsZS9Qcm9maWxlSW1hZ2UuanMiXSwibWFwcGluZ3MiOiI7Ozs7OztBQUFBO0FBQ0E7OztBQUFBO0FBQ0E7QUFBQTtBQUNBO0FBQUE7QUFDQTs7O0FBQ0E7QUFDQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUhBO0FBREE7QUFEQTtBQUNBO0FBU0E7QUFDQTtBQUNBO0FBREE7QUFEQTtBQUNBO0FBS0E7QUFBQTtBQUNBO0FBQ0E7QUFEQTtBQUdBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///849\n");
+
+/***/ })
+
+})

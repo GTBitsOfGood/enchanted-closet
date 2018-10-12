@@ -67,7 +67,7 @@ class Navigation extends Component {
             style={styles.button}
             onClick={navFactory('/login')}
           >
-      Log In
+          Log In
           </Menu.Item>
         )}
       </Menu>
