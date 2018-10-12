@@ -24,7 +24,6 @@ class ProfileForm extends Component {
       status: initStatus,
       userData: initData,
       cachedData: initData
-      // dropdown: "6"
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -134,12 +133,11 @@ class ProfileForm extends Component {
                   <Form.Select
                     key={`profile${key}`}
                     label={tar.label ? tar.label : startCase(key)}
+                    error={this.errorFactory(key)}
                     options={this.targets[key]['options']}
-                    // placeholder='Grade'
                     value={
                       userData[key]
                     }
-                    // onChange={this.handleChange}
                     onChange={this.handleChange}
                     onBlur={this.blurFunctionFactory(key)}
                   />

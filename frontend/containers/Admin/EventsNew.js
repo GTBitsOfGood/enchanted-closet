@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter, Redirect} from 'react-router-dom'
 
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
@@ -10,7 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { upsertEvent } from '../../actions'
 
-import { Container, Segment, Form, Message } from 'semantic-ui-react'
+import { Container, Segment, Form, Message,Transition } from 'semantic-ui-react'
 import { Event, LoadingIcon, PageTitle } from '../../components/'
 
 class AdminEventsNew extends Component {
@@ -85,11 +85,13 @@ class AdminEventsNew extends Component {
                 loading={loading} onSubmit={this.upsertEvent}
               >
                 {error &&
+     <Transition.Group animation={'fade'} duration={500}>
      <Message
        error
        header='Unable to create event'
        content={error}
      />
+     </Transition.Group>
                 }
                 <Form.Input required label='Event Name' value={this.state.name} name='name' placeholder='Event Name' onChange={this.handleInputChange} />
                 <Form.TextArea required label='Description' rows={12} value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />

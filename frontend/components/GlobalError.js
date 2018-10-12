@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Container, Message } from 'semantic-ui-react' // No transitions, this is presentational
+import { Container, Message,Transition } from 'semantic-ui-react' // No transitions, this is presentational
 
 import { clearErrors } from '../actions/'
 
@@ -9,6 +9,7 @@ import { clearErrors } from '../actions/'
 const GlobalError = ({ clearErrors, errorMessage }) => {
   // Can't work icon into this : Open issue https://github.com/Semantic-Org/Semantic-UI/issues/4759
   const messageBlock = errorMessage ? (
+    <Transition.Group animation={'fade'} duration={500}>
     <Message
       style={styles.message}
       compact error
@@ -19,6 +20,7 @@ const GlobalError = ({ clearErrors, errorMessage }) => {
         {errorMessage}
       </Message.Content>
     </Message>
+    </Transition.Group>
   ) : <div />
   return (
     <div style={styles.globalError}>
