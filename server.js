@@ -10,11 +10,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 // const favicon = require('serve-favicon');
 const app = express();
-const PORT = 5000;
-// const webpack = require('webpack')
-// const webpackConfig = require('./webpack.config');
-// const compiler = webpack(webpackConfig);
-
+const PORT = 3001;
 
 app.use(bodyParser.urlencoded({
   extended: true
