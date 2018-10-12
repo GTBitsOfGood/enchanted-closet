@@ -90,6 +90,12 @@ class EventsDetail extends Component {
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
+
+    let markAttendanceButton = null
+    if(user && user.events && user.events.includes(event._id)){
+      markAttendanceButton =  <MarkAttendanceButton/>
+    }
+
     if (!event && isFetchingEvents) { return <div /> }
     const date = new Date(event.datetime)
     const registerBlock = (() => {
@@ -193,7 +199,8 @@ class EventsDetail extends Component {
             { registerBlock }
           </RoleCheck>
           <RoleCheck role="Volunteer">
-            <MarkAttendanceButton />
+          {markAttendanceButton}
+
           </RoleCheck>
         </ButtonGallery>
       </RoleCheck>
