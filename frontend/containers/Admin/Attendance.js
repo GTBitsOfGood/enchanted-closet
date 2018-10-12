@@ -101,7 +101,6 @@ class AdminAttendance extends Component {
           )
 
           const isAttending = event.volunteersAttended.filter(v => v._id === user._id).length === 1
-          console.log(event.volunteersAttended.filter(v => v._id === user._id))
           if (user.role === 'Volunteer' && !isAttending) {
             return (
               <Container>

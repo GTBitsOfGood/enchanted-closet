@@ -51,7 +51,7 @@ class EventsDetail extends Component {
           })
         })
         .catch(err => {
-          console.log(err)
+          console.error(err)
           this.setState({ displayMapLocationError: true })
         })
     }
@@ -82,7 +82,7 @@ class EventsDetail extends Component {
         })
         .catch(err => {
           this.setState({ displayMapLocationError: true })
-          console.log(err)
+          console.error(err)
         })
     }
   }

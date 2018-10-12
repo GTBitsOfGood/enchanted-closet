@@ -186,7 +186,6 @@ module.exports.yearReport = (req, res, next) => {
           })
         }
       })
-      console.log(csvStream.readableLength)
       // if (csvStream.readableLength === 0) {
       //   res.locals.error = {
       //     status: 404,
