@@ -13,6 +13,7 @@ import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react'
 import { ButtonGallery, DeleteButton, DownloadAttendanceButton,
   MarkAttendanceButton, Map, EditButton,
   ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/'
+import { Redirect } from 'react-router-dom';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -91,6 +92,7 @@ class EventsDetail extends Component {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
     if (!event && isFetchingEvents) { return <div /> }
+    if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const date = new Date(event.datetime)
     const registerBlock = (() => {
       const yesterday = new Date()
@@ -101,7 +103,7 @@ class EventsDetail extends Component {
             return (
               <Button>
                 <Link to='/profile'>
-      Complete Profile to Register
+                  Complete Profile to Register
                 </Link>
               </Button>
             )
@@ -110,28 +112,28 @@ class EventsDetail extends Component {
           if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
             return (
               <Button disabled>
-    Registration denied
+                Registration denied
               </Button>
             )
           }
           if ((user.events && user.events.includes(event._id)) ||
-        (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
+          (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
             return (
               <Button onClick={() => cancelEvent(event._id, user._id)}>
-    Cancel Registration
+                Cancel Registration
               </Button>
             )
           }
           return (
             <Button onClick={() => registerEvent(event._id, user._id)}>
-        Register
+              Register
             </Button>
           )
         } else {
           return (
             <Button attached= 'top'>
               <Link to='/login'>
-    Login to Register
+                Login to Register
               </Link>
             </Button>
           )
@@ -139,7 +141,7 @@ class EventsDetail extends Component {
       } else {
         return (
           <Button disabled>
-    Registration Closed
+            Registration Closed
           </Button>
         )
       }
@@ -177,7 +179,7 @@ class EventsDetail extends Component {
           <RoleCheck role="Admin">
             <EditButton id={event._id} />
             <Modal
-              trigger={<DeleteButton />}
+              trigger={<DeleteButton/>}
               header='Confirm Delete'
               content='Are you sure you want to delete this event?'
               actions={[
