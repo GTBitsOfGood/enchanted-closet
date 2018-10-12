@@ -10,19 +10,9 @@ import { deleteEvent } from '../../actions'
 import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react'
 import { Clearfix, EditButton } from '../'
 import { COLORS } from '../../constants'
+import { sameDay } from '../../helpers/util'
 
 class Event extends Component {
-  constructor(props) {
-    super(props)
-    this.sameDay = this.sameDay.bind(this)
-  }
-
-  sameDay(d1, d2) {
-    return d1.getFullYear() === d2.getFullYear() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getDate() === d2.getDate();
-  }
-
   render () {
     const { data, deleteEvent, history, user } = this.props
     const link = `/events/${data._id}`
@@ -40,7 +30,7 @@ class Event extends Component {
                       <Icon name='calendar'/>
                       {moment(new Date(data.startTime)).format('MMMM Do YYYY, h:mm a')}
                       &nbsp;&#8209;&nbsp;
-                      {this.sameDay(new Date(data.startTime), new Date(data.endTime)) ?
+                      {sameDay(new Date(data.startTime), new Date(data.endTime)) ?
                         moment(new Date(data.endTime)).format('h:mm a') :
                         moment(new Date(data.endTime)).format('MMMM Do YYYY, h:mm a')
                       }

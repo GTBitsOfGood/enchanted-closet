@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Divider, Segment, Header, Icon, Container, Message } from 'semantic-ui-react'
 import { COLORS } from '../../constants'
 import { withRouter, Link } from 'react-router-dom'
-import isProfileComplete from '../../helpers/util'
+import { isProfileComplete } from '../../helpers/util'
 import { DashboardCard } from './'
 import { Event, RoleCheck } from '../'
 
