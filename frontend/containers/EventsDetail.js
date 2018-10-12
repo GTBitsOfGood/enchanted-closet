@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { uniqueId } from 'lodash'
 import moment from 'moment'
-import isProfileComplete from '../helpers/util'
+import { isProfileComplete, sameDay } from '../helpers/util'
 import { geocode } from '../helpers/geocodeEngine'
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index'
@@ -97,7 +97,7 @@ class EventsDetail extends Component {
     }
 
     if (!event && isFetchingEvents) { return <div /> }
-    const date = new Date(event.datetime)
+    const date = new Date(event.startTime)
     const registerBlock = (() => {
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
@@ -176,7 +176,12 @@ class EventsDetail extends Component {
       <Segment key="events">
         <h3>Events</h3>
         <p><Icon name='map'/> {event.location} </p>
-        <p><Icon name='clock'/> {moment(new Date(event.datetime)).format('MMMM Do YYYY, h:mm a')}</p>
+        <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
+                      &nbsp;&#8209;&nbsp;
+                      {sameDay(new Date(event.startTime), new Date(event.endTime)) ?
+                        moment(new Date(event.endTime)).format('h:mm a') :
+                        moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
+                      }</p>
       </Segment>
       <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
         <ButtonGallery>
