@@ -28,6 +28,8 @@ class Event extends Component {
                     <Container style={style.whiteText}>
                       <Icon name='calendar'/>
                       {moment(new Date(data.startTime)).format('MMMM Do YYYY, h:mm a')}
+                      &nbsp;&#8209;&nbsp;
+                      {moment(new Date(data.endTime)).format('MMMM Do YYYY, h:mm a')}
                     </Container>
                   )}
                   content="Date"
