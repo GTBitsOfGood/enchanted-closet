@@ -88,10 +88,14 @@ class Event extends Component {
 }
 
 const pruneDescription = (description) => {
-  const cutoff = 20 // 20 words;
-  const split = description.split(' ')
-  if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`
-  return description
+  if (description) {
+    const cutoff = 20 // 20 words;
+    const split = description.split(' ')
+    if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`
+    return description
+  } else {
+    return description
+  }
 }
 
 const style = {
