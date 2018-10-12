@@ -25,7 +25,8 @@ class AdminEventsNew extends Component {
       endTime: moment(),
       speakers: '',
       loading: this.props.loading,
-      error: this.props.error
+      error: this.props.error,
+      dateError: false
     }
 
     this.upsertEvent = this.upsertEvent.bind(this)
@@ -55,10 +56,12 @@ class AdminEventsNew extends Component {
   }
 
   upsertEvent () {
-    const { upsertEvent: upsert } = this.props
-    const { _id, name, description, location, speakers, startTime, endTime } = this.state
-    this.setState({ loading: true })
-    upsert({ _id, name, description, location, speakers, startTime, endTime })
+    if (!this.state.dateError) {
+      const { upsertEvent: upsert } = this.props
+      const { _id, name, description, location, speakers, startTime, endTime } = this.state
+      this.setState({ loading: true })
+      upsert({ _id, name, description, location, speakers, startTime, endTime })
+    }
   }
 
   handleInputChange (e, { name, value }) {
@@ -67,10 +70,13 @@ class AdminEventsNew extends Component {
 
   handleStartTimeChange (updated) {
     this.setState({ 'startTime': updated })
-  };
+    this.setState({ 'dateError': this.state.endTime.isBefore(updated) })
+
+  }
 
   handleEndTimeChange(updated) {
       this.setState({ 'endTime': updated })
+      this.setState({ 'dateError': this.state.startTime.isAfter(updated) })
   };
 
   render () {
@@ -113,7 +119,8 @@ class AdminEventsNew extends Component {
                     onChange={this.handleStartTimeChange}
                     showTimeSelect
                     timeFormat="HH:mm"
-                    timeIntervals={15}/>
+                    timeIntervals={15}
+                    error={this.state.dateError} />
                   <Form.Field
                     label='Ending date & time'
                     control={DatePicker}
@@ -122,9 +129,18 @@ class AdminEventsNew extends Component {
                     onChange={this.handleEndTimeChange}
                     showTimeSelect
                     timeFormat="HH:mm"
-                    timeIntervals={15} />
+                    timeIntervals={15}
+                    error={this.state.dateError}/>
                 </Form.Group>
-                <Form.Button>
+                {this.state.dateError &&
+                  <Message>
+                    <Message.Header>Date Error</Message.Header>
+                    <p>
+                      Start date must be before end date!
+                    </p>
+                  </Message>
+                }
+                <Form.Button disabled={this.state.dateError || !this.state.name || !this.state.location || !this.state.description || !this.state.speakers}>
                   {this.state._id ? 'Update Event' : 'Create Event'}
                 </Form.Button>
               </Form>
