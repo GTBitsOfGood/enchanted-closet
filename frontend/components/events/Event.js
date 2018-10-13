@@ -10,6 +10,7 @@ import { deleteEvent } from '../../actions'
 import { Segment, Icon, Grid, Button, Modal, Header, Popup, Container } from 'semantic-ui-react'
 import { Clearfix, EditButton } from '../'
 import { COLORS } from '../../constants'
+import { sameDay } from '../../helpers/util'
 
 class Event extends Component {
   render () {
@@ -27,7 +28,12 @@ class Event extends Component {
                   trigger={(
                     <Container style={style.whiteText}>
                       <Icon name='calendar'/>
-                      {moment(new Date(data.datetime)).format('MMMM Do YYYY, h:mm a')}
+                      {moment(new Date(data.startTime)).format('MMMM Do YYYY, h:mm a')}
+                      &nbsp;&#8209;&nbsp;
+                      {sameDay(new Date(data.startTime), new Date(data.endTime)) ?
+                        moment(new Date(data.endTime)).format('h:mm a') :
+                        moment(new Date(data.endTime)).format('MMMM Do YYYY, h:mm a')
+                      }
                     </Container>
                   )}
                   content="Date"
@@ -82,10 +88,14 @@ class Event extends Component {
 }
 
 const pruneDescription = (description) => {
-  const cutoff = 20 // 20 words;
-  const split = description.split(' ')
-  if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`
-  return description
+  if (description) {
+    const cutoff = 20 // 20 words;
+    const split = description.split(' ')
+    if (split.length > cutoff) return `${split.splice(0, 20).join(' ')}...`
+    return description
+  } else {
+    return description
+  }
 }
 
 const style = {
