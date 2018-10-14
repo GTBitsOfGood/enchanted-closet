@@ -40,7 +40,6 @@ class EventTab extends Component {
     const length = filteredEvents.length
     // TODO: Extreme Inefficiency flag
     // sort newer ones first
-    filteredEvents.sort((e1, e2) => (new Date(e2.datetime) - new Date(e1.datetime)))
     filteredEvents.map(e => {
       counter++
       if (counter >= range[0] && counter <= range[1]) {

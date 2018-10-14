@@ -1,0 +1,8 @@
+/* ul.react-datepicker__time-list {
+    padding-right: 0 !important;
+    padding: 0 !important;
+} */
+
+ul {
+    padding: 0 !important;
+}

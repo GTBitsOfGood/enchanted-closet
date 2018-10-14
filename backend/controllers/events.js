@@ -27,7 +27,8 @@ module.exports.index = (req, res, next) => {
 
 module.exports.fetchFutureEvents = (req, res, next) => {
   Event
-    .find({ 'datetime': { $gt: currDate } })
+    .find({ 'startTime': { $gt: currDate } })
+    .sort({ 'startTime': 1 })
     .populate('participants')
     .exec((err, events) => {
       if (events) {
@@ -48,7 +49,8 @@ module.exports.fetchFutureEvents = (req, res, next) => {
 
 module.exports.fetchPastEvents = (req, res, next) => {
   Event
-    .find({ datetime: { $lte: currDate } })
+    .find({ 'startTime': { $lte: currDate } })
+    .sort({ 'startTime': 1 })
     .populate('participants')
     .exec((err, events) => {
       if (events) {
@@ -311,10 +313,18 @@ module.exports.create = (req, res, next) => {
     return next()
   }
 
-  if (!req.body.datetime) {
+  if (!req.body.startTime) {
     res.locals.error = {
       status: 400,
-      msg: 'Date & Time field is required'
+      msg: 'Start Date & Time field is required'
+    }
+    return next()
+  }
+
+  if (!req.body.endTime) {
+    res.locals.error = {
+      status: 400,
+      msg: 'End Date & Time field is required'
     }
     return next()
   }
@@ -323,7 +333,8 @@ module.exports.create = (req, res, next) => {
     name: req.body.name,
     description: req.body.description,
     location: req.body.location,
-    datetime: req.body.datetime,
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
     speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
   }, (err, result) => {
     if (err) {
@@ -401,7 +412,8 @@ module.exports.update = (req, res, next) => {
     if (req.body.name && req.body.name.length > 2) newValues.name = req.body.name
     if (req.body.description && req.body.description.length > 2) newValues.description = req.body.description
     if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location
-    if (req.body.datetime && req.body.datetime.length > 2) newValues.datetime = req.body.datetime
+    if (req.body.startTime && req.body.startTime.length > 2) newValues.startTime = req.body.startTime
+    if (req.body.endTime && req.body.endTime.length > 2) newValues.endTime = req.body.endTime
     if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(e => e.trim())
 
     event.set(newValues)
