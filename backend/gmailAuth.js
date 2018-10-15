@@ -14,9 +14,9 @@ const TOKEN_PATH = 'token.json'
 // Should be getting and updating token in database!!!!!!
 
 // Load client secrets from a local file.
-module.exports.authSend = function authSend(receivers, message) {
+module.exports.authSend = function authSend(receivers, subject, message) {
   // Authorize a client with credentials, then call the Gmail API.
-  authorize(receivers, message, sendMessage)
+  authorize(receivers, subject, message, sendMessage)
 }
 
 /**
@@ -25,7 +25,7 @@ module.exports.authSend = function authSend(receivers, message) {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(receivers, message, callback) {
+function authorize(receivers, subject, message, callback) {
   const CLIENT_ID = process.env.CLIENT_ID
   const CLIENT_SECRET = process.env.CLIENT_SECRET
   const REDIRECT_URIS = process.env.REDIRECT_URIS
@@ -46,7 +46,7 @@ function authorize(receivers, message, callback) {
     token_type: process.env.TOKEN_TYPE,
     expiry_date: process.env.EXPIRY_DATE
   })
-  callback(oAuth2Client, receivers, message)
+  callback(oAuth2Client, receivers, subject, message)
 }
 
 /**
@@ -80,31 +80,7 @@ function getNewToken(oAuth2Client, callback) {
   })
 }
 
-/**
- * Lists the labels in the user's account.
- *
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listLabels(auth) {
-  const gmail = google.gmail({ version: 'v1', auth })
-  gmail.users.labels.list({
-    userId: 'me'
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err)
-    const labels = res.data.labels
-    if (labels.length) {
-      console.log('Labels:')
-      labels.forEach((label) => {
-        console.log(`- ${label.name}`)
-      })
-    } else {
-      console.log('No labels found.')
-    }
-  })
-}
-
 function makeBody(to, from, subject, message) {
-  console.log('to: ', to)
   var str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
     "MIME-Version: 1.0\n",
     "Content-Transfer-Encoding: 7bit\n",
@@ -117,8 +93,8 @@ function makeBody(to, from, subject, message) {
   return encodedMail
 }
 
-function sendMessage(auth, receivers, message) {
-  var raw = makeBody(receivers, 'testmailec1234@gmail.com', 'THIS IS FROM NODE', message)
+function sendMessage(auth, receivers, subject, message) {
+  var raw = makeBody(receivers, 'testmailec1234@gmail.com', subject, message)
   const gmail = google.gmail({ version: 'v1', auth })
   gmail.users.messages.send({
     auth: auth,
@@ -129,8 +105,6 @@ function sendMessage(auth, receivers, message) {
   }, function(err, response) {
     if (err) {
       console.error(err)
-    } else {
-      // return good response??
     }
   })
 }

@@ -292,10 +292,9 @@ function volunteerRegisterEmail(user) {
       if (err) {
         // handle error (db error for sure)
         console.error(err)
-        return
       }
       users.forEach(u => admins.push(u.email))
-      mail.authSend(admins, user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look')
+      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look')
     })
   }
 }

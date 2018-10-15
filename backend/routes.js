@@ -62,7 +62,7 @@ router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.even
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent)
 router.put('/events/:id', auth.checkAdmin, controllers.events.update)
 router.get('/events/:id/report', controllers.reporting.eventReport)
-router.get('/report/year', controllers.reporting.yearReport)
+router.get('/report/year', auth.checkAdmin, controllers.reporting.yearReport)
 
 // Package and finish
 router.use((req, res, next) => {
