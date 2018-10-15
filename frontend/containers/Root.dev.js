@@ -8,17 +8,53 @@ import DevTools from './DevTools'
 import { COLORS } from '../constants'
 import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components'
 import * as Admin from './Admin'
-import Dashboard from './Dashboard.js'
-import Events from './Events.js'
-import EventsDetail from './EventsDetail.js'
-import Homepage from './Homepage.js'
-import Login from './Login.js'
-import Logout from './Logout.js'
-import MissingPage from './MissingPage.js'
-import Navigation from './Navigation'
-import Profile from './Profile.js'
-import Register from './Register'
-import FormDemo from './FormDemo'
+import Loadable from 'react-loadable'
+const Events = Loadable({
+  loader: () => import('./Events.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const EventsDetail = Loadable({
+  loader: () => import('./EventsDetail.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Homepage = Loadable({
+  loader: () => import('./Homepage.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Login = Loadable({
+  loader: () => import('./Login.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Logout = Loadable({
+  loader: () => import('./Logout.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const MissingPage = Loadable({
+  loader: () => import('./MissingPage.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Navigation = Loadable({
+  loader: () => import('./Navigation'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Profile = Loadable({
+  loader: () => import('./Profile.js'),
+  loading () { return (<div> Loading... </div>) }
+})
+const Register = Loadable({
+  loader: () => import('./Register'),
+  loading () { return (<div> Loading... </div>) }
+})
+
+const Dashboard = Loadable({
+  loader: () => import('./Dashboard.js'),
+  loading () { return (<div>Loading...</div>) }
+})
+
+const FormDemo = Loadable({
+  loader: () => import('./FormDemo'),
+  loading () { return (<div>Loading...</div>) }
+})
 
 class Root extends React.Component {
   render () {
@@ -36,6 +72,12 @@ class Root extends React.Component {
                 <Route
                   path="/formDemo"
                   componet={FormDemo}
+                />
+                <SmartRoute
+                  accepts={['loggedOut', 'loggedIn']}
+                  path="/formDemo"
+                  component={FormDemo}
+                  redirect="/"
                 />
                 <SmartRoute
                   accepts={['loggedOut']}
