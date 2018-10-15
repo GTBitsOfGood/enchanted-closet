@@ -4,7 +4,7 @@ import './systemconfig'
 
 const mongoose = require('mongoose')
 
-const mongoURL = 'mongodb://127.0.0.1/enchannted_closet_database'
+const mongoURL = process.env.MONGO_URL
 
 var mongoDB = mongoURL
 mongoose.connect(mongoDB, {
