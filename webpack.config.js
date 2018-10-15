@@ -4,6 +4,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const Dotenv = require('dotenv-webpack')
 const webpack = require('webpack')
 
 const port = 3000
@@ -110,7 +111,8 @@ module.exports = {
       filename: '[name].css',
       chunkFilename: '[id].css'
     }),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new Dotenv({path: './.env.frontend'}),
   ],
   devServer: {
     host: 'localhost',

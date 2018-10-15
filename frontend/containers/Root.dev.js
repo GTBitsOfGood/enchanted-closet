@@ -18,6 +18,7 @@ import MissingPage from './MissingPage.js'
 import Navigation from './Navigation'
 import Profile from './Profile.js'
 import Register from './Register'
+import FormDemo from './FormDemo'
 
 class Root extends React.Component {
   render () {
@@ -32,6 +33,10 @@ class Root extends React.Component {
               <GlobalError />
               <GlobalMessage />
               <Switch>
+                <Route
+                  path="/formDemo"
+                  componet={FormDemo}
+                />
                 <SmartRoute
                   accepts={['loggedOut']}
                   exact path="/"
