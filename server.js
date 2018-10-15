@@ -8,7 +8,7 @@ const express = require('express');
 const compression = require('compression');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-// const favicon = require('serve-favicon');
+const favicon = require('serve-favicon');
 const app = express();
 const PORT = 3001;
 
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-// app.use(favicon(__dirname + '/public/images/favicon/favicon.ico'));
+app.use(favicon(__dirname + '/public/images/favicon/favicon.ico'));
 app.use(compression());
 app.use(helmet());
 const db = require('./backend/models/db');
