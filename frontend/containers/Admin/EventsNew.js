@@ -7,6 +7,7 @@ import moment from 'moment'
 import DatePicker from 'react-datepicker'
 
 import 'react-datepicker/dist/react-datepicker.css'
+import '../../assets/stylesheets/datepicker.css'
 
 import { upsertEvent } from '../../actions'
 
@@ -20,15 +21,18 @@ class AdminEventsNew extends Component {
       name: '',
       description: '',
       location: '',
-      datetime: moment(),
+      startTime: moment(),
+      endTime: moment(),
       speakers: '',
       loading: this.props.loading,
-      error: this.props.error
+      error: this.props.error,
+      dateError: false
     }
 
     this.upsertEvent = this.upsertEvent.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleDatetimeChange = this.handleDatetimeChange.bind(this)
+    this.handleStartTimeChange = this.handleStartTimeChange.bind(this)
+    this.handleEndTimeChange = this.handleEndTimeChange.bind(this)
   }
 
   componentWillMount () {
@@ -40,7 +44,8 @@ class AdminEventsNew extends Component {
         description: event.description,
         location: event.location,
         speakers: event.speakers.join(', '),
-        datetime: moment(new Date(event.datetime))
+        startTime: moment(new Date(event.startTime)),
+        endTime: moment(new Date(event.endTime)),
       })
     }
   }
@@ -51,18 +56,27 @@ class AdminEventsNew extends Component {
   }
 
   upsertEvent () {
-    const { upsertEvent: upsert } = this.props
-    const { _id, name, description, location, speakers, datetime } = this.state
-    this.setState({ loading: true })
-    upsert({ _id, name, description, location, speakers, datetime })
+    if (!this.state.dateError) {
+      const { upsertEvent: upsert } = this.props
+      const { _id, name, description, location, speakers, startTime, endTime } = this.state
+      this.setState({ loading: true })
+      upsert({ _id, name, description, location, speakers, startTime, endTime })
+    }
   }
 
   handleInputChange (e, { name, value }) {
     this.setState({ [name]: value })
   };
 
-  handleDatetimeChange (updated) {
-    this.setState({ 'datetime': updated })
+  handleStartTimeChange (updated) {
+    this.setState({ 'startTime': updated })
+    this.setState({ 'dateError': this.state.endTime.isBefore(updated) })
+
+  }
+
+  handleEndTimeChange(updated) {
+      this.setState({ 'endTime': updated })
+      this.setState({ 'dateError': this.state.startTime.isAfter(updated) })
   };
 
   render () {
@@ -96,16 +110,37 @@ class AdminEventsNew extends Component {
                 <Form.Input required label='Event Address' value={this.state.location} name='location' placeholder='123 Main Street, Atlanta GA 30318' onChange={this.handleInputChange} />
                 <Form.Input required label='Speakers' value={this.state.speakers} name='speakers' placeholder='John Smith, Jessica Hornbuckle' onChange={this.handleInputChange} />
                 <p>* Enter a comma-separated list of names for the speakers of this event</p>
-                <Form.Field
-                  label='Starting date & time'
-                  control={DatePicker}
-                  name='datetime'
-                  selected={this.state.datetime}
-                  onChange={this.handleDatetimeChange}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}/>
-                <Form.Button>
+                <Form.Group widths='equal'>
+                  <Form.Field
+                    label='Starting date & time'
+                    control={DatePicker}
+                    name='startTime'
+                    selected={this.state.startTime}
+                    onChange={this.handleStartTimeChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    error={this.state.dateError} />
+                  <Form.Field
+                    label='Ending date & time'
+                    control={DatePicker}
+                    name='endTime'
+                    selected={this.state.endTime}
+                    onChange={this.handleEndTimeChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    error={this.state.dateError}/>
+                </Form.Group>
+                {this.state.dateError &&
+                  <Message>
+                    <Message.Header>Date Error</Message.Header>
+                    <p>
+                      Start date must be before end date!
+                    </p>
+                  </Message>
+                }
+                <Form.Button disabled={this.state.dateError || !this.state.name || !this.state.location || !this.state.description || !this.state.speakers}>
                   {this.state._id ? 'Update Event' : 'Create Event'}
                 </Form.Button>
               </Form>

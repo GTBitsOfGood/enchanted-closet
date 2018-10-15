@@ -70,7 +70,7 @@ class AdminAttendance extends Component {
     if (event) {
       // Timecheck on event: TODO CONSTANT ASSUMPTION Presume same day
       // Future TODO: Split single time into start and end
-      const date = new Date(event.datetime)
+      const date = new Date(event.startTime)
       const curDate = new Date(Date.now())
       if (curDate.getFullYear() === date.getFullYear() &&
         curDate.getMonth() === date.getMonth() &&
@@ -131,7 +131,7 @@ class AdminAttendance extends Component {
           return <Redirect to="/" />
         }
       } else { // Future or Past check
-        if (Date.now() - event.datetime > 0) { // Past TODO: functional - provide admin write access to past events
+        if (Date.now() - event.startTime > 0) { // Past TODO: functional - provide admin write access to past events
           return (
             <div>
               <GenericBanner

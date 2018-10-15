@@ -241,7 +241,7 @@ module.exports.monthReport = (req, res, next) => {
 
   Event
     .find({
-      datetime: {
+      startTime: {
         $lte: maximumDate,
         $gt: minimumDate
       }
