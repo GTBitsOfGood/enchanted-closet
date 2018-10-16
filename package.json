@@ -4,7 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js",
+    "build": "NODE_ENV=production npm run build-server && npm run build-react",
+    "prebuild": "rm -rf build/*",
+    "build-server": "babel ./backend -d build/backend",
+    "build-react": "webpack -p --config webpack.config.prod.js",
     "dev": "concurrently -k \"webpack-dev-server --hot\" \"npm run backend\"",
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
@@ -61,6 +64,7 @@
     "should": "^13.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",

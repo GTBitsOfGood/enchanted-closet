@@ -13,7 +13,7 @@ module.exports = {
   mode: 'production',
   entry: './frontend/index.js',
   output: {
-    path: path.resolve('dist'),
+    path: path.resolve('build/frontend'),
     filename: 'bundle.[hash].js',
     publicPath: '/'
   },
@@ -44,7 +44,12 @@ module.exports = {
         use: {
             loader: 'babel-loader',
             options: {
-              presets: ["@babel/preset-env", "@babel/preset-react"]
+              presets: ["@babel/preset-env", "@babel/preset-react"],
+              plugins: [
+                "react-hot-loader/babel",
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-class-properties"
+              ]
             }
         }
       },
