@@ -18,6 +18,7 @@ class UsersNew extends Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.processData = this.processData.bind(this)
+    this.setDuration=this.setDuration.bind(this)
   }
 
   handleInputChange (e, { name, value }) {
@@ -35,6 +36,11 @@ class UsersNew extends Component {
     upsertUser({ _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone })
   }
 
+  setDuration=()=>{
+    setTimeout(()=>{
+      this.setState({error: false})
+    }, 3000)
+  }
   render () {
     const { loading, error, newUser } = this.state
     if (newUser) {
@@ -45,13 +51,13 @@ class UsersNew extends Component {
           <Segment>
             <Form error={error !== undefined && error !== null} loading={loading} onSubmit={this.processData}>
               {error &&
-         <Transition.Group animation={'fade'} duration={500}>
+         <Transition visible={true} animation={'fade'} duration={500} >
          <Message
            error
            header='Unable to create user'
            content={error}
          />
-         </Transition.Group>
+         </Transition>
               }
               <Form.Input required label='Name' type='text' name='name' placeholder='John Smith' onChange={this.handleInputChange}/>
               <Form.Input required autoComplete="off" label='Email Address' type='email' name='email' placeholder='john.smith@gmail.com' onChange={this.handleInputChange}/>

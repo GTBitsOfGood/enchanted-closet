@@ -9,7 +9,7 @@ import { clearAllMessages } from '../actions/'
 const GlobalMessage = ({ clearAllMessages, message }) => {
   // Can't work icon into this : Open issue https://github.com/Semantic-Org/Semantic-UI/issues/4759
   const messageBlock = message ? (
-    <Transition.Group animation={'fade'} duration={500}>
+    <Transition visible={true} animation={'fade'} duration={500}>
     <Message
       style={styles.message}
       compact info
@@ -20,7 +20,7 @@ const GlobalMessage = ({ clearAllMessages, message }) => {
         {message}
       </Message.Content>
     </Message>
-    </Transition.Group>
+    </Transition>
   ) : <div />
   return (
     <div style={styles.globalMessage}>

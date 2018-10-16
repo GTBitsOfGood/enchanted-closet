@@ -85,13 +85,13 @@ class AdminEventsNew extends Component {
                 loading={loading} onSubmit={this.upsertEvent}
               >
                 {error &&
-     <Transition.Group animation={'fade'} duration={500}>
+     <Transition animation={'fade'} duration={500}>
      <Message
        error
        header='Unable to create event'
        content={error}
      />
-     </Transition.Group>
+     </Transition>
                 }
                 <Form.Input required label='Event Name' value={this.state.name} name='name' placeholder='Event Name' onChange={this.handleInputChange} />
                 <Form.TextArea required label='Description' rows={12} value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />

@@ -9,7 +9,7 @@ import { clearErrors } from '../actions/'
 const GlobalError = ({ clearErrors, errorMessage }) => {
   // Can't work icon into this : Open issue https://github.com/Semantic-Org/Semantic-UI/issues/4759
   const messageBlock = errorMessage ? (
-    <Transition.Group animation={'fade'} duration={500}>
+    <Transition animation={'fade'} duration={500}>
     <Message
       style={styles.message}
       compact error
@@ -20,7 +20,7 @@ const GlobalError = ({ clearErrors, errorMessage }) => {
         {errorMessage}
       </Message.Content>
     </Message>
-    </Transition.Group>
+    </Transition>
   ) : <div />
   return (
     <div style={styles.globalError}>
