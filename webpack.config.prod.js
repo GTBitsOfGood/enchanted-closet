@@ -15,7 +15,7 @@ module.exports = {
   output: {
     path: path.resolve('build/frontend'),
     filename: 'bundle.[hash].js',
-    publicPath: '/'
+    publicPath: path.resolve('public/')
   },
   optimization: {
     minimizer: [
