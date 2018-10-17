@@ -13,6 +13,7 @@ import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react'
 import { ButtonGallery, DeleteButton, DownloadAttendanceButton,
   MarkAttendanceButton, Map, EditButton,
   ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/'
+import { Redirect } from 'react-router-dom';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -90,7 +91,7 @@ class EventsDetail extends Component {
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
-    if (!event && isFetchingEvents) { return <div /> }
+    if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const date = new Date(event.startTime)
     const registerBlock = (() => {
       const yesterday = new Date()
