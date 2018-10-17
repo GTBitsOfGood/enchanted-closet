@@ -110,7 +110,6 @@ class Root extends React.Component {
               </Switch>
             </div>
           </Router>
-          {(process.env.REDUX_DEV_TOOL !== 'BROWSER') && <DevTools/>}
         </div>
       </Provider>
     )

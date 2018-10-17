@@ -70,11 +70,15 @@ class AdminAttendance extends Component {
     if (event) {
       // Timecheck on event: TODO CONSTANT ASSUMPTION Presume same day
       // Future TODO: Split single time into start and end
-      const date = new Date(event.startTime)
+      const start = new Date(event.startTime)
+      const end = new Date(event.endTime)
       const curDate = new Date(Date.now())
-      if (curDate.getFullYear() === date.getFullYear() &&
-        curDate.getMonth() === date.getMonth() &&
-        curDate.getDate() === date.getDate()) {
+      if (curDate.getFullYear() === start.getFullYear() &&
+        curDate.getMonth() === start.getMonth() &&
+        curDate.getDate() >= start.getDate() &&
+        curDate.getDate() <= end.getDate() &&
+        curDate.getTime() >= start.getTime() &&
+        curDate.getTime() <= end.getTime()) {
         // Verify users
         if (user) {
           if (user.role === 'Volunteer') { // Redirect unregistered volunteers

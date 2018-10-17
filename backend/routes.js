@@ -64,7 +64,7 @@ router.put('/events/:id', auth.checkAdmin, controllers.events.update)
 router.get('/events/:id/report', controllers.reporting.eventReport)
 router.get('/report/:year', controllers.reporting.yearReport)
 router.get('/report/:year/:month', controllers.reporting.monthReport)
-router.get('/reports', controllers.reporting.index)
+router.get('/reports', auth.checkAdmin, controllers.reporting.index)
 
 // Package and finish
 router.use((req, res, next) => {

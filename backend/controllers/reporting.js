@@ -186,14 +186,6 @@ module.exports.yearReport = (req, res, next) => {
           })
         }
       })
-      // if (csvStream.readableLength === 0) {
-      //   res.locals.error = {
-      //     status: 404,
-      //     msg: 'No events could be found for ' + year
-      //   }
-      //   console.log('returned next')
-      //   return next()
-      // }
       csvStream.end()
     })
 }
@@ -243,7 +235,7 @@ module.exports.monthReport = (req, res, next) => {
     .find({
       startTime: {
         $lte: maximumDate,
-        $gt: minimumDate
+        $gte: minimumDate
       }
     })
     .populate('participants')
@@ -301,13 +293,6 @@ module.exports.monthReport = (req, res, next) => {
           }
         })
       })
-      if (csvStream.readableLength === 0) {
-        res.locals.error = {
-          status: 404,
-          msg: 'No events could be found for ' + year
-        }
-        return next()
-      }
       csvStream.end()
     })
 }
