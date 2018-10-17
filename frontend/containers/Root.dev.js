@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Helmet from 'react-helmet'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { hot } from 'react-hot-loader'
 import DevTools from './DevTools'
 import { COLORS } from '../constants'
 import { SmartRoute, GlobalDimmer, GlobalError, GlobalMessage } from '../components'
 import * as Admin from './Admin'
 import Loadable from 'react-loadable'
+import FormDemo from './FormDemo'
 const Events = Loadable({
   loader: () => import('./Events.js'),
   loading () { return (<div> Loading... </div>) }
@@ -51,11 +51,6 @@ const Dashboard = Loadable({
   loading () { return (<div>Loading...</div>) }
 })
 
-const FormDemo = Loadable({
-  loader: () => import('./FormDemo'),
-  loading () { return (<div>Loading...</div>) }
-})
-
 class Root extends React.Component {
   render () {
     return (
@@ -69,15 +64,10 @@ class Root extends React.Component {
               <GlobalError />
               <GlobalMessage />
               <Switch>
-                <Route
-                  path="/formDemo"
-                  componet={FormDemo}
-                />
                 <SmartRoute
-                  accepts={['loggedOut', 'loggedIn']}
-                  path="/formDemo"
+                  accepts={['loggedOut']}
+                  exact path="/form-demo"
                   component={FormDemo}
-                  redirect="/"
                 />
                 <SmartRoute
                   accepts={['loggedOut']}
@@ -169,4 +159,4 @@ const styles = {
   }
 }
 
-export default hot(module)(Root)
+export default Root
