@@ -98,3 +98,24 @@ export function updateEventImage (event) {
     events: [newEvent]
   }
 }
+
+export function receiveOldestDate(json) {
+  return {
+    type: types.OLDEST_DATE,
+    oldestDate: json
+  }
+}
+
+export function oldestDate() {
+  return (dispatch, getState) => {
+    dispatch(loading())
+    return fetchHelper(`/api/reports`, getAPIToken(getState))
+      .then(res => res.json())
+      .then(json => {
+        return safeWrap(json, () => {
+          dispatch(receiveOldestDate(json), dispatch)
+        })
+      })
+      .then(() => dispatch(stopLoading()))
+  }
+}

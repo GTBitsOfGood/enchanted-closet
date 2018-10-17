@@ -33,7 +33,7 @@ const eventUpload = multer({ storage: eventStorage })
 
 router.post('/login', controllers.auth.login)
 router.post('/register', controllers.auth.register)
-// router.post('/session/:id', auth.verifySession);
+// router.post('/session/:id', auth.verifySession)
 
 router.get('/users', auth.checkAdmin, controllers.users.index)
 router.get('/users/:id', auth.idMatchesOrAdmin, controllers.users.get)
@@ -62,7 +62,9 @@ router.get('/events/:eventID/present/:userID', auth.checkAdmin, controllers.even
 router.get('/events/:eventID/absent/:userID', auth.checkAdmin, controllers.events.absent)
 router.put('/events/:id', auth.checkAdmin, controllers.events.update)
 router.get('/events/:id/report', controllers.reporting.eventReport)
-router.get('/report/year', controllers.reporting.yearReport)
+router.get('/report/:year', controllers.reporting.yearReport)
+router.get('/report/:year/:month', controllers.reporting.monthReport)
+router.get('/reports', auth.checkAdmin, controllers.reporting.index)
 
 // Package and finish
 router.use((req, res, next) => {
@@ -78,6 +80,7 @@ router.use((req, res, next) => {
     })
     return res.status(statusCode).json(response)
   } else {
+    // not every error should be a generic 500 error!!!!!!!!!!!!
     console.log('generic server error')
     return res.status(500).json({
       'status': 'error',
