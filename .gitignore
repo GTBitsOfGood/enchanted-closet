@@ -65,6 +65,4 @@ typings/
 # macOS Index File
 .DS_Store
 
-build/*
-
 dump.rdb
