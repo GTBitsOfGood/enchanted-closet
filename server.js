@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
 
 let DIR;
 let STATIC_DIR;
@@ -19,8 +19,10 @@ let api;
 if (process.env.NODE_ENV === 'production') {
   console.log('prod')
   DIR = path.join(__dirname, 'build');
-  STATIC_DIR = path.join(__dirname, 'build/frontend')
+  // STATIC_DIR = path.join(__dirname, 'build/frontend')
+  STATIC_DIR = path.join(__dirname, 'public');
   console.log(DIR)
+  console.log(path.join(STATIC_DIR, '/index.html'));
 } else {
   STATIC_DIR = path.join(__dirname, 'public');
   DIR = __dirname;

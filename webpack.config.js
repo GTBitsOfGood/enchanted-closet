@@ -12,7 +12,6 @@ module.exports = {
   mode: 'development',
   entry: './frontend/index.js',
   output: {
-    path: path.resolve('dist'),
     filename: 'bundle.[hash].js',
     publicPath: '/'
   },

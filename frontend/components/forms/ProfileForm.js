@@ -121,7 +121,6 @@ class ProfileForm extends Component {
   render () {
     const { userData } = this.state
     const { setError, setValid, setComplete, setMessage } = this.props
-    console.log(userData)
 
     return (
       <div>
