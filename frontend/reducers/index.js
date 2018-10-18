@@ -2,6 +2,10 @@ import * as types from '../actions/types'
 
 function rootReducer (state = require('../static/defaultState'), action) {
   switch (action.type) {
+    case types.OLDEST_DATE:
+      return Object.assign({}, state, {
+        oldestDate: action.oldestDate
+      })
     case types.INVALIDATE_EVENTS:
       return Object.assign({}, state, {
         didInvalidateEvents: true

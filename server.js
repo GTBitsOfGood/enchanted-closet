@@ -1,5 +1,5 @@
 /* eslint-disable */
-"use strict";
+"use strict"
 
 require('dotenv').config()
 
@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(compression());
 app.use(helmet());
-app.use(favicon(STATIC_DIR + '/favicon.ico'));
+app.use(favicon(STATIC_DIR + '/images/favicon/favicon.ico'));
 
 app.use('/api', api); // Server Routing
 app.get('/*', (req, res) => { // Else, give to React
@@ -50,5 +50,5 @@ app.get('/*', (req, res) => { // Else, give to React
 app.listen(PORT, error => {
   error
   ? console.error(error)
-  : console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`);
-});
+  : console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`)
+})
