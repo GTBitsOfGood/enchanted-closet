@@ -30,6 +30,7 @@ module.exports.fetchFutureEvents = (req, res, next) => {
     .find({ 'startTime': { $gt: currDate } })
     .sort({ 'startTime': 1 })
     .populate('participants')
+    .populate('volunteers')
     .exec((err, events) => {
       if (events) {
         res.locals.data = {
@@ -52,6 +53,7 @@ module.exports.fetchPastEvents = (req, res, next) => {
     .find({ 'startTime': { $lte: currDate } })
     .sort({ 'startTime': 1 })
     .populate('participants')
+    .populate('volunteers')
     .exec((err, events) => {
       if (events) {
         res.locals.data = {
@@ -231,6 +233,7 @@ module.exports.get = (req, res, next) => {
   Event
     .findById(req.params.id)
     .populate('participants')
+    .populate('volunteers')
     .exec((err, event) => {
       if (event) {
         res.locals.data = {
