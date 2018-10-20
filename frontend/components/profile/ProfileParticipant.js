@@ -39,6 +39,12 @@ const targets = {
   },
   'emergencyContactRelation': {
     isLegal: val => /^[a-zA-Z\s]*$/.test(val)
+  },
+  'currentPassword': {
+    isLegal: val => /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val)
+  },
+  'newPassword': {
+    isLegal: val => /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val)
   }
 }
 

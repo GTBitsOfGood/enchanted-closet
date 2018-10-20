@@ -38,6 +38,10 @@ class ProfileForm extends Component {
 
   regFinalTest = (field, val) => {
     if (!val) return false // no falsey!
+    console.log(field);
+    if (field === "currentPassword" || field === "newPassword" || field === "confirmPassword") {
+      return /^(?=.*[A-Za-z.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ])(?=.*\d)[A-Za-z\d.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~`]{7,}$/.test(val)
+    }
     if (this.targets[field]) {
       if ('isFinal' in this.targets[field]) { return this.targets[field]['isFinal'](val) }
       return this.targets[field]['isLegal'](val) && val.length !== 0 // Fallback
