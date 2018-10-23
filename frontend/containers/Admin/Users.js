@@ -35,7 +35,7 @@ class Users extends Component {
       userMapping[role].push(user)
     })
     this.setState({ users: userMapping })
-    //console.log(userMapping['admin'])
+    console.log(userMapping)
     userMapping['admin'].sort(function(a, b){
     if(a.firstName < b.firstName) { return -1; }
     if(a.firstName > b.firstName) { return 1; }
