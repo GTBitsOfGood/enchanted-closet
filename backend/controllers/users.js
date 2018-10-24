@@ -119,6 +119,32 @@ module.exports.update = (req, res, next) => {
   }
   let newProps = {}
 
+  if (req.body.currentPassword && req.body.newPassword) {
+    // TODO: verify old password
+    // auth.validatePassword(token, req.body.currentPassword)
+    let token = req.headers.authorization
+    if (!token.startsWith('Bearer ')) {
+      res.locals.error = {
+        status: 403,
+        msg: 'Not authorized (must be admin)'
+      }
+      return next(new Error(res.locals.error))
+    }
+    token = token.substring(7)
+    auth.currentUser(token, (_, curr) => {
+      if (req.params.id !== curr) {
+        res.locals.error = {
+          status: 403,
+          msg: 'Not authorized (must be admin)'
+        }
+        return next(new Error(res.locals.error))
+      }
+      if (matchesComplexityRequirements(req.body.currentPassword)) {
+        newProps.password = hash.genNew(req.body.newPassword)
+      }
+    })
+  }
+
   if (req.body.password) {
     // TODO: verify old password
     let token = req.headers.authorization

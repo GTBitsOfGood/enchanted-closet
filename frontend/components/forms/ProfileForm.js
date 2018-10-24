@@ -37,10 +37,22 @@ class ProfileForm extends Component {
   }
 
   regFinalTest = (field, val) => {
-    if (!val) return false // no falsey!
-    console.log(field);
-    if (field === "currentPassword" || field === "newPassword" || field === "confirmPassword") {
-      return /^(?=.*[A-Za-z.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ])(?=.*\d)[A-Za-z\d.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~`]{7,}$/.test(val)
+    if (!val) {
+      if (this.state) {
+        if (field === "currentPassword") {
+          if (!this.state.userData.newPassword) {
+            return true;
+          }
+        }
+        if (field === "newPassword") {
+          if (!this.state.userData.currentPassword) {
+            return true;
+          }
+        }
+      } else {
+        return true;
+      }
+      return false // no falsey!
     }
     if (this.targets[field]) {
       if ('isFinal' in this.targets[field]) { return this.targets[field]['isFinal'](val) }
@@ -113,6 +125,7 @@ class ProfileForm extends Component {
         diffDict[key] = this.state.userData[key]
       })
       if (Object.keys(diffDict).length === 0) { this.props.setError('No fields have changed!') } else {
+        this.setState({ userData: Object.assign({currentPassword: ""}, this.state.userData)})
         this.props.upsertUser({ ...diffDict, _id: this.props.user._id })
         // optimistic update
         this.setState({ cachedData: this.state.userData })
@@ -125,7 +138,6 @@ class ProfileForm extends Component {
   render () {
     const { userData } = this.state
     const { setError, setValid, setComplete, setMessage } = this.props
-    console.log(userData)
 
     return (
       <div>
