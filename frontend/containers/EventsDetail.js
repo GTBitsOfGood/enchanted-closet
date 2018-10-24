@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link, Redirect } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { uniqueId } from 'lodash'
 import moment from 'moment'
@@ -51,7 +51,7 @@ class EventsDetail extends Component {
           })
         })
         .catch(err => {
-          console.log(err)
+          console.error(err)
           this.setState({ displayMapLocationError: true })
         })
     }
@@ -82,7 +82,7 @@ class EventsDetail extends Component {
         })
         .catch(err => {
           this.setState({ displayMapLocationError: true })
-          console.log(err)
+          console.error(err)
         })
     }
   }
@@ -92,11 +92,11 @@ class EventsDetail extends Component {
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
 
     let markAttendanceButton = null
-    if(user && user.events && user.events.includes(event._id)){
-      markAttendanceButton =  <MarkAttendanceButton/>
+    if (user && user.events && user.events.includes(event._id)) {
+      markAttendanceButton = <MarkAttendanceButton id={event._id}/>
     }
 
-    if (!event && isFetchingEvents) { return <div /> }
+    if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const date = new Date(event.startTime)
     const registerBlock = (() => {
       const yesterday = new Date()
@@ -107,7 +107,7 @@ class EventsDetail extends Component {
             return (
               <Button>
                 <Link to='/profile'>
-      Complete Profile to Register
+                  Complete Profile to Register
                 </Link>
               </Button>
             )
@@ -116,28 +116,28 @@ class EventsDetail extends Component {
           if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
             return (
               <Button disabled>
-    Registration denied
+                Registration denied
               </Button>
             )
           }
           if ((user.events && user.events.includes(event._id)) ||
-        (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
+          (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
             return (
               <Button onClick={() => cancelEvent(event._id, user._id)}>
-    Cancel Registration
+                Cancel Registration
               </Button>
             )
           }
           return (
             <Button onClick={() => registerEvent(event._id, user._id)}>
-        Register
+              Register
             </Button>
           )
         } else {
           return (
             <Button attached= 'top'>
               <Link to='/login'>
-    Login to Register
+                Login to Register
               </Link>
             </Button>
           )
@@ -145,7 +145,7 @@ class EventsDetail extends Component {
       } else {
         return (
           <Button disabled>
-    Registration Closed
+            Registration Closed
           </Button>
         )
       }
@@ -177,11 +177,11 @@ class EventsDetail extends Component {
         <h3>Events</h3>
         <p><Icon name='map'/> {event.location} </p>
         <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
-                      &nbsp;&#8209;&nbsp;
-                      {sameDay(new Date(event.startTime), new Date(event.endTime)) ?
-                        moment(new Date(event.endTime)).format('h:mm a') :
-                        moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
-                      }</p>
+          &nbsp;&#8209;&nbsp;
+          {sameDay(new Date(event.startTime), new Date(event.endTime)) ?
+            moment(new Date(event.endTime)).format('h:mm a') :
+            moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
+          }</p>
       </Segment>
       <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
         <ButtonGallery>
@@ -204,19 +204,18 @@ class EventsDetail extends Component {
             { registerBlock }
           </RoleCheck>
           <RoleCheck role="Volunteer">
-          {markAttendanceButton}
-
+            {markAttendanceButton}
           </RoleCheck>
         </ButtonGallery>
       </RoleCheck>
     </div>
         }
         { !isFetchingEvents && !event &&
-    <ErrorComponent
-      redir='/events/'
-      redirMsg='Return to all events'
-      errMsg='404 - Event not Found'
-    />
+          <ErrorComponent
+            redir='/events/'
+            redirMsg='Return to all events'
+            errMsg='404 - Event not Found'
+          />
         }
       </Container>
     )
