@@ -120,8 +120,7 @@ module.exports.update = (req, res, next) => {
   let newProps = {}
 
   if (req.body.currentPassword && req.body.newPassword) {
-    // TODO: verify old password
-    // auth.validatePassword(token, req.body.currentPassword)
+    console.log('entered if')
     let token = req.headers.authorization
     if (!token.startsWith('Bearer ')) {
       res.locals.error = {
@@ -139,13 +138,30 @@ module.exports.update = (req, res, next) => {
         }
         return next(new Error(res.locals.error))
       }
+      // if (matchesComplexityRequirements(req.body.currentPassword)) {
+      //   console.log("Set new password in currentuser thing")
+      //   newProps.password = hash.genNew(req.body.newPassword)
+      // }
+    })
+    const data = { email: req.body.email, password: req.body.currentPassword }
+    auth.validatePassword(data, (err, result) => {
+      if (err) {
+        res.locals.error = {
+          status: 400,
+          msg: 'Incorrect password'
+        }
+        return next(new Error(res.locals.error))
+      }
+      console.log("No Error!!!!!!!!!!!!")
       if (matchesComplexityRequirements(req.body.currentPassword)) {
+        console.log("Set new password")
         newProps.password = hash.genNew(req.body.newPassword)
       }
     })
   }
 
-  if (req.body.password) {
+  if (req.body.password && !req.body.newPassword) {
+    console.log('should not be here')
     // TODO: verify old password
     let token = req.headers.authorization
     if (!token.startsWith('Bearer ')) {
@@ -210,6 +226,7 @@ module.exports.update = (req, res, next) => {
       }
       return next(new Error(res.locals.error))
     } else {
+      console.log('newProps: ', newProps)
       doc.set(newProps)
       doc.save((err, updated) => {
         if (err) {

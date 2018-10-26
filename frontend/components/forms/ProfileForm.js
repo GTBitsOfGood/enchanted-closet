@@ -126,7 +126,7 @@ class ProfileForm extends Component {
       })
       if (Object.keys(diffDict).length === 0) { this.props.setError('No fields have changed!') } else {
         this.setState({ userData: Object.assign({currentPassword: ""}, this.state.userData)})
-        this.props.upsertUser({ ...diffDict, _id: this.props.user._id })
+        this.props.upsertUser({ ...diffDict, _id: this.props.user._id, email: this.props.user.email})
         // optimistic update
         this.setState({ cachedData: this.state.userData })
       }

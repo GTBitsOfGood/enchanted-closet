@@ -85,6 +85,21 @@ const validateUser = (data, callback) => {
   ))
 }
 
+const validatePassword = (data, callback) => {
+  if (!data) {
+    return callback(true, null)
+  } else {
+   hash.checkAgainst(data, function (err, usr) {
+      if (err) {
+        return callback(true, null)
+      } else {
+        console.log("no error in validatePassword")
+        return callback(false, usr)
+      }
+    })
+  }
+}
+
 const currentUser = (tok, callback) => {
   if (!tok) { // catch falsy values like null, empty string
     return callback(null, null)
@@ -285,3 +300,4 @@ module.exports.register = (data, callback) => {
 
 module.exports.currentUser = currentUser
 module.exports.isAdmin = isAdmin
+module.exports.validatePassword = validatePassword
