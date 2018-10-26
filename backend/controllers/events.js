@@ -329,6 +329,22 @@ module.exports.create = (req, res, next) => {
     return next()
   }
 
+  if (!req.body.registrationStart) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration Start Date & Time field is required'
+    }
+    return next()
+  }
+
+  if (!req.body.registrationEnd) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration End Date & Time field is required'
+    }
+    return next()
+  }
+
   Event.create({
     name: req.body.name,
     description: req.body.description,
