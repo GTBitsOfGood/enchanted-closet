@@ -351,6 +351,8 @@ module.exports.create = (req, res, next) => {
     location: req.body.location,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
+    registrationStart: req.body.registrationStart,
+    registrationEnd: req.body.registrationEnd,
     speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
   }, (err, result) => {
     if (err) {
