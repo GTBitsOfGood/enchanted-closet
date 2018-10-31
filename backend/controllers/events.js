@@ -8,6 +8,7 @@ module.exports.index = (req, res, next) => {
   Event
     .find({})
     .populate('participants')
+    .populate('volunteers')
     .exec((err, events) => {
       if (events) {
         res.locals.data = {

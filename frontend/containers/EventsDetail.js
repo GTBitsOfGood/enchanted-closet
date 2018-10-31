@@ -9,7 +9,7 @@ import { isProfileComplete, sameDay } from '../helpers/util'
 import { geocode } from '../helpers/geocodeEngine'
 
 import { upfetchEventById, fetchEventsIfNeeded, invalidateEvents, deleteEvent, registerEvent, cancelEvent } from '../actions/index'
-import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react'
+import { Button, Container, Icon, Segment, Modal, Grid, Table } from 'semantic-ui-react'
 import { ButtonGallery, DeleteButton, DownloadAttendanceButton,
   MarkAttendanceButton, Map, EditButton,
   ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/'
@@ -151,6 +151,30 @@ class EventsDetail extends Component {
       }
     })()
 
+    const volunteerBlock = (
+      <Grid>
+        <Grid.Row style={{ padding: '20px' }}>
+          <Table>
+            <Table.Body>
+              {event.volunteers && event.volunteers.length > 0 ? event.volunteers.map(volunteer => {
+                const name = volunteer.firstName && volunteer.lastName ? volunteer.firstName + ' ' + volunteer.lastName : <i>&lt;No Name&gt;</i>
+                return (
+                  <Table.Row
+                    key={volunteer._id}>
+                    <Table.Cell>{name}</Table.Cell>
+                    <Table.Cell>{volunteer.email || (<i>&lt;No Email&gt;</i>)}</Table.Cell>
+                  </Table.Row>
+                )
+              })
+                : (<Table.Row>
+                  <Table.Cell>{(<p>There are no volunteers</p>)}</Table.Cell>
+                </Table.Row>)}
+            </Table.Body>
+          </Table>
+        </Grid.Row>
+      </Grid>
+    )
+
     return (
       <Container>
         { !isFetchingEvents && event &&
@@ -178,9 +202,9 @@ class EventsDetail extends Component {
         <p><Icon name='map'/> {event.location} </p>
         <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
           &nbsp;&#8209;&nbsp;
-          {sameDay(new Date(event.startTime), new Date(event.endTime)) ?
-            moment(new Date(event.endTime)).format('h:mm a') :
-            moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
+          {sameDay(new Date(event.startTime), new Date(event.endTime))
+            ? moment(new Date(event.endTime)).format('h:mm a')
+            : moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
           }</p>
       </Segment>
       <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
