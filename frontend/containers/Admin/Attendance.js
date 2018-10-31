@@ -70,11 +70,15 @@ class AdminAttendance extends Component {
     if (event) {
       // Timecheck on event: TODO CONSTANT ASSUMPTION Presume same day
       // Future TODO: Split single time into start and end
-      const date = new Date(event.startTime)
+      const start = new Date(event.startTime)
+      const end = new Date(event.endTime)
       const curDate = new Date(Date.now())
-      if (curDate.getFullYear() === date.getFullYear() &&
-    curDate.getMonth() === date.getMonth() &&
-    curDate.getDate() === date.getDate()) {
+      if (curDate.getFullYear() === start.getFullYear() &&
+        curDate.getMonth() === start.getMonth() &&
+        curDate.getDate() >= start.getDate() &&
+        curDate.getDate() <= end.getDate() &&
+        curDate.getTime() >= start.getTime() &&
+        curDate.getTime() <= end.getTime()) {
         // Verify users
         if (user) {
           if (user.role === 'Volunteer') { // Redirect unregistered volunteers
@@ -105,7 +109,7 @@ class AdminAttendance extends Component {
             return (
               <Container>
                 <Segment>
-      Looks like you're registered! Have a coordinator sign you in to start marking participant attendance!
+                  Looks like you're registered! Have a coordinator sign you in to start marking participant attendance!
                 </Segment>
               </Container>
             )
@@ -117,18 +121,8 @@ class AdminAttendance extends Component {
                 showLoadingIcon
               />
               <ButtonGallery>
-                <Button
-                  as={Link}
-                  to="/admin/users/create"
-                >
-      Register New User
-                </Button>
-                <Button
-                  as={Link}
-                  to={`/events/${eventId}`}
-                >
-      Back to Event View
-                </Button>
+                <Button as={Link} to="/admin/users/create">Register New User</Button>
+                <Button as={Link} to={`/events/${eventId}`}>Back to Event View</Button>
               </ButtonGallery>
               <SearchBarCard filterFunction={this.searchFilterUsers}/>
               <RoleCheck role="Admin">

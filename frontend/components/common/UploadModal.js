@@ -28,7 +28,6 @@ class UploadModal extends Component {
 
   render () {
     const { children, id, type } = this.props
-    console.log(children)
     const { file } = this.state
     // process filename real fast
     const label = file

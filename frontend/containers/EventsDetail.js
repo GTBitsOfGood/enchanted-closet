@@ -13,6 +13,7 @@ import { Button, Container, Icon, Segment, Modal } from 'semantic-ui-react'
 import { ButtonGallery, DeleteButton, DownloadAttendanceButton,
   MarkAttendanceButton, Map, EditButton,
   ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/'
+import { Redirect } from 'react-router-dom';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -51,7 +52,7 @@ class EventsDetail extends Component {
           })
         })
         .catch(err => {
-          console.log(err)
+          console.error(err)
           this.setState({ displayMapLocationError: true })
         })
     }
@@ -82,7 +83,7 @@ class EventsDetail extends Component {
         })
         .catch(err => {
           this.setState({ displayMapLocationError: true })
-          console.log(err)
+          console.error(err)
         })
     }
   }
@@ -90,7 +91,7 @@ class EventsDetail extends Component {
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
-    if (!event && isFetchingEvents) { return <div /> }
+    if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const date = new Date(event.startTime)
     const registerBlock = (() => {
       const yesterday = new Date()
@@ -101,7 +102,7 @@ class EventsDetail extends Component {
             return (
               <Button>
                 <Link to='/profile'>
-      Complete Profile to Register
+                  Complete Profile to Register
                 </Link>
               </Button>
             )
@@ -110,28 +111,28 @@ class EventsDetail extends Component {
           if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
             return (
               <Button disabled>
-    Registration denied
+                Registration denied
               </Button>
             )
           }
           if ((user.events && user.events.includes(event._id)) ||
-        (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
+          (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
             return (
               <Button onClick={() => cancelEvent(event._id, user._id)}>
-    Cancel Registration
+                Cancel Registration
               </Button>
             )
           }
           return (
             <Button onClick={() => registerEvent(event._id, user._id)}>
-        Register
+              Register
             </Button>
           )
         } else {
           return (
             <Button attached= 'top'>
               <Link to='/login'>
-    Login to Register
+                Login to Register
               </Link>
             </Button>
           )
@@ -139,7 +140,7 @@ class EventsDetail extends Component {
       } else {
         return (
           <Button disabled>
-    Registration Closed
+            Registration Closed
           </Button>
         )
       }
@@ -148,68 +149,68 @@ class EventsDetail extends Component {
     return (
       <Container>
         { !isFetchingEvents && event &&
-    <div>
-      <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
-      <Segment>
-        <EventImage imageUrl={event.image} id={event._id} />
-      </Segment>
-      <Segment key="information">
-        <h3>Description</h3>
-        <p style={{ whiteSpace: 'pre-line' }}>{event.description}</p>
-      </Segment>
-      <Speakers speakers={event.speakers}/>
-      {displayMapLocationError || (latitude && longitude)
-        ? <Map
-          isMarkerShown
-          lat={latitude || DEFAULT_MAP_LOCATION.latitude}
-          long={longitude || DEFAULT_MAP_LOCATION.longitude}
-          displayMapLocationError={displayMapLocationError}
-        />
-        : <Segment style={{ textAlign: 'center', padding: '80px' }} loading />
-      }
-      <Segment key="events">
-        <h3>Events</h3>
-        <p><Icon name='map'/> {event.location} </p>
-        <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
-                      &nbsp;&#8209;&nbsp;
-                      {sameDay(new Date(event.startTime), new Date(event.endTime)) ?
-                        moment(new Date(event.endTime)).format('h:mm a') :
-                        moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
-                      }</p>
-      </Segment>
-      <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
-        <ButtonGallery>
-          <RoleCheck role="Admin">
-            <EditButton id={event._id} />
-            <Modal
-              trigger={<DeleteButton />}
-              header='Confirm Delete'
-              content='Are you sure you want to delete this event?'
-              actions={[
-                'Cancel',
-                { key: 'done', content: 'Delete', negative: true }
-              ]}
-              onActionClick={() => deleteEvent(event._id)}
-            />
-            <MarkAttendanceButton id={event._id} />
-            <DownloadAttendanceButton id={event._id} />
-          </RoleCheck>
-          <RoleCheck roles={['Volunteer', 'Participant']}>
-            { registerBlock }
-          </RoleCheck>
-          <RoleCheck role="Volunteer">
-            <MarkAttendanceButton />
-          </RoleCheck>
-        </ButtonGallery>
-      </RoleCheck>
-    </div>
+          <div>
+            <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
+            <Segment>
+              <EventImage imageUrl={event.image} id={event._id} />
+            </Segment>
+            <Segment key="information">
+              <h3>Description</h3>
+              <p style={{ whiteSpace: 'pre-line' }}>{event.description}</p>
+            </Segment>
+            <Speakers speakers={event.speakers}/>
+            {displayMapLocationError || (latitude && longitude)
+              ? <Map
+                isMarkerShown
+                lat={latitude || DEFAULT_MAP_LOCATION.latitude}
+                long={longitude || DEFAULT_MAP_LOCATION.longitude}
+                displayMapLocationError={displayMapLocationError}
+              />
+              : <Segment style={{ textAlign: 'center', padding: '80px' }} loading />
+            }
+            <Segment key="events">
+              <h3>Events</h3>
+              <p><Icon name='map'/> {event.location} </p>
+              <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
+                &nbsp;&#8209;&nbsp;
+                {sameDay(new Date(event.startTime), new Date(event.endTime))
+                  ? moment(new Date(event.endTime)).format('h:mm a')
+                  : moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
+                }</p>
+            </Segment>
+            <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
+              <ButtonGallery>
+                <RoleCheck role="Admin">
+                  <EditButton id={event._id} />
+                  <Modal
+                    trigger={<DeleteButton />}
+                    header='Confirm Delete'
+                    content='Are you sure you want to delete this event?'
+                    actions={[
+                      'Cancel',
+                      { key: 'done', content: 'Delete', negative: true }
+                    ]}
+                    onActionClick={() => deleteEvent(event._id)}
+                  />
+                  <MarkAttendanceButton id={event._id} />
+                  <DownloadAttendanceButton id={event._id} />
+                </RoleCheck>
+                <RoleCheck roles={['Volunteer', 'Participant']}>
+                  { registerBlock }
+                </RoleCheck>
+                <RoleCheck role="Volunteer">
+                  <MarkAttendanceButton id={event._id} />
+                </RoleCheck>
+              </ButtonGallery>
+            </RoleCheck>
+          </div>
         }
         { !isFetchingEvents && !event &&
-    <ErrorComponent
-      redir='/events/'
-      redirMsg='Return to all events'
-      errMsg='404 - Event not Found'
-    />
+          <ErrorComponent
+            redir='/events/'
+            redirMsg='Return to all events'
+            errMsg='404 - Event not Found'
+          />
         }
       </Container>
     )

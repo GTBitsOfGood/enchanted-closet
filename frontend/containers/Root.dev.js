@@ -100,12 +100,16 @@ class Root extends React.Component {
                   path="/users/:id"
                   component={Admin.UsersDetail}
                 />
+                <SmartRoute
+                  accepts={['Admin']}
+                  exact path="/reports"
+                  component={Admin.Reports}
+                />
                 <Route path="/error" component={MissingPage} />
                 <Route component={MissingPage} />
               </Switch>
             </div>
           </Router>
-          {(process.env.REDUX_DEV_TOOL !== 'BROWSER') && <DevTools/>}
         </div>
       </Provider>
     )
