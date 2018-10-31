@@ -332,12 +332,30 @@ module.exports.create = (req, res, next) => {
     return next()
   }
 
+  if (!req.body.registrationStart) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration Start Date & Time field is required'
+    }
+    return next()
+  }
+
+  if (!req.body.registrationEnd) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration End Date & Time field is required'
+    }
+    return next()
+  }
+
   Event.create({
     name: req.body.name,
     description: req.body.description,
     location: req.body.location,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
+    registrationStart: req.body.registrationStart,
+    registrationEnd: req.body.registrationEnd,
     speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
   }, (err, result) => {
     if (err) {
@@ -417,6 +435,8 @@ module.exports.update = (req, res, next) => {
     if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location
     if (req.body.startTime && req.body.startTime.length > 2) newValues.startTime = req.body.startTime
     if (req.body.endTime && req.body.endTime.length > 2) newValues.endTime = req.body.endTime
+    if (req.body.registrationStart && req.body.registrationStart.length > 2) newValues.registrationStart = req.body.registrationStart
+    if (req.body.registrationEnd && req.body.registrationEnd.length > 2) newValues.registrationEnd = req.body.registrationEnd
     if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(e => e.trim())
 
     event.set(newValues)
