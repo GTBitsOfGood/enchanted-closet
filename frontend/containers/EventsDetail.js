@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link, Redirect } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { uniqueId } from 'lodash'
 import moment from 'moment'
@@ -13,7 +13,6 @@ import { Button, Container, Icon, Segment, Modal, Grid, Table } from 'semantic-u
 import { ButtonGallery, DeleteButton, DownloadAttendanceButton,
   MarkAttendanceButton, Map, EditButton,
   ErrorComponent, Event, EventImage, PageTitle, RoleCheck, Speakers } from '../components/'
-import { Redirect } from 'react-router-dom';
 
 const DEFAULT_MAP_LOCATION = {
   latitude: 51.5033640,
@@ -91,6 +90,12 @@ class EventsDetail extends Component {
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
+
+    let markAttendanceButton = null
+    if (user && user.events && user.events.includes(event._id)) {
+      markAttendanceButton = <MarkAttendanceButton id={event._id}/>
+    }
+
     if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const date = new Date(event.startTime)
     const registerBlock = (() => {
@@ -146,94 +151,88 @@ class EventsDetail extends Component {
       }
     })()
 
-    const  volunteerBlock = (
-        <Grid>
-          <Grid.Row style={{ padding: '20px' }}>
-            <Table>
-              <Table.Body>
-                {event.volunteers && event.volunteers.length > 0? event.volunteers.map(volunteer => {
-                  const name = volunteer.firstName && volunteer.lastName ? volunteer.firstName + ' ' + volunteer.lastName : <i>&lt;No Name&gt;</i>
-                  return (
-                    <Table.Row
-                      key={volunteer._id}>
-                      <Table.Cell>{name}</Table.Cell>
-                      <Table.Cell>{volunteer.email || (<i>&lt;No Email&gt;</i>)}</Table.Cell>
-                    </Table.Row>
-                  )
-                })
+    const volunteerBlock = (
+      <Grid>
+        <Grid.Row style={{ padding: '20px' }}>
+          <Table>
+            <Table.Body>
+              {event.volunteers && event.volunteers.length > 0 ? event.volunteers.map(volunteer => {
+                const name = volunteer.firstName && volunteer.lastName ? volunteer.firstName + ' ' + volunteer.lastName : <i>&lt;No Name&gt;</i>
+                return (
+                  <Table.Row
+                    key={volunteer._id}>
+                    <Table.Cell>{name}</Table.Cell>
+                    <Table.Cell>{volunteer.email || (<i>&lt;No Email&gt;</i>)}</Table.Cell>
+                  </Table.Row>
+                )
+              })
                 : (<Table.Row>
-                    <Table.Cell>{(<p>There are no volunteers</p>)}</Table.Cell>
-                  </Table.Row>)}
-              </Table.Body>
-            </Table>
-          </Grid.Row>
-        </Grid>
-      )
+                  <Table.Cell>{(<p>There are no volunteers</p>)}</Table.Cell>
+                </Table.Row>)}
+            </Table.Body>
+          </Table>
+        </Grid.Row>
+      </Grid>
+    )
 
     return (
       <Container>
         { !isFetchingEvents && event &&
-          <div>
-            <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
-            <Segment>
-              <EventImage imageUrl={event.image} id={event._id} />
-            </Segment>
-            <Segment key="information">
-              <h3>Description</h3>
-              <p style={{ whiteSpace: 'pre-line' }}>{event.description}</p>
-            </Segment>
-            <Speakers speakers={event.speakers}/>
-            {user.role == "Admin" ? <Segment key="volunteers">
-                                    <h3>Volunteers</h3>
-                                      {volunteerBlock}
-                                  </Segment>
-                                  : null}
-
-            {displayMapLocationError || (latitude && longitude)
-              ? <Map
-                isMarkerShown
-                lat={latitude || DEFAULT_MAP_LOCATION.latitude}
-                long={longitude || DEFAULT_MAP_LOCATION.longitude}
-                displayMapLocationError={displayMapLocationError}
-              />
-              : <Segment style={{ textAlign: 'center', padding: '80px' }} loading />
-            }
-            <Segment key="events">
-              <h3>Events</h3>
-              <p><Icon name='map'/> {event.location} </p>
-              <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
-                &nbsp;&#8209;&nbsp;
-                {sameDay(new Date(event.startTime), new Date(event.endTime))
-                  ? moment(new Date(event.endTime)).format('h:mm a')
-                  : moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
-                }</p>
-            </Segment>
-            <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
-              <ButtonGallery>
-                <RoleCheck role="Admin">
-                  <EditButton id={event._id} />
-                  <Modal
-                    trigger={<DeleteButton />}
-                    header='Confirm Delete'
-                    content='Are you sure you want to delete this event?'
-                    actions={[
-                      'Cancel',
-                      { key: 'done', content: 'Delete', negative: true }
-                    ]}
-                    onActionClick={() => deleteEvent(event._id)}
-                  />
-                  <MarkAttendanceButton id={event._id} />
-                  <DownloadAttendanceButton id={event._id} />
-                </RoleCheck>
-                <RoleCheck roles={['Volunteer', 'Participant']}>
-                  { registerBlock }
-                </RoleCheck>
-                <RoleCheck role="Volunteer">
-                  <MarkAttendanceButton id={event._id} />
-                </RoleCheck>
-              </ButtonGallery>
-            </RoleCheck>
-          </div>
+    <div>
+      <PageTitle title={event.name} link="/events" linkTitle="Back to All Events" />
+      <Segment>
+        <EventImage imageUrl={event.image} id={event._id} />
+      </Segment>
+      <Segment key="information">
+        <h3>Description</h3>
+        <p style={{ whiteSpace: 'pre-line' }}>{event.description}</p>
+      </Segment>
+      <Speakers speakers={event.speakers}/>
+      {displayMapLocationError || (latitude && longitude)
+        ? <Map
+          isMarkerShown
+          lat={latitude || DEFAULT_MAP_LOCATION.latitude}
+          long={longitude || DEFAULT_MAP_LOCATION.longitude}
+          displayMapLocationError={displayMapLocationError}
+        />
+        : <Segment style={{ textAlign: 'center', padding: '80px' }} loading />
+      }
+      <Segment key="events">
+        <h3>Events</h3>
+        <p><Icon name='map'/> {event.location} </p>
+        <p><Icon name='clock'/> {moment(new Date(event.startTime)).format('MMMM Do YYYY, h:mm a')}
+          &nbsp;&#8209;&nbsp;
+          {sameDay(new Date(event.startTime), new Date(event.endTime))
+            ? moment(new Date(event.endTime)).format('h:mm a')
+            : moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
+          }</p>
+      </Segment>
+      <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
+        <ButtonGallery>
+          <RoleCheck role="Admin">
+            <EditButton id={event._id} />
+            <Modal
+              trigger={<DeleteButton />}
+              header='Confirm Delete'
+              content='Are you sure you want to delete this event?'
+              actions={[
+                'Cancel',
+                { key: 'done', content: 'Delete', negative: true }
+              ]}
+              onActionClick={() => deleteEvent(event._id)}
+            />
+            <MarkAttendanceButton id={event._id} />
+            <DownloadAttendanceButton id={event._id} />
+          </RoleCheck>
+          <RoleCheck roles={['Volunteer', 'Participant']}>
+            { registerBlock }
+          </RoleCheck>
+          <RoleCheck role="Volunteer">
+            {markAttendanceButton}
+          </RoleCheck>
+        </ButtonGallery>
+      </RoleCheck>
+    </div>
         }
         { !isFetchingEvents && !event &&
           <ErrorComponent
