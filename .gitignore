@@ -65,6 +65,8 @@ typings/
 # macOS Index File
 .DS_Store
 
+dist/*
+
 dump.rdb
 
 .idea

@@ -12,7 +12,6 @@ const favicon = require('serve-favicon')
 const app = express()
 const PORT = 3001
 
-
 app.use(bodyParser.urlencoded({
   extended: true
 }))

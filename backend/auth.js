@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const randomBytes = require('crypto').randomBytes
 const redisClient = require('redis').createClient()
+const mail = require('./gmailAuth')
 
 const isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 // const isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
@@ -275,12 +276,27 @@ module.exports.register = (data, callback) => {
       if (err) {
         return callback(err, null)
       }
+      volunteerRegisterEmail(validatedUserData)
       let tok = randomBytes(64).toString('hex')
       user.set('token', tok)
       redisClient.set(tok, user._id.toString())//, 'EX', 1800); // expire after 30 mins
       return callback(null, Object.assign({}, user._doc, { 'token': tok }))
     })
   })
+}
+
+function volunteerRegisterEmail(user) {
+  let admins = []
+  if (user.role === 'Volunteer') {
+    User.find({ role: 'Admin' }).exec((err, users) => {
+      if (err) {
+        // handle error (db error for sure)
+        console.error(err)
+      }
+      users.forEach(u => admins.push(u.email))
+      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look')
+    })
+  }
 }
 
 module.exports.currentUser = currentUser
