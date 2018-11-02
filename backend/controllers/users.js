@@ -27,7 +27,7 @@ module.exports.index = (req, res, next) => {
     })
 }
 
-function lacksAny (obj, props) {
+function lacksAny(obj, props) {
   for (let p in props) {
     if (!(obj[p])) {
       return p
@@ -36,7 +36,7 @@ function lacksAny (obj, props) {
   return false
 }
 
-function matchesComplexityRequirements (password) {
+function matchesComplexityRequirements(password) {
   if (password.length < 7) return false
   let hasAlpha = false
   let hasNum = false
@@ -109,7 +109,43 @@ module.exports.delete = (req, res, next) => {
   })
 }
 
-module.exports.update = (req, res, next) => {
+const manualUpdate = async (newProps, id, res, next) => {
+  // TODO: Sam update error object or at least addd message if any of these fail
+  console.log('fdf')
+  let doc = null
+  try {
+    doc = await User.findById(id)
+    console.log('newProps: ', newProps)
+    doc.set(newProps)
+  } catch (e) {
+    res.locals.error = {
+      status: 404,
+      msg: 'User not found with desired ID'
+    }
+    return next(new Error(res.locals.error))
+  }
+
+  try {
+    let updated = await doc.save()
+    res.locals.data = {
+      user: updated
+    }
+    
+    console.log('updated:', updated)
+  } catch(e) {
+    console.log(e)
+    console.log("error in catch")
+    res.locals.error = {
+      status: 500,
+      msg: 'Unable to save user changes to db'
+    }
+  }
+
+  return next()
+
+}
+
+module.exports.update = async (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -117,6 +153,9 @@ module.exports.update = (req, res, next) => {
     }
     return next()
   }
+
+  console.log(req.params.id)
+  const _id = req.params.id
   let newProps = {}
 
   if (req.body.currentPassword && req.body.newPassword) {
@@ -144,7 +183,7 @@ module.exports.update = (req, res, next) => {
       // }
     })
     const data = { email: req.body.email, password: req.body.currentPassword }
-    auth.validatePassword(data, (err, result) => {
+    auth.validatePassword(data, async (err, result) => {
       if (err) {
         res.locals.error = {
           status: 400,
@@ -156,6 +195,7 @@ module.exports.update = (req, res, next) => {
       if (matchesComplexityRequirements(req.body.currentPassword)) {
         console.log("Set new password")
         newProps.password = hash.genNew(req.body.newPassword)
+        await manualUpdate(newProps, _id, res, next)
       }
     })
   }

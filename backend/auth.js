@@ -226,6 +226,7 @@ module.exports.makeAdmin = (req, res, next) => {
 
 module.exports.idMatches = (req, res, next) => {
   let token = req.header('Authorization')
+  console.log(token)
   if (!token.startsWith('Bearer ')) {
     res.locals.error = {
       status: 403,
