@@ -6,7 +6,7 @@ import fetch from 'isomorphic-fetch'
 
 // User Pfp display/linker / lock if not admin - id of event
 const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
-  let image = `http://localhost:3000/uploaded/events/${imageUrl}`
+  let image = `https://registration.enchantedcloset.org/uploaded/events/${imageUrl}`
   if (role !== 'Admin') {
     return (
       <Image
