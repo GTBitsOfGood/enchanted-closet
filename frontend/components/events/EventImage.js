@@ -2,15 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Container, Image, Reveal } from 'semantic-ui-react'
 import { UploadModal } from '../'
+import fetch from 'isomorphic-fetch'
 
 // User Pfp display/linker / lock if not admin - id of event
 const EventImage = ({ imageUrl = 'defaultEventPicture.png', role, id }) => {
-  let image = ''
-  try {
-    image = require(`../../../public/uploaded/events/${imageUrl}`)
-  } catch (err) {
-    image = require(`../../../public/uploaded/events/defaultEventPicture.png`)
-  }
+  let image = `http://localhost:3000/uploaded/events/${imageUrl}`
   if (role !== 'Admin') {
     return (
       <Image

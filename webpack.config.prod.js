@@ -114,7 +114,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
-      favicon: 'public/favicon.ico'
+      favicon: 'public/images/favicon/favicon.ico'
     }),
   ],
 }

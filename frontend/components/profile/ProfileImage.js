@@ -5,12 +5,7 @@ import { UploadModal } from '../'
 
 // User Pfp display/linker
 const ProfileImage = ({ imageUrl = 'defaultUserPicture.jpg' }) => {
-  let image = ''
-  try {
-    image = require(`../../../public/uploaded/users/${imageUrl}`)
-  } catch (err) {
-    image = require(`../../../public/uploaded/users/defaultUserPicture.jpg`)
-  }
+  let image = require(`../../../public/uploaded/users/${imageUrl}`)
   return (
     <UploadModal type="user">
       <Image

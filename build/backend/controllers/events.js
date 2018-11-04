@@ -9,7 +9,7 @@ var async = require('async');
 var currDate = new Date();
 
 module.exports.index = function (req, res, next) {
-  Event.find({}).populate('participants').exec(function (err, events) {
+  Event.find({}).populate('participants').populate('volunteers').exec(function (err, events) {
     if (events) {
       res.locals.data = {
         events: events
@@ -33,7 +33,7 @@ module.exports.fetchFutureEvents = function (req, res, next) {
     }
   }).sort({
     'startTime': 1
-  }).populate('participants').exec(function (err, events) {
+  }).populate('participants').populate('volunteers').exec(function (err, events) {
     if (events) {
       res.locals.data = {
         events: events
@@ -57,7 +57,7 @@ module.exports.fetchPastEvents = function (req, res, next) {
     }
   }).sort({
     'startTime': 1
-  }).populate('participants').exec(function (err, events) {
+  }).populate('participants').populate('volunteers').exec(function (err, events) {
     if (events) {
       res.locals.data = {
         events: events
@@ -247,7 +247,7 @@ module.exports.get = function (req, res, next) {
     return next();
   }
 
-  Event.findById(req.params.id).populate('participants').exec(function (err, event) {
+  Event.findById(req.params.id).populate('participants').populate('volunteers').exec(function (err, event) {
     if (event) {
       res.locals.data = {
         event: event
@@ -347,7 +347,22 @@ module.exports.create = function (req, res, next) {
       msg: 'End Date & Time field is required'
     };
     return next();
-  }
+  } // uncomment when frontend is done
+  // if (!req.body.registrationStart) {
+  //   res.locals.error = {
+  //     status: 400,
+  //     msg: 'Registration Start Date & Time field is required'
+  //   }
+  //   return next()
+  // }
+  // if (!req.body.registrationEnd) {
+  //   res.locals.error = {
+  //     status: 400,
+  //     msg: 'Registration End Date & Time field is required'
+  //   }
+  //   return next()
+  // }
+
 
   Event.create({
     name: req.body.name,
@@ -355,6 +370,9 @@ module.exports.create = function (req, res, next) {
     location: req.body.location,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
+    // uncomment when frontend is done
+    // registrationStart: req.body.registrationStart,
+    // registrationEnd: req.body.registrationEnd,
     speakers: req.body.speakers ? req.body.speakers.split(',').map(function (e) {
       return e.trim();
     }) : []
@@ -436,6 +454,8 @@ module.exports.update = function (req, res, next) {
     if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location;
     if (req.body.startTime && req.body.startTime.length > 2) newValues.startTime = req.body.startTime;
     if (req.body.endTime && req.body.endTime.length > 2) newValues.endTime = req.body.endTime;
+    if (req.body.registrationStart && req.body.registrationStart.length > 2) newValues.registrationStart = req.body.registrationStart;
+    if (req.body.registrationEnd && req.body.registrationEnd.length > 2) newValues.registrationEnd = req.body.registrationEnd;
     if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(function (e) {
       return e.trim();
     });

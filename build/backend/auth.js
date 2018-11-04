@@ -10,6 +10,8 @@ var randomBytes = require('crypto').randomBytes;
 
 var redisClient = require('redis').createClient();
 
+var mail = require('./gmailAuth');
+
 var isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // const isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 
 var grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
@@ -313,6 +315,7 @@ module.exports.register = function (data, callback) {
         return callback(err, null);
       }
 
+      volunteerRegisterEmail(validatedUserData);
       var tok = randomBytes(64).toString('hex');
       user.set('token', tok);
       redisClient.set(tok, user._id.toString()); //, 'EX', 1800); // expire after 30 mins
@@ -323,6 +326,26 @@ module.exports.register = function (data, callback) {
     });
   });
 };
+
+function volunteerRegisterEmail(user) {
+  var admins = [];
+
+  if (user.role === 'Volunteer') {
+    User.find({
+      role: 'Admin'
+    }).exec(function (err, users) {
+      if (err) {
+        // handle error (db error for sure)
+        console.error(err);
+      }
+
+      users.forEach(function (u) {
+        return admins.push(u.email);
+      });
+      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look');
+    });
+  }
+}
 
 module.exports.currentUser = currentUser;
 module.exports.isAdmin = isAdmin;
