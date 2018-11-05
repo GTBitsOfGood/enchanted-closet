@@ -5,7 +5,12 @@ import { UploadModal } from '../'
 
 // User Pfp display/linker
 const ProfileImage = ({ imageUrl = 'defaultUserPicture.jpg' }) => {
-  let image = require(`../../../public/uploaded/users/${imageUrl}`)
+  let image = ''
+  if (process.env.NODE_ENV === 'production') {
+    image = `https://registration.enchantedcloset.org/uploaded/events/${imageUrl}`
+  } else {
+    image = `http://localhost:3000/uploaded/events/${imageUrl}`
+  }
   return (
     <UploadModal type="user">
       <Image
