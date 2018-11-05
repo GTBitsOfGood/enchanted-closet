@@ -171,7 +171,7 @@ class EventsDetail extends Component {
                   </Table.Row>
                 )
               })
-                : (<Table.Row>
+                : (<Table.Row key='no_volunteers'>
                   <Table.Cell>{(<p>There are no volunteers</p>)}</Table.Cell>
                 </Table.Row>)}
             </Table.Body>

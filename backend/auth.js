@@ -17,7 +17,7 @@ const authError = {
 }
 
 redisClient.on('error', function (err) {
-  console.log('Error ' + err)
+  console.error('Error ' + err)
 })
 
 const isAdmin = (id, callback) => {

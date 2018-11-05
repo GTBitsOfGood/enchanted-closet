@@ -13,10 +13,8 @@ module.exports = {
   mode: 'production',
   entry: './frontend/index.js',
   output: {
-    // path: path.resolve('build/frontend'),
-    path: path.resolve('public'),
+    path: path.resolve('build/public'),
     filename: 'bundle.[hash].js',
-    // publicPath: path.resolve('public/')
     publicPath: '/'
   },
   optimization: {

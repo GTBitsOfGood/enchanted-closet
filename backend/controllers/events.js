@@ -129,7 +129,7 @@ module.exports.present = (req, res, next) => {
 
       eDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -206,7 +206,7 @@ module.exports.absent = (req, res, next) => {
 
       eDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -275,7 +275,7 @@ module.exports.upload = (req, res, next) => {
     } else {
       doc.set(newProps)
       doc.save((err, updated) => {
-        console.log(err)
+        console.error(err)
         if (err) {
           res.locals.error = {
             status: 500,
@@ -449,7 +449,7 @@ module.exports.update = (req, res, next) => {
           code: 500,
           msg: 'Internal Server Error'
         }
-        console.log(err)
+        console.error(err)
         return next(new Error(res.locals.error))
       }
       res.locals.data = {

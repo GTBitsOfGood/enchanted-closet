@@ -7,9 +7,7 @@ const mongoose = require('mongoose')
 const mongoURL = process.env.MONGO_URL
 
 var mongoDB = mongoURL
-mongoose.connect(mongoDB, {
-  useMongoClient: true
-})
+mongoose.connect(mongoDB, { useNewUrlParser: true })
 
 // Get the default connection
 var db = mongoose.connection

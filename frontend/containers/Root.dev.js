@@ -21,7 +21,6 @@ import Register from './Register'
 
 class Root extends React.Component {
   render () {
-    console.log('root dev')
     return (
       <Provider store={this.props.store}>
         <div>
