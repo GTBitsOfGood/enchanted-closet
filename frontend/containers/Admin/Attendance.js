@@ -87,20 +87,30 @@ class AdminAttendance extends Component {
               return <Redirect to="/events" />
             }
           }
+          let volunteers = users.filter(user => event.volunteers.includes(user._id) && user.role === 'Volunteer')
+          if (volunteers.length === 0) {
+            // event.volunteers might have actual user objects
+            volunteers = event.volunteers
+          }
 
           const volunteerBlock = users && (
             <Segment>
               <Header as="h3">Volunteers </Header>
               <Divider />
-              <UserList event={event} users={users.filter(user => event.volunteers.includes(user._id) && user.role === 'Volunteer')} filter={filter} />
+              <UserList event={event} users={volunteers} filter={filter} />
             </Segment>
           )
+          let participants = users.filter(user => event.participants.includes(user._id) && user.role === 'Participant')
+          if (participants.length === 0) {
+            // event.participants might have actual user objects
+            participants = event.participants
+          }
 
           const participantBlock = users && (
             <Segment>
               <Header as="h3">Participants </Header>
               <Divider />
-              <UserList event={event} users={users.filter(user => event.participants.includes(user._id) && user.role === 'Participant')} filter={filter} />
+              <UserList event={event} users={participants} filter={filter} />
             </Segment>
           )
 
