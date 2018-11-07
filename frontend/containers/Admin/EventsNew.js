@@ -36,6 +36,7 @@ class AdminEventsNew extends Component {
   }
 
   componentWillMount () {
+    console.log("componentWillMount");
     if (this.props.event) {
       const { event } = this.props
       this.setState({

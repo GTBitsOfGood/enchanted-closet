@@ -252,8 +252,11 @@ module.exports.create = (req, res, next) => {
     }
     return next(new Error(res.locals.error))
   }
-  if (req.body.name && req.body.name.length >= 2) {
-    newProps.name = req.body.name
+  if (req.body.firstName) {
+    newProps.firstName = req.body.firstName
+  }
+  if (req.body.lastName) {
+    newProps.lastName = req.body.lastName
   }
   if (req.body.email && isEmail.test(req.body.email)) {
     newProps.email = req.body.email
@@ -291,7 +294,6 @@ module.exports.create = (req, res, next) => {
   if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation
   }
-
   User.create(newProps, (err, user) => {
     if (err) {
       res.locals.error = {

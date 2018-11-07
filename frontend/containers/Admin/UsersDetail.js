@@ -36,10 +36,12 @@ class AdminUsersDetail extends Component {
 
   loadUsers () {
     const { updateUserStore } = this.props
-    this.setState({
-      loading: true,
-      hasPerformedUpdate: true
-    })
+    //do not change this to setState. setState will not work until the component is mounted.
+    //loadUsers is first invoked in the constructor so we have to mutate the state directly
+    this.state = Object.assign({}, this.state,
+      {loading: true,
+      hasPerformedUpdate: true}
+    )
     updateUserStore()
   }
 
