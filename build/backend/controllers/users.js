@@ -1,20 +1,20 @@
 'use strict';
 
-var User = require('mongoose').model('User');
+const User = require('mongoose').model('User');
 
-var Event = require('mongoose').model('Event');
+const Event = require('mongoose').model('Event');
 
-var auth = require('../auth');
+const auth = require('../auth');
 
-var isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/;
-var grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/;
+let grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
-var hash = require('../hash');
+const hash = require('../hash');
 
-module.exports.index = function (req, res, next) {
+module.exports.index = (req, res, next) => {
   User.find({}) // don't populate all users, only personal user
-  .exec(function (err, users) {
+  .exec((err, users) => {
     if (users) {
       res.locals.data = {
         users: users
@@ -32,7 +32,7 @@ module.exports.index = function (req, res, next) {
 };
 
 function lacksAny(obj, props) {
-  for (var p in props) {
+  for (let p in props) {
     if (!obj[p]) {
       return p;
     }
@@ -43,11 +43,11 @@ function lacksAny(obj, props) {
 
 function matchesComplexityRequirements(password) {
   if (password.length < 7) return false;
-  var hasAlpha = false;
-  var hasNum = false;
+  let hasAlpha = false;
+  let hasNum = false;
 
-  for (var i = 0; i < password.length; i++) {
-    var c = password.charCodeAt(i);
+  for (let i = 0; i < password.length; i++) {
+    let c = password.charCodeAt(i);
 
     if (c >= 65 && c <= 90 || c >= 97 && c <= 122) {
       hasAlpha = true;
@@ -61,8 +61,8 @@ function matchesComplexityRequirements(password) {
   return false;
 }
 
-var validateAdmin = function validateAdmin(data, callback) {
-  var tmp = lacksAny(data, ['email', 'password', 'name']);
+let validateAdmin = (data, callback) => {
+  let tmp = lacksAny(data, ['email', 'password', 'name']);
 
   if (tmp) {
     return callback({
@@ -93,8 +93,8 @@ var validateAdmin = function validateAdmin(data, callback) {
   });
 };
 
-module.exports.get = function (req, res, next) {
-  User.findById(req.params.id).populate('events').populate('pendingEvents').exec(function (err, user) {
+module.exports.get = (req, res, next) => {
+  User.findById(req.params.id).populate('events').populate('pendingEvents').exec((err, user) => {
     if (user) {
       res.locals.data = {
         user: user
@@ -111,8 +111,8 @@ module.exports.get = function (req, res, next) {
   });
 };
 
-module.exports.delete = function (req, res, next) {
-  User.findById(req.params.id).remove(function (err, user) {
+module.exports.delete = (req, res, next) => {
+  User.findById(req.params.id).remove((err, user) => {
     if (user) {
       res.locals.data = {
         msg: 'User succesfully dleeted'
@@ -129,7 +129,37 @@ module.exports.delete = function (req, res, next) {
   });
 };
 
-module.exports.update = function (req, res, next) {
+const manualUpdate = async (newProps, id, res, next) => {
+  // TODO: Sam update error object or at least addd message if any of these fail
+  let doc = null;
+
+  try {
+    doc = await User.findById(id);
+    doc.set(newProps);
+  } catch (e) {
+    res.locals.error = {
+      status: 404,
+      msg: 'User not found with desired ID'
+    };
+    return next(new Error(res.locals.error));
+  }
+
+  try {
+    let updated = await doc.save();
+    res.locals.data = {
+      user: updated
+    };
+  } catch (e) {
+    res.locals.error = {
+      status: 500,
+      msg: 'Unable to save user changes to db'
+    };
+  }
+
+  return next();
+};
+
+module.exports.update = async (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -138,36 +168,8 @@ module.exports.update = function (req, res, next) {
     return next();
   }
 
-  var newProps = {};
-
-  if (req.body.password) {
-    // TODO: verify old password
-    var token = req.headers.authorization;
-
-    if (!token.startsWith('Bearer ')) {
-      res.locals.error = {
-        status: 403,
-        msg: 'Not authorized (must be admin)'
-      };
-      return next(new Error(res.locals.error));
-    }
-
-    token = token.substring(7);
-    auth.currentUser(token, function (_, curr) {
-      if (req.params.id !== curr) {
-        res.locals.error = {
-          status: 403,
-          msg: 'Not authorized (must be admin)'
-        };
-        return next(new Error(res.locals.error));
-      }
-
-      if (matchesComplexityRequirements(req.body.data['password'])) {
-        newProps['password'] = hash.genNew(req.body.data.password);
-      }
-    });
-  } // ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
-
+  const _id = req.params.id;
+  let newProps = {}; // ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
 
   if (req.body.birthday) {
     newProps.birthday = new Date(req.body.birthday);
@@ -207,37 +209,108 @@ module.exports.update = function (req, res, next) {
 
   if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation;
-  } // TODO: Sam update error object or at least addd message if any of these fail
+  } // for when you update an existing password
 
 
-  User.findById(req.params.id, function (err, doc) {
-    if (err) {
+  if (req.body.currentPassword && req.body.newPassword) {
+    let token = req.headers.authorization;
+
+    if (!token.startsWith('Bearer ')) {
       res.locals.error = {
-        status: 404,
-        msg: 'User not found with desired ID'
+        status: 403,
+        msg: 'Not authorized (must be admin)'
       };
       return next(new Error(res.locals.error));
-    } else {
-      doc.set(newProps);
-      doc.save(function (err, updated) {
-        if (err) {
-          res.locals.error = {
-            status: 500,
-            msg: 'Unable to save user changes to db'
-          };
-        } else {
-          res.locals.data = {
-            user: updated
-          };
-        }
-
-        return next();
-      });
     }
-  });
+
+    token = token.substring(7);
+    auth.currentUser(token, (_, curr) => {
+      if (req.params.id !== curr) {
+        res.locals.error = {
+          status: 403,
+          msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+      }
+    });
+    const data = {
+      email: req.body.email,
+      password: req.body.currentPassword
+    };
+    auth.validatePassword(data, async (err, result) => {
+      if (err) {
+        res.locals.error = {
+          status: 400,
+          msg: 'Incorrect password'
+        };
+        return next(new Error(res.locals.error));
+      }
+
+      if (matchesComplexityRequirements(req.body.currentPassword)) {
+        newProps.password = hash.genNew(req.body.newPassword);
+        await manualUpdate(newProps, _id, res, next);
+      }
+    });
+  } // setting password on a new user
+
+
+  if (req.body.password && !req.body.newPassword) {
+    let token = req.headers.authorization;
+
+    if (!token.startsWith('Bearer ')) {
+      res.locals.error = {
+        status: 403,
+        msg: 'Not authorized (must be admin)'
+      };
+      return next(new Error(res.locals.error));
+    }
+
+    token = token.substring(7);
+    auth.currentUser(token, (_, curr) => {
+      if (req.params.id !== curr) {
+        res.locals.error = {
+          status: 403,
+          msg: 'Not authorized (must be admin)'
+        };
+        return next(new Error(res.locals.error));
+      }
+
+      if (matchesComplexityRequirements(req.body.data['password'])) {
+        newProps['password'] = hash.genNew(req.body.data.password);
+      }
+    });
+  }
+
+  if (!req.body.currentPassword || !req.body.newPassword) {
+    User.findById(req.params.id, (err, doc) => {
+      if (err) {
+        res.locals.error = {
+          status: 404,
+          msg: 'User not found with desired ID'
+        };
+        return next(new Error(res.locals.error));
+      } else {
+        doc.set(newProps);
+        doc.save((err, updated) => {
+          if (err) {
+            res.locals.error = {
+              status: 500,
+              msg: 'Unable to save user changes to db'
+            };
+          } else {
+            res.locals.data = {
+              user: updated
+            };
+          }
+
+          return next();
+        });
+      }
+    });
+  }
 };
 
-module.exports.upload = function (req, res, next) {
+module.exports.upload = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -246,13 +319,13 @@ module.exports.upload = function (req, res, next) {
     return next();
   }
 
-  var newProps = {};
+  let newProps = {};
 
   if (req.file) {
     newProps.image = req.file.filename;
   }
 
-  User.findById(req.params.id, function (err, doc) {
+  User.findById(req.params.id, (err, doc) => {
     if (err) {
       res.locals.error = {
         status: 404,
@@ -261,7 +334,7 @@ module.exports.upload = function (req, res, next) {
       return next(new Error(res.locals.error));
     } else {
       doc.set(newProps);
-      doc.save(function (err, updated) {
+      doc.save((err, updated) => {
         if (err) {
           res.locals.error = {
             status: 500,
@@ -279,8 +352,8 @@ module.exports.upload = function (req, res, next) {
   });
 };
 
-module.exports.create = function (req, res, next) {
-  var newProps = {};
+module.exports.create = (req, res, next) => {
+  let newProps = {};
 
   if (matchesComplexityRequirements(req.body.password)) {
     newProps.password = hash.genNew(req.body.password);
@@ -342,7 +415,7 @@ module.exports.create = function (req, res, next) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation;
   }
 
-  User.create(newProps, function (err, user) {
+  User.create(newProps, (err, user) => {
     if (err) {
       res.locals.error = {
         status: 400,
@@ -358,7 +431,7 @@ module.exports.create = function (req, res, next) {
   });
 };
 
-module.exports.registerevent = function (req, res, next) {
+module.exports.registerevent = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
       status: 400,
@@ -375,8 +448,8 @@ module.exports.registerevent = function (req, res, next) {
     return next(new Error(res.locals.error));
   }
 
-  var userID = req.params.userID;
-  var eventID = req.params.eventID;
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
   Event.findById(eventID, function (err, eDoc) {
     if (err || !eDoc) {
       res.locals.error = {
@@ -456,7 +529,7 @@ module.exports.registerevent = function (req, res, next) {
         }
       }
 
-      uDoc.save(function (err) {
+      uDoc.save(err => {
         if (err) {
           console.error(err);
           res.locals.error = {
@@ -466,7 +539,7 @@ module.exports.registerevent = function (req, res, next) {
           return next();
         }
 
-        eDoc.save(function (err) {
+        eDoc.save(err => {
           if (err) {
             console.error(err);
             res.locals.error = {
@@ -490,7 +563,7 @@ module.exports.registerevent = function (req, res, next) {
   });
 };
 
-module.exports.denyRegistration = function (req, res, next) {
+module.exports.denyRegistration = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
       status: 400,
@@ -507,8 +580,8 @@ module.exports.denyRegistration = function (req, res, next) {
     return next();
   }
 
-  var userID = req.params.userID;
-  var eventID = req.params.eventID;
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
   Event.findById(eventID, function (err, eDoc) {
     if (err || !eDoc) {
       res.locals.error = {
@@ -568,7 +641,7 @@ module.exports.denyRegistration = function (req, res, next) {
         return next();
       }
 
-      uDoc.save(function (err) {
+      uDoc.save(err => {
         if (err) {
           console.error(err);
           res.locals.error = {
@@ -578,7 +651,7 @@ module.exports.denyRegistration = function (req, res, next) {
           return next();
         }
 
-        eDoc.save(function (err) {
+        eDoc.save(err => {
           if (err) {
             console.error(err);
             res.locals.error = {
@@ -603,7 +676,7 @@ module.exports.denyRegistration = function (req, res, next) {
   });
 };
 
-module.exports.confirmRegistration = function (req, res, next) {
+module.exports.confirmRegistration = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
       status: 400,
@@ -620,8 +693,8 @@ module.exports.confirmRegistration = function (req, res, next) {
     return next();
   }
 
-  var userID = req.params.userID;
-  var eventID = req.params.eventID;
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
   Event.findById(eventID, function (err, eDoc) {
     if (err || !eDoc) {
       res.locals.error = {
@@ -672,7 +745,7 @@ module.exports.confirmRegistration = function (req, res, next) {
         return next();
       }
 
-      uDoc.save(function (err) {
+      uDoc.save(err => {
         if (err) {
           console.error(err);
           res.locals.error = {
@@ -682,7 +755,7 @@ module.exports.confirmRegistration = function (req, res, next) {
           return next();
         }
 
-        eDoc.save(function (err) {
+        eDoc.save(err => {
           if (err) {
             console.error(err);
             res.locals.error = {
@@ -707,7 +780,7 @@ module.exports.confirmRegistration = function (req, res, next) {
   });
 };
 
-module.exports.cancelevent = function (req, res, next) {
+module.exports.cancelevent = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
       status: 400,
@@ -724,8 +797,8 @@ module.exports.cancelevent = function (req, res, next) {
     return next();
   }
 
-  var userID = req.params.userID;
-  var eventID = req.params.eventID;
+  const userID = req.params.userID;
+  const eventID = req.params.eventID;
   Event.findById(eventID, function (err, eDoc) {
     if (err || !eDoc) {
       res.locals.error = {
@@ -749,21 +822,17 @@ module.exports.cancelevent = function (req, res, next) {
 
       if (eDoc.participants.map(String).includes(userID)) {
         // TODO: Add in role checks (this works for now though)
-        var temp = eDoc.participants.map(String);
+        let temp = eDoc.participants.map(String);
         temp.splice(temp.indexOf(userID), 1);
         eDoc.participants = temp;
       } else if (eDoc.volunteers.map(String).includes(userID)) {
-        var _temp = eDoc.volunteers.map(String);
-
-        _temp.splice(_temp.indexOf(userID), 1);
-
-        eDoc.volunteers = _temp;
+        let temp = eDoc.volunteers.map(String);
+        temp.splice(temp.indexOf(userID), 1);
+        eDoc.volunteers = temp;
       } else if (eDoc.pendingVolunteers.map(String).includes(userID)) {
-        var _temp2 = eDoc.pendingVolunteers.map(String);
-
-        _temp2.splice(_temp2.indexOf(userID), 1);
-
-        eDoc.pendingVolunteers = _temp2;
+        let temp = eDoc.pendingVolunteers.map(String);
+        temp.splice(temp.indexOf(userID), 1);
+        eDoc.pendingVolunteers = temp;
       } else {
         res.locals.error = {
           status: 400,
@@ -778,18 +847,13 @@ module.exports.cancelevent = function (req, res, next) {
       if (uDoc.role === 'Volunteer' && uDoc.pendingEvents.map(String).includes(eventID)) {
         // TODO: Some way for admins to remove volunteers from confirmed events
         if (!uDoc.pendingEvents) uDoc.events = [];
-
-        var _temp3 = uDoc.pendingEvents.map(String);
-
-        _temp3.splice(_temp3.indexOf(eventID), 1);
-
-        uDoc.pendingEvents = _temp3;
+        let temp = uDoc.pendingEvents.map(String);
+        temp.splice(temp.indexOf(eventID), 1);
+        uDoc.pendingEvents = temp;
       } else if (uDoc.events.map(String).includes(eventID)) {
-        var _temp4 = uDoc.events.map(String);
-
-        _temp4.splice(_temp4.indexOf(eventID), 1);
-
-        uDoc.events = _temp4;
+        let temp = uDoc.events.map(String);
+        temp.splice(temp.indexOf(eventID), 1);
+        uDoc.events = temp;
       } else {
         res.locals.error = {
           status: 400,
@@ -798,7 +862,7 @@ module.exports.cancelevent = function (req, res, next) {
         return next();
       }
 
-      uDoc.save(function (err) {
+      uDoc.save(err => {
         if (err) {
           console.error(err);
           res.locals.error = {
@@ -808,7 +872,7 @@ module.exports.cancelevent = function (req, res, next) {
           return next();
         }
 
-        eDoc.save(function (err) {
+        eDoc.save(err => {
           if (err) {
             console.error(err);
             res.locals.error = {

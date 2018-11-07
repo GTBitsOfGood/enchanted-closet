@@ -33,7 +33,7 @@ var SystemConfigSchema = new _mongoose.default.Schema({
   }
 });
 
-var SystemConfig = _mongoose.default.model('SystemConfig', SystemConfigSchema);
+let SystemConfig = _mongoose.default.model('SystemConfig', SystemConfigSchema);
 
 var _default = SystemConfig;
 exports.default = _default;

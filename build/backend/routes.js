@@ -1,38 +1,38 @@
 'use strict';
 
-var express = require('express');
+const express = require('express');
 
-var router = express.Router();
+const router = express.Router();
 
-var controllers = require('./controllers/');
+const controllers = require('./controllers/');
 
-var auth = require('./auth');
+const auth = require('./auth');
 
-var multer = require('multer'); // TODO: consider changing filename
+const multer = require('multer'); // TODO: consider changing filename
 
 
-var userStorage = multer.diskStorage({
-  destination: function destination(req, file, cb) {
+const userStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
     cb(null, './public/uploaded/users');
   },
-  filename: function filename(req, file, cb) {
-    var names = file.mimetype.split('/');
+  filename: function (req, file, cb) {
+    let names = file.mimetype.split('/');
     cb(null, req.params.id + '.' + names[names.length - 1]);
   }
 });
-var eventStorage = multer.diskStorage({
-  destination: function destination(req, file, cb) {
+const eventStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
     cb(null, './public/uploaded/events');
   },
-  filename: function filename(req, file, cb) {
-    var names = file.mimetype.split('/');
+  filename: function (req, file, cb) {
+    let names = file.mimetype.split('/');
     cb(null, req.params.id + '.' + names[names.length - 1]);
   }
 });
-var userUpload = multer({
+const userUpload = multer({
   storage: userStorage
 });
-var eventUpload = multer({
+const eventUpload = multer({
   storage: eventStorage
 });
 router.post('/login', controllers.auth.login);
@@ -65,21 +65,19 @@ router.get('/report/:year', controllers.reporting.yearReport);
 router.get('/report/:year/:month', controllers.reporting.monthReport);
 router.get('/reports', auth.checkAdmin, controllers.reporting.index); // Package and finish
 
-router.use(function (req, res, next) {
+router.use((req, res, next) => {
   if (res.locals.data) {
-    var response = Object.assign({}, res.locals.data, {
+    let response = Object.assign({}, res.locals.data, {
       'status': 'ok'
     });
     return res.status(200).json(response);
   } else if (res.locals.error) {
     // Any errors thrown are be handled below, but because we're bad not all errors are thrown >:(
-    var statusCode = res.locals.error.code || 500;
-
-    var _response = Object.assign({}, res.locals.error, {
+    let statusCode = res.locals.error.code || 500;
+    let response = Object.assign({}, res.locals.error, {
       'status': 'error'
     });
-
-    return res.status(statusCode).json(_response);
+    return res.status(statusCode).json(response);
   } else {
     // not every error should be a generic 500 error!!!!!!!!!!!!
     console.error('generic server error');
@@ -91,12 +89,12 @@ router.use(function (req, res, next) {
   }
 }); // quick error handle
 
-router.use(function (err, req, res, next) {
+router.use((err, req, res, next) => {
   if (res.locals.error) {
     // Map msg to message because honestly what even
     res.locals.error.message = res.locals.error.msg;
-    var statusCode = res.locals.error.code || 500;
-    var response = Object.assign({}, res.locals.error, {
+    let statusCode = res.locals.error.code || 500;
+    let response = Object.assign({}, res.locals.error, {
       'status': 'error'
     });
     return res.status(statusCode).json(response);

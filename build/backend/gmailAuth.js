@@ -1,15 +1,16 @@
 "use strict";
 
-var fs = require('fs');
+const fs = require('fs');
 
-var readline = require('readline');
+const readline = require('readline');
 
-var _require = require('googleapis'),
-    google = _require.google; // If modifying these scopes, delete token.json.
+const {
+  google
+} = require('googleapis'); // If modifying these scopes, delete token.json.
 
 
 var SCOPES = ['https://mail.google.com/', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.compose', 'https://www.googleapis.com/auth/gmail.send'];
-var TOKEN_PATH = 'token.json'; // move token to database!!!
+const TOKEN_PATH = 'token.json'; // move token to database!!!
 // Should be getting and updating token in database!!!!!!
 // Load client secrets from a local file.
 
@@ -26,10 +27,10 @@ module.exports.authSend = function authSend(receivers, subject, message) {
 
 
 function authorize(receivers, subject, message, callback) {
-  var CLIENT_ID = process.env.CLIENT_ID;
-  var CLIENT_SECRET = process.env.CLIENT_SECRET;
-  var REDIRECT_URIS = process.env.REDIRECT_URIS;
-  var oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URIS[0]); // Check if we have previously stored a token.
+  const CLIENT_ID = process.env.CLIENT_ID;
+  const CLIENT_SECRET = process.env.CLIENT_SECRET;
+  const REDIRECT_URIS = process.env.REDIRECT_URIS;
+  const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URIS[0]); // Check if we have previously stored a token.
 
   if (!process.env.ACCESS_TOKEN && !process.env.REFRESH_TOKEN && !process.env.SCOPE && !process.env.TOKEN_TYPE && !process.env.EXPIRY_DATE) {
     return getNewToken(oAuth2Client, callback);
@@ -53,22 +54,22 @@ function authorize(receivers, subject, message, callback) {
 
 
 function getNewToken(oAuth2Client, callback) {
-  var authUrl = oAuth2Client.generateAuthUrl({
+  const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES
   });
   console.log('Authorize this app by visiting this url:', authUrl);
-  var rl = readline.createInterface({
+  const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
   });
-  rl.question('Enter the code from that page here: ', function (code) {
+  rl.question('Enter the code from that page here: ', code => {
     rl.close();
-    oAuth2Client.getToken(code, function (err, token) {
+    oAuth2Client.getToken(code, (err, token) => {
       if (err) return console.error('Error retrieving access token', err);
       oAuth2Client.setCredentials(token); // Store the token to disk for later program executions
 
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), function (err) {
+      fs.writeFile(TOKEN_PATH, JSON.stringify(token), err => {
         if (err) return console.error(err);
         console.log('Token stored to', TOKEN_PATH);
       });
@@ -85,9 +86,9 @@ function makeBody(to, from, subject, message) {
 
 function sendMessage(auth, receivers, subject, message) {
   var raw = makeBody(receivers, 'testmailec1234@gmail.com', subject, message);
-  var gmail = google.gmail({
+  const gmail = google.gmail({
     version: 'v1',
-    auth: auth
+    auth
   });
   gmail.users.messages.send({
     auth: auth,

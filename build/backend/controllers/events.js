@@ -1,15 +1,15 @@
 "use strict";
 
-var Event = require('mongoose').model('Event');
+const Event = require('mongoose').model('Event');
 
-var User = require('mongoose').model('User');
+const User = require('mongoose').model('User');
 
-var async = require('async');
+const async = require('async');
 
 var currDate = new Date();
 
-module.exports.index = function (req, res, next) {
-  Event.find({}).populate('participants').populate('volunteers').exec(function (err, events) {
+module.exports.index = (req, res, next) => {
+  Event.find({}).populate('participants').populate('volunteers').exec((err, events) => {
     if (events) {
       res.locals.data = {
         events: events
@@ -26,17 +26,17 @@ module.exports.index = function (req, res, next) {
   });
 };
 
-module.exports.fetchFutureEvents = function (req, res, next) {
+module.exports.fetchFutureEvents = (req, res, next) => {
   Event.find({
     'startTime': {
       $gt: currDate
     }
   }).sort({
     'startTime': 1
-  }).populate('participants').populate('volunteers').exec(function (err, events) {
+  }).populate('participants').populate('volunteers').exec((err, events) => {
     if (events) {
       res.locals.data = {
-        events: events
+        events
       };
       return next();
     } else {
@@ -50,17 +50,17 @@ module.exports.fetchFutureEvents = function (req, res, next) {
   });
 };
 
-module.exports.fetchPastEvents = function (req, res, next) {
+module.exports.fetchPastEvents = (req, res, next) => {
   Event.find({
     'startTime': {
       $lte: currDate
     }
   }).sort({
     'startTime': 1
-  }).populate('participants').populate('volunteers').exec(function (err, events) {
+  }).populate('participants').populate('volunteers').exec((err, events) => {
     if (events) {
       res.locals.data = {
-        events: events
+        events
       };
       return next();
     } else {
@@ -74,7 +74,7 @@ module.exports.fetchPastEvents = function (req, res, next) {
   });
 };
 
-module.exports.present = function (req, res, next) {
+module.exports.present = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
       status: 400,
@@ -135,7 +135,7 @@ module.exports.present = function (req, res, next) {
         }
       }
 
-      eDoc.save(function (err) {
+      eDoc.save(err => {
         if (err) {
           console.error(err);
           res.locals.error = {
@@ -153,7 +153,7 @@ module.exports.present = function (req, res, next) {
   });
 };
 
-module.exports.absent = function (req, res, next) {
+module.exports.absent = (req, res, next) => {
   if (!req.params.eventID) {
     res.locals.error = {
       status: 400,
@@ -192,7 +192,7 @@ module.exports.absent = function (req, res, next) {
         if (!eDoc.participantsAttended) eDoc.participantsAttended = [];
 
         if (eDoc.participantsAttended.indexOf(req.params.userID) !== -1) {
-          var temp = eDoc.participantsAttended.map(String);
+          let temp = eDoc.participantsAttended.map(String);
           temp.splice(temp.indexOf(req.params.userID), 1);
           eDoc.participantsAttended = temp;
         } else {
@@ -206,11 +206,9 @@ module.exports.absent = function (req, res, next) {
         if (!eDoc.volunteersAttended) eDoc.volunteersAttended = [];
 
         if (eDoc.volunteersAttended.indexOf(req.params.userID) !== -1) {
-          var _temp = eDoc.volunteersAttended.map(String);
-
-          _temp.splice(_temp.indexOf(req.params.userID), 1);
-
-          eDoc.volunteersAttended = _temp;
+          let temp = eDoc.volunteersAttended.map(String);
+          temp.splice(temp.indexOf(req.params.userID), 1);
+          eDoc.volunteersAttended = temp;
         } else {
           res.locals.error = {
             status: 400,
@@ -220,7 +218,7 @@ module.exports.absent = function (req, res, next) {
         }
       }
 
-      eDoc.save(function (err) {
+      eDoc.save(err => {
         if (err) {
           console.error(err);
           res.locals.error = {
@@ -238,7 +236,7 @@ module.exports.absent = function (req, res, next) {
   });
 };
 
-module.exports.get = function (req, res, next) {
+module.exports.get = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -247,7 +245,7 @@ module.exports.get = function (req, res, next) {
     return next();
   }
 
-  Event.findById(req.params.id).populate('participants').populate('volunteers').exec(function (err, event) {
+  Event.findById(req.params.id).populate('participants').populate('volunteers').exec((err, event) => {
     if (event) {
       res.locals.data = {
         event: event
@@ -264,7 +262,7 @@ module.exports.get = function (req, res, next) {
   });
 };
 
-module.exports.upload = function (req, res, next) {
+module.exports.upload = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -273,13 +271,13 @@ module.exports.upload = function (req, res, next) {
     return next();
   }
 
-  var newProps = {};
+  let newProps = {};
 
   if (req.file) {
     newProps.image = req.file.filename;
   }
 
-  Event.findById(req.params.id, function (err, doc) {
+  Event.findById(req.params.id, (err, doc) => {
     if (err) {
       res.locals.error = {
         status: 404,
@@ -288,7 +286,7 @@ module.exports.upload = function (req, res, next) {
       return next(new Error(res.locals.error));
     } else {
       doc.set(newProps);
-      doc.save(function (err, updated) {
+      doc.save((err, updated) => {
         console.error(err);
 
         if (err) {
@@ -308,7 +306,7 @@ module.exports.upload = function (req, res, next) {
   });
 };
 
-module.exports.create = function (req, res, next) {
+module.exports.create = (req, res, next) => {
   if (!req.body.name) {
     res.locals.error = {
       status: 400,
@@ -373,10 +371,8 @@ module.exports.create = function (req, res, next) {
     // uncomment when frontend is done
     // registrationStart: req.body.registrationStart,
     // registrationEnd: req.body.registrationEnd,
-    speakers: req.body.speakers ? req.body.speakers.split(',').map(function (e) {
-      return e.trim();
-    }) : []
-  }, function (err, result) {
+    speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
+  }, (err, result) => {
     if (err) {
       res.locals.error = {
         status: 500,
@@ -393,7 +389,7 @@ module.exports.create = function (req, res, next) {
   });
 };
 
-module.exports.delete = function (req, res, next) {
+module.exports.delete = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -404,7 +400,7 @@ module.exports.delete = function (req, res, next) {
 
   Event.findOne({
     _id: req.params.id
-  }).remove(function (err, event) {
+  }).remove((err, event) => {
     if (event) {
       res.locals.data = {
         msg: 'Event successfully deleted'
@@ -421,7 +417,7 @@ module.exports.delete = function (req, res, next) {
   });
 };
 
-module.exports.update = function (req, res, next) {
+module.exports.update = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 404,
@@ -430,7 +426,7 @@ module.exports.update = function (req, res, next) {
     return next();
   }
 
-  Event.findById(req.params.id, function (err, event) {
+  Event.findById(req.params.id, (err, event) => {
     if (err) {
       console.error(err);
       res.locals.errors = {
@@ -448,7 +444,7 @@ module.exports.update = function (req, res, next) {
       return next();
     }
 
-    var newValues = {};
+    let newValues = {};
     if (req.body.name && req.body.name.length > 2) newValues.name = req.body.name;
     if (req.body.description && req.body.description.length > 2) newValues.description = req.body.description;
     if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location;
@@ -456,11 +452,9 @@ module.exports.update = function (req, res, next) {
     if (req.body.endTime && req.body.endTime.length > 2) newValues.endTime = req.body.endTime;
     if (req.body.registrationStart && req.body.registrationStart.length > 2) newValues.registrationStart = req.body.registrationStart;
     if (req.body.registrationEnd && req.body.registrationEnd.length > 2) newValues.registrationEnd = req.body.registrationEnd;
-    if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(function (e) {
-      return e.trim();
-    });
+    if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(e => e.trim());
     event.set(newValues);
-    event.save(function (err, updatedEvent) {
+    event.save((err, updatedEvent) => {
       if (err) {
         res.locals.error = {
           code: 500,

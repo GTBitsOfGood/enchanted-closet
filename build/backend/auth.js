@@ -1,22 +1,22 @@
 "use strict";
 
-var hash = require('./hash');
+const hash = require('./hash');
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var User = mongoose.model('User');
+const User = mongoose.model('User');
 
-var randomBytes = require('crypto').randomBytes;
+const randomBytes = require('crypto').randomBytes;
 
-var redisClient = require('redis').createClient();
+const redisClient = require('redis').createClient();
 
-var mail = require('./gmailAuth');
+const mail = require('./gmailAuth');
 
-var isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // const isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
+const isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // const isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 
-var grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-var authHeader = 'authorization';
-var authError = {
+const grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+const authHeader = 'authorization';
+const authError = {
   code: 403,
   msg: 'Invalid authorization credentials'
 };
@@ -24,13 +24,13 @@ redisClient.on('error', function (err) {
   console.error('Error ' + err);
 });
 
-var isAdmin = function isAdmin(id, callback) {
+const isAdmin = (id, callback) => {
   if (!id) {
     // catch falsy values like null or empty string
     return callback(null, false);
   }
 
-  User.findById(id, function (err, result) {
+  User.findById(id, (err, result) => {
     if (!err && result.role === 'Admin') {
       return callback(err, true);
     }
@@ -40,8 +40,8 @@ var isAdmin = function isAdmin(id, callback) {
 };
 
 function lacksAny(obj, props) {
-  for (var p in props) {
-    var k = props[p];
+  for (let p in props) {
+    let k = props[p];
 
     if (!obj[k]) {
       return k;
@@ -51,14 +51,14 @@ function lacksAny(obj, props) {
   return null;
 }
 
-var matchesComplexityRequirements = function matchesComplexityRequirements(password) {
+const matchesComplexityRequirements = password => {
   // TODO: put these requirements on frontend
   if (password.length < 7) return false;
-  var hasAlpha = false;
-  var hasNum = false;
+  let hasAlpha = false;
+  let hasNum = false;
 
-  for (var i = 0; i < password.length; i++) {
-    var c = password.charCodeAt(i);
+  for (let i = 0; i < password.length; i++) {
+    let c = password.charCodeAt(i);
 
     if (c >= 65 && c <= 90 || c >= 97 && c <= 122) {
       hasAlpha = true;
@@ -72,7 +72,7 @@ var matchesComplexityRequirements = function matchesComplexityRequirements(passw
   return false;
 };
 
-var validateUser = function validateUser(data, callback) {
+const validateUser = (data, callback) => {
   // TODO: Reinstate backend validation (Low business value)
 
   /*
@@ -89,7 +89,7 @@ var validateUser = function validateUser(data, callback) {
      data.emergencyContactRelation = data.emergencycontactrelation;
      delete data.emergencycontactrelation;
    */
-  var capitalized = data.role.charAt(0).toUpperCase() + data.role.slice(1);
+  const capitalized = data.role.charAt(0).toUpperCase() + data.role.slice(1);
   return callback(null, Object.assign({}, data, {
     'password': hash.genNew(data.password)
   }, {
@@ -97,7 +97,22 @@ var validateUser = function validateUser(data, callback) {
   }));
 };
 
-var currentUser = function currentUser(tok, callback) {
+const validatePassword = (data, callback) => {
+  if (!data) {
+    return callback(true, null);
+  } else {
+    hash.checkAgainst(data, function (err, usr) {
+      if (err) {
+        return callback(true, null);
+      } else {
+        console.log("no error in validatePassword");
+        return callback(false, usr);
+      }
+    });
+  }
+};
+
+const currentUser = (tok, callback) => {
   if (!tok) {
     // catch falsy values like null, empty string
     return callback(null, null);
@@ -108,8 +123,8 @@ var currentUser = function currentUser(tok, callback) {
   });
 };
 
-module.exports.idMatchesOrAdmin = function (req, res, next) {
-  var token = req.header('Authorization');
+module.exports.idMatchesOrAdmin = (req, res, next) => {
+  let token = req.header('Authorization');
 
   if (!token || !token.startsWith('Bearer ')) {
     res.locals.error = {
@@ -120,7 +135,7 @@ module.exports.idMatchesOrAdmin = function (req, res, next) {
   }
 
   token = token.substring(7);
-  currentUser(token, function (err, curr) {
+  currentUser(token, (err, curr) => {
     // TODO put back in module.exports if broken
     if (err) {
       res.locals.error = {
@@ -130,7 +145,7 @@ module.exports.idMatchesOrAdmin = function (req, res, next) {
       return next(new Error(res.locals.error));
     }
 
-    isAdmin(curr, function (err, state) {
+    isAdmin(curr, (err, state) => {
       // TODO see above
       if (err) {
         res.locals.error = {
@@ -153,8 +168,8 @@ module.exports.idMatchesOrAdmin = function (req, res, next) {
   });
 };
 
-module.exports.checkAdmin = function (req, res, next) {
-  var token = req.header('Authorization');
+module.exports.checkAdmin = (req, res, next) => {
+  let token = req.header('Authorization');
 
   if (!token.startsWith('Bearer ')) {
     res.locals.error = {
@@ -165,7 +180,7 @@ module.exports.checkAdmin = function (req, res, next) {
   }
 
   token = token.substring(7);
-  currentUser(token, function (err, curr) {
+  currentUser(token, (err, curr) => {
     if (err) {
       res.locals.error = {
         status: 403,
@@ -174,7 +189,7 @@ module.exports.checkAdmin = function (req, res, next) {
       return next(new Error(res.locals.error));
     }
 
-    isAdmin(curr, function (err, state) {
+    isAdmin(curr, (err, state) => {
       if (err) {
         res.locals.error = {
           status: 403,
@@ -196,8 +211,8 @@ module.exports.checkAdmin = function (req, res, next) {
   });
 };
 
-module.exports.makeAdmin = function (req, res, next) {
-  var token = req.header('Authorization');
+module.exports.makeAdmin = (req, res, next) => {
+  let token = req.header('Authorization');
 
   if (!token.startsWith('Bearer ')) {
     res.locals.error = {
@@ -220,7 +235,7 @@ module.exports.makeAdmin = function (req, res, next) {
       return next(new Error(res.locals.error));
     }
 
-    User.findById(req.params.id).populate('events').exec(function (err, user) {
+    User.findById(req.params.id).populate('events').exec((err, user) => {
       if (user) {
         res.locals.data = {
           user: user,
@@ -241,8 +256,9 @@ module.exports.makeAdmin = function (req, res, next) {
   });
 };
 
-module.exports.idMatches = function (req, res, next) {
-  var token = req.header('Authorization');
+module.exports.idMatches = (req, res, next) => {
+  let token = req.header('Authorization');
+  console.log(token);
 
   if (!token.startsWith('Bearer ')) {
     res.locals.error = {
@@ -253,7 +269,7 @@ module.exports.idMatches = function (req, res, next) {
   }
 
   token = token.substring(7);
-  module.exports.currentUser(token, function (err, curr) {
+  module.exports.currentUser(token, (err, curr) => {
     if (err || curr == null || curr !== req.params.id) {
       res.locals.error = {
         status: 403,
@@ -266,14 +282,14 @@ module.exports.idMatches = function (req, res, next) {
   });
 };
 
-module.exports.login = function (data, callback) {
+module.exports.login = (data, callback) => {
   hash.checkAgainst(data, function (err, usr) {
     if (err) {
       return callback(err, null);
     }
 
     if (usr !== null) {
-      var tok = randomBytes(64).toString('hex');
+      let tok = randomBytes(64).toString('hex');
       redisClient.set(tok, usr._id.toString()); //, 'EX', 1800); // expire after 30 mins
 
       return callback(err, Object.assign({}, usr, {
@@ -303,20 +319,20 @@ module.exports.login = function (data, callback) {
 // }
 
 
-module.exports.register = function (data, callback) {
+module.exports.register = (data, callback) => {
   /* Redo validation scheme... */
-  validateUser(data, function (err, validatedUserData) {
+  validateUser(data, (err, validatedUserData) => {
     if (err) {
       return callback(err.reason, null);
     }
 
-    User.create(validatedUserData, function (err, user) {
+    User.create(validatedUserData, (err, user) => {
       if (err) {
         return callback(err, null);
       }
 
       volunteerRegisterEmail(validatedUserData);
-      var tok = randomBytes(64).toString('hex');
+      let tok = randomBytes(64).toString('hex');
       user.set('token', tok);
       redisClient.set(tok, user._id.toString()); //, 'EX', 1800); // expire after 30 mins
 
@@ -328,20 +344,18 @@ module.exports.register = function (data, callback) {
 };
 
 function volunteerRegisterEmail(user) {
-  var admins = [];
+  let admins = [];
 
   if (user.role === 'Volunteer') {
     User.find({
       role: 'Admin'
-    }).exec(function (err, users) {
+    }).exec((err, users) => {
       if (err) {
         // handle error (db error for sure)
         console.error(err);
       }
 
-      users.forEach(function (u) {
-        return admins.push(u.email);
-      });
+      users.forEach(u => admins.push(u.email));
       mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look');
     });
   }
@@ -349,3 +363,4 @@ function volunteerRegisterEmail(user) {
 
 module.exports.currentUser = currentUser;
 module.exports.isAdmin = isAdmin;
+module.exports.validatePassword = validatePassword;

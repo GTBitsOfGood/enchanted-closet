@@ -1,15 +1,15 @@
 "use strict";
 
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
-var User = require('mongoose').model('User');
+const User = require('mongoose').model('User');
 
-module.exports.genNew = function (password) {
-  var salt = bcrypt.genSaltSync();
+module.exports.genNew = password => {
+  const salt = bcrypt.genSaltSync();
   return bcrypt.hashSync(password, salt);
 };
 
-module.exports.checkAgainst = function (data, callback) {
+module.exports.checkAgainst = (data, callback) => {
   User.findOne({
     email: data.email
   }, function (err, user) {
@@ -19,11 +19,7 @@ module.exports.checkAgainst = function (data, callback) {
     }
 
     if (user) {
-      user.validatePassword(data.password).then(function (authenticatedUser) {
-        return callback(null, authenticatedUser);
-      }).catch(function (error) {
-        return callback(error, null);
-      });
+      user.validatePassword(data.password).then(authenticatedUser => callback(null, authenticatedUser)).catch(error => callback(error, null));
     } else {
       return callback('Incorrect email/password combination', null);
     }

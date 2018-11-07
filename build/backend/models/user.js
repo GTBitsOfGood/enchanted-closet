@@ -1,8 +1,8 @@
 "use strict";
 
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
-var mongoose = require('mongoose'); // const Event = mongoose.model('event');
+const mongoose = require('mongoose'); // const Event = mongoose.model('event');
 
 
 var UserSchema = new mongoose.Schema({
@@ -62,20 +62,20 @@ var UserSchema = new mongoose.Schema({
 });
 
 UserSchema.methods.toJSON = function () {
-  var usr = this.toObject();
+  let usr = this.toObject();
   delete usr.password;
   return usr;
 };
 
 UserSchema.methods.validatePassword = function (password) {
-  var user = this.toObject();
-  return new Promise(function (resolve, reject) {
-    bcrypt.compare(password, user.password, function (err, authenticated) {
+  let user = this.toObject();
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(password, user.password, (err, authenticated) => {
       if (err) return reject(err);
 
       if (authenticated) {
         // This is a hack to make sure we don't create a reference, but instead literally copy the object
-        var temporaryUser = JSON.parse(JSON.stringify(user));
+        let temporaryUser = JSON.parse(JSON.stringify(user));
         delete temporaryUser.password;
         return resolve(temporaryUser);
       } else {
@@ -85,5 +85,5 @@ UserSchema.methods.validatePassword = function (password) {
   });
 };
 
-var User = mongoose.model('User', UserSchema);
+let User = mongoose.model('User', UserSchema);
 module.exports = User;

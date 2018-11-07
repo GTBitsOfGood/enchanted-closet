@@ -1,17 +1,17 @@
 "use strict";
 
-var csv = require('fast-csv');
+const csv = require('fast-csv');
 
-var Event = require('mongoose').model('Event');
+const Event = require('mongoose').model('Event');
 
-var User = require('mongoose').model('User');
+const User = require('mongoose').model('User');
 
-var async = require('async');
+const async = require('async');
 
-module.exports.index = function (req, res, next) {
+module.exports.index = (req, res, next) => {
   Event.find({}).sort({
     datetime: 1
-  }).limit(1).exec(function (err, event) {
+  }).limit(1).exec((err, event) => {
     if (event) {
       res.locals.data = {
         datetime: event[0].datetime
@@ -28,7 +28,7 @@ module.exports.index = function (req, res, next) {
   });
 };
 
-module.exports.eventReport = function (req, res, next) {
+module.exports.eventReport = (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 404,
@@ -37,12 +37,12 @@ module.exports.eventReport = function (req, res, next) {
     return next();
   }
 
-  var csvStream = csv.createWriteStream({
+  let csvStream = csv.createWriteStream({
     headers: true
   });
   res.setHeader('content-type', 'text/csv');
   csvStream.pipe(res);
-  Event.findById(req.params.id).populate('participants').populate('volunteers').exec(function (err, eventInfo) {
+  Event.findById(req.params.id).populate('participants').populate('volunteers').exec((err, eventInfo) => {
     if (err) {
       res.locals.error = {
         status: 404,
@@ -53,12 +53,10 @@ module.exports.eventReport = function (req, res, next) {
     }
 
     res.setHeader('Content-disposition', 'attachment; filename=' + eventInfo.name + '.csv');
-    eventInfo.volunteers.forEach(function (v) {
-      var userInfo = v;
+    eventInfo.volunteers.forEach(v => {
+      const userInfo = v;
 
-      if (eventInfo.volunteersAttended.find(function (id) {
-        return v._id.toString() === id.toString();
-      })) {
+      if (eventInfo.volunteersAttended.find(id => v._id.toString() === id.toString())) {
         csvStream.write({
           Event: eventInfo.name,
           Role: 'Volunteer',
@@ -76,12 +74,10 @@ module.exports.eventReport = function (req, res, next) {
         });
       }
     });
-    eventInfo.participants.forEach(function (u, ind2, users) {
-      var userInfo = u;
+    eventInfo.participants.forEach((u, ind2, users) => {
+      const userInfo = u;
 
-      if (eventInfo.participantsAttended.find(function (id) {
-        return u._id.toString() === id.toString();
-      })) {
+      if (eventInfo.participantsAttended.find(id => u._id.toString() === id.toString())) {
         csvStream.write({
           Event: eventInfo.name,
           Role: 'Participant',
@@ -103,7 +99,7 @@ module.exports.eventReport = function (req, res, next) {
   });
 };
 
-module.exports.yearReport = function (req, res, next) {
+module.exports.yearReport = (req, res, next) => {
   if (!req.params.year) {
     res.locals.error = {
       status: 404,
@@ -112,17 +108,17 @@ module.exports.yearReport = function (req, res, next) {
     return next();
   }
 
-  var csvStream = csv.createWriteStream({
+  const csvStream = csv.createWriteStream({
     headers: true
   });
-  var year = req.params.year;
+  const year = req.params.year;
   res.setHeader('Content-disposition', 'attachment; filename=' + year + '-report.csv');
   res.setHeader('Content-Type', 'text/csv');
   csvStream.pipe(res);
-  var currYear = new Date().getFullYear();
-  var minimumDate = new Date();
+  const currYear = new Date().getFullYear();
+  const minimumDate = new Date();
   minimumDate.setFullYear(year, 0, 1);
-  var maximumDate;
+  let maximumDate;
 
   if (year === currYear) {
     maximumDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
@@ -138,7 +134,7 @@ module.exports.yearReport = function (req, res, next) {
     }
   }).populate('participants') //    .populate('participantsAttended')
   .populate('volunteers') //    .populate('volunteerAttended')
-  .exec(function (err, events) {
+  .exec((err, events) => {
     if (err || events.length === 0) {
       res.locals.error = {
         status: 404,
@@ -147,15 +143,13 @@ module.exports.yearReport = function (req, res, next) {
       return next();
     }
 
-    var count = 0;
-    events.forEach(function (e) {
+    let count = 0;
+    events.forEach(e => {
       if (e.volunteersAttended.length !== 0) {
-        e.volunteers.forEach(function (v) {
-          var userInfo = v; //
+        e.volunteers.forEach(v => {
+          const userInfo = v; //
 
-          if (e.volunteersAttended.find(function (id) {
-            return v._id.toString() === id.toString();
-          })) {
+          if (e.volunteersAttended.find(id => v._id.toString() === id.toString())) {
             csvStream.write({
               Event: e.name,
               Role: 'Volunteer',
@@ -176,12 +170,10 @@ module.exports.yearReport = function (req, res, next) {
       }
 
       if (e.participantsAttended.length !== 0) {
-        e.participants.forEach(function (u) {
-          var userInfo = u;
+        e.participants.forEach(u => {
+          const userInfo = u;
 
-          if (e.participantsAttended.find(function (id) {
-            return u._id.toString() === id.toString();
-          })) {
+          if (e.participantsAttended.find(id => u._id.toString() === id.toString())) {
             csvStream.write({
               Event: e.name,
               Role: 'Participant',
@@ -205,7 +197,7 @@ module.exports.yearReport = function (req, res, next) {
   });
 };
 
-module.exports.monthReport = function (req, res, next) {
+module.exports.monthReport = (req, res, next) => {
   if (!req.params.year) {
     res.locals.error = {
       status: 404,
@@ -221,28 +213,28 @@ module.exports.monthReport = function (req, res, next) {
     };
   }
 
-  var csvStream = csv.createWriteStream({
+  const csvStream = csv.createWriteStream({
     headers: true
   });
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  var year = req.params.year;
-  var month = req.params.month;
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const year = req.params.year;
+  const month = req.params.month;
   res.setHeader('Content-disposition', 'attachment; filename=' + months[month] + '-' + year + '-report.csv');
   res.setHeader('Content-Type', 'text/csv');
   csvStream.pipe(res);
-  var currentYear = new Date().getFullYear();
-  var minimumDate = new Date();
+  const currentYear = new Date().getFullYear();
+  const minimumDate = new Date();
   minimumDate.setFullYear(year, month, 1);
-  var maximumDate;
+  let maximumDate;
 
   if (year === currentYear) {
-    var currentMonth = new Date().getMonth();
+    const currentMonth = new Date().getMonth();
 
     if (month === currentMonth) {
       maximumDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
     }
   } else {
-    var numberOfDays = new Date(year, month + 1, 0).getDate(); // month needs to be indexed starting at 1 since days are 0
+    const numberOfDays = new Date(year, month + 1, 0).getDate(); // month needs to be indexed starting at 1 since days are 0
 
     maximumDate = new Date();
     maximumDate.setFullYear(year, month, numberOfDays);
@@ -255,7 +247,7 @@ module.exports.monthReport = function (req, res, next) {
     }
   }).populate('participants') //    .populate('participantsAttended')
   .populate('volunteers') //    .populate('volunteerAttended')
-  .exec(function (err, events) {
+  .exec((err, events) => {
     if (err || events.length === 0) {
       res.locals.error = {
         status: 404,
@@ -264,14 +256,12 @@ module.exports.monthReport = function (req, res, next) {
       return next();
     }
 
-    var count = 0;
-    events.forEach(function (e) {
-      e.volunteers.forEach(function (v) {
-        var userInfo = v; //
+    let count = 0;
+    events.forEach(e => {
+      e.volunteers.forEach(v => {
+        const userInfo = v; //
 
-        if (e.volunteersAttended.find(function (id) {
-          return v._id.toString() === id.toString();
-        })) {
+        if (e.volunteersAttended.find(id => v._id.toString() === id.toString())) {
           csvStream.write({
             Event: e.name,
             Role: 'Volunteer',
@@ -289,12 +279,10 @@ module.exports.monthReport = function (req, res, next) {
           });
         }
       });
-      e.participants.forEach(function (u) {
-        var userInfo = u;
+      e.participants.forEach(u => {
+        const userInfo = u;
 
-        if (e.participantsAttended.find(function (id) {
-          return u._id.toString() === id.toString();
-        })) {
+        if (e.participantsAttended.find(id => u._id.toString() === id.toString())) {
           csvStream.write({
             Event: e.name,
             Role: 'Participant',

@@ -1,38 +1,26 @@
 "use strict";
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var User = mongoose.model('User');
-var Event = mongoose.model('Event');
+const User = mongoose.model('User');
+const Event = mongoose.model('Event');
 
-var async = require('async');
+const async = require('async');
 
-module.exports.cards = function (req, res, next) {
-  var userCounts = {
+module.exports.cards = (req, res, next) => {
+  let userCounts = {
     participant: 0,
     volunteer: 0,
     admin: 0
   };
   async.parallel({
-    users: function users(cb) {
-      User.find({}).then(function (users) {
-        return users.map(function (u) {
-          return userCounts[u.role.toLowerCase()]++;
-        });
-      }).then(function () {
-        return cb(null, userCounts);
-      }).catch(function (err) {
-        return cb(err, null);
-      });
+    users: cb => {
+      User.find({}).then(users => users.map(u => userCounts[u.role.toLowerCase()]++)).then(() => cb(null, userCounts)).catch(err => cb(err, null));
     },
-    events: function events(cb) {
-      Event.find({}).then(function (events) {
-        return cb(null, events.length);
-      }).catch(function (err) {
-        return cb(err, null);
-      });
+    events: cb => {
+      Event.find({}).then(events => cb(null, events.length)).catch(err => cb(err, null));
     }
-  }, function (err, results) {
+  }, (err, results) => {
     if (err) {
       res.locals.errors = {
         code: 500,

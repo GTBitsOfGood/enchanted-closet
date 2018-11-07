@@ -6,9 +6,9 @@ require("./user");
 
 require("./systemconfig");
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var mongoURL = process.env.MONGO_URL;
+const mongoURL = process.env.MONGO_URL;
 var mongoDB = mongoURL;
 mongoose.connect(mongoDB, {
   useNewUrlParser: true

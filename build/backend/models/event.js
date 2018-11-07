@@ -1,6 +1,6 @@
 "use strict";
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 var EventSchema = new mongoose.Schema({
   name: {

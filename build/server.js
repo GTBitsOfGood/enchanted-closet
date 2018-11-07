@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const app = express();
-const PORT = 3001 || process.env.port;
+const PORT = 3000 || process.env.port;
 
 let DIR;
 let STATIC_DIR;

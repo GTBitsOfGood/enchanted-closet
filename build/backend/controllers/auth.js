@@ -1,8 +1,8 @@
 "use strict";
 
-var auth = require('../auth');
+const auth = require('../auth');
 
-module.exports.login = function (req, res, next) {
+module.exports.login = (req, res, next) => {
   if (!req.body.email) {
     res.locals.error = {
       status: 400,
@@ -22,7 +22,7 @@ module.exports.login = function (req, res, next) {
   auth.login({
     email: req.body.email,
     password: req.body.password
-  }, function (error, user) {
+  }, (error, user) => {
     if (error) {
       res.locals.error = {
         status: 403,
@@ -46,7 +46,7 @@ module.exports.login = function (req, res, next) {
   });
 };
 
-module.exports.register = function (req, res, next) {
+module.exports.register = (req, res, next) => {
   if (!req.body.email) {
     res.locals.error = {
       status: 400,
@@ -71,7 +71,7 @@ module.exports.register = function (req, res, next) {
     return next();
   }
 
-  auth.register(req.body, function (err, user) {
+  auth.register(req.body, (err, user) => {
     if (err) {
       if (err.code === 11000) {
         // 11000 is duplicate key
