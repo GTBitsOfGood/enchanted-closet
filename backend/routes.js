@@ -33,6 +33,7 @@ const eventUpload = multer({ storage: eventStorage })
 
 router.post('/login', controllers.auth.login)
 router.post('/register', controllers.auth.register)
+router.post('/resetPassword', controllers.auth.resetPassword)
 // router.post('/session/:id', auth.verifySession)
 
 router.get('/users', auth.checkAdmin, controllers.users.index)
