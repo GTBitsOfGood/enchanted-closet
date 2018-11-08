@@ -1,14 +1,10 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Link, Redirect, withRouter } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
-import Radium from 'radium'
+import React from 'react'
+import { Link, withRouter } from 'react-router-dom'
 
-import { Container, Card, Divider, Grid, Icon, Reveal, Segment, Message, Image, Button } from 'semantic-ui-react'
-import { LoginForm } from '../components/'
+import { Container, Card, Divider, Grid, Icon, Image, Button } from 'semantic-ui-react'
+import { ResetPasswordForm } from '../components/'
 
-const Login = () => (
+const ResetPassword = () => (
   <Grid verticalAlign="middle" columns='three' centered>
     <Grid.Row>
       <Grid.Column width={4} only="computer">
@@ -17,21 +13,21 @@ const Login = () => (
       <Grid.Column computer={8} mobile={16}>
         <Container fluid text>
           <Card fluid color='purple' >
-            <Card.Content header='Login' />
+            <Card.Content header='Reset Password' />
             <Card.Content>
-              <LoginForm />
+              <ResetPasswordForm />
             </Card.Content>
           </Card>
-          <Divider horizontal> Forgot Password? </Divider>
+          <Divider horizontal> Remember Password? </Divider>
           <Container textAlign="center">
             <Button
               color="violet"
               as={Link}
-              to='/reset-password'
-              icon labelPosition="right"
+              to='/login'
+              icon labelPosition="left"
             >
-              Reset Password
-              <Icon name="right arrow" />
+              Login
+              <Icon name="left arrow" />
             </Button>
           </Container>
           <Divider horizontal> New User? </Divider>
@@ -40,10 +36,10 @@ const Login = () => (
               color="violet"
               as={Link}
               to='/register'
-              icon labelPosition="right"
+              icon labelPosition="left"
             >
               Register a New Account
-              <Icon name="right arrow" />
+              <Icon name="left arrow" />
             </Button>
           </Container>
         </Container>
@@ -55,12 +51,4 @@ const Login = () => (
   </Grid>
 )
 
-const styles = {
-}
-
-const images = {
-  imgL: '../../public/images/EC_dress2-01.png',
-  imgR: '../../public/images/EC_dress4-01.png'
-}
-
-export default withRouter(Login)
+export default withRouter(ResetPassword)
