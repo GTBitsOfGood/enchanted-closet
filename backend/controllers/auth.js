@@ -100,6 +100,8 @@ module.exports.resetPassword = (req, res, next) => {
     return next()
   }
   // Valid request
-  res.locals.data = {}
+  res.locals.data = {
+    msg: 'Check your email for your new temporary password'
+  }
   return next()
 }
