@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import { fetchUsers, promoteUser, deleteUser } from '../../actions/'
 
 import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react'
-import { withRouter, Link , Redirect, Route} from 'react-router-dom'
+import { withRouter, Link} from 'react-router-dom'
 
 import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, LoadingIcon, PageTitle, PastEventsCard } from '../../components'
 
@@ -64,7 +64,7 @@ class AdminUsersDetail extends Component {
 
   render () {
     const { loading, hasPerformedUpdate, userId, user } = this.state
-    const { promoteUser, deleteUser} = this.props
+    const { promoteUser} = this.props
     const name = user ? `${user.firstName} ${user.lastName}`
       : 'Name not found'
 
