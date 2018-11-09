@@ -95,7 +95,7 @@ module.exports.delete = (req, res, next) => {
   User.findById(req.params.id).remove((err, user) => {
     if (user) {
       res.locals.data = {
-        msg: 'User succesfully dleeted'
+        msg: 'User successfully deleted'
       }
       return next()
     } else {
@@ -128,7 +128,7 @@ const manualUpdate = async (newProps, id, res, next) => {
     res.locals.data = {
       user: updated
     }
-    
+
   } catch(e) {
     res.locals.error = {
       status: 500,
@@ -151,7 +151,7 @@ module.exports.update = async (req, res, next) => {
 
   const _id = req.params.id
   let newProps = {}
-  
+
   // ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
   if (req.body.birthday) {
     newProps.birthday = new Date(req.body.birthday)
