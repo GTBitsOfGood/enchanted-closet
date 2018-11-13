@@ -89,3 +89,17 @@ module.exports.register = (req, res, next) => {
     return next()
   })
 }
+
+// FIXME this is a stub for the frontend, need real implementation
+module.exports.resetPassword = (req, res, next) => {
+  if (!req.body.email) {
+    res.locals.error = {
+      code: 400,
+      msg: 'Email field required'
+    }
+    return next()
+  }
+  // Valid request
+  res.locals.data = {}
+  return next()
+}
