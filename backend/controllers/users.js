@@ -27,7 +27,7 @@ module.exports.index = (req, res, next) => {
     })
 }
 
-function lacksAny (obj, props) {
+function lacksAny(obj, props) {
   for (let p in props) {
     if (!(obj[p])) {
       return p
@@ -36,7 +36,7 @@ function lacksAny (obj, props) {
   return false
 }
 
-function matchesComplexityRequirements (password) {
+function matchesComplexityRequirements(password) {
   if (password.length < 7) return false
   let hasAlpha = false
   let hasNum = false
@@ -109,7 +109,38 @@ module.exports.delete = (req, res, next) => {
   })
 }
 
-module.exports.update = (req, res, next) => {
+const manualUpdate = async (newProps, id, res, next) => {
+  // TODO: Sam update error object or at least addd message if any of these fail
+  let doc = null
+  try {
+    doc = await User.findById(id)
+    doc.set(newProps)
+  } catch (e) {
+    res.locals.error = {
+      status: 404,
+      msg: 'User not found with desired ID'
+    }
+    return next(new Error(res.locals.error))
+  }
+
+  try {
+    let updated = await doc.save()
+    res.locals.data = {
+      user: updated
+    }
+    
+  } catch(e) {
+    res.locals.error = {
+      status: 500,
+      msg: 'Unable to save user changes to db'
+    }
+  }
+
+  return next()
+
+}
+
+module.exports.update = async (req, res, next) => {
   if (!req.params.id) {
     res.locals.error = {
       status: 400,
@@ -117,33 +148,10 @@ module.exports.update = (req, res, next) => {
     }
     return next()
   }
+
+  const _id = req.params.id
   let newProps = {}
-
-  if (req.body.password) {
-    // TODO: verify old password
-    let token = req.headers.authorization
-    if (!token.startsWith('Bearer ')) {
-      res.locals.error = {
-        status: 403,
-        msg: 'Not authorized (must be admin)'
-      }
-      return next(new Error(res.locals.error))
-    }
-    token = token.substring(7)
-    auth.currentUser(token, (_, curr) => {
-      if (req.params.id !== curr) {
-        res.locals.error = {
-          status: 403,
-          msg: 'Not authorized (must be admin)'
-        }
-        return next(new Error(res.locals.error))
-      }
-      if (matchesComplexityRequirements(req.body.data['password'])) {
-        newProps['password'] = hash.genNew(req.body.data.password)
-      }
-    })
-  }
-
+  
   // ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
   if (req.body.birthday) {
     newProps.birthday = new Date(req.body.birthday)
@@ -175,31 +183,93 @@ module.exports.update = (req, res, next) => {
   if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation
   }
-  // TODO: Sam update error object or at least addd message if any of these fail
-  User.findById(req.params.id, (err, doc) => {
-    if (err) {
+  // for when you update an existing password
+  if (req.body.currentPassword && req.body.newPassword) {
+    let token = req.headers.authorization
+    if (!token.startsWith('Bearer ')) {
       res.locals.error = {
-        status: 404,
-        msg: 'User not found with desired ID'
+        status: 403,
+        msg: 'Not authorized (must be admin)'
       }
       return next(new Error(res.locals.error))
-    } else {
-      doc.set(newProps)
-      doc.save((err, updated) => {
-        if (err) {
-          res.locals.error = {
-            status: 500,
-            msg: 'Unable to save user changes to db'
-          }
-        } else {
-          res.locals.data = {
-            user: updated
-          }
-        }
-        return next()
-      })
     }
-  })
+    token = token.substring(7)
+    auth.currentUser(token, (_, curr) => {
+      if (req.params.id !== curr) {
+        res.locals.error = {
+          status: 403,
+          msg: 'Not authorized (must be admin)'
+        }
+        return next(new Error(res.locals.error))
+      }
+    })
+    const data = { email: req.body.email, password: req.body.currentPassword }
+    auth.validatePassword(data, async (err, result) => {
+      if (err) {
+        res.locals.error = {
+          status: 400,
+          msg: 'Incorrect password'
+        }
+        return next(new Error(res.locals.error))
+      }
+      if (matchesComplexityRequirements(req.body.currentPassword)) {
+        newProps.password = hash.genNew(req.body.newPassword)
+        await manualUpdate(newProps, _id, res, next)
+      }
+    })
+  }
+
+  // setting password on a new user
+  if (req.body.password && !req.body.newPassword) {
+    let token = req.headers.authorization
+    if (!token.startsWith('Bearer ')) {
+      res.locals.error = {
+        status: 403,
+        msg: 'Not authorized (must be admin)'
+      }
+      return next(new Error(res.locals.error))
+    }
+    token = token.substring(7)
+    auth.currentUser(token, (_, curr) => {
+      if (req.params.id !== curr) {
+        res.locals.error = {
+          status: 403,
+          msg: 'Not authorized (must be admin)'
+        }
+        return next(new Error(res.locals.error))
+      }
+      if (matchesComplexityRequirements(req.body.data['password'])) {
+        newProps['password'] = hash.genNew(req.body.data.password)
+      }
+    })
+  }
+
+  if (!req.body.currentPassword || !req.body.newPassword) {
+    User.findById(req.params.id, (err, doc) => {
+      if (err) {
+        res.locals.error = {
+          status: 404,
+          msg: 'User not found with desired ID'
+        }
+        return next(new Error(res.locals.error))
+      } else {
+        doc.set(newProps)
+        doc.save((err, updated) => {
+          if (err) {
+            res.locals.error = {
+              status: 500,
+              msg: 'Unable to save user changes to db'
+            }
+          } else {
+            res.locals.data = {
+              user: updated
+            }
+          }
+          return next()
+        })
+      }
+    })
+  }
 }
 
 module.exports.upload = (req, res, next) => {
