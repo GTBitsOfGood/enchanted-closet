@@ -87,10 +87,6 @@ class EventsDetail extends Component {
     }
   }
 
-  cancelModal = () => {
-    console.log('modal cancel')
-  }
-
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
@@ -103,9 +99,9 @@ class EventsDetail extends Component {
     if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const registerBlock = (() => {
       if (event) {
-        const yesterday = new Date()
-        yesterday.setDate(yesterday.getDate() - 1)
-        if (new Date(event.startTime).getTime() > yesterday) { // flag: event still open condition
+        const today = new Date()
+        if (new Date(event.registrationStart) <= today &&
+        today < new Date(event.registrationEnd)) { // flag: event still open condition
           if (user) {
             if (!isProfileComplete(user)) {
               return (
@@ -211,6 +207,17 @@ class EventsDetail extends Component {
             ? moment(new Date(event.endTime)).format('h:mm a')
             : moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
           }</p>
+        {event.registrationStart && event.registrationEnd &&
+          <div>
+            <h4>Registration</h4>
+            <p><Icon name='clock'/> {moment(new Date(event.registrationStart)).format('MMMM Do YYYY, h:mm a')}
+              &nbsp;&#8209;&nbsp;
+              {sameDay(new Date(event.registrationStart), new Date(event.registrationEnd))
+                ? moment(new Date(event.registrationEnd)).format('h:mm a')
+                : moment(new Date(event.registrationEnd)).format('MMMM Do YYYY, h:mm a')
+              }</p>
+          </div>
+        }
       </Segment>
       <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
         <ButtonGallery>
@@ -221,7 +228,7 @@ class EventsDetail extends Component {
               header='Confirm Delete'
               content='Are you sure you want to delete this event?'
               actions={[
-                { key: 'cancel', content: 'Cancel', onClick: this.cancelModal},
+                'Cancel',
                 { key: 'done', content: 'Delete', negative: true, onClick: () => deleteEvent(event._id) }
               ]}
             />

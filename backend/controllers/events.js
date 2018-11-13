@@ -129,7 +129,7 @@ module.exports.present = (req, res, next) => {
 
       eDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -206,7 +206,7 @@ module.exports.absent = (req, res, next) => {
 
       eDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -275,7 +275,7 @@ module.exports.upload = (req, res, next) => {
     } else {
       doc.set(newProps)
       doc.save((err, updated) => {
-        console.log(err)
+        console.error(err)
         if (err) {
           res.locals.error = {
             status: 500,
@@ -332,23 +332,22 @@ module.exports.create = (req, res, next) => {
     }
     return next()
   }
-  
-  // uncomment when frontend is done
-  // if (!req.body.registrationStart) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Registration Start Date & Time field is required'
-  //   }
-  //   return next()
-  // }
+ 
+  if (!req.body.registrationStart) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration Start Date & Time field is required'
+    }
+    return next()
+  }
 
-  // if (!req.body.registrationEnd) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Registration End Date & Time field is required'
-  //   }
-  //   return next()
-  // }
+  if (!req.body.registrationEnd) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration End Date & Time field is required'
+    }
+    return next()
+  }
 
   Event.create({
     name: req.body.name,
@@ -356,9 +355,8 @@ module.exports.create = (req, res, next) => {
     location: req.body.location,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
-    // uncomment when frontend is done
-    // registrationStart: req.body.registrationStart,
-    // registrationEnd: req.body.registrationEnd,
+    registrationStart: req.body.registrationStart,
+    registrationEnd: req.body.registrationEnd,
     speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
   }, (err, result) => {
     if (err) {
@@ -449,7 +447,7 @@ module.exports.update = (req, res, next) => {
           code: 500,
           msg: 'Internal Server Error'
         }
-        console.log(err)
+        console.error(err)
         return next(new Error(res.locals.error))
       }
       res.locals.data = {

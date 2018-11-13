@@ -43,10 +43,10 @@ class EventsEdit extends Component {
       return (
         <Container>
           {loading &&
-     <LoadingIcon active/>
+            <LoadingIcon active/>
           }
           {!loading &&
-     <AdminEventsNew event={event} />
+            <AdminEventsNew event={event} />
           }
         </Container>
       )

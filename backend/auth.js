@@ -17,7 +17,7 @@ const authError = {
 }
 
 redisClient.on('error', function (err) {
-  console.log('Error ' + err)
+  console.error('Error ' + err)
 })
 
 const isAdmin = (id, callback) => {
@@ -90,11 +90,11 @@ const validatePassword = (data, callback) => {
   if (!data) {
     return callback(true, null)
   } else {
-   hash.checkAgainst(data, function (err, usr) {
+    hash.checkAgainst(data, function (err, usr) {
       if (err) {
         return callback(true, null)
       } else {
-        console.log("no error in validatePassword")
+        console.error("no error in validatePassword")
         return callback(false, usr)
       }
     })
@@ -227,7 +227,6 @@ module.exports.makeAdmin = (req, res, next) => {
 
 module.exports.idMatches = (req, res, next) => {
   let token = req.header('Authorization')
-  console.log(token)
   if (!token.startsWith('Bearer ')) {
     res.locals.error = {
       status: 403,

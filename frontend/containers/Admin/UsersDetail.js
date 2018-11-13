@@ -5,42 +5,41 @@ import { bindActionCreators } from 'redux'
 import { fetchUsers, promoteUser, deleteUser } from '../../actions/'
 
 import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react'
-import { withRouter, Link} from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 
 import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, LoadingIcon, PageTitle, PastEventsCard } from '../../components'
 
 class AdminUsersDetail extends Component {
   constructor (props) {
     super(props)
-    const { updateUserStore, users, match } = this.props
+    // I feel like this doesn't belong in constructor!!!!
+    const { updateUserStore, users, match, deleteUser, promoteUser } = this.props
     this.state = {
       userId: match.params.id,
       loading: false,
       hasPerformedUpdate: false
     }
+  }
 
-    if (!users) {
+  componentDidMount() {
+    if (!this.users) {
       this.loadUsers()
     } else {
-      const usr = users.filter(u => u._id === this.state.userId)
+      const usr = this.users.filter(u => u._id === this.state.userId)
       if (usr.length === 1) {
-        this.state = Object.assign({}, this.state, {
-          user: usr[0]
-        })
+        this.setState({ user: usr[0] })
       } else {
         this.loadUsers()
       }
     }
-    this.loadUsers = this.loadUsers.bind(this)
   }
 
-  loadUsers () {
-    const { updateUserStore } = this.props
+  loadUsers = () => {
     this.setState({
       loading: true,
       hasPerformedUpdate: true
     })
-    updateUserStore()
+    this.props.updateUserStore()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -54,17 +53,14 @@ class AdminUsersDetail extends Component {
     }
   }
 
-  handleDelete(userId){
-    this.setState({user:null})
-    const {deleteUser} = this.props
-    deleteUser(userId)
+  handleDelete = (userId) => {
+    this.setState({ user: null })
+    this.props.deleteUser(userId)
     this.props.history.push('/users')
   }
 
-
   render () {
     const { loading, hasPerformedUpdate, userId, user } = this.state
-    const { promoteUser} = this.props
     const name = user ? `${user.firstName} ${user.lastName}`
       : 'Name not found'
 
@@ -112,8 +108,8 @@ class AdminUsersDetail extends Component {
           header='Confirm Delete'
           content='Are you sure you want to delete this user?'
           actions={[
-            {key:'cancel', content:'Cancel', negative:true},
-            { key: 'done', content: 'Delete', positive: true, onClick:()=>this.handleDelete(userId)}
+            'Cancel',
+            { key: 'done', content: 'Delete', negative: true, onClick: () => this.handleDelete(userId) }
           ]}
         />
       </Container>
