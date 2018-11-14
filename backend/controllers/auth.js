@@ -1,6 +1,7 @@
 const auth = require('../auth')
 const User = require('mongoose').model('User')
 const hash = require('../hash')
+const mail = require('../gmailAuth')
 
 module.exports.login = (req, res, next) => {
   if (!req.body.email) {
@@ -105,9 +106,13 @@ module.exports.resetPassword = (req, res, next) => {
   User.findOne({ email: req.body.email }, (err, result) => {
     if (result) {
       makePassword().then(pass => {
-        result.password = pass
+        const plainPassword = pass[1]
+        result.password = pass[0]
+        result.passwordReset = true
         result.save((err, result) => {
           if (result) {
+            const msg = constructMessage(plainPassword)
+            mail.authSend(result.email, 'Password Reset', msg)
             res.locals.data = {
               status: 400,
               msg: 'Password reset'
@@ -139,6 +144,12 @@ module.exports.resetPassword = (req, res, next) => {
   })
 }
 
+function constructMessage(password) {
+  return 'Here is your temporary password \n' +
+    password + '\n' +
+    'please log in and change it immediately'
+}
+
 function makePassword() {
   let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
@@ -146,5 +157,5 @@ function makePassword() {
   for (let i = 0; i < 15; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
-  return Promise.resolve(hash.genNew(text))
+  return Promise.resolve([hash.genNew(text), text]) // yes hacky, no I don't care
 }

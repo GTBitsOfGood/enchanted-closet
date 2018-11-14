@@ -17,7 +17,7 @@ const TOKEN_PATH = 'token.json'
 module.exports.authSend = function authSend(receivers, subject, message) {
   // Authorize a client with credentials, then call the Gmail API.
   fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err)
+    if (err) return console.error('Error loading client secret file:', err)
     // Authorize a client with credentials, then call the Gmail API.
     authorize(JSON.parse(content), receivers, subject, message, sendMessage)
   })
@@ -74,8 +74,7 @@ function getNewToken(oAuth2Client, callback) {
 
 function makeBody(to, from, subject, message) {
   const email =
-    "From: " + 'enchanted.closet.atlanta.help@gmail.com' + "\n\n" +
-    "to: " + from.toString() + "\n" +
+    "to: " + to.toString() + "\n" +
     "from: " + from + "\n" +
     "subject: " + subject + "\n\n" +
     message
@@ -84,7 +83,6 @@ function makeBody(to, from, subject, message) {
 }
 
 function sendMessage(auth, receivers, subject, message) {
-  console.log(receivers.toString())
   var raw = makeBody(receivers.toString(), 'enchanted.closet.atlanta.help@gmail.com', subject, message)
   const gmail = google.gmail({ version: 'v1', auth })
   gmail.users.messages.send({

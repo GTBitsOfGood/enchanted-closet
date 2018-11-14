@@ -17,7 +17,7 @@ module.exports.index = (req, res, next) => {
         }
         return next()
       } else {
-        console.log(err)
+        console.error(err)
         res.locals.error = {
           msg: 'There are no users in the database',
           status: 404
@@ -469,7 +469,7 @@ module.exports.registerevent = (req, res, next) => {
 
       uDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -478,7 +478,7 @@ module.exports.registerevent = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
@@ -574,7 +574,7 @@ module.exports.denyRegistration = (req, res, next) => {
 
       uDoc.save((err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -583,7 +583,7 @@ module.exports.denyRegistration = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
@@ -673,7 +673,7 @@ module.exports.confirmRegistration = (req, res, next) => {
 
       uDoc.save((err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -682,7 +682,7 @@ module.exports.confirmRegistration = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
@@ -781,7 +781,7 @@ module.exports.cancelevent = (req, res, next) => {
 
       uDoc.save((err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -790,7 +790,7 @@ module.exports.cancelevent = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
