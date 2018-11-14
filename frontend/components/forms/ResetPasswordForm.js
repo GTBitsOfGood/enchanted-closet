@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Button, Form } from 'semantic-ui-react'
 import { formWrapper } from './'
-// FIXME in next PR: Add `performResetPassword` redux action
-// import { performResetPassword } from '../../actions/'
+import { performResetPassword } from '../../actions/'
 
 class ResetPasswordForm extends Component {
   constructor (props) {
@@ -87,7 +86,6 @@ class ResetPasswordForm extends Component {
   onSubmit = () => {
     const { ...formData } = this.state
     if (this.verifyAll()) {
-      this.props.setComplete('Resetting password...')
       this.props.performResetPassword(formData)
     } else {
       this.props.setError('The form is completed incorrectly.')
@@ -130,13 +128,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-    performResetPassword: console.warn // FIXME temporary
-  }
-  // FIXME in next PR: Tie `performPasswordReset` to an actual redux action
-  // return bindActionCreators({
-  //   performResetPassword: console.warn
-  // }, dispatch)
+  return bindActionCreators({
+    performResetPassword: performResetPassword
+  }, dispatch)
 }
 
 export default formWrapper(connect(
