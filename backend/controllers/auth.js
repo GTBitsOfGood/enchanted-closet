@@ -77,11 +77,9 @@ module.exports.register = (req, res, next) => {
           msg: 'A user with that email already exists'
         }
       } else {
-        if (err) {
-          res.locals.error = {
-            code: 500,
-            msg: err
-          }
+        res.locals.error = {
+          status: 500,
+          msg: err
         }
       }
       return next()
@@ -104,7 +102,16 @@ module.exports.resetPassword = (req, res, next) => {
   }
 
   User.findOne({ email: req.body.email }, (err, result) => {
-    if (err)
+    if (result) {
+      
+    } else {
+      // fail safe
+      res.locals.error = {
+        status: 500,
+        msg: err
+      }
+      return next()
+    }
   })
   // Valid request
   res.locals.data = {}
