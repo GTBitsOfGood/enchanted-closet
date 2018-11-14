@@ -70,3 +70,6 @@ dist/*
 dump.rdb
 
 .idea
+
+token.json
+credentials.json
