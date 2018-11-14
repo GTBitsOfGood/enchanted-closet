@@ -1,5 +1,6 @@
 const auth = require('../auth')
 const User = require('mongoose').model('User')
+const hash = require('../hash')
 
 module.exports.login = (req, res, next) => {
   if (!req.body.email) {
@@ -103,7 +104,30 @@ module.exports.resetPassword = (req, res, next) => {
 
   User.findOne({ email: req.body.email }, (err, result) => {
     if (result) {
-      
+      makePassword().then(pass => {
+        result.password = pass
+        result.save((err, result) => {
+          if (result) {
+            res.locals.data = {
+              status: 400,
+              msg: 'Password reset'
+            }
+            return next()
+          } else {
+            res.locals.error = {
+              status: 500,
+              msg: err
+            }
+            return next()
+          }
+        })
+      }, err => {
+        res.locals.error = {
+          status: 500,
+          msg: err
+        }
+        return next()
+      })
     } else {
       // fail safe
       res.locals.error = {
@@ -113,7 +137,14 @@ module.exports.resetPassword = (req, res, next) => {
       return next()
     }
   })
-  // Valid request
-  res.locals.data = {}
-  return next()
+}
+
+function makePassword() {
+  let text = ''
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+
+  for (let i = 0; i < 15; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+  return Promise.resolve(hash.genNew(text))
 }

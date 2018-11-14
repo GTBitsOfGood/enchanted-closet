@@ -128,8 +128,7 @@ const manualUpdate = async (newProps, id, res, next) => {
     res.locals.data = {
       user: updated
     }
-
-  } catch(e) {
+  } catch (e) {
     res.locals.error = {
       status: 500,
       msg: 'Unable to save user changes to db'
@@ -137,7 +136,6 @@ const manualUpdate = async (newProps, id, res, next) => {
   }
 
   return next()
-
 }
 
 module.exports.update = async (req, res, next) => {
