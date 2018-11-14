@@ -115,7 +115,6 @@ export function deleteUser (id) {
   }
 }
 
-
 export function promoteUser (id) {
   return (dispatch, getState) => {
     dispatch(loading())

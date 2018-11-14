@@ -112,6 +112,15 @@ class EventsDetail extends Component {
                 </Button>
               )
             }
+            if (user.passwordReset) {
+              return (
+                <Button>
+                  <Link to='/profile'>
+                    Change Your Password to Continue
+                  </Link>
+                </Button>
+              )
+            }
             // check block
             if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
               return (

@@ -212,6 +212,7 @@ module.exports.update = async (req, res, next) => {
       }
       if (matchesComplexityRequirements(req.body.currentPassword)) {
         newProps.password = hash.genNew(req.body.newPassword)
+        newProps.passwordReset = false
         await manualUpdate(newProps, _id, res, next)
       }
     })

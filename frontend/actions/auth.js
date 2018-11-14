@@ -70,7 +70,7 @@ export function performRegistration (data) {
 export function performResetPassword (data) {
   return dispatch => {
     dispatch(showModalLoader())
-    return fetchHelper(`/api/resetPassword`, null, {
+    return fetchHelper(`/api/reset-password`, null, {
       method: 'POST',
       headers: DEFAULT_HEADERS,
       body: JSON.stringify(data)

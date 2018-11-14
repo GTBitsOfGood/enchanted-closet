@@ -69,6 +69,13 @@ class BaseDashboard extends Component {
             content='We noticed that your profile is missing important information. Please enter all information into your profile'
           />) : null
         }
+        { this.props.user.passwordReset ? (
+          <Message style={ styles.wrap } error
+            header='Please change your password.'
+            content='We noticed that your password was reset. Please change it in the profile page.'
+          />
+        ) : null
+        }
         <Segment style={ styles.eventsContainer }>
           <Header as="h1" style={styles.header} > Upcoming Events </Header>
           <Divider />
