@@ -93,6 +93,14 @@ class ProfileForm extends Component {
     if (this.verifyAll()) {
       this.props.setComplete()
     }
+    if (this.state.userData.currentPassword && !this.state.userData.newPassword) {
+      this.props.setError()
+      this.updateStatus('newPassword', 1, false)
+    }
+    if (this.state.userData.newPassword && !this.state.userData.currentPassword) {
+      this.props.setError()
+      this.updateStatus('currentPassword', 1, false)
+    } 
   }
 
   blurFunctions = { // Implement finer control here
@@ -102,6 +110,11 @@ class ProfileForm extends Component {
     if (this.regFinalTest(field, e.target.value) || field === 'grade') {
       this.props.setValid()
       this.updateStatus(field, 0, true)
+      if (field === 'currentPassword' && !this.state.userData.newPassword && !this.state.userData.currentPassword) {
+        this.updateStatus('newPassword', 0, true)
+      } else if (field === 'newPassword' && !this.state.userData.currentPassword && !this.state.userData.newPassword) {
+        this.updateStatus('currentPassword', 0, true)
+      }
     } else {
       this.props.setError()
       this.updateStatus(field, 1, true)
