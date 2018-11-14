@@ -129,7 +129,7 @@ module.exports.present = (req, res, next) => {
 
       eDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err

@@ -1,4 +1,5 @@
 const auth = require('../auth')
+const User = require('mongoose').model('User')
 
 module.exports.login = (req, res, next) => {
   if (!req.body.email) {
@@ -76,9 +77,11 @@ module.exports.register = (req, res, next) => {
           msg: 'A user with that email already exists'
         }
       } else {
-        res.locals.error = {
-          status: 500,
-          msg: err
+        if (err) {
+          res.locals.error = {
+            code: 500,
+            msg: err
+          }
         }
       }
       return next()
@@ -99,6 +102,10 @@ module.exports.resetPassword = (req, res, next) => {
     }
     return next()
   }
+
+  User.findOne({ email: req.body.email }, (err, result) => {
+    if (err)
+  })
   // Valid request
   res.locals.data = {}
   return next()
