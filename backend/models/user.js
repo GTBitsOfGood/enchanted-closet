@@ -34,6 +34,7 @@ var UserSchema = new mongoose.Schema({
   },
   birthday: Date,
   grade: String,
+  tshirt: String,
   age: Number,
   race: String,
   school: String,

@@ -30,9 +30,9 @@ class UsersNew extends Component {
   }
 
   processData () {
-    const { _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone } = this.state
+    const { _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone, tshirt } = this.state
     const { upsertUser } = this.props
-    upsertUser({ _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone })
+    upsertUser({ _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone, tshirt })
   }
 
   render () {

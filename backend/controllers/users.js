@@ -5,6 +5,7 @@ const auth = require('../auth')
 let isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 let isPhone = /^(\+1 )?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}( x\d{1,5})?$/
 let grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+const tShirtSizes = ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl']
 const hash = require('../hash')
 
 module.exports.index = (req, res, next) => {
@@ -158,6 +159,9 @@ module.exports.update = async (req, res, next) => {
   }
   if (req.body.grade && grades.indexOf(req.body.grade !== -1)) {
     newProps.grade = req.body.grade
+  }
+  if (req.body.tshirt && tShirtSizes.indexOf(req.body.tshirt !== -1)) {
+    newProps.tshirt = req.body.tshirt
   }
   if (req.body.age) {
     newProps.age = req.body.age
@@ -336,6 +340,9 @@ module.exports.create = (req, res, next) => {
   }
   if (req.body.grade && grades.indexOf(req.body.grade !== -1)) {
     newProps.grade = req.body.grade
+  }
+  if (req.body.tshirt && tShirtSizes.indexOf(req.body.tshirt !== -1)) {
+    newProps.tshirt = req.body.tshirt
   }
   if (req.body.age) {
     newProps.age = req.body.age

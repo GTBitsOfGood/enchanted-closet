@@ -27,7 +27,7 @@ class ProfileForm extends Component {
       // dropdown: "6"
     }
 
-    this.handleChange = this.handleChange.bind(this)
+    this.handleChangeFunctionFactory = this.handleChangeFunctionFactory.bind(this)
   }
 
   regLegalTest = (field, val) => {
@@ -64,7 +64,7 @@ class ProfileForm extends Component {
   // Filter is what filter to apply to value into state
   changeFunctionFactory = (field, warningMessage, filter) => {
     return e => {
-      if (this.regLegalTest(field, e.target.value) || field === 'grade') {
+      if (this.regLegalTest(field, e.target.value) || field === 'grade' || field === 'tshirt') {
         this.props.setValid()
         this.setState({ userData: { ...this.state.userData, [field]: (filter ? filter(e.target.value) : e.target.value) } })
         this.updateStatus(field, 0)
@@ -73,13 +73,8 @@ class ProfileForm extends Component {
       }
     }
   }
-  handleChange (event) {
-    var text = event.target.innerHTML.substring(19, 21)
-    if (text.substring(1, 2) === '<') {
-      text = text.substring(0, 1)
-    }
-    this.setState({ userData: { ...this.state.userData, 'grade': text } })
-    // this.updateStatus('grade', 0);
+  handleChangeFunctionFactory = key => (event, data) => {
+    this.setState({ userData: { ...this.state.userData, [key]: data.value } })
   }
 
   // verify cb
@@ -99,7 +94,7 @@ class ProfileForm extends Component {
   }
 
   blurFunctionFactory = field => (e) => {
-    if (this.regFinalTest(field, e.target.value) || field === 'grade') {
+    if (this.regFinalTest(field, e.target.value) || field === 'grade' || field === 'tshirt') {
       this.props.setValid()
       this.updateStatus(field, 0, true)
     } else {
@@ -145,18 +140,14 @@ class ProfileForm extends Component {
           {
             Object.keys(this.targets).map(key => {
               const tar = this.targets[key]
-              if (key === 'grade') {
+              if (key === 'grade' || key === 'tshirt') {
                 return (
                   <Form.Select
                     key={`profile${key}`}
                     label={tar.label ? tar.label : startCase(key)}
                     options={this.targets[key]['options']}
-                    // placeholder='Grade'
-                    value={
-                      userData[key]
-                    }
-                    // onChange={this.handleChange}
-                    onChange={this.handleChange}
+                    value={userData[key]}
+                    onChange={this.handleChangeFunctionFactory(key)}
                     onBlur={this.blurFunctionFactory(key)}
                   />
 
