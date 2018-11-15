@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Button, Form } from 'semantic-ui-react'
 import { formWrapper } from './'
-import { performResetPassword } from '../../actions/'
-
+import { performResetPassword } from '../../actions/auth'
 class ResetPasswordForm extends Component {
   constructor (props) {
     super(props)

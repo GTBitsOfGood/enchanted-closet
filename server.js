@@ -9,6 +9,7 @@ const compression = require('compression')
 const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const favicon = require('serve-favicon')
+const gmail = require('./backend/gmailAuth')
 const app = express()
 const PORT = 3001
 
@@ -21,7 +22,6 @@ app.use(compression())
 app.use(helmet())
 const db = require('./backend/models/db')
 const api = require('./backend/routes')
-
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api', api) // Server Routing
 app.get('/*', (req, res) => { // Else, give to React

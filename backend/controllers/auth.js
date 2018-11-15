@@ -1,4 +1,7 @@
 const auth = require('../auth')
+const User = require('mongoose').model('User')
+const hash = require('../hash')
+const mail = require('../gmailAuth')
 
 module.exports.login = (req, res, next) => {
   if (!req.body.email) {
@@ -99,9 +102,60 @@ module.exports.resetPassword = (req, res, next) => {
     }
     return next()
   }
-  // Valid request
-  res.locals.data = {
-    msg: 'Check your email for your new temporary password'
+
+  User.findOne({ email: req.body.email }, (err, result) => {
+    if (result) {
+      makePassword().then(pass => {
+        const plainPassword = pass[1]
+        result.password = pass[0]
+        result.passwordReset = true
+        result.save((err, result) => {
+          if (result) {
+            const msg = constructMessage(plainPassword)
+            mail.authSend(result.email, 'Password Reset', msg)
+            res.locals.data = {
+              status: 400,
+              msg: 'Password reset'
+            }
+            return next()
+          } else {
+            res.locals.error = {
+              status: 500,
+              msg: err
+            }
+            return next()
+          }
+        })
+      }, err => {
+        res.locals.error = {
+          status: 500,
+          msg: err
+        }
+        return next()
+      })
+    } else {
+      // fail safe
+      res.locals.error = {
+        status: 500,
+        msg: err
+      }
+      return next()
+    }
+  })
+}
+
+function constructMessage(password) {
+  return 'Here is your temporary password \n' +
+    password + '\n' +
+    'please log in and change it immediately'
+}
+
+function makePassword() {
+  let text = ''
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+
+  for (let i = 0; i < 15; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
-  return next()
+  return Promise.resolve([hash.genNew(text), text]) // yes hacky, no I don't care
 }

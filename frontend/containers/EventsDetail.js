@@ -87,10 +87,6 @@ class EventsDetail extends Component {
     }
   }
 
-  cancelModal = () => {
-    console.log('modal cancel')
-  }
-
   render () {
     const { user, deleteEvent, registerEvent, cancelEvent } = this.props
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
@@ -112,6 +108,15 @@ class EventsDetail extends Component {
                 <Button>
                   <Link to='/profile'>
                     Complete Profile to Register
+                  </Link>
+                </Button>
+              )
+            }
+            if (user.passwordReset) {
+              return (
+                <Button>
+                  <Link to='/profile'>
+                    Change Your Password to Continue
                   </Link>
                 </Button>
               )
@@ -221,7 +226,7 @@ class EventsDetail extends Component {
               header='Confirm Delete'
               content='Are you sure you want to delete this event?'
               actions={[
-                { key: 'cancel', content: 'Cancel', onClick: this.cancelModal},
+                'Cancel',
                 { key: 'done', content: 'Delete', negative: true, onClick: () => deleteEvent(event._id) }
               ]}
             />

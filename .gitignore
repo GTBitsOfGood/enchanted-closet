@@ -64,9 +64,13 @@ typings/
 !public/**/*.jpg
 # macOS Index File
 .DS_Store
+.vscode
 
 dist/*
 
 dump.rdb
 
 .idea
+
+token.json
+credentials.json
