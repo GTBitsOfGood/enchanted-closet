@@ -120,11 +120,12 @@ module.exports.yearReport = (req, res, next) => {
     maximumDate.setFullYear(year, 11, 31)
   }
 
+
   Event
     .find({
-      datetime: {
+      startTime: {
         $lte: maximumDate,
-        $gt: minimumDate
+        $gte: minimumDate
       }
     })
     .populate('participants')
@@ -163,7 +164,9 @@ module.exports.yearReport = (req, res, next) => {
             }
           })
         }
+
         if (e.participantsAttended.length !== 0) {
+          console.log(e.participantsAttended)
           e.participants.forEach(u => {
             const userInfo = u
             if (e.participantsAttended.find(id => u._id.toString() === id.toString())) {
