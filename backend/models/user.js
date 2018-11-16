@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
+const validator = require('validator')
 // const Event = mongoose.model('event');
 
 var UserSchema = new mongoose.Schema({
@@ -15,7 +16,8 @@ var UserSchema = new mongoose.Schema({
     type: String,
     index: true,
     required: true,
-    unique: true
+    unique: true,
+    validate: [ validator.isEmail, 'invalid email' ]
   },
   password: {
     type: String,
