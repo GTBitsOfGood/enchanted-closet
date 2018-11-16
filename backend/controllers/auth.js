@@ -29,7 +29,7 @@ module.exports.login = (req, res, next) => {
         status: 403,
         msg: error
       }
-      return next(new Error(res.locals.error))
+      return next()
     }
     if (user) {
       res.locals.data = {
