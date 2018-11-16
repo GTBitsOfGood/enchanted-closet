@@ -20,12 +20,13 @@ class AdminUsersDetail extends Component {
     }
   }
 
-  componentWillMount(){
+  componentDidMount(){
+
     const { updateUserStore, users, match } = this.props
     if (!users) {
       this.loadUsers()
     } else {
-      const usr = this.users.filter(u => u._id === this.state.userId)
+      const usr = users.filter(u => u._id === this.state.userId)
       if (usr.length === 1) {
         this.setState({ user: usr[0] })
       } else {
