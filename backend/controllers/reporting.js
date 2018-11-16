@@ -166,7 +166,6 @@ module.exports.yearReport = (req, res, next) => {
         }
 
         if (e.participantsAttended.length !== 0) {
-          console.log(e.participantsAttended)
           e.participants.forEach(u => {
             const userInfo = u
             if (e.participantsAttended.find(id => u._id.toString() === id.toString())) {
