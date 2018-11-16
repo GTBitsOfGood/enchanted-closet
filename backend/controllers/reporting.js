@@ -120,7 +120,6 @@ module.exports.yearReport = (req, res, next) => {
     maximumDate.setFullYear(year, 11, 31)
   }
 
-
   Event
     .find({
       startTime: {
