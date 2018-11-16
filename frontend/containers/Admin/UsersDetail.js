@@ -12,13 +12,16 @@ import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, Lo
 class AdminUsersDetail extends Component {
   constructor (props) {
     super(props)
-    const { updateUserStore, users, match } = this.props
+    const { match } = this.props
     this.state = {
       userId: match.params.id,
       loading: false,
       hasPerformedUpdate: false
     }
+  }
 
+  componentWillMount(){
+    const { updateUserStore, users, match } = this.props
     if (!users) {
       this.loadUsers()
     } else {
@@ -31,17 +34,14 @@ class AdminUsersDetail extends Component {
         this.loadUsers()
       }
     }
-    this.loadUsers = this.loadUsers.bind(this)
-  }
 
+  }
   loadUsers () {
     const { updateUserStore } = this.props
-    //do not change this to setState. setState will not work until the component is mounted.
-    //loadUsers is first invoked in the constructor so we have to mutate the state directly
-    this.state = Object.assign({}, this.state,
-      {loading: true,
-      hasPerformedUpdate: true}
-    )
+    this.setState({
+      loading:true,
+      hasPerformedUpdate:true
+    })
     updateUserStore()
   }
 
