@@ -122,9 +122,9 @@ module.exports.yearReport = (req, res, next) => {
 
   Event
     .find({
-      datetime: {
+      startTime: {
         $lte: maximumDate,
-        $gt: minimumDate
+        $gte: minimumDate
       }
     })
     .populate('participants')
