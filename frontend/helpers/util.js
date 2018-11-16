@@ -3,13 +3,14 @@ export function isProfileComplete (user) {
     'Participant': [
       'leader', 'race', 'phone', 'school',
       'emergencyContactName', 'emergencyContactPhone',
-      'emergencyContactRelation', 'grade'
+      'emergencyContactRelation', 'grade', 'tshirt'
     ],
     'Volunteer': [
       'phone',
       'emergencyContactName',
       'emergencyContactPhone',
-      'emergencyContactRelation'
+      'emergencyContactRelation',
+      'tshirt'
     ],
     'Admin': []
   }

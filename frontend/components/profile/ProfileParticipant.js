@@ -40,6 +40,18 @@ const targets = {
   'emergencyContactRelation': {
     isLegal: val => /^[a-zA-Z\s]*$/.test(val)
   },
+  'tshirt': {
+    isLegal: val => /^$|^(Extra\sSmall|Small|Medium|Large|Extra\sLarge|2\sExtra\sLarge|3\sExtra\sLarge)$/.test(val),
+    options: [
+      { key: 'Extra Small', text: 'Extra Small', value: 'Extra Small' },
+      { key: 'Small', text: 'Small', value: 'Small' },
+      { key: 'Medium', text: 'Medium', value: 'Medium' },
+      { key: 'Large', text: 'Large', value: 'Large' },
+      { key: 'Extra Large', text: 'Extra Large', value: 'Extra Large' },
+      { key: '2x Extra Large', text: '2x Extra Large', value: '2x Extra Large' },
+      { key: '3x Extra Large', text: '3x Extra Large', value: '3x Extra Large' }
+    ]
+  },
   'currentPassword': {
     isLegal: val => /^[a-zA-Z0-9.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ]*$/.test(val),
     isFinal: val => /^(?=.*[A-Za-z.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~` ])(?=.*\d)[A-Za-z\d.!@?#$%&:;()*\+,\/;\-=[\\\]\^_{|}<>~`]{7,}$/.test(val)
