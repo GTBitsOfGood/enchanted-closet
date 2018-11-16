@@ -94,7 +94,6 @@ const validatePassword = (data, callback) => {
       if (err) {
         return callback(true, null)
       } else {
-        console.error('no error in validatePassword')
         return callback(false, usr)
       }
     })

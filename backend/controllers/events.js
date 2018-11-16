@@ -330,23 +330,22 @@ module.exports.create = (req, res, next) => {
     }
     return next()
   }
+ 
+  if (!req.body.registrationStart) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration Start Date & Time field is required'
+    }
+    return next()
+  }
 
-  // uncomment when frontend is done
-  // if (!req.body.registrationStart) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Registration Start Date & Time field is required'
-  //   }
-  //   return next()
-  // }
-
-  // if (!req.body.registrationEnd) {
-  //   res.locals.error = {
-  //     status: 400,
-  //     msg: 'Registration End Date & Time field is required'
-  //   }
-  //   return next()
-  // }
+  if (!req.body.registrationEnd) {
+    res.locals.error = {
+      status: 400,
+      msg: 'Registration End Date & Time field is required'
+    }
+    return next()
+  }
 
   Event.create({
     name: req.body.name,
@@ -354,9 +353,8 @@ module.exports.create = (req, res, next) => {
     location: req.body.location,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
-    // uncomment when frontend is done
-    // registrationStart: req.body.registrationStart,
-    // registrationEnd: req.body.registrationEnd,
+    registrationStart: req.body.registrationStart,
+    registrationEnd: req.body.registrationEnd,
     speakers: req.body.speakers ? req.body.speakers.split(',').map(e => e.trim()) : []
   }, (err, result) => {
     if (err) {

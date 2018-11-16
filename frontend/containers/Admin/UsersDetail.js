@@ -12,7 +12,8 @@ import { ContactCard, DemographicsCard, EmergencyContactCard, ErrorComponent, Lo
 class AdminUsersDetail extends Component {
   constructor (props) {
     super(props)
-    const { match } = this.props
+    // I feel like this doesn't belong in constructor!!!!
+    const { updateUserStore, users, match, deleteUser, promoteUser } = this.props
     this.state = {
       userId: match.params.id,
       loading: false,
@@ -20,26 +21,23 @@ class AdminUsersDetail extends Component {
     }
   }
 
-  componentDidMount(){
-
-    const { updateUserStore, users, match } = this.props
-    if (!users) {
+  componentDidMount() {
+    if (!this.users) {
       this.loadUsers()
     } else {
-      const usr = users.filter(u => u._id === this.state.userId)
+      const usr = this.users.filter(u => u._id === this.state.userId)
       if (usr.length === 1) {
         this.setState({ user: usr[0] })
       } else {
         this.loadUsers()
       }
     }
-
   }
-  loadUsers () {
-    const { updateUserStore } = this.props
+
+  loadUsers = () => {
     this.setState({
-      loading:true,
-      hasPerformedUpdate:true
+      loading: true,
+      hasPerformedUpdate: true
     })
     this.props.updateUserStore()
   }

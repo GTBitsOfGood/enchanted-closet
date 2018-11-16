@@ -28,16 +28,32 @@ class Event extends Component {
                   trigger={(
                     <Container style={style.whiteText}>
                       <Icon name='calendar'/>
-                      {moment(new Date(data.startTime)).format('MMMM Do YYYY, h:mm a')}
+                      {moment(new Date(data.startTime)).format('Do MMM YYYY, h:mm a')}
                       &nbsp;&#8209;&nbsp;
-                      {sameDay(new Date(data.startTime), new Date(data.endTime)) ?
-                        moment(new Date(data.endTime)).format('h:mm a') :
-                        moment(new Date(data.endTime)).format('MMMM Do YYYY, h:mm a')
+                      {sameDay(new Date(data.startTime), new Date(data.endTime))
+                        ? moment(new Date(data.endTime)).format('h:mm a')
+                        : moment(new Date(data.endTime)).format('Do MMM YYYY, h:mm a')
                       }
                     </Container>
                   )}
                   content="Date"
                 />
+                {data.registrationStart && data.registrationEnd && // for old events in the DB so they don't break
+                  <Popup inverted
+                    trigger={(
+                      <Container style={style.whiteText}>
+                        <Icon name='clock'/>
+                        {moment(new Date(data.registrationStart)).format('Do MMM YYYY, h:mm a')}
+                        &nbsp;&#8209;&nbsp;
+                        {sameDay(new Date(data.registrationStart), new Date(data.registrationEnd))
+                          ? moment(new Date(data.registrationEnd)).format('h:mm a')
+                          : moment(new Date(data.registrationEnd)).format('Do MMM YYYY, h:mm a')
+                        }
+                      </Container>
+                    )}
+                    content="Date"
+                  />
+                }
                 <Popup inverted
                   trigger={(
                     <Container style={style.whiteText}>

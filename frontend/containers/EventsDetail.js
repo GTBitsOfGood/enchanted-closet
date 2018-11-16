@@ -99,9 +99,9 @@ class EventsDetail extends Component {
     if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
     const registerBlock = (() => {
       if (event) {
-        const yesterday = new Date()
-        yesterday.setDate(yesterday.getDate() - 1)
-        if (new Date(event.startTime).getTime() > yesterday) { // flag: event still open condition
+        const today = new Date()
+        if (new Date(event.registrationStart) <= today &&
+        today < new Date(event.registrationEnd)) { // flag: event still open condition
           if (user) {
             if (!isProfileComplete(user)) {
               return (
@@ -152,11 +152,19 @@ class EventsDetail extends Component {
             )
           }
         } else {
-          return (
-            <Button disabled>
-              Registration Closed
-            </Button>
-          )
+          if (today < new Date(event.registrationEnd)) {
+            return (
+              <Button disabled>
+                Registration Not Open
+              </Button>
+            )
+          } else {
+            return (
+              <Button disabled>
+                Registration Closed
+              </Button>
+            )
+          }
         }
       }
     })()
@@ -216,6 +224,17 @@ class EventsDetail extends Component {
             ? moment(new Date(event.endTime)).format('h:mm a')
             : moment(new Date(event.endTime)).format('MMMM Do YYYY, h:mm a')
           }</p>
+        {event.registrationStart && event.registrationEnd &&
+          <div>
+            <h4>Registration</h4>
+            <p><Icon name='clock'/> {moment(new Date(event.registrationStart)).format('MMMM Do YYYY, h:mm a')}
+              &nbsp;&#8209;&nbsp;
+              {sameDay(new Date(event.registrationStart), new Date(event.registrationEnd))
+                ? moment(new Date(event.registrationEnd)).format('h:mm a')
+                : moment(new Date(event.registrationEnd)).format('MMMM Do YYYY, h:mm a')
+              }</p>
+          </div>
+        }
       </Segment>
       <RoleCheck roles={['Admin', 'Volunteer', 'Participant']}>
         <ButtonGallery>
