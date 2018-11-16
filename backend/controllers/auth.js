@@ -93,7 +93,6 @@ module.exports.register = (req, res, next) => {
   })
 }
 
-// FIXME this is a stub for the frontend, need real implementation
 module.exports.resetPassword = (req, res, next) => {
   if (!req.body.email) {
     res.locals.error = {
@@ -103,44 +102,68 @@ module.exports.resetPassword = (req, res, next) => {
     return next()
   }
 
-  User.findOne({ email: req.body.email }, (err, result) => {
-    if (result) {
-      makePassword().then(pass => {
-        const plainPassword = pass[1]
-        result.password = pass[0]
-        result.passwordReset = true
-        result.save((err, result) => {
-          if (result) {
-            const msg = constructMessage(plainPassword)
-            mail.authSend(result.email, 'Password Reset', msg)
-            res.locals.data = {
-              status: 400,
-              msg: 'Password reset'
-            }
-            return next()
-          } else {
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if (err) {
+      // Fail safe
+      res.locals.error = {
+        status: 500,
+        msg: err
+      }
+      return next()
+    } else if (!user) {
+      // User not found
+      res.locals.error = {
+        status: 404,
+        msg: 'Invalid email'
+      }
+      return next()
+    } else if (user.passwordReset) {
+      // Password was last reset by system, prevent consecutive reset
+      res.locals.error = {
+        status: 429, // Client Error: Too Many Requests
+        msg: 'Password was already reset, you will not receive another email.' +
+          ' Please search your email for your temporary password.'
+      }
+      return next()
+    }
+    makePassword().then(pass => {
+      const plainPassword = pass[1]
+      user.password = pass[0]
+      user.passwordReset = true
+      const msg = constructMessage(plainPassword)
+      mail.authSend(user.email, 'Password Reset', msg, err => {
+        if (err) {
+          // Failed to send email
+          res.locals.error = {
+            status: 500,
+            msg: err
+          }
+          return next()
+        }
+        // Email sent successfully, save user in DB
+        user.save(err => {
+          if (err) {
             res.locals.error = {
               status: 500,
               msg: err
             }
             return next()
           }
+          res.locals.data = {
+            status: 200,
+            msg: 'Password reset, please check your email for your temporary password.'
+          }
+          return next()
         })
-      }, err => {
-        res.locals.error = {
-          status: 500,
-          msg: err
-        }
-        return next()
       })
-    } else {
-      // fail safe
+    }).catch(err => {
+      // Failed to create new temporary a password
       res.locals.error = {
         status: 500,
         msg: err
       }
       return next()
-    }
+    })
   })
 }
 

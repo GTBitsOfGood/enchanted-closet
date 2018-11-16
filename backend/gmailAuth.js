@@ -14,12 +14,14 @@ const TOKEN_PATH = 'token.json'
 // Should be getting and updating token in database!!!!!!
 
 // Load client secrets from a local file.
-module.exports.authSend = function authSend(receivers, subject, message) {
+module.exports.authSend = function authSend(receivers, subject, message, callback) {
   // Authorize a client with credentials, then call the Gmail API.
   fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.error('Error loading client secret file:', err)
+    if (err) {
+      return callback(err)
+    }
     // Authorize a client with credentials, then call the Gmail API.
-    authorize(JSON.parse(content), receivers, subject, message, sendMessage)
+    authorize(JSON.parse(content), receivers, subject, message, callback)
   })
 }
 
@@ -27,7 +29,6 @@ module.exports.authSend = function authSend(receivers, subject, message) {
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
  * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials, receivers, subject, message, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.installed
@@ -35,9 +36,11 @@ function authorize(credentials, receivers, subject, message, callback) {
 
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback)
+    if (err) {
+      return getNewToken(oAuth2Client, callback)
+    }
     oAuth2Client.setCredentials(JSON.parse(token))
-    callback(oAuth2Client, receivers, subject, message)
+    sendMessage(oAuth2Client, receivers, subject, message, callback)
   })
 }
 
@@ -45,7 +48,6 @@ function authorize(credentials, receivers, subject, message, callback) {
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
  */
 function getNewToken(oAuth2Client, callback) {
   const authUrl = oAuth2Client.generateAuthUrl({
@@ -60,14 +62,18 @@ function getNewToken(oAuth2Client, callback) {
   rl.question('Enter the code from that page here: ', (code) => {
     rl.close()
     oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error retrieving access token', err)
+      if (err) {
+        return callback(err)
+      }
       oAuth2Client.setCredentials(token)
       // Store the token to disk for later program executions
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err)
+        if (err) {
+          return callback(err)
+        }
         console.log('Token stored to', TOKEN_PATH)
       })
-      callback(oAuth2Client)
+      sendMessage(oAuth2Client, callback)
     })
   })
 }
@@ -82,7 +88,7 @@ function makeBody(to, from, subject, message) {
   return encodedMail
 }
 
-function sendMessage(auth, receivers, subject, message) {
+function sendMessage(auth, receivers, subject, message, callback) {
   var raw = makeBody(receivers.toString(), 'enchanted.closet.atlanta.help@gmail.com', subject, message)
   const gmail = google.gmail({ version: 'v1', auth })
   gmail.users.messages.send({
@@ -93,7 +99,8 @@ function sendMessage(auth, receivers, subject, message) {
     }
   }, function(err, response) {
     if (err) {
-      console.error(err)
+      return callback(err)
     }
+    return callback(null, response)
   })
 }

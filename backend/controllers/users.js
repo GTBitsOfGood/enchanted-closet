@@ -239,6 +239,7 @@ module.exports.update = async (req, res, next) => {
       }
       if (matchesComplexityRequirements(req.body.data['password'])) {
         newProps['password'] = hash.genNew(req.body.data.password)
+        newProps.passwordReset = false
       }
     })
   }

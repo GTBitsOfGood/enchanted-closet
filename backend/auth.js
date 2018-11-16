@@ -309,7 +309,11 @@ function volunteerRegisterEmail(user) {
         console.error(err)
       }
       users.forEach(u => admins.push(u.email))
-      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look')
+      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look', err => {
+        if (err) {
+          console.error(err)
+        }
+      })
     })
   }
 }
