@@ -60,7 +60,8 @@
     "semantic-ui-css": "2.3.1",
     "semantic-ui-react": "~0.81.0",
     "serve-favicon": "^2.4.5",
-    "should": "^13.1.0"
+    "should": "^13.1.0",
+    "validator": "^10.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
