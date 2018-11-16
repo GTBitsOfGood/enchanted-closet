@@ -17,7 +17,7 @@ module.exports.index = (req, res, next) => {
         }
         return next()
       } else {
-        console.log(err)
+        console.error(err)
         res.locals.error = {
           msg: 'There are no users in the database',
           status: 404
@@ -95,7 +95,7 @@ module.exports.delete = (req, res, next) => {
   User.findById(req.params.id).remove((err, user) => {
     if (user) {
       res.locals.data = {
-        msg: 'User succesfully dleeted'
+        msg: 'User successfully deleted'
       }
       return next()
     } else {
@@ -128,8 +128,7 @@ const manualUpdate = async (newProps, id, res, next) => {
     res.locals.data = {
       user: updated
     }
-    
-  } catch(e) {
+  } catch (e) {
     res.locals.error = {
       status: 500,
       msg: 'Unable to save user changes to db'
@@ -137,7 +136,6 @@ const manualUpdate = async (newProps, id, res, next) => {
   }
 
   return next()
-
 }
 
 module.exports.update = async (req, res, next) => {
@@ -151,7 +149,7 @@ module.exports.update = async (req, res, next) => {
 
   const _id = req.params.id
   let newProps = {}
-  
+
   // ["name", "email", "password", "birthday", "grade", "race", "school", "leader_name", "emergency_contact"]);
   if (req.body.birthday) {
     newProps.birthday = new Date(req.body.birthday)
@@ -214,6 +212,7 @@ module.exports.update = async (req, res, next) => {
       }
       if (matchesComplexityRequirements(req.body.currentPassword)) {
         newProps.password = hash.genNew(req.body.newPassword)
+        newProps.passwordReset = false
         await manualUpdate(newProps, _id, res, next)
       }
     })
@@ -473,7 +472,7 @@ module.exports.registerevent = (req, res, next) => {
 
       uDoc.save(err => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -482,7 +481,7 @@ module.exports.registerevent = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
@@ -578,7 +577,7 @@ module.exports.denyRegistration = (req, res, next) => {
 
       uDoc.save((err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -587,7 +586,7 @@ module.exports.denyRegistration = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
@@ -677,7 +676,7 @@ module.exports.confirmRegistration = (req, res, next) => {
 
       uDoc.save((err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -686,7 +685,7 @@ module.exports.confirmRegistration = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err
@@ -785,7 +784,7 @@ module.exports.cancelevent = (req, res, next) => {
 
       uDoc.save((err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
           res.locals.error = {
             code: 500,
             msg: err
@@ -794,7 +793,7 @@ module.exports.cancelevent = (req, res, next) => {
         }
         eDoc.save(err => {
           if (err) {
-            console.log(err)
+            console.error(err)
             res.locals.error = {
               code: 500,
               msg: err

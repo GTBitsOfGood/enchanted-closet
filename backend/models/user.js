@@ -32,6 +32,10 @@ var UserSchema = new mongoose.Schema({
     default: 'Participant',
     required: true
   },
+  passwordReset: {
+    type: Boolean,
+    required: false
+  },
   birthday: Date,
   grade: String,
   age: Number,
@@ -64,7 +68,7 @@ UserSchema.methods.validatePassword = function (password) {
         delete temporaryUser.password
         return resolve(temporaryUser)
       } else {
-        return reject('Incorrect email/password combination')
+        return reject(new Error('Incorrect email/password combination'))
       }
     })
   })

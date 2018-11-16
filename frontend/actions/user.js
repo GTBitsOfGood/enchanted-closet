@@ -150,6 +150,23 @@ function updateUser (user) {
   }
 }
 
+export function deleteUser (id) {
+  return (dispatch, getState) => {
+    dispatch(showModalLoader())
+    return fetchHelper(`/api/users/${id}`, getAPIToken(getState), {
+      method: 'DELETE',
+      headers: DEFAULT_HEADERS
+    }, getState().apiToken)
+      .then(response => response.json())
+      .then(json => {
+        return safeWrap(json, () => {
+          dispatch(deleteLocalData('users', id))
+        }, dispatch)
+      })
+      .then(() => dispatch(hideModalLoader()))
+  }
+}
+
 export function promoteUser (id) {
   return (dispatch, getState) => {
     dispatch(loading())

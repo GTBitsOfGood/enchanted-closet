@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchUsers, promoteUser } from '../../actions/'
+import { fetchUsers, promoteUser, deleteUser } from '../../actions/'
 
 import { Segment, Container, Button, Icon, Modal } from 'semantic-ui-react'
 import { withRouter, Link } from 'react-router-dom'
@@ -25,11 +25,9 @@ class AdminUsersDetail extends Component {
     if (!users) {
       this.loadUsers()
     } else {
-      const usr = users.filter(u => u._id === this.state.userId)
+      const usr = this.users.filter(u => u._id === this.state.userId)
       if (usr.length === 1) {
-        this.state = Object.assign({}, this.state, {
-          user: usr[0]
-        })
+        this.setState({ user: usr[0] })
       } else {
         this.loadUsers()
       }
@@ -42,7 +40,7 @@ class AdminUsersDetail extends Component {
       loading:true,
       hasPerformedUpdate:true
     })
-    updateUserStore()
+    this.props.updateUserStore()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -56,11 +54,17 @@ class AdminUsersDetail extends Component {
     }
   }
 
+  handleDelete = (userId) => {
+    this.setState({ user: null })
+    this.props.deleteUser(userId)
+    this.props.history.push('/users')
+  }
+
   render () {
     const { loading, hasPerformedUpdate, userId, user } = this.state
-    const { promoteUser } = this.props
     const name = user ? `${user.firstName} ${user.lastName}`
       : 'Name not found'
+
     return (
       <Container>
         {loading &&
@@ -93,6 +97,22 @@ class AdminUsersDetail extends Component {
         Make Admin
         </Button>
         }
+        <Modal
+          trigger={
+            <Button animated="vertical" color="red">
+              <Button.Content visible>Delete</Button.Content>
+              <Button.Content hidden>
+                <Icon name='trash' />
+              </Button.Content>
+            </Button>
+          }
+          header='Confirm Delete'
+          content='Are you sure you want to delete this user?'
+          actions={[
+            'Cancel',
+            { key: 'done', content: 'Delete', negative: true, onClick: () => this.handleDelete(userId) }
+          ]}
+        />
       </Container>
     )
   }
@@ -107,7 +127,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     updateUserStore: fetchUsers,
-    promoteUser
+    promoteUser,
+    deleteUser
   }, dispatch)
 }
 

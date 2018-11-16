@@ -31,7 +31,7 @@ class EventsDetail extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { match, upfetchEventById, // fetchEvents,
       events, location } = this.props
     const eventId = match.params.id
@@ -92,62 +92,72 @@ class EventsDetail extends Component {
     const { event, isFetchingEvents, displayMapLocationError, latitude, longitude } = this.state
 
     let markAttendanceButton = null
-    if (user && user.events && user.events.includes(event._id)) {
+    if (user && user.events && event && user.events.includes(event._id)) {
       markAttendanceButton = <MarkAttendanceButton id={event._id}/>
     }
 
     if (!event && !isFetchingEvents) { return <Redirect to='/events' /> }
-    const date = new Date(event.startTime)
     const registerBlock = (() => {
-      const yesterday = new Date()
-      yesterday.setDate(yesterday.getDate() - 1)
-      if (date.getTime() > yesterday) { // flag: event still open condition
-        if (user) {
-          if (!isProfileComplete(user)) {
+      if (event) {
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
+        if (new Date(event.startTime).getTime() > yesterday) { // flag: event still open condition
+          if (user) {
+            if (!isProfileComplete(user)) {
+              return (
+                <Button>
+                  <Link to='/profile'>
+                    Complete Profile to Register
+                  </Link>
+                </Button>
+              )
+            }
+            if (user.passwordReset) {
+              return (
+                <Button>
+                  <Link to='/profile'>
+                    Change Your Password to Continue
+                  </Link>
+                </Button>
+              )
+            }
+            // check block
+            if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
+              return (
+                <Button disabled>
+                  Registration denied
+                </Button>
+              )
+            }
+            if ((user.events && user.events.includes(event._id)) ||
+            (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
+              return (
+                <Button onClick={() => cancelEvent(event._id, user._id)}>
+                  Cancel Registration
+                </Button>
+              )
+            }
             return (
-              <Button>
-                <Link to='/profile'>
-                  Complete Profile to Register
+              <Button onClick={() => registerEvent(event._id, user._id)}>
+                Register
+              </Button>
+            )
+          } else {
+            return (
+              <Button attached= 'top'>
+                <Link to='/login'>
+                  Login to Register
                 </Link>
               </Button>
             )
           }
-          // check block
-          if ((user.deniedEvents && user.deniedEvents.includes(event._id))) {
-            return (
-              <Button disabled>
-                Registration denied
-              </Button>
-            )
-          }
-          if ((user.events && user.events.includes(event._id)) ||
-          (user.pendingEvents && user.pendingEvents.includes(event._id))) { // Already registered
-            return (
-              <Button onClick={() => cancelEvent(event._id, user._id)}>
-                Cancel Registration
-              </Button>
-            )
-          }
-          return (
-            <Button onClick={() => registerEvent(event._id, user._id)}>
-              Register
-            </Button>
-          )
         } else {
           return (
-            <Button attached= 'top'>
-              <Link to='/login'>
-                Login to Register
-              </Link>
+            <Button disabled>
+              Registration Closed
             </Button>
           )
         }
-      } else {
-        return (
-          <Button disabled>
-            Registration Closed
-          </Button>
-        )
       }
     })()
 
@@ -156,7 +166,7 @@ class EventsDetail extends Component {
         <Grid.Row style={{ padding: '20px' }}>
           <Table>
             <Table.Body>
-              {event.volunteers && event.volunteers.length > 0 ? event.volunteers.map(volunteer => {
+              {event && event.volunteers && event.volunteers.length > 0 ? event.volunteers.map(volunteer => {
                 const name = volunteer.firstName && volunteer.lastName ? volunteer.firstName + ' ' + volunteer.lastName : <i>&lt;No Name&gt;</i>
                 return (
                   <Table.Row
@@ -217,9 +227,8 @@ class EventsDetail extends Component {
               content='Are you sure you want to delete this event?'
               actions={[
                 'Cancel',
-                { key: 'done', content: 'Delete', negative: true }
+                { key: 'done', content: 'Delete', negative: true, onClick: () => deleteEvent(event._id) }
               ]}
-              onActionClick={() => deleteEvent(event._id)}
             />
             <MarkAttendanceButton id={event._id} />
             <DownloadAttendanceButton id={event._id} />

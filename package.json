@@ -6,6 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js",
     "dev": "concurrently -k \"webpack-dev-server --hot\" \"npm run backend\"",
+    "debug": "nodemon server.js --inspect --exec babel-node --presets @babel/env",
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
     "start": "npm run build && NODE_ENV=production node server.js",
@@ -19,7 +20,6 @@
     "body-parser": "^1.18.2",
     "compression": "^1.7.2",
     "dotenv": "^4.0.0",
-    "dotenv-webpack": "^1.5.4",
     "enzyme": "^2.8.1",
     "expect": "^1.20.2",
     "express": "^4.15.2",
@@ -82,6 +82,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "concurrently": "^3.5.0",
     "css-loader": "^0.28.11",
+    "dotenv-webpack": "^1.5.7",
     "eslint": "^5.0.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-loader": "^2.1.1",

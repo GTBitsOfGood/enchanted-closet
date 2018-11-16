@@ -33,6 +33,7 @@ const eventUpload = multer({ storage: eventStorage })
 
 router.post('/login', controllers.auth.login)
 router.post('/register', controllers.auth.register)
+router.post('/reset-password', controllers.auth.resetPassword)
 // router.post('/session/:id', auth.verifySession)
 
 router.get('/users', auth.checkAdmin, controllers.users.index)
@@ -81,7 +82,7 @@ router.use((req, res, next) => {
     return res.status(statusCode).json(response)
   } else {
     // not every error should be a generic 500 error!!!!!!!!!!!!
-    console.log('generic server error')
+    console.error('generic server error')
     return res.status(500).json({
       'status': 'error',
       'code': 500,
@@ -99,10 +100,9 @@ router.use((err, req, res, next) => {
     let response = Object.assign({}, res.locals.error, {
       'status': 'error'
     })
-    console.log(response)
     return res.status(statusCode).json(response)
   } else {
-    console.log('generic server error')
+    console.error('generic server error')
     return res.status(500).json({
       'status': 'error',
       'code': 500,

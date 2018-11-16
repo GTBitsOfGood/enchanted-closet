@@ -17,6 +17,6 @@ export const saveAuthState = state => {
     localStorage.setItem('user', serializedAuth)
   } catch (err) {
     // Ignore errors
-    console.log(err)
+    console.error(err)
   }
 }
