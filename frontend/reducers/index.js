@@ -177,11 +177,20 @@ function rootReducer (state = require('../static/defaultState'), action) {
         events: newEvents,
         errorMessage: null }
     }
-    case types.USER_UPDATE:
+    case types.USER_UPDATE:{
       return Object.assign({}, state, {
         user: { ...(state.user ? state.user : null), ...action.user },
+        newUser:{...action.user},
         errorMessage: null
       })
+    }
+    case types.ADMIN_USER_CREATE:{
+      return Object.assign({}, state, {
+        newUser:{...action.user},
+        errorMessage: null
+      })
+    }
+
 
     case types.USER_AUTHENTICATED:
       return Object.assign({}, state, {

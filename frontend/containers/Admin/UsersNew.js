@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter, Redirect } from 'react-router-dom'
-import { upsertUser } from '../../actions/'
+import { adminCreateUser } from '../../actions/'
 
 import { Container, Segment, Header, Form, Button, Dropdown, Icon, Message } from 'semantic-ui-react'
 import { Role } from '../../components/'
@@ -24,21 +24,22 @@ class UsersNew extends Component {
     this.setState({ [name]: value })
   }
 
+
   componentWillReceiveProps (nextProps) {
     const { loading, error, newUser } = nextProps
     this.setState({ loading, error, newUser })
   }
 
   processData () {
-    const { _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone } = this.state
-    const { upsertUser } = this.props
-    upsertUser({ _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone })
+    const { _id, firstName, lastName, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone } = this.state
+    const { adminCreateUser } = this.props
+    adminCreateUser({ _id, firstName, lastName, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone })
   }
 
   render () {
     const { loading, error, newUser } = this.state
     if (newUser) {
-      return <Redirect to={`/admin/users/${newUser._id}`}/>
+      return <Redirect to={`/users/${newUser._id}`}/>
     } else {
       return (
         <Container>
@@ -51,7 +52,8 @@ class UsersNew extends Component {
            content={error}
          />
               }
-              <Form.Input required label='Name' type='text' name='name' placeholder='John Smith' onChange={this.handleInputChange}/>
+              <Form.Input required label='Name' type='text' name='firstName' placeholder='John' onChange={this.handleInputChange}/>
+              <Form.Input required label='Name' type='text' name='lastName' placeholder='Smith' onChange={this.handleInputChange}/>
               <Form.Input required autoComplete="off" label='Email Address' type='email' name='email' placeholder='john.smith@gmail.com' onChange={this.handleInputChange}/>
               <Form.Input required autoComplete="off" label='Password' type='password' name='password' placeholder='•••••••••' onChange={this.handleInputChange}/>
               <Role required onChange={this.handleInputChange}/>
@@ -89,7 +91,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    upsertUser: upsertUser
+    adminCreateUser: adminCreateUser
   }, dispatch)
 }
 
