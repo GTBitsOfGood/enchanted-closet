@@ -143,11 +143,19 @@ class EventsDetail extends Component {
             )
           }
         } else {
-          return (
-            <Button disabled>
-              Registration Closed
-            </Button>
-          )
+          if (today < new Date(event.registrationEnd)) {
+            return (
+              <Button disabled>
+                Registration Not Open
+              </Button>
+            )
+          } else {
+            return (
+              <Button disabled>
+                Registration Closed
+              </Button>
+            )
+          }
         }
       }
     })()

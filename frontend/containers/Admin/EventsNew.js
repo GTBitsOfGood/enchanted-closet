@@ -42,7 +42,9 @@ class AdminEventsNew extends Component {
         location: event.location,
         speakers: event.speakers.join(', '),
         startTime: moment(new Date(event.startTime)),
-        endTime: moment(new Date(event.endTime))
+        endTime: moment(new Date(event.endTime)),
+        registrationStart: moment(new Date(event.registrationStart)),
+        registrationEnd: moment(new Date(event.registrationEnd))
       })
     }
   }
