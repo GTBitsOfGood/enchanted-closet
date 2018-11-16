@@ -11,7 +11,6 @@ module.exports.index = (req, res, next) => {
       }
       return next()
     } else {
-      console.error(err)
       res.locals.error = {
         msg: 'There are no events in the database',
         status: 404

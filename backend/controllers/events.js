@@ -270,7 +270,7 @@ module.exports.upload = (req, res, next) => {
         status: 404,
         msg: 'Event not found with desired ID'
       }
-      return next(new Error(res.locals.error))
+      return next()
     } else {
       doc.set(newProps)
       doc.save((err, updated) => {
@@ -447,7 +447,7 @@ module.exports.update = (req, res, next) => {
           code: 500,
           msg: 'Internal Server Error'
         }
-        return next(new Error(res.locals.error))
+        return next()
       }
       res.locals.data = {
         event: updatedEvent

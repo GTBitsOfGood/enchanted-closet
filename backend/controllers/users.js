@@ -374,7 +374,7 @@ module.exports.create = (req, res, next) => {
         status: 400,
         msg: 'User unable to be created'
       }
-      return next(new Error(res.locals.error))
+      return next()
     } else {
       res.locals.data = {
         user: user
