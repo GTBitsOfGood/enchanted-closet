@@ -164,7 +164,6 @@ module.exports.yearReport = (req, res, next) => {
             }
           })
         }
-
         if (e.participantsAttended.length !== 0) {
           e.participants.forEach(u => {
             const userInfo = u
