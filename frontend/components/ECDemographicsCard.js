@@ -3,7 +3,7 @@ import { Segment, List, Icon } from 'semantic-ui-react'
 import { capitalize, camelCase } from 'lodash'
 import moment from 'moment'
 
-const demographicsFields = ['grade', 'birthday', 'race', 'school', 'leader']
+const demographicsFields = ['grade', 'birthday', 'race', 'school', 'leader', 'tshirt']
 
 const ECDemographicsCard = (props) => {
   let { user } = props

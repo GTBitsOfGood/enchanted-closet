@@ -90,11 +90,10 @@ const validatePassword = (data, callback) => {
   if (!data) {
     return callback(true, null)
   } else {
-   hash.checkAgainst(data, function (err, usr) {
+    hash.checkAgainst(data, function (err, usr) {
       if (err) {
         return callback(true, null)
       } else {
-        console.log("no error in validatePassword")
         return callback(false, usr)
       }
     })
@@ -227,7 +226,6 @@ module.exports.makeAdmin = (req, res, next) => {
 
 module.exports.idMatches = (req, res, next) => {
   let token = req.header('Authorization')
-  console.log(token)
   if (!token.startsWith('Bearer ')) {
     res.locals.error = {
       status: 403,
@@ -310,7 +308,11 @@ function volunteerRegisterEmail(user) {
         console.error(err)
       }
       users.forEach(u => admins.push(u.email))
-      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look')
+      mail.authSend(admins, 'New Volunteer Registered at Enchanted Closet', user.firstName + ' ' + user.lastName + ' just registered as a volunteer! Have a look', err => {
+        if (err) {
+          console.error(err)
+        }
+      })
     })
   }
 }

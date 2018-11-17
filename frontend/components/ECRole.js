@@ -4,13 +4,13 @@ import { Form, Dropdown } from 'semantic-ui-react'
 const roles = [
   {
     text: 'Participant',
-    value: 'participant'
+    value: 'Participant'
   }, {
     text: 'Volunteer',
-    value: 'volunteer'
+    value: 'Volunteer'
   }, {
     text: 'Admin',
-    value: 'admin'
+    value: 'Admin'
   }
 ]
 

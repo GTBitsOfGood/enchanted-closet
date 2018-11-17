@@ -3,6 +3,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import Homepage from './Homepage.js'
 import Login from './Login.js'
+import ResetPassword from './ResetPassword'
 import Logout from './Logout.js'
 import Register from './Register'
 import Profile from './Profile.js'
@@ -44,6 +45,12 @@ export default function Root ({ store }) {
                 accepts={['loggedOut']}
                 path="/login"
                 component={Login}
+                redirect="/"
+              />
+              <SmartRoute
+                accepts={['loggedOut']}
+                path="/reset-password"
+                component={ResetPassword}
                 redirect="/"
               />
               <SmartRoute

@@ -1,4 +1,4 @@
-import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, receiveUsers, updateUserWithEvents, setMessage, messageWrap, errorWrap } from './'
+import { showModalLoader, hideModalLoader, loading, stopLoading, requestUsers, updateUserWithEvents, errorWrap } from './'
 import { safeWrap, fetchHelper, getAPIToken, DEFAULT_HEADERS } from './util'
 import * as types from './types'
 
@@ -64,5 +64,21 @@ export function performRegistration (data) {
         dispatch(hideModalLoader())
         dispatch(processAuthenticationAttempt(json))
       })
+  }
+}
+
+export function performResetPassword (data) {
+  return dispatch => {
+    dispatch(showModalLoader())
+    return fetchHelper(`/api/reset-password`, null, {
+      method: 'POST',
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(json => {
+        return safeWrap(json, () => {}, dispatch)
+      })
+      .then(() => dispatch(hideModalLoader()))
   }
 }

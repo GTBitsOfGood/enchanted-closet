@@ -41,6 +41,39 @@ export function upsertUser (data) {
   }
 }
 
+export function adminCreateUser(data) {
+  return (dispatch, getState) => {
+    dispatch(loading())
+    const url = data._id ? `/api/users/${data._id}` : `/api/users`
+    const method = data._id ? 'PUT' : 'POST'
+    const isUpdate = !!data._id
+    delete data._id
+    return fetchHelper(url, getAPIToken(getState), {
+      method: method,
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(json => safeWrap(json, () => dispatch(processUserCreation(json, isUpdate)), dispatch))
+      .then(() => stopLoading())
+  }
+}
+
+function processUserCreation(json, isUpdate){
+  return (dispatch, getState) => {
+    if (json.status === 'ok') {
+      dispatch(updateNewUserWithEvents(json.user)) // whatever, not gonna strip users array
+      dispatch({
+        type: types.USERS_UPSERT,
+        user: json.user,
+        isUpdate: isUpdate
+      })
+    } else {
+      errorWrap(dispatch, json.msg)
+    }
+  }
+}
+
 function processUserUpsert (json, isUpdate) { // updates users array as well (only relevant for admin)
   return (dispatch, getState) => {
     if (json.status === 'ok') {
@@ -91,10 +124,46 @@ export function updateUserWithEvents (user) {
   }
 }
 
+export function updateNewUserWithEvents (user) {
+  return (dispatch, getState) => {
+    const events = user.events ? user.events.map(e => e._id) : []
+    const pendingEvents = user.pendingEvents ? user.pendingEvents.map(e => e._id) : []
+    const newUser = { ...user, events, pendingEvents }
+    dispatch(createUser(newUser))
+    dispatch(receiveEvents(user.events)) // these are unstripped
+    dispatch(receiveMoreEvents(user.pendingEvents))
+    dispatch(stopLoading())
+  }
+}
+
+function  createUser (user) {
+  return {
+    type: types.ADMIN_USER_CREATE,
+    user
+  }
+}
+
 function updateUser (user) {
   return {
     type: types.USER_UPDATE,
     user
+  }
+}
+
+export function deleteUser (id) {
+  return (dispatch, getState) => {
+    dispatch(showModalLoader())
+    return fetchHelper(`/api/users/${id}`, getAPIToken(getState), {
+      method: 'DELETE',
+      headers: DEFAULT_HEADERS
+    }, getState().apiToken)
+      .then(response => response.json())
+      .then(json => {
+        return safeWrap(json, () => {
+          dispatch(deleteLocalData('users', id))
+        }, dispatch)
+      })
+      .then(() => dispatch(hideModalLoader()))
   }
 }
 

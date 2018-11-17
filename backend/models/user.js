@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
+const validator = require('validator')
 // const Event = mongoose.model('event');
 
 var UserSchema = new mongoose.Schema({
@@ -15,7 +16,8 @@ var UserSchema = new mongoose.Schema({
     type: String,
     index: true,
     required: true,
-    unique: true
+    unique: true,
+    validate: [ validator.isEmail, 'invalid email' ]
   },
   password: {
     type: String,
@@ -32,8 +34,13 @@ var UserSchema = new mongoose.Schema({
     default: 'Participant',
     required: true
   },
+  passwordReset: {
+    type: Boolean,
+    required: false
+  },
   birthday: Date,
   grade: String,
+  tshirt: String,
   age: Number,
   race: String,
   school: String,
@@ -64,7 +71,7 @@ UserSchema.methods.validatePassword = function (password) {
         delete temporaryUser.password
         return resolve(temporaryUser)
       } else {
-        return reject('Incorrect email/password combination')
+        return reject(new Error('Incorrect email/password combination'))
       }
     })
   })

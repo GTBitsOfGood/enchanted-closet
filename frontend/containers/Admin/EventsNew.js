@@ -23,16 +23,13 @@ class AdminEventsNew extends Component {
       location: '',
       startTime: moment(),
       endTime: moment(),
+      registrationStart: moment(),
+      registrationEnd: moment(),
       speakers: '',
       loading: this.props.loading,
       error: this.props.error,
       dateError: false
     }
-
-    this.upsertEvent = this.upsertEvent.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleStartTimeChange = this.handleStartTimeChange.bind(this)
-    this.handleEndTimeChange = this.handleEndTimeChange.bind(this)
   }
 
   componentWillMount () {
@@ -46,6 +43,8 @@ class AdminEventsNew extends Component {
         speakers: event.speakers.join(', '),
         startTime: moment(new Date(event.startTime)),
         endTime: moment(new Date(event.endTime)),
+        registrationStart: moment(new Date(event.registrationStart)),
+        registrationEnd: moment(new Date(event.registrationEnd))
       })
     }
   }
@@ -55,29 +54,38 @@ class AdminEventsNew extends Component {
     this.setState({ loading, error, newEvent })
   }
 
-  upsertEvent () {
+  upsertEvent = () => {
     if (!this.state.dateError) {
       const { upsertEvent: upsert } = this.props
-      const { _id, name, description, location, speakers, startTime, endTime } = this.state
+      const { _id, name, description, location, speakers, startTime, endTime, registrationStart, registrationEnd } = this.state
       this.setState({ loading: true })
-      upsert({ _id, name, description, location, speakers, startTime, endTime })
+      upsert({ _id, name, description, location, speakers, startTime, endTime, registrationStart, registrationEnd })
     }
   }
 
-  handleInputChange (e, { name, value }) {
+  handleInputChange = (e, { name, value }) => {
     this.setState({ [name]: value })
   };
 
-  handleStartTimeChange (updated) {
-    this.setState({ 'startTime': updated })
-    this.setState({ 'dateError': this.state.endTime.isBefore(updated) })
-
+  handleStartTimeChange = (startTime) => {
+    this.setState({ startTime })
+    this.setState({ dateError: this.state.endTime.isBefore(startTime) })
   }
 
-  handleEndTimeChange(updated) {
-      this.setState({ 'endTime': updated })
-      this.setState({ 'dateError': this.state.startTime.isAfter(updated) })
-  };
+  handleEndTimeChange = (endTime) => {
+    this.setState({ endTime })
+    this.setState({ dateError: this.state.startTime.isAfter(endTime) })
+  }
+
+  handleregistrationStartTimeChange = (registrationStart) => {
+    this.setState({ registrationStart })
+    this.setState({ dateError: this.state.registrationEnd.isBefore(registrationStart) })
+  }
+
+  handleregistrationEndTimeChange = (registrationEnd) => {
+    this.setState({ registrationEnd })
+    this.setState({ dateError: this.state.registrationStart.isAfter(registrationEnd) })
+  }
 
   render () {
     const { loading, error, newEvent } = this.state
@@ -99,11 +107,11 @@ class AdminEventsNew extends Component {
                 loading={loading} onSubmit={this.upsertEvent}
               >
                 {error &&
-     <Message
-       error
-       header='Unable to create event'
-       content={error}
-     />
+                  <Message
+                    error
+                    header='Unable to create event'
+                    content={error}
+                  />
                 }
                 <Form.Input required label='Event Name' value={this.state.name} name='name' placeholder='Event Name' onChange={this.handleInputChange} />
                 <Form.TextArea required label='Description' rows={12} value={this.state.description} name='description' placeholder='Tell us more about this event...' onChange={this.handleInputChange} />
@@ -112,6 +120,7 @@ class AdminEventsNew extends Component {
                 <p>* Enter a comma-separated list of names for the speakers of this event</p>
                 <Form.Group widths='equal'>
                   <Form.Field
+                    required
                     label='Starting date & time'
                     control={DatePicker}
                     name='startTime'
@@ -122,6 +131,7 @@ class AdminEventsNew extends Component {
                     timeIntervals={15}
                     error={this.state.dateError} />
                   <Form.Field
+                    required
                     label='Ending date & time'
                     control={DatePicker}
                     name='endTime'
@@ -132,6 +142,39 @@ class AdminEventsNew extends Component {
                     timeIntervals={15}
                     error={this.state.dateError}/>
                 </Form.Group>
+                {this.state.dateError &&
+                  <Message>
+                    <Message.Header>Date Error</Message.Header>
+                    <p>
+                      Start date must be before end date!
+                    </p>
+                  </Message>
+                }
+                <Form.Group widths='equal'>
+                  <Form.Field
+                    required
+                    label='Registration start date & time'
+                    control={DatePicker}
+                    name='registrationStart'
+                    selected={this.state.registrationStart}
+                    onChange={this.handleregistrationStartTimeChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    error={this.state.dateError} />
+                  <Form.Field
+                    required
+                    label='Registration end date & time'
+                    control={DatePicker}
+                    name='registrationEnd'
+                    selected={this.state.registrationEnd}
+                    onChange={this.handleregistrationEndTimeChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    error={this.state.dateError}/>
+                </Form.Group>
+                {/* Do I need this here or is the one above enough?? */}
                 {this.state.dateError &&
                   <Message>
                     <Message.Header>Date Error</Message.Header>

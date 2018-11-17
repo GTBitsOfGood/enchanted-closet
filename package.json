@@ -11,6 +11,7 @@
     "build-server": "babel ./backend -d build/backend",
     "build-react": "webpack -p --config webpack.config.prod.js",
     "dev": "concurrently -k \"webpack-dev-server --hot\" \"npm run backend\"",
+    "debug": "nodemon server.js --inspect --exec babel-node --presets @babel/env",
     "frontend": "webpack-dev-server --hot",
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
     "start": "npm run build && NODE_ENV=production node server.js",
@@ -56,7 +57,8 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "2.3.1",
     "semantic-ui-react": "~0.81.0",
-    "serve-favicon": "^2.4.5"
+    "serve-favicon": "^2.4.5",
+    "validator": "^10.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -79,6 +81,7 @@
     "babel-register": "^6.26.0",
     "concurrently": "^3.5.0",
     "css-loader": "^0.28.11",
+    "dotenv-webpack": "^1.5.7",
     "eslint": "^5.0.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-loader": "^2.1.1",

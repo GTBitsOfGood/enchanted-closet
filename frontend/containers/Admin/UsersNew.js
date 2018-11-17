@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter, Redirect } from 'react-router-dom'
-import { upsertUser } from '../../actions/'
+import { adminCreateUser } from '../../actions/'
 
 import { Container, Segment, Header, Form, Button, Dropdown, Icon, Message } from 'semantic-ui-react'
 import { Role } from '../../components/'
@@ -30,15 +30,15 @@ class UsersNew extends Component {
   }
 
   processData () {
-    const { _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone } = this.state
-    const { upsertUser } = this.props
-    upsertUser({ _id, name, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone })
+    const { _id, firstName, lastName, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone, tshirt } = this.state
+    const { adminCreateUser } = this.props
+    adminCreateUser({ _id, firstName, lastName, password, email, role, grade, age, race, school, leader, emergencyContactName, emergencyContactRelation, emergencyContactPhone, tshirt })
   }
 
   render () {
     const { loading, error, newUser } = this.state
     if (newUser) {
-      return <Redirect to={`/admin/users/${newUser._id}`}/>
+      return <Redirect to={`/users/${newUser._id}`}/>
     } else {
       return (
         <Container>
@@ -51,23 +51,24 @@ class UsersNew extends Component {
            content={error}
          />
               }
-              <Form.Input required label='Name' type='text' name='name' placeholder='John Smith' onChange={this.handleInputChange}/>
+              <Form.Input required label='First Name' type='text' name='firstName' placeholder='John' onChange={this.handleInputChange}/>
+              <Form.Input required label='Last Name' type='text' name='lastName' placeholder='Smith' onChange={this.handleInputChange}/>
               <Form.Input required autoComplete="off" label='Email Address' type='email' name='email' placeholder='john.smith@gmail.com' onChange={this.handleInputChange}/>
               <Form.Input required autoComplete="off" label='Password' type='password' name='password' placeholder='•••••••••' onChange={this.handleInputChange}/>
               <Role required onChange={this.handleInputChange}/>
               {this.state.role === 'participant' &&
-         <div>
-           <Form.Input label='Grade' type='number' value={this.state.grade} name='grade' onChange={this.handleInputChange} placeholder="10"/>
-           <Form.Input label='Age' type='number' value={this.state.age} name='age' onChange={this.handleInputChange} placeholder="16"/>
-           <Form.Input label='Race/Ethnicity' type='text' value={this.state.race} name='race' onChange={this.handleInputChange} placeholder=""/>
-           <Header as='h3'>Affiliations</Header>
-           <Form.Input label='School' type='text' value={this.state.school} name='school' onChange={this.handleInputChange} placeholder="Atlanta High School"/>
-           <Form.Input label='Leader' type='text' value={this.state.leader} name='leader' onChange={this.handleInputChange} placeholder="Jessica Smith"/>
-           <Header as='h3'>Emergency Contact</Header>
-           <Form.Input label='Name' type='text' value={this.state.emergencyContactName} name='emergencyContactName' onChange={this.handleInputChange} placeholder="Mary Smith"/>
-           <Form.Input label='Phone Number' type='phone' value={this.state.emergencyContactPhone} name='emergencyContactPhone' onChange={this.handleInputChange} placeholder="(404) 002-2999"/>
-           <Form.Input label='Relation' type='text' value={this.state.emergencyContactRelation} name='emergencyContactRelation' onChange={this.handleInputChange} placeholder="Mother"/>
-         </div>
+                <div>
+                  <Form.Input label='Grade' type='number' value={this.state.grade} name='grade' onChange={this.handleInputChange} placeholder="10"/>
+                  <Form.Input label='Age' type='number' value={this.state.age} name='age' onChange={this.handleInputChange} placeholder="16"/>
+                  <Form.Input label='Race/Ethnicity' type='text' value={this.state.race} name='race' onChange={this.handleInputChange} placeholder=""/>
+                  <Header as='h3'>Affiliations</Header>
+                  <Form.Input label='School' type='text' value={this.state.school} name='school' onChange={this.handleInputChange} placeholder="Atlanta High School"/>
+                  <Form.Input label='Leader' type='text' value={this.state.leader} name='leader' onChange={this.handleInputChange} placeholder="Jessica Smith"/>
+                  <Header as='h3'>Emergency Contact</Header>
+                  <Form.Input label='Name' type='text' value={this.state.emergencyContactName} name='emergencyContactName' onChange={this.handleInputChange} placeholder="Mary Smith"/>
+                  <Form.Input label='Phone Number' type='phone' value={this.state.emergencyContactPhone} name='emergencyContactPhone' onChange={this.handleInputChange} placeholder="(404) 002-2999"/>
+                  <Form.Input label='Relation' type='text' value={this.state.emergencyContactRelation} name='emergencyContactRelation' onChange={this.handleInputChange} placeholder="Mother"/>
+                </div>
               }
               <Button primary><Icon name='add user'/>Create User</Button>
             </Form>
@@ -89,7 +90,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    upsertUser: upsertUser
+    adminCreateUser: adminCreateUser
   }, dispatch)
 }
 

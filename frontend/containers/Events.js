@@ -20,17 +20,14 @@ class Events extends Component {
       query: '',
       filters: { 'Name': true, 'Location': false }
     }
-    this.handleRefreshClick = this.handleRefreshClick.bind(this)
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.fetchFutureEvents()
   }
 
-  handleRefreshClick (e) { // Defunct. probably going to cause bugs.
+  handleRefreshClick = (e) => { // Defunct. probably going to cause bugs.
     e.preventDefault()
-
-    const { invalidateEvents, fetchEventsIfNeeded } = this.props
   }
 
   changeQuery = (event) => {
@@ -42,13 +39,19 @@ class Events extends Component {
     filts[data.label] = !filts[data.label]
     this.setState({ filters: filts })
   }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.events !== prevState.events) {
+      return { events: nextProps.events }
+    } else return null
+  }
 
-  componentWillReceiveProps (nextProps) {
-    this.setState({ isFetching: false })
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.events !== this.props.events) {
+      this.setState({ isFetching: false })
+    }
   }
 
   render () {
-    // const { isFetchingEvents, lastUpdatedEvents } = this.props; // Defunct
     const { isFetching, query, filters } = this.state
     const { events = [], fetchPastEvents, fetchFutureEvents } = this.props
     const bodyProps = {

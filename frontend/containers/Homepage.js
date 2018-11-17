@@ -61,7 +61,7 @@ class Homepage extends Component {
               as={Link}
               to={'/events'}
             >
-        See All Events
+              See All Events
             </Button>
             <Divider style={styles.mainDivider} />
             { eventsBlock }

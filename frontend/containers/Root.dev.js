@@ -13,6 +13,7 @@ import Events from './Events.js'
 import EventsDetail from './EventsDetail.js'
 import Homepage from './Homepage.js'
 import Login from './Login.js'
+import ResetPassword from './ResetPassword'
 import Logout from './Logout.js'
 import MissingPage from './MissingPage.js'
 import Navigation from './Navigation'
@@ -42,6 +43,12 @@ class Root extends React.Component {
                   accepts={['loggedOut']}
                   path="/login"
                   component={Login}
+                  redirect="/"
+                />
+                <SmartRoute
+                  accepts={['loggedOut']}
+                  path="/reset-password"
+                  component={ResetPassword}
                   redirect="/"
                 />
                 <SmartRoute
