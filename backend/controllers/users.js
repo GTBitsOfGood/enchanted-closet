@@ -170,19 +170,19 @@ module.exports.update = async (req, res, next) => {
   if (req.body.phone) {
     newProps.phone = req.body.phone
   }
-  if (req.body.race && req.body.race.length > 2) {
+  if (req.body.race && req.body.race.length >= 1) {
     newProps.race = req.body.race
   }
-  if (req.body.school && req.body.school.length > 2) {
+  if (req.body.school && req.body.school.length >= 1) {
     newProps.school = req.body.school
   }
-  if (req.body.emergencyContactName && req.body.emergencyContactName.length > 2) {
+  if (req.body.emergencyContactName && req.body.emergencyContactName.length >= 1) {
     newProps.emergencyContactName = req.body.emergencyContactName
   }
-  if (req.body.emergencyContactPhone && req.body.emergencyContactPhone.length > 2) {
+  if (req.body.emergencyContactPhone && req.body.emergencyContactPhone.length >= 1) {
     newProps.emergencyContactPhone = req.body.emergencyContactPhone
   }
-  if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length > 2) {
+  if (req.body.emergencyContactRelation && req.body.emergencyContactRelation.length >= 1) {
     newProps.emergencyContactRelation = req.body.emergencyContactRelation
   }
   // for when you update an existing password
