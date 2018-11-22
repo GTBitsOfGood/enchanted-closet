@@ -17,31 +17,51 @@ function rootReducer (state = require('../static/defaultState'), action) {
       })
 
     case types.CLEAR_ERRORS:
+      const prevErrorCount = state.numErrors ? state.numErrors : 0
+      if (prevErrorCount > 1) {
+        return Object.assign({}, state, {
+          numErrors: prevErrorCount - 1
+        })
+      }
+      // Only clear error message after action is called on the last error
       return Object.assign({}, state, {
         error: null,
-        errorMessage: null
+        errorMessage: null,
+        numErrors: 0
       })
 
     case types.CLEAR_ALL_MESSAGES:
+      const prevMessageCount = state.numMessages ? state.numMessages : 0
+      if (prevMessageCount > 1) {
+        return Object.assign({}, state, {
+          numMessages: prevMessageCount - 1
+        })
+      }
+      // Only clear messages after action is called on the last message
       return Object.assign({}, state, {
         error: null,
         errorMessage: null,
-        message: null
+        message: null,
+        numMessages: 0
       })
 
     case types.SET_MESSAGE: {
+      const prevMessageCount = state.numMessages ? state.numMessages : 0
       return Object.assign({}, state, {
         error: null,
         errorMessage: null,
-        message: action.message
+        message: action.message,
+        numMessages: prevMessageCount + 1 // Keep track of the number of active messages
       })
     }
 
     case types.SET_ERROR_MESSAGE: {
+      const prevErrorCount = state.numErrors ? state.numErrors : 0
       return Object.assign({}, state, {
         error: null, // hmmm
         errorMessage: action.message,
-        message: null
+        message: null,
+        numErrors: prevErrorCount + 1 // Keep track of the number of active errors
       })
     }
 
@@ -177,20 +197,19 @@ function rootReducer (state = require('../static/defaultState'), action) {
         events: newEvents,
         errorMessage: null }
     }
-    case types.USER_UPDATE:{
+    case types.USER_UPDATE: {
       return Object.assign({}, state, {
         user: { ...(state.user ? state.user : null), ...action.user },
-        newUser:{...action.user},
+        newUser: { ...action.user },
         errorMessage: null
       })
     }
-    case types.ADMIN_USER_CREATE:{
+    case types.ADMIN_USER_CREATE: {
       return Object.assign({}, state, {
-        newUser:{...action.user},
+        newUser: { ...action.user },
         errorMessage: null
       })
     }
-
 
     case types.USER_AUTHENTICATED:
       return Object.assign({}, state, {

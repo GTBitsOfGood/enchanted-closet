@@ -52,7 +52,7 @@ export function setErrorMessage (message) { // sad repetition
 // Timeout
 export function messageWrap (dispatch, message) {
   dispatch(setMessage(message))
-  setTimeout(() => dispatch(clearAllMessages()), 3000) //
+  setTimeout(() => dispatch(clearAllMessages()), 3000)
 }
 
 export function errorWrap (dispatch, message) {
