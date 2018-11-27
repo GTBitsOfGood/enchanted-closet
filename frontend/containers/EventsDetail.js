@@ -206,12 +206,13 @@ class EventsDetail extends Component {
         <p style={{ whiteSpace: 'pre-line' }}>{event.description}</p>
       </Segment>
       <Speakers speakers={event.speakers}/>
-      {user.role == "Admin" ?
-        <Segment key="volunteers">
-          <h3>Volunteers</h3>
-          {volunteerBlock}
-        </Segment>
-        : null}
+      {user.role === 'Admin'
+        ? (
+          <Segment key="volunteers">
+            <h3>Volunteers</h3>
+            {volunteerBlock}
+          </Segment>
+        ) : null}
       {displayMapLocationError || (latitude && longitude)
         ? <Map
           isMarkerShown

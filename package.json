@@ -99,7 +99,7 @@
     "ignore-styles": "^5.0.1",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.4.3",
-    "nodemon": "^1.11.0",
+    "nodemon": "^1.18.6",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
     "react-addons-test-utils": "^15.5.1",
