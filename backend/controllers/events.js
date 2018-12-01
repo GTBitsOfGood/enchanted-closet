@@ -28,7 +28,7 @@ module.exports.index = (req, res, next) => {
 
 module.exports.fetchFutureEvents = (req, res, next) => {
   Event
-    .find({ 'startTime': { $gt: currDate } })
+    .find({ 'endTime': { $gte: currDate } })
     .sort({ 'startTime': 1 })
     .populate('participants')
     .populate('volunteers')
@@ -51,7 +51,7 @@ module.exports.fetchFutureEvents = (req, res, next) => {
 
 module.exports.fetchPastEvents = (req, res, next) => {
   Event
-    .find({ 'startTime': { $lte: currDate } })
+    .find({ 'endTime': { $lte: currDate } })
     .sort({ 'startTime': 1 })
     .populate('participants')
     .populate('volunteers')
