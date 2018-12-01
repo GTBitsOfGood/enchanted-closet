@@ -39,18 +39,18 @@ class ProfileForm extends Component {
   regFinalTest = (field, val) => {
     if (!val) {
       if (this.state) {
-        if (field === "currentPassword") {
+        if (field === 'currentPassword') {
           if (!this.state.userData.newPassword) {
-            return true;
+            return true
           }
         }
-        if (field === "newPassword") {
+        if (field === 'newPassword') {
           if (!this.state.userData.currentPassword) {
-            return true;
+            return true
           }
         }
       } else {
-        return true;
+        return true
       }
       return false // no falsey!
     }
@@ -95,7 +95,7 @@ class ProfileForm extends Component {
     if (this.state.userData.newPassword && !this.state.userData.currentPassword) {
       this.props.setError()
       this.updateStatus('currentPassword', 1, false)
-    } 
+    }
   }
 
   blurFunctions = { // Implement finer control here
@@ -133,9 +133,9 @@ class ProfileForm extends Component {
         diffDict[key] = this.state.userData[key]
       })
       if (Object.keys(diffDict).length === 0) { this.props.setError('No fields have changed!') } else {
-        this.props.upsertUser({ ...diffDict, _id: this.props.user._id, email: this.props.user.email})
+        this.props.upsertUser({ ...diffDict, _id: this.props.user._id, email: this.props.user.email })
         // optimistic update
-        this.setState({ userData: { ...this.state.userData, currentPassword: "", newPassword: "" } })
+        this.setState({ userData: { ...this.state.userData, currentPassword: '', newPassword: '' } })
         this.setState({ cachedData: this.state.userData })
       }
     } else {

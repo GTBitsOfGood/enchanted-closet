@@ -35,22 +35,21 @@ class Users extends Component {
       userMapping[role].push(user)
     })
     this.setState({ users: userMapping })
-    userMapping['admin'].sort(function(a, b){
-      if(a.firstName < b.firstName) { return -1; }
-      if(a.firstName > b.firstName) { return 1; }
-      return 0;
+    userMapping['admin'].sort(function(a, b) {
+      if (a.firstName < b.firstName) { return -1 }
+      if (a.firstName > b.firstName) { return 1 }
+      return 0
     })
-    userMapping['volunteer'].sort(function(a, b){
-      if(a.firstName < b.firstName) { return -1; }
-      if(a.firstName > b.firstName) { return 1; }
-      return 0;
+    userMapping['volunteer'].sort(function(a, b) {
+      if (a.firstName < b.firstName) { return -1 }
+      if (a.firstName > b.firstName) { return 1 }
+      return 0
     })
-    userMapping['participant'].sort(function(a, b){
-        if(a.firstName < b.firstName) { return -1; }
-        if(a.firstName > b.firstName) { return 1; }
-        return 0;
+    userMapping['participant'].sort(function(a, b) {
+      if (a.firstName < b.firstName) { return -1 }
+      if (a.firstName > b.firstName) { return 1 }
+      return 0
     })
-
   }
 
   componentWillMount () {

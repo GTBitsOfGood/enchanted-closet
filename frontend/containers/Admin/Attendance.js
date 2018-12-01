@@ -50,6 +50,22 @@ class AdminAttendance extends Component {
     }
   }
 
+  // static getDerivedStateFromProps(props, state) {
+  //   if (props.users !== this.props.users) {
+  //     console.log(props.users)
+  //   }
+  // }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.events !== this.props.events) {
+  //     this.setState({ events: this.props.events })
+  //   }
+  //   if (prevProps.users !== this.props.users) {
+  //     this.setState({ users: this.props.users })
+  //   }
+  //   this.setState({ loading: false })
+  // }
+
   componentWillReceiveProps (nextProps) { // Receipt of full fetch
     const { events = [], users = [] } = nextProps // On the bright side, this will update every time you send an action
     this.setState({
@@ -73,12 +89,7 @@ class AdminAttendance extends Component {
       const start = new Date(event.startTime)
       const end = new Date(event.endTime)
       const curDate = new Date(Date.now())
-      if (curDate.getFullYear() === start.getFullYear() &&
-        curDate.getMonth() === start.getMonth() &&
-        curDate.getDate() >= start.getDate() &&
-        curDate.getDate() <= end.getDate() &&
-        curDate.getTime() >= start.getTime() &&
-        curDate.getTime() <= end.getTime()) {
+      if (curDate.getTime() >= start.getTime() && curDate.getTime() < end.getTime()) {
         // Verify users
         if (user) {
           if (user.role === 'Volunteer') { // Redirect unregistered volunteers
@@ -114,16 +125,16 @@ class AdminAttendance extends Component {
             </Segment>
           )
 
-          const isAttending = event.volunteersAttended.filter(v => v._id === user._id).length === 1
-          if (user.role === 'Volunteer' && !isAttending) {
-            return (
-              <Container>
-                <Segment>
-                  Looks like you're registered! Have a coordinator sign you in to start marking participant attendance!
-                </Segment>
-              </Container>
-            )
-          }
+          // const isAttending = event.volunteersAttended.filter(v => v._id === user._id).length === 1
+          // if (user.role === 'Volunteer' && !isAttending) {
+          //   return (
+          //     <Container>
+          //       <Segment>
+          //         Looks like you're registered! Have a coordinator sign you in to start marking participant attendance!
+          //       </Segment>
+          //     </Container>
+          //   )
+          // }
           return (
             <Container>
               <PageTitle
@@ -131,7 +142,9 @@ class AdminAttendance extends Component {
                 showLoadingIcon
               />
               <ButtonGallery>
-                <Button as={Link} to="/admin/users/create">Register New User</Button>
+                <RoleCheck role="Admin">
+                  <Button as={Link} to="/admin/users/create">Register New User</Button>
+                </RoleCheck>
                 <Button as={Link} to={`/events/${eventId}`}>Back to Event View</Button>
               </ButtonGallery>
               <SearchBarCard filterFunction={this.searchFilterUsers}/>
@@ -145,7 +158,7 @@ class AdminAttendance extends Component {
           return <Redirect to="/" />
         }
       } else { // Future or Past check
-        if (Date.now() - event.startTime > 0) { // Past TODO: functional - provide admin write access to past events
+        if (Date.now() - event.endTime > 0) { // Past TODO: functional - provide admin write access to past events
           return (
             <div>
               <GenericBanner
