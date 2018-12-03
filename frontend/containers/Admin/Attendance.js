@@ -89,7 +89,10 @@ class AdminAttendance extends Component {
       const start = new Date(event.startTime)
       const end = new Date(event.endTime)
       const curDate = new Date(Date.now())
-      if (curDate.getTime() >= start.getTime() && curDate.getTime() < end.getTime()) {
+      if (curDate.getFullYear() === start.getFullYear() &&
+          curDate.getMonth() === start.getMonth() &&
+          curDate.getDay() >= start.getDay() &&
+          curDate.getTime() < end.getTime()) {
         // Verify users
         if (user) {
           if (user.role === 'Volunteer') { // Redirect unregistered volunteers

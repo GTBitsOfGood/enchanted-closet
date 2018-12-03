@@ -8,6 +8,7 @@ import { clearErrors, fetchUserById } from '../actions'
 
 import { Button, Card, Container, Form, Header, Message, Segment } from 'semantic-ui-react'
 import { PageTitle, ProfileParticipant, ProfileVolunteer, ProfileBase } from '../components'
+import ProfileAdmin from '../components/profile/ProfileAdmin';
 
 class Profile extends Component {
   constructor (props) {
@@ -23,7 +24,7 @@ class Profile extends Component {
     const profileBody = (() => {
       switch (user.role) {
         case 'Admin':
-          return null // Admin has no profile
+          return <ProfileAdmin user={user} />
         case 'Volunteer':
           return <ProfileVolunteer user={user} />
         case 'Participant':
