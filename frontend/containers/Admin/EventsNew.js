@@ -23,8 +23,8 @@ class AdminEventsNew extends Component {
       location: '',
       startTime: moment(),
       endTime: moment(),
-      registrationStart: moment(),
-      registrationEnd: moment(),
+      registrationStart: null,
+      registrationEnd: null,
       speakers: '',
       loading: this.props.loading,
       error: this.props.error,
@@ -79,12 +79,16 @@ class AdminEventsNew extends Component {
 
   handleregistrationStartTimeChange = (registrationStart) => {
     this.setState({ registrationStart })
-    this.setState({ dateError: this.state.registrationEnd.isBefore(registrationStart) })
+    this.setState({ dateError:
+      this.state.registrationEnd.isBefore(registrationStart) ||
+      this.state.registrationStart.isAfter(this.state.startTime) })
   }
 
   handleregistrationEndTimeChange = (registrationEnd) => {
     this.setState({ registrationEnd })
-    this.setState({ dateError: this.state.registrationStart.isAfter(registrationEnd) })
+    this.setState({ dateError:
+      this.state.registrationStart.isAfter(registrationEnd) ||
+      this.state.registrationEnd.isAfter(this.state.startTime) })
   }
 
   render () {

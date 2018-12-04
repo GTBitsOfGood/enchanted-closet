@@ -19,12 +19,10 @@ var EventSchema = new mongoose.Schema({
     required: true
   },
   registrationStart: {
-    type: Date,
-    required: true
+    type: Date
   },
   registrationEnd: {
-    type: Date,
-    required: true
+    type: Date
   },
   location: {
     type: String,

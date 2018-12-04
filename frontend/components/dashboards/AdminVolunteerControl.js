@@ -27,6 +27,7 @@ const AdminVolunteerControl = ({ confirmVolunteer, denyVolunteer, events = [], u
               <Segment>
                 <Header as="h3"> Event: {e.name} </Header>
               </Segment>
+              {console.log(e)}
               {e.pendingVolunteers.map(id => {
                 const user = users.find(u => u._id === id)
                 if (user) {

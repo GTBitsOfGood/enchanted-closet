@@ -28,7 +28,7 @@ module.exports.index = (req, res, next) => {
 
 module.exports.fetchFutureEvents = (req, res, next) => {
   Event
-    .find({ 'startTime': { $gt: currDate } })
+    .find({ 'endTime': { $gte: currDate } })
     .sort({ 'startTime': 1 })
     .populate('participants')
     .populate('volunteers')
@@ -51,7 +51,7 @@ module.exports.fetchFutureEvents = (req, res, next) => {
 
 module.exports.fetchPastEvents = (req, res, next) => {
   Event
-    .find({ 'startTime': { $lte: currDate } })
+    .find({ 'endTime': { $lte: currDate } })
     .sort({ 'startTime': 1 })
     .populate('participants')
     .populate('volunteers')
@@ -330,7 +330,7 @@ module.exports.create = (req, res, next) => {
     }
     return next()
   }
- 
+
   if (!req.body.registrationStart) {
     res.locals.error = {
       status: 400,
@@ -429,13 +429,13 @@ module.exports.update = (req, res, next) => {
     }
 
     let newValues = {}
-    if (req.body.name && req.body.name.length > 2) newValues.name = req.body.name
-    if (req.body.description && req.body.description.length > 2) newValues.description = req.body.description
-    if (req.body.location && req.body.location.length > 2) newValues.location = req.body.location
-    if (req.body.startTime && req.body.startTime.length > 2) newValues.startTime = req.body.startTime
-    if (req.body.endTime && req.body.endTime.length > 2) newValues.endTime = req.body.endTime
-    if (req.body.registrationStart && req.body.registrationStart.length > 2) newValues.registrationStart = req.body.registrationStart
-    if (req.body.registrationEnd && req.body.registrationEnd.length > 2) newValues.registrationEnd = req.body.registrationEnd
+    if (req.body.name && req.body.name.length >= 1) newValues.name = req.body.name
+    if (req.body.description && req.body.description.length >= 1) newValues.description = req.body.description
+    if (req.body.location && req.body.location.length >= 1) newValues.location = req.body.location
+    if (req.body.startTime && req.body.startTime.length >= 1) newValues.startTime = req.body.startTime
+    if (req.body.endTime && req.body.endTime.length >= 1) newValues.endTime = req.body.endTime
+    if (req.body.registrationStart && req.body.registrationStart.length >= 1) newValues.registrationStart = req.body.registrationStart
+    if (req.body.registrationEnd && req.body.registrationEnd.length >= 1) newValues.registrationEnd = req.body.registrationEnd
     if (req.body.speakers) newValues.speakers = req.body.speakers.split(',').map(e => e.trim())
 
     event.set(newValues)
