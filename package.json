@@ -26,7 +26,7 @@
     "fast-csv": "^2.4.1",
     "form-data": "^2.3.1",
     "googleapis": "^27.0.0",
-    "helmet": "^3.12.0",
+    "helmet": "^3.21.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "mocha": "^5.0.3",
