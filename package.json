@@ -11,7 +11,9 @@
     "backend": "nodemon server.js --exec babel-node --presets @babel/env",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
-    "webpack": "webpack --config webpack.config.prod.js"
+    "webpack": "webpack --config webpack.config.prod.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "GT Bits of Good",
   "license": "ISC",
@@ -61,7 +63,8 @@
     "semantic-ui-react": "~0.81.0",
     "serve-favicon": "^2.4.5",
     "should": "^13.1.0",
-    "validator": "^10.9.0"
+    "validator": "^10.9.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -112,5 +115,6 @@
     "webpack": "^4.23.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
-  }
+  },
+  "snyk": true
 }
